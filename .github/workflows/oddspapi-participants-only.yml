@@ -1,0 +1,47 @@
+name: OddsPapi participants only
+
+on:
+  push:
+    paths:
+      - oddspapi-participants-only-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch soccer participants
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request
+          from datetime import datetime, timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          if not key: raise SystemExit('Missing ODDSPAPI_KEY')
+          url='https://api.oddspapi.io/v4/participants?'+urllib.parse.urlencode({'sportId':10,'language':'en','apiKey':key})
+          req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/4.0'})
+          with urllib.request.urlopen(req,timeout=90) as r:
+              data=json.loads(r.read().decode())
+          neom=[]; qadis=[]
+          if isinstance(data,dict):
+              for pid,name in data.items():
+                  n=str(name).lower()
+                  if 'neom' in n: neom.append([pid,name])
+                  if 'qadis' in n or 'qadisi' in n or 'qades' in n: qadis.append([pid,name])
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'type':type(data).__name__,'participant_count':len(data) if hasattr(data,'__len__') else None,'neom':neom,'qadis':qadis}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/oddspapi-participants.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit result
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/oddspapi-participants.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh OddsPapi participants test"
+          git push
