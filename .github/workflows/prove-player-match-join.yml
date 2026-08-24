@@ -1,0 +1,77 @@
+name: Prove player to match join
+
+on:
+  push:
+    paths:
+      - 'prove-player-match-join-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Join player events to standard matches by provider id
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,re,urllib.request
+          from datetime import datetime,timezone
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          B='https://sportservice.betflag.it/api/sport/pregame/'
+          def get(path):
+            with urllib.request.urlopen(urllib.request.Request(B+path,headers=H),timeout=30) as r:return json.loads(r.read(12000000).decode('utf-8','replace'))
+          standard=get('getOverviewDefault/1?channelId=0')
+          players=get('getOverviewEventsAams/0/-1/21/29300/0/0/0?channelId=0')
+          match_by_pi={}; match_by_code={}
+          def walk(x):
+            if isinstance(x,dict):
+              if x.get('si')==1 and x.get('ei') and x.get('en') and x.get('pi'):
+                rec={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','pi','mi','tai')}
+                # Don't let player-event nodes overwrite normal football matches.
+                if not str(x.get('sn','')).lower().startswith('giocatori') and not str(x.get('en','')).startswith('('):
+                  match_by_pi[str(x.get('pi'))]=rec
+              for v in x.values(): walk(v)
+            elif isinstance(x,list):
+              for v in x: walk(v)
+          walk(standard)
+          rows=[]
+          for ev in players.get('leo') or []:
+            if not isinstance(ev,dict):continue
+            name=str(ev.get('en') or '')
+            m=re.match(r'^\(([^)]+)\)\s*(.+)$',name)
+            player=m.group(2).strip() if m else name
+            code=m.group(1) if m else None
+            pi=str(ev.get('pi') or '')
+            match=match_by_pi.get(pi)
+            # collect default market odds
+            odds=[]; mm=ev.get('mmkW') or {}; vals=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+            for mk in vals:
+              if not isinstance(mk,dict):continue
+              mname=(mk.get('mn') or mk.get('mnd') or '').strip()
+              sp=mk.get('spd') or {}; spreads=sp.values() if isinstance(sp,dict) else (sp if isinstance(sp,list) else [])
+              for z in spreads:
+                if not isinstance(z,dict):continue
+                for q in z.get('asl') or []:
+                  if isinstance(q,dict):odds.append({'market':mname,'selection':q.get('sn'),'odd':q.get('ov')})
+            rows.append({'player':player,'code':code,'pi':pi,'player_event_id':ev.get('ei'),'player_tournament':ev.get('td'),'match':match,'odds':odds[:10]})
+          joined=[x for x in rows if x.get('match')]
+          wanted=[]
+          for w in ('Dany Mota','Andrea Colpani','Keita Balde','Patrick Cutrone'):
+            wanted.extend([x for x in rows if w.lower() in x['player'].lower()])
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'standard_match_count':len(match_by_pi),'player_event_count':len(rows),'joined_count':len(joined),'join_rate':round(len(joined)/max(1,len(rows)),4),'proof':wanted[:20],'joined_samples':joined[:20]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-match-join-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-match-join-proof.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prove player events join to real matches'
+          git push
