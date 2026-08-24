@@ -1,0 +1,136 @@
+name: Inspect Betflag event detail for player markets
+
+on:
+  push:
+    paths:
+      - 'betflag-event-detail-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Inspect public event-detail frontend
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          UA='Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1'
+          def fetch(url, headers=None, cap=3000000):
+            h={'User-Agent':UA,'Accept':'text/html,application/json,application/javascript,text/plain,*/*'}
+            if headers: h.update(headers)
+            req=urllib.request.Request(url,headers=h)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read(cap); return {'url':url,'status':r.status,'ctype':r.headers.get('content-type'),'body':raw.decode('utf-8','replace')}
+            except urllib.error.HTTPError as e:
+              return {'url':url,'status':e.code,'ctype':e.headers.get('content-type'),'body':e.read(100000).decode('utf-8','replace')}
+            except Exception as e:
+              return {'url':url,'error':type(e).__name__+': '+str(e)[:250],'body':''}
+
+          home=fetch('https://www.betflag.it/mobile/default.aspx',cap=500000)
+          body=home['body']
+          mu=re.search(r'feedUrl\s*=\s*["\']([^"\']+)',body,re.I)
+          mt=re.search(r'feedToken\s*=\s*["\']([^"\']+)',body,re.I)
+          feed_url=mu.group(1).rstrip('/') if mu else None
+          token=mt.group(1) if mt else None
+
+          feeds=[]; events=[]
+          if feed_url and token:
+            for route in ('/sport/live','/sport/prematch'):
+              rec=fetch(feed_url+route,{'X-Feed-Token':token,'Accept':'application/json'},cap=1000000)
+              parsed=None
+              try: parsed=json.loads(rec['body'])
+              except: pass
+              feeds.append({'route':route,'status':rec.get('status'),'bytes':len(rec.get('body',''))})
+              if isinstance(parsed,dict):
+                for ev in parsed.get('events') or []:
+                  if isinstance(ev,dict) and str(ev.get('disciplineName','')).lower()=='calcio':
+                    events.append({'source':route,**ev})
+
+          # Prefer Malaga/Deportivo if currently present, then up to four other football events.
+          events=sorted(events,key=lambda e:(0 if ('malaga' in str(e.get('title','')).lower() or 'deportivo la coru' in str(e.get('title','')).lower()) else 1, str(e.get('time',{}).get('data',''))))
+          chosen=[]; seen=set()
+          for ev in events:
+            eid=str(ev.get('id'))
+            if not eid or eid in seen: continue
+            seen.add(eid); chosen.append(ev)
+            if len(chosen)>=5: break
+
+          needles=['marcat','giocator','player','assist','tiro','tiri','getdetail','aams','pregame','/api/','iframe','eventdetail']
+          detail_results=[]; discovered_assets=[]
+          asset_re=re.compile(r'''(?:src|href)\s*=\s*["']([^"']+\.(?:js|mjs)(?:\?[^"']*)?)["']''',re.I)
+          iframe_re=re.compile(r'''<iframe[^>]+src\s*=\s*["']([^"']+)["']''',re.I)
+          for ev in chosen:
+            rel=ev.get('url') or ''
+            url=urllib.parse.urljoin('https://www.betflag.it/',rel)
+            rec=fetch(url,cap=3500000); text=rec.get('body',''); low=text.lower()
+            snippets=[]
+            for needle in needles:
+              start=0
+              while True:
+                i=low.find(needle,start)
+                if i<0: break
+                s=text[max(0,i-700):i+1400]
+                # redact obvious token/auth assignments if present
+                s=re.sub(r'((?:token|authorization|apikey|apiKey)\s*[:=]\s*["\'])[^"\']+',r'\1[REDACTED]',s,flags=re.I)
+                snippets.append({'needle':needle,'text':s})
+                start=i+len(needle)
+                if len(snippets)>=80: break
+            scripts=[]
+            for rel_asset in asset_re.findall(text):
+              a=urllib.parse.urljoin(url,rel_asset)
+              if 'betflag.it' in (urllib.parse.urlparse(a).hostname or ''): scripts.append(a)
+            iframes=[urllib.parse.urljoin(url,x) for x in iframe_re.findall(text)]
+            discovered_assets += scripts
+            detail_results.append({
+              'event_id':ev.get('id'),'title':ev.get('title'),'source':ev.get('source'),'event_url':url,
+              'status':rec.get('status'),'content_type':rec.get('ctype'),'bytes':len(text),
+              'iframes':iframes[:30],'scripts':list(dict.fromkeys(scripts))[:80],'snippets':snippets[:80]
+            })
+
+          # Scan scripts unique to event-detail pages for player/AAMS route vocabulary.
+          script_hits=[]
+          for a in list(dict.fromkeys(discovered_assets))[:100]:
+            rec=fetch(a,cap=3000000); text=rec.get('body',''); low=text.lower()
+            matched=[n for n in needles if n in low]
+            if not matched: continue
+            urls=re.findall(r'https?://[^\s"\'<>\\]{6,500}',text,re.I)
+            paths=re.findall(r'/(?:api|sport|sports|pregame|live|event)[A-Za-z0-9_./?&=%{}:-]{3,500}',text,re.I)
+            snippets=[]
+            for n in matched:
+              i=low.find(n)
+              if i>=0: snippets.append(text[max(0,i-650):i+1400])
+            script_hits.append({'url':a,'status':rec.get('status'),'matched':matched,'urls':urls[:100],'paths':paths[:200],'snippets':snippets[:30]})
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'feed_config_present':bool(feed_url and token),
+            'feeds':feeds,
+            'football_events_seen':len(events),
+            'chosen_events':[{k:e.get(k) for k in ('id','title','source','url','marketName','tournamentName')} for e in chosen],
+            'details':detail_results,
+            'script_hits':script_hits
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-event-detail-discovery.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+            'football_events_seen':len(events),'chosen':out['chosen_events'],
+            'detail_statuses':[(x['title'],x.get('status'),len(x.get('iframes',[])),len(x.get('snippets',[]))) for x in detail_results],
+            'script_hit_count':len(script_hits)
+          },ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-event-detail-discovery.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Inspect Betflag event detail for player markets'
+          git push
