@@ -1,0 +1,51 @@
+name: Extract Betflag AAMS call sites
+
+on:
+  push:
+    paths:
+      - 'betflag-aams-calls-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract exact getDetailsEventAams calls
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, urllib.request
+          from datetime import datetime, timezone
+          url='https://cdn-ltm.betflag.it/site/scripts/sport/bundle.min.js?263'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/javascript,*/*'})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              text=r.read(12000000).decode('utf-8','replace')
+          low=text.lower()
+          terms=['getdetailseventaams','getdetailsevent(','getovervieweventsaams','channelid','react_app_betflag_base_url','sportservice.betflag.it']
+          out_terms={}
+          for term in terms:
+              arr=[]; start=0
+              while True:
+                  i=low.find(term.lower(),start)
+                  if i<0: break
+                  arr.append(text[max(0,i-3500):i+6000])
+                  start=i+len(term)
+                  if len(arr)>=40: break
+              out_terms[term]=arr
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'url':url,'occurrences':{k:len(v) for k,v in out_terms.items()},'contexts':out_terms}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-aams-call-sites.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'occurrences':out['occurrences']},indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-aams-call-sites.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract Betflag AAMS call sites'
+          git push
