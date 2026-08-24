@@ -64,7 +64,6 @@ jobs:
             if ' – ' in s:return tuple(s.split(' – ',1))
             return (s,'')
 
-          # GoldBet events already known by the direct movement tracker.
           targets={}
           try:
             mv=json.loads(MOV.read_text(encoding='utf-8'))
@@ -78,20 +77,29 @@ jobs:
           except Exception as e:
             raise SystemExit('Cannot read movement state: '+repr(e))
 
-          # Current football schedule from the same Livesport platform.
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/139.0.0.0 Safari/537.36'
           def http(url,headers=None,cap=8000000):
-            h={'User-Agent':UA,'Accept':'*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8','Referer':'https://www.diretta.it/'}
+            h={'User-Agent':UA,'Accept':'*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8','Referer':'https://www.diretta.it/','x-fsign':'SW9D1eZo'}
             if headers:h.update(headers)
             req=urllib.request.Request(url,headers=h)
             try:
               with urllib.request.urlopen(req,timeout=25) as r:return r.status,r.read(cap).decode('utf-8','replace')
             except urllib.error.HTTPError as e:return e.code,e.read(100000).decode('utf-8','replace')
-            except Exception as e:return None,''
-          status,feed=http('https://www.flashscore.com/x/feed/f_1_0_3_it_1')
-          if status!=200 or 'AA÷' not in feed:
-            status,feed=http('https://www.flashscore.com/x/feed/f_1_0_3_en_1')
-          if status!=200 or 'AA÷' not in feed:raise SystemExit('Flashscore football feed unavailable')
+            except Exception:return None,''
+
+          feed_urls=[
+            'https://www.flashscore.com/x/feed/f_1_0_3_en_1',
+            'https://www.flashscore.com/x/feed/f_1_0_3_it_1',
+            'https://local-global.flashscore.ninja/2/x/feed/f_1_0_3_it_1'
+          ]
+          feed=''; feed_url=None; feed_statuses=[]
+          for u in feed_urls:
+            st,body=http(u)
+            feed_statuses.append({'url':u,'status':st,'bytes':len(body)})
+            if st==200 and 'AA÷' in body:
+              feed=body; feed_url=u; break
+          if not feed:raise SystemExit('Flashscore football feed unavailable: '+json.dumps(feed_statuses))
+
           def fields(sec):
             d={}
             for p in sec.split(chr(0xAC)):
@@ -105,18 +113,15 @@ jobs:
             if 'AA' in f and ('AE' in f or 'AF' in f):
               try:ts=int(f.get('AD') or 0)
               except:ts=0
-              if ts:
-                fs.append({'id':f.get('AA'),'home':f.get('AE'),'away':f.get('AF'),'ts':ts,'tournament':tourn})
+              if ts:fs.append({'id':f.get('AA'),'home':f.get('AE'),'away':f.get('AF'),'ts':ts,'tournament':tourn})
 
-          # Deterministic best match using kickoff + both team names.
           matched=[]; unmatched=[]
           for t in sorted(targets.values(),key=lambda x:x['start_time']):
             th,ta=split_event(t['event']); td=parse_dt(t['start_time']); best=None
             for f in fs:
               fd=datetime.fromtimestamp(f['ts'],timezone.utc); dm=abs((fd-td).total_seconds())/60
               if dm>20:continue
-              hs=side_score(th,f['home']);as_=side_score(ta,f['away'])
-              score=.5*hs+.5*as_
+              hs=side_score(th,f['home']);as_=side_score(ta,f['away']);score=.5*hs+.5*as_
               if min(hs,as_)<.48:continue
               cand=(score,-dm,hs,as_,f)
               if best is None or cand[:2]>best[:2]:best=cand
@@ -128,8 +133,7 @@ jobs:
           base='https://global.ds.lsapp.eu/odds/pq_graphql'
           H={'User-Agent':UA,'Accept':'*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8','Referer':'https://www.diretta.it/','Origin':'https://www.diretta.it'}
           def api(params):
-            url=base+'?'+urllib.parse.urlencode(params)
-            st,body=http(url,H,3000000)
+            url=base+'?'+urllib.parse.urlencode(params); st,body=http(url,H,3000000)
             try:d=json.loads(body) if st==200 else None
             except:d=None
             return st,d
@@ -154,11 +158,9 @@ jobs:
             elif bt=='BOTH_TEAMS_TO_SCORE':
               add('YES',payload.get('yes'));add('NO',payload.get('no'))
             elif bt=='DOUBLE_CHANCE':
-              # Structure varies; preserve any simple named legs if present.
               for k,sel in [('homeDraw','HOME_DRAW'),('homeAway','HOME_AWAY'),('drawAway','DRAW_AWAY')]:add(sel,payload.get(k))
             return rows
 
-          # Only query events not yet certified. TRUE OPEN is immutable once captured.
           todo=[]
           for m in matched:
             prev=old_events.get(m['event_id'])
@@ -183,26 +185,24 @@ jobs:
               bt=it.get('bettingType');bs=it.get('bettingScope');ids=[str(x) for x in (it.get('bookmakerIds') or [])]
               if not bt or not bs or bs!='FULL_TIME' or bt not in ('HOME_DRAW_AWAY','OVER_UNDER','BOTH_TEAMS_TO_SCORE','DOUBLE_CHANCE') or (bt,bs) in seen:continue
               if ids and gbid not in ids:continue
-              seen.add((bt,bs)); ss,dd=api({'_hash':'ope2','eventId':fid,'bookmakerId':gbid,'betType':bt,'betScope':bs})
+              seen.add((bt,bs)); _,dd=api({'_hash':'ope2','eventId':fid,'bookmakerId':gbid,'betType':bt,'betScope':bs})
               payload=((dd or {}).get('data') or {}).get('findPrematchOddsForBookmaker') if isinstance(dd,dict) else None
               if isinstance(payload,dict):rec['rows'].extend(flatten(bt,payload))
             if rec['rows']:
               rec['status']='TRUE_OPEN_CERTIFIED';rec['source']='Diretta/Flashscore ope2';rec['certified_at']=NOW_ISO
             return rec
 
-          with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
-            fresh=list(ex.map(one,todo)) if todo else []
+          with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:fresh=list(ex.map(one,todo)) if todo else []
           events=dict(old_events)
           for r in fresh:events[r['event_id']]=r
-          # Keep only recently relevant/future records.
           keep={}
           for eid,r in events.items():
             dt=parse_dt(r.get('start_time'))
             if dt and dt>=NOW-timedelta(days=7):keep[eid]=r
           events=keep
-          out={'generated_at':NOW_ISO,'method':'Diretta project 400 / Italy IT21 / GoldBet bookmakerId discovered from menu / ope2 opening','source':'Diretta/Flashscore','bookmaker':'GoldBet','bookmaker_id_expected':188,'target_count':len(targets),'flashscore_event_count':len(fs),'matched_count':len(matched),'unmatched_count':len(unmatched),'queried_this_run':len(todo),'certified_this_run':sum(1 for x in fresh if x.get('status')=='TRUE_OPEN_CERTIFIED'),'certified_total':sum(1 for x in events.values() if x.get('status')=='TRUE_OPEN_CERTIFIED'),'unmatched':unmatched[:80],'events':events}
+          out={'generated_at':NOW_ISO,'method':'Diretta project 400 / Italy IT21 / GoldBet bookmakerId from menu / ope2 opening','source':'Diretta/Flashscore','bookmaker':'GoldBet','bookmaker_id_expected':188,'feed_url':feed_url,'feed_statuses':feed_statuses,'target_count':len(targets),'flashscore_event_count':len(fs),'matched_count':len(matched),'unmatched_count':len(unmatched),'queried_this_run':len(todo),'certified_this_run':sum(1 for x in fresh if x.get('status')=='TRUE_OPEN_CERTIFIED'),'certified_total':sum(1 for x in events.values() if x.get('status')=='TRUE_OPEN_CERTIFIED'),'unmatched':unmatched[:80],'events':events}
           OUT.parent.mkdir(exist_ok=True);OUT.write_text(json.dumps(out,ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8')
-          print(json.dumps({k:out[k] for k in ('target_count','flashscore_event_count','matched_count','unmatched_count','queried_this_run','certified_this_run','certified_total')},ensure_ascii=False,indent=2))
+          print(json.dumps({k:out[k] for k in ('feed_url','target_count','flashscore_event_count','matched_count','unmatched_count','queried_this_run','certified_this_run','certified_total')},ensure_ascii=False,indent=2))
           PY
       - name: Commit TRUE OPEN index
         run: |
