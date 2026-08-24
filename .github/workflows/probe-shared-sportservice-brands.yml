@@ -1,0 +1,130 @@
+name: Identify GoldBet brand on shared sportservice
+
+on:
+  push:
+    paths:
+      - 'shared-brand-probe-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compare X-Brand variants on shared sportservice
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request, urllib.error, urllib.parse, re
+          from datetime import datetime, timezone
+
+          host='https://sportservice.betflag.it'
+          brands=list(range(0,11))
+
+          def fetch(url,brand,cap=5000000):
+            headers={
+              'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/139 Safari/537.36',
+              'Accept':'application/json,text/plain,*/*',
+              'x-api-version':'1.0','X-Auth-Token':'','X-Brand':str(brand),'X-IdCanale':'0',
+              'Origin':'https://www.goldbet.it','Referer':'https://www.goldbet.it/'
+            }
+            req=urllib.request.Request(url,headers=headers)
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                body=r.read(cap).decode('utf-8','replace'); return r.status,r.headers.get('content-type'),body
+            except urllib.error.HTTPError as e:
+              return e.code,e.headers.get('content-type'),e.read(150000).decode('utf-8','replace')
+            except Exception as e:
+              return None,None,repr(e)
+
+          def event_summaries(data):
+            events=[]
+            def walk(x):
+              if len(events)>=250: return
+              if isinstance(x,dict):
+                if 'ei' in x and 'en' in x and ('mmkW' in x or 'ti' in x):
+                  markets=[]
+                  mm=x.get('mmkW')
+                  if isinstance(mm,dict): vals=mm.values()
+                  elif isinstance(mm,list): vals=mm
+                  else: vals=[]
+                  for m in vals:
+                    if not isinstance(m,dict): continue
+                    name=m.get('mn'); sels=[]
+                    spd=m.get('spd')
+                    if isinstance(spd,dict): spds=spd.values()
+                    elif isinstance(spd,list): spds=spd
+                    else: spds=[]
+                    for s in spds:
+                      if not isinstance(s,dict): continue
+                      for q in s.get('asl') or []:
+                        if isinstance(q,dict): sels.append({'sn':q.get('sn'),'ov':q.get('ov'),'mti':q.get('mti')})
+                    if name: markets.append({'mn':name,'sels':sels[:8]})
+                  events.append({k:x.get(k) for k in ('si','ei','ti','mi','tai','en','ed','td','cd')} | {'markets':markets[:8]})
+                for v in x.values(): walk(v)
+              elif isinstance(x,list):
+                for v in x: walk(v)
+            walk(data)
+            return events
+
+          rows=[]
+          for brand in brands:
+            rec={'brand':brand}
+            for name,path in [
+              ('program','/api/sport/pregame/getProgram?channelId=0'),
+              ('overview1','/api/sport/pregame/getOverviewDefault/1?channelId=0')
+            ]:
+              status,ctype,body=fetch(host+path,brand)
+              item={'status':status,'ctype':ctype,'bytes':len(body)}
+              try:
+                data=json.loads(body); item['json_type']=type(data).__name__
+                if name=='program':
+                  item['list_count']=len(data) if isinstance(data,list) else None
+                  if isinstance(data,list): item['sports']=[{'id':x.get('id'),'n':x.get('n')} for x in data[:12] if isinstance(x,dict)]
+                else:
+                  ev=event_summaries(data); item['event_count']=len(ev); item['events']=ev[:40]
+                  # Keep exact samples useful for bookmaker matching.
+                  wanted=[]
+                  for e in ev:
+                    nm=str(e.get('en','')).lower()
+                    if any(k in nm for k in ('milan','venezia','real madrid','barcelona','manchester','liverpool','juventus','inter')):
+                      wanted.append(e)
+                  item['wanted_events']=wanted[:20]
+              except Exception:
+                item['prefix']=body[:700]
+              rec[name]=item
+            rows.append(rec)
+
+          # Fingerprint whether brand outputs are identical/different.
+          fingerprints=[]
+          for r in rows:
+            events=r.get('overview1',{}).get('events') or []
+            fp=[]
+            for e in events[:20]:
+              mk=[]
+              for m in e.get('markets') or []:
+                mk.append((m.get('mn'),tuple((s.get('sn'),s.get('ov')) for s in m.get('sels') or [])))
+              fp.append((e.get('ei'),e.get('en'),tuple(mk)))
+            fingerprints.append({'brand':r['brand'],'fingerprint':repr(fp)})
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'host':host,'rows':rows,'fingerprints':fingerprints}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/shared-sportservice-brands.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{
+            'brand':r['brand'],
+            'program_status':r['program'].get('status'),'program_bytes':r['program'].get('bytes'),'sport_count':r['program'].get('list_count'),
+            'overview_status':r['overview1'].get('status'),'overview_bytes':r['overview1'].get('bytes'),'event_count':r['overview1'].get('event_count'),
+            'wanted':r['overview1'].get('wanted_events',[])[:3]
+          } for r in rows],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/shared-sportservice-brands.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Identify GoldBet X-Brand on shared sportservice'
+          git push
