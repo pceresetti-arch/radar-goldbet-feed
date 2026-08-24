@@ -25,152 +25,149 @@ jobs:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error, traceback
           from datetime import datetime, timezone
 
-          key=os.environ.get('ODDSPAPI_KEY','').strip()
-          if not key:
-              raise SystemExit('Missing GitHub Actions secret: ODDSPAPI_KEY')
-
-          t=json.loads(pathlib.Path('oddspapi-trigger.json').read_text(encoding='utf-8'))
-          sport_id=int(t.get('sportId',10))
-          bookmaker=str(t.get('bookmaker','goldbet.it'))
-          terms=t.get('match_terms',[]) or []
-          if isinstance(terms,str): terms=[terms]
-          terms=[str(x).strip().lower() for x in terms if str(x).strip()]
-
-          def epoch(s):
-              s=str(s).replace('Z','+00:00')
-              return int(datetime.fromisoformat(s).timestamp())
-
-          start_from=epoch(t['from'])
-          start_to=epoch(t['to'])
-          BASE='https://v5.oddspapi.io/en'
-
-          def get(path, params):
-              q=dict(params); q['apiKey']=key
-              url=BASE+path+'?'+urllib.parse.urlencode(q)
-              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/5.0'})
-              with urllib.request.urlopen(req,timeout=90) as r:
-                  return json.loads(r.read().decode('utf-8'))
-
-          fixtures=get('/fixtures',{
-              'sportId':sport_id,
-              'bookmakers':bookmaker,
-              'startTimeFrom':start_from,
-              'startTimeTo':start_to,
-          })
-          if not isinstance(fixtures,list): fixtures=[]
-
-          def ftxt(f):
-              p=f.get('participants') or {}
-              tr=f.get('tournament') or {}
-              vals=[p.get('participant1Name'),p.get('participant2Name'),p.get('participant1ShortName'),p.get('participant2ShortName'),tr.get('tournamentName'),tr.get('categoryName')]
-              return ' '.join(str(x) for x in vals if x).lower()
-
-          matches=[f for f in fixtures if all(term in ftxt(f) for term in terms)] if terms else fixtures
           outdir=pathlib.Path('feed'); outdir.mkdir(exist_ok=True)
           now=datetime.now(timezone.utc).isoformat()
-          out={
-              'generated_at':now,
-              'api':'OddsPapi v5',
-              'bookmaker':bookmaker,
-              'match_terms':terms,
-              'fixtures_returned':len(fixtures),
-              'matches_found':len(matches),
-          }
+          t={}
+          out={'generated_at':now,'api':'OddsPapi v5','diagnostic_version':2}
 
-          if not matches:
-              out['sample_fixtures']=[{
-                  'fixtureId':f.get('fixtureId'),
-                  'participant1Name':(f.get('participants') or {}).get('participant1Name'),
-                  'participant2Name':(f.get('participants') or {}).get('participant2Name'),
-                  'tournamentName':(f.get('tournament') or {}).get('tournamentName'),
-                  'startTime':f.get('startTime'),
-              } for f in fixtures[:40]]
-          else:
-              f=matches[0]
-              fid=f.get('fixtureId')
-              od=get('/fixtures/odds',{'fixtureId':fid,'bookmakers':bookmaker})
-              markets=get('/markets',{'sportId':sport_id})
-              mmap={str(m.get('marketId')):m for m in markets if isinstance(m,dict)} if isinstance(markets,list) else {}
-              raw=(od.get('odds') or {}).get(bookmaker,{}) if isinstance(od,dict) else {}
-              if not isinstance(raw,dict): raw={}
+          try:
+              t=json.loads(pathlib.Path('oddspapi-trigger.json').read_text(encoding='utf-8'))
+              key=os.environ.get('ODDSPAPI_KEY','').strip()
+              if not key:
+                  raise RuntimeError('Missing GitHub Actions secret: ODDSPAPI_KEY')
 
-              rows=[]; player_ids=set(); market_ids=set()
-              for odds_id,sel in raw.items():
-                  if not isinstance(sel,dict): continue
-                  mid=sel.get('marketId'); pid=sel.get('playerId')
-                  meta=mmap.get(str(mid),{})
-                  is_player=bool(meta.get('playerProp')) or (pid not in (None,0,'0'))
-                  if not is_player: continue
-                  if pid not in (None,0,'0'): player_ids.add(str(pid))
-                  market_ids.add(str(mid))
-                  rows.append({
-                      'oddsId':str(odds_id),
-                      'marketId':mid,
-                      'marketName':meta.get('marketName'),
-                      'marketNameShort':meta.get('marketNameShort'),
-                      'marketType':meta.get('marketType'),
-                      'period':meta.get('period'),
-                      'playerProp':bool(meta.get('playerProp')),
-                      'playerId':pid,
-                      'outcomeId':sel.get('outcomeId'),
-                      'price':sel.get('price'),
-                      'active':sel.get('active'),
-                      'marketActive':sel.get('marketActive'),
-                      'mainLine':sel.get('mainLine'),
-                      'bookmakerOutcomeId':sel.get('bookmakerOutcomeId'),
-                      'bookmakerMarketId':sel.get('bookmakerMarketId'),
-                      'changedAt':sel.get('changedAt'),
-                  })
+              sport_id=int(t.get('sportId',10))
+              bookmaker=str(t.get('bookmaker','goldbet.it'))
+              terms=t.get('match_terms',[]) or []
+              if isinstance(terms,str): terms=[terms]
+              terms=[str(x).strip().lower() for x in terms if str(x).strip()]
+              out.update({'bookmaker':bookmaker,'match_terms':terms})
 
-              pmap={}
-              ids=sorted(player_ids)
-              for i in range(0,len(ids),100):
-                  pdata=get('/players',{'playerIds':','.join(ids[i:i+100])})
-                  if isinstance(pdata,list):
-                      for p in pdata:
-                          if isinstance(p,dict): pmap[str(p.get('playerId'))]=p.get('playerName')
-              for r in rows:
-                  r['playerName']=pmap.get(str(r.get('playerId')))
+              def epoch(s):
+                  return int(datetime.fromisoformat(str(s).replace('Z','+00:00')).timestamp())
 
-              bm=(od.get('bookmakers') or {}).get(bookmaker,{}) if isinstance(od,dict) else {}
-              out.update({
-                  'fixtureId':fid,
-                  'participant1Name':(od.get('participants') or {}).get('participant1Name'),
-                  'participant2Name':(od.get('participants') or {}).get('participant2Name'),
-                  'tournamentName':(od.get('tournament') or {}).get('tournamentName'),
-                  'startTime':od.get('startTime'),
-                  'bookmakerFixtureId':bm.get('bookmakerFixtureId'),
-                  'fixturePath':bm.get('fixturePath'),
-                  'hasOdds':bm.get('hasOdds'),
-                  'suspended':bm.get('suspended'),
-                  'total_goldbet_selections':len(raw),
-                  'player_selection_count':len(rows),
-                  'player_market_ids':sorted(market_ids),
-                  'player_selections':rows,
+              BASE='https://v5.oddspapi.io/en'
+              calls=[]
+
+              def get(path, params):
+                  q=dict(params); q['apiKey']=key
+                  safe=dict(params); safe['apiKey']='[SECRET]'
+                  url=BASE+path+'?'+urllib.parse.urlencode(q)
+                  req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/5.1'})
+                  try:
+                      with urllib.request.urlopen(req,timeout=90) as r:
+                          body=r.read().decode('utf-8','replace')
+                          calls.append({'path':path,'params':safe,'status':r.status,'content_type':r.headers.get('content-type'),'body_prefix':body[:500]})
+                          return json.loads(body)
+                  except urllib.error.HTTPError as e:
+                      body=e.read().decode('utf-8','replace')
+                      calls.append({'path':path,'params':safe,'status':e.code,'content_type':e.headers.get('content-type'),'body_prefix':body[:1200]})
+                      raise RuntimeError(f'{path} HTTP {e.code}: {body[:500]}')
+
+              fixtures=get('/fixtures',{
+                  'sportId':sport_id,
+                  'bookmakers':bookmaker,
+                  'startTimeFrom':epoch(t['from']),
+                  'startTimeTo':epoch(t['to']),
               })
+              out['fixtures_response_type']=type(fixtures).__name__
+              if isinstance(fixtures,dict):
+                  out['fixtures_response_keys']=list(fixtures.keys())[:30]
+                  fixtures=fixtures.get('data') or fixtures.get('fixtures') or []
+              if not isinstance(fixtures,list): fixtures=[]
+              out['fixtures_returned']=len(fixtures)
+
+              def nested_name(f,key):
+                  p=f.get('participants') or {}
+                  return p.get(key) or f.get(key)
+              def tournament_name(f):
+                  tr=f.get('tournament') or {}
+                  return tr.get('tournamentName') or f.get('tournamentName')
+              def ftxt(f):
+                  vals=[nested_name(f,'participant1Name'),nested_name(f,'participant2Name'),nested_name(f,'participant1ShortName'),nested_name(f,'participant2ShortName'),tournament_name(f),f.get('categoryName')]
+                  return ' '.join(str(x) for x in vals if x).lower()
+
+              matches=[f for f in fixtures if all(term in ftxt(f) for term in terms)] if terms else fixtures
+              out['matches_found']=len(matches)
+              out['fixture_candidates']=[{
+                  'fixtureId':f.get('fixtureId'),
+                  'participant1Name':nested_name(f,'participant1Name'),
+                  'participant2Name':nested_name(f,'participant2Name'),
+                  'tournamentName':tournament_name(f),
+                  'startTime':f.get('startTime'),
+              } for f in matches[:15]]
+
+              if matches:
+                  f=matches[0]; fid=f.get('fixtureId')
+                  od=get('/fixtures/odds',{'fixtureId':fid,'bookmakers':bookmaker})
+                  markets=get('/markets',{'sportId':sport_id})
+                  if isinstance(markets,dict): markets=markets.get('data') or markets.get('markets') or []
+                  mmap={str(m.get('marketId')):m for m in markets if isinstance(m,dict)} if isinstance(markets,list) else {}
+
+                  out['odds_response_type']=type(od).__name__
+                  out['odds_response_keys']=list(od.keys())[:40] if isinstance(od,dict) else []
+                  raw_odds=od.get('odds') or {} if isinstance(od,dict) else {}
+                  out['odds_top_keys']=list(raw_odds.keys())[:40] if isinstance(raw_odds,dict) else []
+                  raw=raw_odds.get(bookmaker,{}) if isinstance(raw_odds,dict) else {}
+                  if not isinstance(raw,dict): raw={}
+
+                  rows=[]; player_ids=set(); market_ids=set()
+                  for odds_id,sel in raw.items():
+                      if not isinstance(sel,dict): continue
+                      mid=sel.get('marketId'); pid=sel.get('playerId')
+                      meta=mmap.get(str(mid),{})
+                      if not (bool(meta.get('playerProp')) or pid not in (None,0,'0')): continue
+                      if pid not in (None,0,'0'): player_ids.add(str(pid))
+                      market_ids.add(str(mid))
+                      rows.append({
+                          'oddsId':str(odds_id),'marketId':mid,
+                          'marketName':meta.get('marketName'),'marketNameShort':meta.get('marketNameShort'),
+                          'marketType':meta.get('marketType'),'period':meta.get('period'),'playerProp':bool(meta.get('playerProp')),
+                          'playerId':pid,'outcomeId':sel.get('outcomeId'),'price':sel.get('price'),
+                          'active':sel.get('active'),'marketActive':sel.get('marketActive'),'mainLine':sel.get('mainLine'),
+                          'bookmakerOutcomeId':sel.get('bookmakerOutcomeId'),'bookmakerMarketId':sel.get('bookmakerMarketId'),'changedAt':sel.get('changedAt')
+                      })
+
+                  pmap={}; ids=sorted(player_ids)
+                  for i in range(0,len(ids),100):
+                      pdata=get('/players',{'playerIds':','.join(ids[i:i+100])})
+                      if isinstance(pdata,dict): pdata=pdata.get('data') or pdata.get('players') or []
+                      if isinstance(pdata,list):
+                          for p in pdata:
+                              if isinstance(p,dict): pmap[str(p.get('playerId'))]=p.get('playerName')
+                  for r in rows: r['playerName']=pmap.get(str(r.get('playerId')))
+
+                  bm=(od.get('bookmakers') or {}).get(bookmaker,{}) if isinstance(od,dict) else {}
+                  out.update({
+                      'fixtureId':fid,
+                      'participant1Name':nested_name(od,'participant1Name') if isinstance(od,dict) else None,
+                      'participant2Name':nested_name(od,'participant2Name') if isinstance(od,dict) else None,
+                      'bookmakerFixtureId':bm.get('bookmakerFixtureId'),'fixturePath':bm.get('fixturePath'),
+                      'hasOdds':bm.get('hasOdds'),'suspended':bm.get('suspended'),
+                      'total_goldbet_selections':len(raw),'player_selection_count':len(rows),
+                      'player_market_ids':sorted(market_ids),'player_selections':rows,
+                  })
+              out['calls']=calls
+
+          except Exception as e:
+              out['error']=str(e)
+              out['traceback']=traceback.format_exc()[-5000:]
+              if 'calls' in locals(): out['calls']=calls
 
           outdir.joinpath('oddspapi-summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          meta={
-              'generated_at':now,
-              'trigger_id':t.get('trigger_id'),
-              'api':'OddsPapi v5',
-              'bookmaker':bookmaker,
-              'from':t.get('from'),'to':t.get('to'),'match_terms':terms,
-          }
+          meta={'generated_at':now,'trigger_id':t.get('trigger_id'),'api':'OddsPapi v5','diagnostic_version':2,'from':t.get('from'),'to':t.get('to'),'match_terms':t.get('match_terms',[])}
           outdir.joinpath('oddspapi-meta.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
 
       - name: Commit OddsPapi feed
+        if: always()
         run: |
           git config user.name "radar-goldbet-bot"
           git config user.email "radar-goldbet-bot@users.noreply.github.com"
           git add feed/oddspapi-summary.json feed/oddspapi-meta.json
-          if git diff --cached --quiet; then
-            echo "OddsPapi feed unchanged"
-            exit 0
-          fi
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m "Refresh OddsPapi v5 GoldBet player feed"
           git push
