@@ -1,0 +1,51 @@
+name: Tiny player market summary
+
+on:
+  push:
+    paths:
+      - 'player-market-tiny-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Reduce player AAMS result to markets and prices
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          src=json.loads(pathlib.Path('feed/correct-player-aams-pipeline.json').read_text(encoding='utf-8'))
+          out={'overviews':[],'details':[]}
+          for x in src.get('player_overviews',[])[:6]:
+            out['overviews'].append({
+              'candidate_tai':x.get('candidate_tai'),'tab':x.get('tab'),'section':x.get('section'),
+              'success':x.get('success'),'leo_count':x.get('leo_count'),'lmtW_count':x.get('lmtW_count'),
+              'market_names':x.get('market_names',[])[:80],
+              'tabs':x.get('tabs',[])[:30],
+              'selection_samples':x.get('selection_samples',[])[:80],
+              'player_hits':x.get('player_hits',[])[:40]
+            })
+          for x in src.get('best_details',[])[:8]:
+            out['details'].append({
+              'event':x.get('event'),'macroTab':x.get('macroTab'),'section':x.get('section'),
+              'success':x.get('success'),'leo_count':x.get('leo_count'),'lmtW_count':x.get('lmtW_count'),
+              'market_names':x.get('market_names',[])[:100],
+              'selection_samples':x.get('selection_samples',[])[:140],
+              'tabs':x.get('tabs',[])[:40],
+              'player_hits':x.get('player_hits',[])[:80]
+            })
+          pathlib.Path('feed/player-market-tiny-summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:30000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-market-tiny-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Summarize player market names and prices'
+          git push
