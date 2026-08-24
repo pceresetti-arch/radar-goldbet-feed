@@ -1,0 +1,73 @@
+name: Direct ODSS player-props probe
+
+on:
+  push:
+    paths:
+      - 'direct-odss-player-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test available secrets without exposing keys
+        env:
+          ODSS_API_KEY: ${{ secrets.ODSS_API_KEY }}
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          endpoint='https://odss-api.com/api/v1/odds'
+          params={'bookmakers':'goldbet','state':'prematch','content':'player','sport':'calcio','limit':'5','offset':'0'}
+          url=endpoint+'?'+urllib.parse.urlencode(params)
+          candidates=['ODSS_API_KEY','ODDSPAPI_KEY','ODDS_API_KEY','BRIDGE_TOKEN']
+          results=[]
+          for name in candidates:
+            key=os.environ.get(name,'').strip()
+            item={'secret_name':name,'configured':bool(key)}
+            if not key:
+              results.append(item); continue
+            req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarDirectODSS/1.0','x-api-key':key})
+            try:
+              with urllib.request.urlopen(req,timeout=45) as r:
+                body=r.read().decode('utf-8','replace'); item['status']=r.status
+            except urllib.error.HTTPError as e:
+              item['status']=e.code; body=e.read().decode('utf-8','replace')
+            except Exception as e:
+              item['error']=type(e).__name__; results.append(item); continue
+            try:
+              data=json.loads(body)
+              item['error_message']=data.get('error') if isinstance(data,dict) else None
+              item['count']=data.get('count') if isinstance(data,dict) else None
+              rows=data.get('odds',[]) if isinstance(data,dict) else []
+              item['returned']=data.get('returned',len(rows)) if isinstance(data,dict) else None
+              item['player_rows']=sum(1 for x in rows if isinstance(x,dict) and x.get('player'))
+              item['samples']=[{
+                'event':x.get('event'),'market':x.get('market'),'player':x.get('player'),'line':x.get('line'),
+                'scope':x.get('scope'),'period':x.get('period'),'bookmakers':x.get('bookmakers')
+              } for x in rows[:5] if isinstance(x,dict)]
+            except Exception:
+              item['body_prefix']=body[:500]
+            results.append(item)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'url_without_key':url,'results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/direct-odss-player-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/direct-odss-player-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe ODSS player props directly'
+          git push
