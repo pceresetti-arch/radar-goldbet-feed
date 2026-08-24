@@ -1,0 +1,74 @@
+name: Discover GBO sports endpoints from public APK
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk-endpoint-discovery.yml'
+      - 'apk-endpoint-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download public Lottomatica betting APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://repo.lottomaticagroup.com/intplatform/app/download/lottomatica-betting.apk'
+          curl -fL --retry 3 --connect-timeout 20 --max-time 180 "$URL" -o /tmp/app.apk
+          echo "apk_bytes=$(stat -c%s /tmp/app.apk)"
+          mkdir -p /tmp/apk
+          unzip -q /tmp/app.apk -d /tmp/apk
+      - name: Extract likely sports API strings
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p feed
+          : > /tmp/allstrings.txt
+          find /tmp/apk -type f -size -40M -print0 | while IFS= read -r -d '' f; do
+            strings -a -n 5 "$f" >> /tmp/allstrings.txt || true
+          done
+          python - <<'PY'
+          import json,re,pathlib
+          txt=pathlib.Path('/tmp/allstrings.txt').read_text(errors='ignore')
+          lines=[]
+          needles=('getdetailseventaams','/api/sport/','pregame','aams','giocatori','marcatori','player','sportservice','serviceconfiguration','wsf','betflag','goldbet','lottomatica')
+          for raw in txt.splitlines():
+              s=raw.strip()
+              l=s.lower()
+              if 5 <= len(s) <= 500 and any(n in l for n in needles):
+                  lines.append(s)
+          urls=[]
+          for m in re.finditer(r'https?://[^\s"\'<>]{5,300}',txt,re.I):
+              u=m.group(0).rstrip('),;]}')
+              lu=u.lower()
+              if any(k in lu for k in ('sport','bet','lottomatica','goldbet','aams','api','wsf')):
+                  urls.append(u)
+          def uniq(xs):
+              out=[]; seen=set()
+              for x in xs:
+                  if x not in seen:
+                      seen.add(x); out.append(x)
+              return out
+          data={
+              'source':'public lottomatica-betting.apk',
+              'matched_lines':uniq(lines)[:4000],
+              'urls':uniq(urls)[:2000]
+          }
+          pathlib.Path('feed/apk-endpoint-discovery.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
+          print('matched_lines',len(data['matched_lines']),'urls',len(data['urls']))
+          PY
+      - name: Commit discovery result
+        shell: bash
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/apk-endpoint-discovery.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Discover GBO sports API endpoints from APK'
+          git push
