@@ -1,0 +1,29 @@
+name: Self-test radar-goldbet Worker
+
+on:
+  push:
+    paths:
+      - 'worker-selftest-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify player-prop query forwarding
+        run: |
+          mkdir -p feed
+          node scripts/selftest-worker-forwarding.mjs > feed/worker-forwarding-selftest.json
+          cat feed/worker-forwarding-selftest.json
+      - name: Commit self-test result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/worker-forwarding-selftest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Verify Radar Worker player-prop forwarding'
+          git push
