@@ -1,0 +1,74 @@
+name: Probe Betflag prematch event search
+
+on:
+  push:
+    paths:
+      - 'betflag-search-events-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Search current prematch football events
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          url='https://sportservice.betflag.it/api/sport/pregame/searchEvents/APP?channelId=0'
+          headers={
+            'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','Content-Type':'application/json',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+          }
+          queries=['Málaga','Deportivo','Manchester','Liverpool','Chelsea','Real','Barcelona','Milan','Inter','Juventus']
+          results=[]
+          for q in queries:
+            data=json.dumps({'evtToSearch':q},ensure_ascii=False).encode('utf-8')
+            req=urllib.request.Request(url,data=data,headers=headers,method='POST')
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                body=r.read(4000000).decode('utf-8','replace'); status=r.status; ctype=r.headers.get('content-type')
+            except urllib.error.HTTPError as e:
+              status=e.code; ctype=e.headers.get('content-type'); body=e.read(200000).decode('utf-8','replace')
+            except Exception as e:
+              results.append({'query':q,'error':type(e).__name__+': '+str(e)[:250]}); continue
+            rec={'query':q,'status':status,'content_type':ctype,'bytes':len(body)}
+            try:
+              obj=json.loads(body); rec['json_type']=type(obj).__name__
+              # Find event-like dictionaries and preserve their exact compact fields.
+              found=[]
+              def walk(x,path=''):
+                if len(found)>=250: return
+                if isinstance(x,dict):
+                  ks=set(x)
+                  if any(k in ks for k in ('ei','eventId','idEvent','id')) and any(k in ks for k in ('en','eventName','title','teams','ed','evDate')):
+                    found.append({'path':path,'obj':x})
+                  for k,v in x.items(): walk(v,path+'.'+str(k))
+                elif isinstance(x,list):
+                  for i,v in enumerate(x): walk(v,path+f'[{i}]')
+              walk(obj)
+              rec['found_count']=len(found); rec['events']=found[:120]
+              rec['keys']=list(obj.keys())[:100] if isinstance(obj,dict) else None
+              rec['body_prefix']=body[:120000]
+            except Exception:
+              rec['body_prefix']=body[:20000]
+            results.append(rec)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-search-events.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{k:r.get(k) for k in ('query','status','bytes','json_type','found_count','error')} for r in results],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-search-events.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe Betflag prematch event search'
+          git push
