@@ -1,0 +1,76 @@
+name: OddsPapi participant lookup test
+
+on:
+  push:
+    paths:
+      - oddspapi-participant-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lookup teams and GoldBet odds
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request
+          from datetime import datetime, timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          if not key: raise SystemExit('Missing ODDSPAPI_KEY')
+          t=json.loads(pathlib.Path('oddspapi-participant-trigger.json').read_text())
+          base='https://api.oddspapi.io/v4'
+          def get(path,params):
+              p=dict(params); p['apiKey']=key
+              req=urllib.request.Request(base+path+'?'+urllib.parse.urlencode(p),headers={'Accept':'application/json','User-Agent':'RadarGoldBet/3.0'})
+              with urllib.request.urlopen(req,timeout=90) as r:return json.loads(r.read().decode())
+          participants=get('/participants',{'sportId':10,'language':'en'})
+          neom=[(pid,name) for pid,name in participants.items() if 'neom' in str(name).lower()]
+          qadis=[(pid,name) for pid,name in participants.items() if 'qadis' in str(name).lower() or 'qadisi' in str(name).lower() or 'qades' in str(name).lower()]
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'neom_participants':neom,'qadis_participants':qadis,'matches':[]}
+          if neom:
+              pid=neom[0][0]
+              fr=get('/fixtures',{'participantId':pid,'from':t['from'],'to':t['to'],'language':'en'})
+              fixtures=fr if isinstance(fr,list) else fr.get('data',[]) if isinstance(fr,dict) else []
+              out['fixtures_for_neom']=fixtures
+              matches=[]
+              for f in fixtures:
+                  text=' '.join(str(f.get(k) or '') for k in ['participant1Name','participant2Name']).lower()
+                  if 'qadis' in text or 'qadisi' in text or 'qades' in text: matches.append(f)
+              out['matches']=matches
+              if matches:
+                  fid=matches[0]['fixtureId']
+                  odds=get('/odds',{'fixtureId':fid,'bookmakers':'goldbet.it','language':'en','oddsFormat':'decimal','verbosity':3})
+                  markets=get('/markets',{'language':'en'})
+                  cat=markets if isinstance(markets,list) else markets.get('data',[]) if isinstance(markets,dict) else []
+                  mmap={str(m.get('marketId')):m for m in cat if isinstance(m,dict)}
+                  book=(odds.get('bookmakerOdds') or {}).get('goldbet.it',{}) if isinstance(odds,dict) else {}
+                  rms=book.get('markets') or {}
+                  player=[]; market_summary=[]
+                  for mid,md in rms.items():
+                      meta=mmap.get(str(mid),{})
+                      count=0
+                      for oid,od in (md.get('outcomes') or {}).items():
+                          for player_id,s in (od.get('players') or {}).items():
+                              if not isinstance(s,dict): continue
+                              if s.get('playerName'):
+                                  count+=1
+                                  player.append({'marketId':str(mid),'marketName':meta.get('marketName'),'marketType':meta.get('marketType'),'period':meta.get('period'),'outcomeId':str(oid),'playerId':str(player_id),'playerName':s.get('playerName'),'price':s.get('price'),'active':s.get('active'),'bookmakerOutcomeId':s.get('bookmakerOutcomeId'),'changedAt':s.get('changedAt')})
+                      market_summary.append({'marketId':str(mid),'marketName':meta.get('marketName'),'marketType':meta.get('marketType'),'period':meta.get('period'),'playerProp':bool(meta.get('playerProp')),'playerSelections':count})
+                  out['odds_result']={'fixtureId':fid,'bookmakerFixtureId':book.get('bookmakerFixtureId'),'fixturePath':book.get('fixturePath'),'market_count':len(rms),'player_selection_count':len(player),'player_selections':player,'markets':market_summary}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/oddspapi-participant.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit result
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/oddspapi-participant.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh OddsPapi participant test"
+          git push
