@@ -1,0 +1,89 @@
+name: Map player events to market odds
+
+on:
+  push:
+    paths:
+      - 'map-player-market-odds-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Map every player event to its market and price
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request
+          from datetime import datetime,timezone
+
+          url='https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/21/29300/0/0/0?channelId=0'
+          req=urllib.request.Request(url,headers={
+            'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+          })
+          with urllib.request.urlopen(req,timeout=30) as r:
+            root=json.loads(r.read(12000000).decode('utf-8','replace'))
+
+          rows=[]
+          for ev in root.get('leo') or []:
+            if not isinstance(ev,dict): continue
+            base={k:ev.get(k) for k in ('ei','en','ed','ti','ci','mi','tai','sn','cd','nmK')}
+            mm=ev.get('mmkW')
+            markets=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+            for market in markets:
+              if not isinstance(market,dict): continue
+              mname=market.get('mn') or market.get('mnd') or ''
+              spd=market.get('spd')
+              spreads=spd.values() if isinstance(spd,dict) else (spd if isinstance(spd,list) else [])
+              had=False
+              for spread in spreads:
+                if not isinstance(spread,dict): continue
+                for sel in spread.get('asl') or []:
+                  if not isinstance(sel,dict): continue
+                  had=True
+                  rows.append({
+                    **base,
+                    'market':mname,
+                    'slI':market.get('slI'),'sslI':market.get('sslI'),'pl':market.get('pl'),
+                    'spread':spread.get('sl'),'selection':sel.get('sn'),'odd':sel.get('ov'),
+                    'selection_id':sel.get('si'),'selection_type':sel.get('sti'),'market_type':sel.get('mti'),
+                    'market_id':sel.get('mi'),'odds_id':sel.get('oi')
+                  })
+              if not had:
+                rows.append({**base,'market':mname,'slI':market.get('slI'),'sslI':market.get('sslI'),'pl':market.get('pl'),'selection':None,'odd':None})
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'source':url,
+            'success':root.get('success'),'tn':root.get('tn'),'tai':root.get('tai'),
+            'event_count':len(root.get('leo') or []),'row_count':len(rows),
+            'markets':sorted({str(x.get('market')).strip() for x in rows if x.get('market')}),
+            'rows':rows
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-market-odds-map.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          # Human-sized proof: selected named players plus first rows.
+          wanted=('Andrea Colpani','Dany Mota','Keita Balde','Patrick Cutrone')
+          proof=[]
+          for name in wanted:
+            proof.extend([x for x in rows if name.lower() in str(x.get('en','')).lower()])
+          proof += [x for x in rows[:12] if x not in proof]
+          small={k:out[k] for k in ('success','tn','tai','event_count','row_count','markets')}
+          small['proof']=proof[:40]
+          pathlib.Path('feed/player-market-odds-proof.json').write_text(json.dumps(small,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(small,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-market-odds-map.json feed/player-market-odds-proof.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Map player events to markets and odds'
+          git push
