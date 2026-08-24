@@ -1,0 +1,134 @@
+name: Correct AAMS player pipeline
+
+on:
+  push:
+    paths:
+      - 'correct-player-aams-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Resolve player overview and detail with correct parameter order
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+
+          def get(path,cap=10000000):
+            u=BASE+'/'+path.lstrip('/')
+            try:
+              with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:
+                b=r.read(cap).decode('utf-8','replace'); return {'url':u,'status':r.status,'body':b}
+            except urllib.error.HTTPError as e:
+              return {'url':u,'status':e.code,'body':e.read(300000).decode('utf-8','replace')}
+            except Exception as e:
+              return {'url':u,'error':type(e).__name__+': '+str(e)[:250],'body':''}
+
+          def parse(rec,keep=False):
+            b=rec.get('body',''); out={'url':rec.get('url'),'status':rec.get('status'),'error':rec.get('error'),'bytes':len(b)}
+            try:
+              o=json.loads(b); out['json_type']=type(o).__name__
+              if isinstance(o,dict):
+                out.update({'success':o.get('success'),'tai':o.get('tai'),'tn':o.get('tn'),'eventId':o.get('eventId'),'leo_count':len(o.get('leo') or []),'lmtW_count':len(o.get('lmtW') or [])})
+              events=[]; markets=[]; sels=[]; tabs=[]; hits=[]
+              def walk(x,path=''):
+                if isinstance(x,dict):
+                  if 'ei' in x and 'en' in x:
+                    events.append({k:x.get(k) for k in ('si','ei','pi','ti','ci','mi','tai','en','ed','td','sn','cd','nmK','oc','evTag')})
+                  if isinstance(x.get('mn'),str): markets.append(x['mn'])
+                  if isinstance(x.get('sn'),str) and 'ov' in x: sels.append({'sn':x.get('sn'),'ov':x.get('ov'),'si':x.get('si'),'sti':x.get('sti'),'mti':x.get('mti'),'mi':x.get('mi'),'oi':x.get('oi')})
+                  if 'tbI' in x and ('tbN' in x or 'lotb' in x): tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','isbb','si')})
+                  flat=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float))).lower()
+                  if any(k in flat for k in ('marcat','scorer','giocator','player','assist','tiro','tiri','porta','sostituto','mvp','pulisic','lautaro','leao','leão')):
+                    hits.append({'path':path,'obj':{k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))}})
+                  for k,v in x.items(): walk(v,path+'.'+str(k))
+                elif isinstance(x,list):
+                  for i,v in enumerate(x): walk(v,path+f'[{i}]')
+              walk(o)
+              out['events']=events[:150]
+              out['market_names']=list(dict.fromkeys(markets))[:250]
+              out['selection_samples']=sels[:350]
+              out['tabs']=list({(x.get('tbI'),x.get('tbN'),x.get('pl'),x.get('isbb')):x for x in tabs}.values())[:120]
+              out['player_hits']=hits[:120]
+              out['player_signal_count']=len(hits)
+              if keep: out['object']=o
+            except Exception:
+              out['body_prefix']=b[:15000]
+            return out
+
+          results={'generated_at':datetime.now(timezone.utc).isoformat()}
+
+          # Sanity check the corrected positional mapping: fTime / idDisc / tai / idTourn / idTab / idSlot / section.
+          standard=[]
+          for tab,slot in ((0,0),(2454,13617)):
+            standard.append(parse(get(f'getOverviewEventsAams/0/1/21/93/{tab}/{slot}/0?channelId=0')))
+          results['standard_sanity']=standard
+
+          # Dedicated Giocatori Calcio: idDisc=-1, category is not passed here; tournament is the player tournament 29300.
+          player=[]
+          for tai in (21,79,0):
+            for tab,slot in ((0,0),(-999,0)):
+              for section in (0,1):
+                rec=parse(get(f'getOverviewEventsAams/0/-1/{tai}/29300/{tab}/{slot}/{section}?channelId=0'),keep=True)
+                rec.update({'candidate_tai':tai,'tab':tab,'slot':slot,'section':section})
+                player.append(rec)
+          player.sort(key=lambda x:(x.get('leo_count',0),len(x.get('events',[])),x.get('player_signal_count',0),x.get('bytes',0)),reverse=True)
+          results['player_overviews']=[]
+
+          detail_attempts=[]
+          for rec in player:
+            obj=rec.pop('object',None)
+            results['player_overviews'].append(rec)
+            if not obj or not rec.get('events'): continue
+            # Get candidate tab IDs exposed by the player overview; always include 0.
+            tabs=[0]
+            for t in rec.get('tabs',[]):
+              v=t.get('tbI')
+              if v is not None and v not in tabs: tabs.append(v)
+            for ev in rec['events'][:4]:
+              ei=ev.get('ei'); mi=ev.get('mi'); ti=ev.get('ti') or 29300; tai=ev.get('tai') if ev.get('tai') is not None else rec.get('tai') or rec.get('candidate_tai')
+              if not all(v is not None for v in (ei,mi,ti,tai)): continue
+              for mt in tabs[:4]:
+                for section in (rec.get('section',0),1,0):
+                  d=parse(get(f'getDetailsEventAams/{tai}/{ti}/{mi}/{ei}/{mt}/{section}?channelId=0'))
+                  d.update({'source_overview':{'tai':rec.get('candidate_tai'),'tab':rec.get('tab'),'slot':rec.get('slot'),'section':rec.get('section')},'event':ev,'macroTab':mt,'section':section})
+                  detail_attempts.append(d)
+                  if d.get('leo_count',0)>0 and (d.get('player_signal_count',0)>0 or len(d.get('selection_samples',[]))>10):
+                    break
+                if detail_attempts and detail_attempts[-1].get('leo_count',0)>0 and (detail_attempts[-1].get('player_signal_count',0)>0 or len(detail_attempts[-1].get('selection_samples',[]))>10): break
+              if any(d.get('leo_count',0)>0 and d.get('player_signal_count',0)>0 for d in detail_attempts[-12:]): break
+            if any(d.get('leo_count',0)>0 and d.get('player_signal_count',0)>0 for d in detail_attempts): break
+
+          detail_attempts.sort(key=lambda x:(x.get('player_signal_count',0),x.get('leo_count',0),len(x.get('selection_samples',[])),x.get('bytes',0)),reverse=True)
+          results['best_details']=detail_attempts[:8]
+          results['detail_attempts_count']=len(detail_attempts)
+
+          # Remove any accidentally large object fields before saving.
+          p=pathlib.Path('feed'); p.mkdir(exist_ok=True)
+          (p/'correct-player-aams-pipeline.json').write_text(json.dumps(results,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={
+            'standard_sanity':[{k:x.get(k) for k in ('status','bytes','success','leo_count','lmtW_count','tai','tn','events','market_names','tabs','error')} for x in standard],
+            'player_overviews':[{k:x.get(k) for k in ('candidate_tai','tab','slot','section','status','bytes','success','leo_count','lmtW_count','tai','tn','events','market_names','selection_samples','tabs','player_signal_count','player_hits','error')} for x in results['player_overviews'][:8]],
+            'best_details':results['best_details'][:5],
+            'detail_attempts_count':len(detail_attempts)
+          }
+          (p/'correct-player-aams-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:50000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/correct-player-aams-pipeline.json feed/correct-player-aams-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Resolve player props with corrected AAMS parameter order'
+          git push
