@@ -1,0 +1,68 @@
+name: OddsPapi Malmo Djurgarden player proof
+
+on:
+  push:
+    paths:
+      - oddspapi-malmo-djurgarden-player-proof-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find match and inspect GoldBet player props
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error, time
+          from datetime import datetime, timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          cfg=json.loads(pathlib.Path('oddspapi-malmo-djurgarden-player-proof-trigger.json').read_text())
+          base='https://api.oddspapi.io/v4'
+          def get(path,params):
+              p=dict(params); p['apiKey']=key
+              req=urllib.request.Request(base+path+'?'+urllib.parse.urlencode(p),headers={'Accept':'application/json','User-Agent':'RadarGoldBet/4.3'})
+              with urllib.request.urlopen(req,timeout=90) as r: return json.loads(r.read().decode())
+          fixtures=get('/fixtures',{'sportId':10,'from':cfg['from'],'to':cfg['to'],'language':'en'})
+          if isinstance(fixtures,dict): fixtures=fixtures.get('data') or []
+          terms=['malmo','djurg']
+          def text(f): return ' '.join(str(f.get(k) or '') for k in ['participant1Name','participant2Name','participant1ShortName','participant2ShortName','tournamentName']).lower().replace('ö','o')
+          matches=[f for f in fixtures if all(t in text(f) for t in terms)]
+          markets=get('/markets',{'language':'en'})
+          cat=markets if isinstance(markets,list) else markets.get('data',[]) if isinstance(markets,dict) else []
+          mmap={str(m.get('marketId')):m for m in cat if isinstance(m,dict)}
+          results=[]
+          for f in matches[:3]:
+              fid=f.get('fixtureId')
+              time.sleep(0.6)
+              try: odds=get('/odds',{'fixtureId':fid,'bookmakers':'goldbet.it','language':'en','verbosity':3})
+              except Exception as e:
+                  results.append({'fixtureId':fid,'event':text(f),'error':repr(e)}); continue
+              b=(odds.get('bookmakerOdds') or {}).get('goldbet.it',{})
+              raw=b.get('markets') or {}
+              rows=[]; pms=[]
+              for mid,md in raw.items():
+                  meta=mmap.get(str(mid),{})
+                  if meta.get('playerProp'): pms.append({'marketId':str(mid),'marketName':meta.get('marketName'),'marketType':meta.get('marketType'),'period':meta.get('period')})
+                  for oid,od in ((md or {}).get('outcomes') or {}).items():
+                      for pid,sel in ((od or {}).get('players') or {}).items():
+                          if isinstance(sel,dict) and (sel.get('playerName') or str(pid) not in ('0','None','')):
+                              rows.append({'marketId':str(mid),'marketName':meta.get('marketName'),'outcomeId':str(oid),'playerId':str(pid),'playerName':sel.get('playerName'),'price':sel.get('price'),'active':sel.get('active')})
+              results.append({'fixtureId':fid,'participant1Name':odds.get('participant1Name'),'participant2Name':odds.get('participant2Name'),'statusId':odds.get('statusId'),'bookmakerFixtureId':b.get('bookmakerFixtureId'),'fixturePath':b.get('fixturePath'),'market_count':len(raw),'player_prop_market_count':len(pms),'player_selection_count':len(rows),'player_prop_markets':pms,'player_selections':rows[:300]})
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'fixtures_returned':len(fixtures),'matches_found':len(matches),'matches':matches[:5],'results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/oddspapi-malmo-djurgarden-player-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit proof
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/oddspapi-malmo-djurgarden-player-proof.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Check Malmo Djurgarden GoldBet player props"
+          git push
