@@ -1,0 +1,103 @@
+name: Probe Betflag feed manager
+
+on:
+  push:
+    paths:
+      - 'betflag-feedmanager-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Inspect frontend references and feed API
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          assets=[
+            'https://cdn-ltm.betflag.it/site/scripts/site.min.js?111',
+            'https://cdn-ltm.betflag.it/site/mobile/scripts/mobileB4.min.js?111',
+            'https://cdn-ltm.betflag.it/site/scripts/newhome.min.js?111',
+            'https://cdn-ltm.betflag.it/site/scripts/sport/sport-message-handler.min.js?111',
+            'https://cdn-ltm.betflag.it/site/scripts/utils.min.js?111'
+          ]
+          base='https://feedmanager.betflag.it'
+          endpoints=['/','/api/feed','/swagger','/swagger/index.html','/swagger/v1/swagger.json','/openapi.json','/api']
+
+          def request(url,method='GET',body=None,headers=None,cap=500000):
+            h={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,text/html,*/*'}
+            if headers: h.update(headers)
+            data=body.encode() if isinstance(body,str) else body
+            req=urllib.request.Request(url,data=data,headers=h,method=method)
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                raw=r.read(cap)
+                return {'url':url,'method':method,'status':r.status,'content_type':r.headers.get('content-type'),
+                        'allow':r.headers.get('allow'),'access_control_allow_methods':r.headers.get('access-control-allow-methods'),
+                        'body':raw.decode('utf-8','replace')}
+            except urllib.error.HTTPError as e:
+              raw=e.read(min(cap,100000))
+              return {'url':url,'method':method,'status':e.code,'content_type':e.headers.get('content-type'),
+                      'allow':e.headers.get('allow'),'access_control_allow_methods':e.headers.get('access-control-allow-methods'),
+                      'body':raw.decode('utf-8','replace')}
+            except Exception as e:
+              return {'url':url,'method':method,'error':type(e).__name__+': '+str(e)[:300],'body':''}
+
+          frontend=[]
+          for url in assets:
+            rec=request(url,cap=2500000)
+            text=rec.get('body',''); low=text.lower(); snippets=[]
+            for needle in ['feedmanager.betflag.it','/api/feed','feedmanager']:
+              start=0
+              while True:
+                i=low.find(needle,start)
+                if i<0: break
+                snippets.append(text[max(0,i-1200):i+2200])
+                start=i+len(needle)
+                if len(snippets)>=12: break
+            if snippets:
+              frontend.append({'url':url,'status':rec.get('status'),'snippets':snippets})
+
+          probes=[]
+          for p in endpoints:
+            probes.append(request(base+p,'GET',cap=200000))
+          probes.append(request(base+'/api/feed','OPTIONS',cap=50000))
+          probes.append(request(base+'/api/feed','POST','{}',{'Content-Type':'application/json'},cap=200000))
+          probes.append(request(base+'/api/feed?type=sport','GET',cap=200000))
+          probes.append(request(base+'/api/feed?sport=calcio','GET',cap=200000))
+
+          def compact(r):
+            body=r.pop('body','')
+            r['bytes']=len(body.encode('utf-8','replace'))
+            r['body_prefix']=body[:12000]
+            # capture likely route/parameter vocabulary from JSON or errors
+            r['tokens']=list(dict.fromkeys(re.findall(r'[A-Za-z_][A-Za-z0-9_]{2,60}',body)))[:250]
+            return r
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'frontend_references':frontend,
+            'probes':[compact(dict(x)) for x in probes]
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-feedmanager-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+            'frontend_refs':len(frontend),
+            'probes':[{k:r.get(k) for k in ('url','method','status','content_type','allow','error')} for r in out['probes']]
+          },ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-feedmanager-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe Betflag feed manager'
+          git push
