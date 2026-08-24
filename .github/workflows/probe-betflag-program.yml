@@ -1,0 +1,68 @@
+name: Probe Betflag pregame program metadata
+
+on:
+  push:
+    paths:
+      - 'betflag-program-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe getProgram with public frontend headers
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error,re
+          from datetime import datetime,timezone
+
+          base='https://sportservice.betflag.it'
+          # Test likely public channels while keeping X-IdCanale and channelId consistent.
+          channels=list(range(0,21))
+          results=[]
+          for ch in channels:
+            url=f'{base}/api/sport/pregame/getProgram?channelId={ch}'
+            headers={
+              'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile Safari/604.1',
+              'Accept':'application/json,text/plain,*/*',
+              'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':str(ch),
+              'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+            }
+            req=urllib.request.Request(url,headers=headers)
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                body=r.read(4000000).decode('utf-8','replace'); status=r.status; ctype=r.headers.get('content-type')
+            except urllib.error.HTTPError as e:
+              status=e.code; ctype=e.headers.get('content-type'); body=e.read(100000).decode('utf-8','replace')
+            except Exception as e:
+              results.append({'channelId':ch,'error':type(e).__name__+': '+str(e)[:200]}); continue
+            low=body.lower()
+            rec={'channelId':ch,'status':status,'content_type':ctype,'bytes':len(body),'signals':{k:low.count(k) for k in ['calcio','malaga','deportivo','event','tournament','aams']}}
+            try:
+              data=json.loads(body); rec['json_type']=type(data).__name__
+              if isinstance(data,dict):
+                rec['keys']=list(data.keys())[:80]
+                rec['summary']={k:(len(v) if isinstance(v,(list,dict,str)) else v) for k,v in list(data.items())[:80]}
+              elif isinstance(data,list): rec['list_count']=len(data)
+              rec['body_prefix']=body[:50000]
+            except: rec['body_prefix']=body[:10000]
+            results.append(rec)
+            if status==200 and len(body)>1000 and ('calcio' in low or 'event' in low): break
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-program-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{k:r.get(k) for k in ('channelId','status','bytes','json_type','keys','list_count','signals','error')} for r in results],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-program-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe Betflag pregame program metadata'
+          git push
