@@ -1,0 +1,95 @@
+name: Refresh GoldBet feed
+
+on:
+  push:
+    paths:
+      - trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-goldbet-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch requested GoldBet snapshot
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+          import sys
+          import urllib.parse
+          import urllib.request
+          from datetime import datetime, timezone
+
+          token = os.environ.get("BRIDGE_TOKEN", "").strip()
+          if not token:
+              raise SystemExit("Missing GitHub Actions secret: BRIDGE_TOKEN")
+
+          trigger_path = pathlib.Path("trigger.json")
+          trigger = json.loads(trigger_path.read_text(encoding="utf-8"))
+
+          endpoint = str(trigger.get("endpoint", "odds")).strip().strip("/") or "odds"
+          params = trigger.get("params", {}) or {}
+          if not isinstance(params, dict):
+              raise SystemExit("trigger.json: params must be an object")
+
+          base = f"https://radar-goldbet.p-ceresetti.workers.dev/{endpoint}"
+          query = {str(k): str(v) for k, v in params.items() if v is not None and str(v) != ""}
+          query["token"] = token
+          url = base + "?" + urllib.parse.urlencode(query)
+
+          req = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "RadarGoldBetFeed/1.0"})
+          with urllib.request.urlopen(req, timeout=60) as resp:
+              raw = resp.read()
+              status = resp.status
+
+          if status != 200:
+              raise SystemExit(f"Bridge returned HTTP {status}")
+
+          try:
+              data = json.loads(raw.decode("utf-8"))
+          except Exception as exc:
+              raise SystemExit(f"Bridge did not return valid JSON: {exc}")
+
+          out_dir = pathlib.Path("feed")
+          out_dir.mkdir(exist_ok=True)
+          (out_dir / "latest.json").write_text(
+              json.dumps(data, ensure_ascii=False, indent=2),
+              encoding="utf-8"
+          )
+
+          meta = {
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+              "endpoint": endpoint,
+              "params": params,
+              "trigger_id": trigger.get("trigger_id"),
+          }
+          (out_dir / "latest.meta.json").write_text(
+              json.dumps(meta, ensure_ascii=False, indent=2),
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Commit refreshed feed
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/latest.json feed/latest.meta.json
+          if git diff --cached --quiet; then
+            echo "Feed unchanged"
+            exit 0
+          fi
+          git commit -m "Refresh GoldBet feed"
+          git push
