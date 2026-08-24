@@ -1,0 +1,116 @@
+name: Discover Betflag public feed configuration
+
+on:
+  push:
+    paths:
+      - 'betflag-feed-config-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Reproduce public browser feed configuration
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, re, urllib.request, urllib.error, urllib.parse
+          from datetime import datetime, timezone
+
+          pages=[
+            'https://www.betflag.it/mobile/default.aspx',
+            'https://www.betflag.it/mobile/sport/manifestazioni',
+            'https://www.betflag.it/'
+          ]
+
+          def fetch(url, headers=None, cap=1200000):
+            h={'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1','Accept':'text/html,application/json,text/plain,*/*'}
+            if headers: h.update(headers)
+            req=urllib.request.Request(url,headers=h)
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                raw=r.read(cap); return r.status,r.headers.get('content-type'),raw.decode('utf-8','replace')
+            except urllib.error.HTTPError as e:
+              raw=e.read(min(cap,100000)); return e.code,e.headers.get('content-type'),raw.decode('utf-8','replace')
+            except Exception as e:
+              return None,None,repr(e)
+
+          page_rows=[]; candidates_url=[]; candidates_token=[]; contexts=[]
+          patterns_url=[
+            r'feedUrl\s*=\s*["\']([^"\']+)',
+            r'["\']feedUrl["\']\s*:\s*["\']([^"\']+)',
+            r'data-feed-url\s*=\s*["\']([^"\']+)'
+          ]
+          patterns_token=[
+            r'feedToken\s*=\s*["\']([^"\']+)',
+            r'["\']feedToken["\']\s*:\s*["\']([^"\']+)',
+            r'data-feed-token\s*=\s*["\']([^"\']+)'
+          ]
+          for url in pages:
+            status,ctype,body=fetch(url)
+            low=body.lower()
+            page_rows.append({'url':url,'status':status,'content_type':ctype,'bytes':len(body)})
+            for pat in patterns_url:
+              candidates_url += re.findall(pat,body,re.I)
+            for pat in patterns_token:
+              candidates_token += re.findall(pat,body,re.I)
+            for needle in ('feedurl','feedtoken','x-feed-token','feedmanager'):
+              start=0
+              while True:
+                i=low.find(needle,start)
+                if i<0: break
+                text=body[max(0,i-900):i+1400]
+                # redact anything that looks like token assignment/header value
+                text=re.sub(r'(feedToken\s*=\s*["\'])[^"\']+',r'\1[REDACTED]',text,flags=re.I)
+                text=re.sub(r'(["\']X-Feed-Token["\']\s*:\s*)[^,}\n]+',r'\1[REDACTED]',text,flags=re.I)
+                contexts.append({'page':url,'needle':needle,'context':text})
+                start=i+len(needle)
+                if len(contexts)>=80: break
+
+          candidates_url=list(dict.fromkeys(x.strip() for x in candidates_url if x.strip()))
+          candidates_token=list(dict.fromkeys(x.strip() for x in candidates_token if x.strip()))
+
+          token_meta=[]
+          for t in candidates_token:
+            token_meta.append({'length':len(t),'sha256_prefix':hashlib.sha256(t.encode()).hexdigest()[:16]})
+
+          probes=[]
+          if candidates_url and candidates_token:
+            base=candidates_url[0].rstrip('/')
+            token=candidates_token[0]
+            routes=['/sport/live','/sport/prematch','/sport/pre-match','/sport/upcoming','/sport/events','/sport']
+            for route in routes:
+              status,ctype,body=fetch(base+route,{'X-Feed-Token':token,'Accept':'application/json'},cap=400000)
+              probes.append({
+                'route':route,'status':status,'content_type':ctype,'bytes':len(body),
+                'body_prefix':body[:15000]
+              })
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'pages':page_rows,
+            'feed_urls':candidates_url,
+            'feed_token_count':len(candidates_token),
+            'feed_token_metadata':token_meta,
+            'contexts':contexts[:80],
+            'authenticated_public_client_probes':probes
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-feed-config-discovery.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+            'pages':page_rows,'feed_urls':candidates_url,'feed_token_count':len(candidates_token),
+            'probes':[{k:x.get(k) for k in ('route','status','content_type','bytes')} for x in probes]
+          },ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-feed-config-discovery.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Discover Betflag public feed configuration'
+          git push
