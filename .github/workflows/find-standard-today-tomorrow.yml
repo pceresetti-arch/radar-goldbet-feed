@@ -1,0 +1,49 @@
+name: Find standard today tomorrow tournament
+
+on:
+  push:
+    paths:
+      - 'find-standard-today-tomorrow-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Find aggregate football tournaments
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          u='https://sportservice.betflag.it/api/sport/pregame/getProgram?channelId=0'
+          with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:p=json.loads(r.read(8000000).decode('utf-8','replace'))
+          sports=[];hits=[]
+          for s in p if isinstance(p,list) else []:
+            if not isinstance(s,dict):continue
+            if s.get('id')==1 or str(s.get('n','')).strip().lower()=='calcio':
+              sports.append({k:s.get(k) for k in ('id','n','nEfT','ne')})
+              for c in s.get('lc') or []:
+                if not isinstance(c,dict):continue
+                for t in c.get('lts') or []:
+                  if not isinstance(t,dict):continue
+                  n=str(t.get('n',''))
+                  if any(w in n.lower() for w in ('oggi','domani','today','tomorrow')):
+                    hits.append({'sport_id':s.get('id'),'category_id':c.get('id'),'category_name':c.get('n'),'tournament_id':t.get('id'),'tournament_name':n,'event_counts':t.get('nEfT'),'number_events':t.get('ne'),'raw':{k:t.get(k) for k in t.keys() if isinstance(t.get(k),(str,int,float,bool,type(None)))}})
+          out={'sports':sports,'hits':hits}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/standard-today-tomorrow-catalog.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/standard-today-tomorrow-catalog.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Find standard football today-tomorrow aggregate'
+          git push
