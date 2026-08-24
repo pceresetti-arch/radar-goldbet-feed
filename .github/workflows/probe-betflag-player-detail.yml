@@ -1,0 +1,156 @@
+name: Probe Betflag AAMS player detail
+
+on:
+  push:
+    paths:
+      - 'betflag-player-detail-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Resolve real event metadata and probe player section
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          BASE='https://sportservice.betflag.it'
+          HEADERS={
+            'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+          }
+
+          def get(path, cap=8000000):
+            url=BASE+path
+            req=urllib.request.Request(url, headers=HEADERS)
+            try:
+              with urllib.request.urlopen(req, timeout=30) as r:
+                body=r.read(cap).decode('utf-8','replace')
+                return {'url':url,'status':r.status,'content_type':r.headers.get('content-type'),'body':body}
+            except urllib.error.HTTPError as e:
+              return {'url':url,'status':e.code,'content_type':e.headers.get('content-type'),'body':e.read(300000).decode('utf-8','replace')}
+            except Exception as e:
+              return {'url':url,'error':type(e).__name__+': '+str(e)[:250],'body':''}
+
+          # 1) Get a real football event with all required metadata.
+          ov=get('/api/sport/pregame/getOverviewDefault/1?channelId=0')
+          data=json.loads(ov['body']) if ov.get('status')==200 and ov.get('body') else {}
+          calcio=data.get('1',{}) if isinstance(data,dict) else {}
+          events=calcio.get('leo') or [] if isinstance(calcio,dict) else []
+
+          preferred=None
+          for e in events:
+            if isinstance(e,dict) and 'milan - venezia' in str(e.get('en','')).lower():
+              preferred=e; break
+          if preferred is None:
+            # Prefer a major football event with a market id and tournament id.
+            for e in events:
+              if isinstance(e,dict) and e.get('ei') and e.get('ti') and e.get('mi') and e.get('tai') is not None:
+                preferred=e; break
+          if preferred is None:
+            raise SystemExit('No usable football event in getOverviewDefault/1')
+
+          event={k:preferred.get(k) for k in ('si','ei','ti','mi','tai','en','ed','td','sn','cd')}
+
+          # 2) Macro-tab candidates from the overview plus safe defaults.
+          macro=[]
+          def add(v):
+            if v is None: return
+            s=str(v)
+            if s not in macro: macro.append(s)
+          add(0); add(-999)
+          for tab in (calcio.get('lmtW') or []):
+            if isinstance(tab,dict):
+              add(tab.get('tbI')); add(tab.get('ti')); add(tab.get('tabId'))
+              for slot in (tab.get('lotb') or []):
+                if isinstance(slot,dict): add(slot.get('ti'))
+          # Some detail responses expose macro tabs not present in overview; small bounded fallback.
+          for v in range(1,8): add(v)
+          macro=macro[:20]
+
+          def walk_collect(obj):
+            markets=[]; selections=[]; tabs=[]; playerish=[]
+            def walk(x,path=''):
+              if isinstance(x,dict):
+                if 'mn' in x and isinstance(x.get('mn'),str): markets.append(x.get('mn'))
+                if 'sn' in x and isinstance(x.get('sn'),str): selections.append(x.get('sn'))
+                if any(k in x for k in ('tbI','pl','ao','lotb')):
+                  tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','ao','ti','sn') if k in x})
+                text=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float)))
+                lt=text.lower()
+                if any(k in lt for k in ('marcat','scorer','player','giocator','assist','tiri','tiro','gol o assist','marc o sost','mvp')):
+                  playerish.append({'path':path,'obj':{k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))}})
+                for k,v in x.items(): walk(v,path+'.'+str(k))
+              elif isinstance(x,list):
+                for i,v in enumerate(x): walk(v,path+f'[{i}]')
+            walk(obj)
+            return markets,selections,tabs,playerish
+
+          # 3) Probe standard (section 0) and player (section 1), using real metadata.
+          probes=[]
+          for section in (0,1):
+            for mt in macro:
+              path=f"/api/sport/pregame/getDetailsEventAams/{event['tai']}/{event['ti']}/{event['mi']}/{event['ei']}/{mt}/{section}?channelId=0"
+              rec=get(path)
+              body=rec.get('body','')
+              out={k:rec.get(k) for k in ('url','status','content_type','error')}
+              out.update({'section':section,'macroTab':mt,'bytes':len(body)})
+              try:
+                obj=json.loads(body)
+                out['json_type']=type(obj).__name__
+                if isinstance(obj,dict):
+                  out['success']=obj.get('success')
+                  out['eventId']=obj.get('eventId')
+                  out['tai']=obj.get('tai')
+                  out['leo_count']=len(obj.get('leo') or [])
+                  out['lmtW_count']=len(obj.get('lmtW') or [])
+                  markets,selections,tabs,playerish=walk_collect(obj)
+                  out['market_names']=list(dict.fromkeys(markets))[:250]
+                  out['selection_names']=list(dict.fromkeys(selections))[:300]
+                  out['tabs']=tabs[:100]
+                  out['playerish_hits']=playerish[:120]
+                  out['player_signal_count']=len(playerish)
+                  # Preserve successful/full responses only, capped, for parser work.
+                  if out['leo_count'] or out['player_signal_count']:
+                    out['body_prefix']=body[:300000]
+              except Exception:
+                out['body_prefix']=body[:10000]
+              probes.append(out)
+              # Once a player-section response is clearly populated, no need to hammer other macro tabs.
+              if section==1 and out.get('leo_count',0)>0 and (out.get('player_signal_count',0)>0 or len(out.get('selection_names',[]))>10):
+                break
+
+          best=sorted(probes,key=lambda r:(r.get('section')==1, r.get('player_signal_count',0), r.get('leo_count',0), r.get('bytes',0)), reverse=True)
+          result={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'overview_status':ov.get('status'),
+            'event':event,
+            'macro_candidates':macro,
+            'best':best[:5],
+            'probes':probes
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-player-detail-probe.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          summary={
+            'event':event,
+            'best':[{
+              k:r.get(k) for k in ('section','macroTab','status','success','eventId','tai','bytes','leo_count','lmtW_count','player_signal_count','market_names','selection_names','tabs')
+            } for r in best[:5]]
+          }
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-player-detail-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe Betflag AAMS player detail with real event metadata'
+          git push
