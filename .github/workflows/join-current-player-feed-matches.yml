@@ -18,7 +18,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import json,pathlib,urllib.request,time,re
+          import json,pathlib,urllib.request,time
           from datetime import datetime,timezone
           H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
           B='https://sportservice.betflag.it/api/sport/pregame'
@@ -31,13 +31,20 @@ jobs:
               for v in x.values():walk(v)
             elif isinstance(x,list):
               for v in x:walk(v)
+          # Main source: all football matches today + tomorrow in one AAMS aggregate.
+          try:
+            u=f'{B}/getOverviewEventsAams/0/1/0/1334500001/0/0/0?channelId=0'
+            with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=35) as r:d=json.loads(r.read(16000000).decode('utf-8','replace'))
+            walk(d)
+          except Exception: pass
+          # Fallback/enrichment from default home tabs.
           for tab in range(10):
             try:
               u=f'{B}/getOverviewDefault/{tab}?channelId=0'
               with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:d=json.loads(r.read(14000000).decode('utf-8','replace'))
               walk(d)
             except Exception:pass
-            if tab: time.sleep(.08)
+            if tab: time.sleep(.05)
           src=json.loads(pathlib.Path('feed/player-props-current.json').read_text(encoding='utf-8'))
           rows=src.get('rows',[])
           joined=[];unmatched=[]
@@ -53,7 +60,7 @@ jobs:
           out={'generated_at':datetime.now(timezone.utc).isoformat(),'standard_match_map_count':len(matches),'row_count':len(rows),'joined_rows':len(joined),'unmatched_rows':len(unmatched),'join_rate':round(len(joined)/max(1,len(rows)),4),'joined_match_count':len(by_match),'matches':list(by_match.values()),'unmatched_samples':[{k:r.get(k) for k in ('match_code','match_market_id','league','start_time','player','market','odd')} for r in unmatched[:30]]}
           pathlib.Path('feed').mkdir(exist_ok=True)
           pathlib.Path('feed/player-props-match-index.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          summary={k:out[k] for k in ('generated_at','standard_match_map_count','row_count','joined_rows','unmatched_rows','join_rate','joined_match_count')};summary['match_samples']=[{k:m.get(k) for k in ('match','match_event_id','match_market_id','start_time','league')} for m in list(by_match.values())[:30]];summary['unmatched_samples']=out['unmatched_samples']
+          summary={k:out[k] for k in ('generated_at','standard_match_map_count','row_count','joined_rows','unmatched_rows','join_rate','joined_match_count')};summary['match_samples']=[{k:m.get(k) for k in ('match','match_event_id','match_market_id','start_time','league')} for m in list(by_match.values())[:50]];summary['unmatched_samples']=out['unmatched_samples']
           pathlib.Path('feed/player-props-match-index-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps(summary,ensure_ascii=False,indent=2))
           PY
