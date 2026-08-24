@@ -1,0 +1,50 @@
+name: Beautify Betflag overview calls
+
+on:
+  push:
+    paths:
+      - 'beautify-overview-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install jsbeautifier
+        run: python -m pip install -q jsbeautifier
+      - name: Beautify call neighborhoods
+        run: |
+          python - <<'PY'
+          import json,pathlib,re,urllib.request,jsbeautifier
+          from datetime import datetime,timezone
+          url='https://cdn-ltm.betflag.it/site/scripts/sport/bundle.min.js?263'
+          text=urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=30).read().decode('utf-8','replace')
+          chunks=[]
+          for needle in ['.getOverviewEventsAams(','.getDetailsEventAams(']:
+            for m in re.finditer(re.escape(needle),text):
+              raw=text[max(0,m.start()-15000):min(len(text),m.end()+15000)]
+              opts=jsbeautifier.default_options(); opts.indent_size=2; opts.wrap_line_length=140
+              pretty=jsbeautifier.beautify(raw,opts)
+              lines=pretty.splitlines()
+              idxs=[i for i,l in enumerate(lines) if needle[1:] in l]
+              if idxs:
+                i=idxs[len(idxs)//2]
+                pretty='\n'.join(lines[max(0,i-120):min(len(lines),i+160)])
+              chunks.append({'needle':needle,'pretty':pretty})
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'chunks':chunks}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-overview-beautified.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('chunks',len(chunks))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-overview-beautified.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Beautify Betflag overview call neighborhoods'
+          git push
