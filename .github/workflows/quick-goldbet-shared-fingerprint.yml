@@ -1,0 +1,84 @@
+name: Quick GoldBet shared price fingerprint
+
+on:
+  push:
+    paths:
+      - 'quick-goldbet-fingerprint-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Find Milan Venezia and compare GoldBet 1X2
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json,os,pathlib,urllib.parse,urllib.request,urllib.error,unicodedata,re
+          from datetime import datetime,timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          if not key: raise SystemExit('Missing ODDSPAPI_KEY')
+          base='https://api.oddspapi.io/v4'
+          def get(path,params):
+            p=dict(params); p['apiKey']=key
+            req=urllib.request.Request(base+path+'?'+urllib.parse.urlencode(p),headers={'Accept':'application/json','User-Agent':'RadarGoldBetFingerprint/1.0'})
+            with urllib.request.urlopen(req,timeout=90) as r:return json.loads(r.read().decode())
+          def norm(s):
+            return re.sub(r'[^a-z0-9]+',' ',unicodedata.normalize('NFKD',str(s)).encode('ascii','ignore').decode().lower()).strip()
+          attempts=[]; fixtures=[]
+          param_variants=[
+            {'from':'2026-08-28','to':'2026-08-29','language':'en'},
+            {'from':'2026-08-27','to':'2026-08-30','language':'en'},
+            {'date':'2026-08-28','language':'en'}
+          ]
+          for p in param_variants:
+            try:
+              data=get('/fixtures',p)
+              arr=data if isinstance(data,list) else data.get('data',[]) if isinstance(data,dict) else []
+              attempts.append({'params':p,'returned':len(arr)})
+              fixtures.extend(arr)
+              if any('milan' in norm(str(f)) and 'venez' in norm(str(f)) for f in arr): break
+            except Exception as e:
+              attempts.append({'params':p,'error':type(e).__name__+': '+str(e)[:250]})
+          matches=[]
+          for f in fixtures:
+            text=' '.join(str(f.get(k) or '') for k in ('participant1Name','participant2Name','name','eventName'))
+            n=norm(text)
+            if 'milan' in n and 'venez' in n: matches.append(f)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'attempts':attempts,'matches':matches[:10]}
+          if matches:
+            fid=matches[0].get('fixtureId')
+            odds=get('/odds',{'fixtureId':fid,'bookmakers':'goldbet.it','language':'en','oddsFormat':'decimal','verbosity':3})
+            book=(odds.get('bookmakerOdds') or {}).get('goldbet.it',{}) if isinstance(odds,dict) else {}
+            markets=book.get('markets') or {}
+            one=[]
+            for mid,md in markets.items():
+              outs=md.get('outcomes') or {}
+              flat=[]
+              for oid,o in outs.items():
+                if isinstance(o,dict):
+                  # non-player outcomes can be direct or nested under selections
+                  if o.get('price') is not None: flat.append({'outcomeId':oid,'name':o.get('name') or o.get('outcomeName'),'price':o.get('price'),'raw':{k:o.get(k) for k in ('name','outcomeName','price','active','mainLine')}})
+                  for sid,s in (o.get('selections') or {}).items() if isinstance(o.get('selections'),dict) else []:
+                    if isinstance(s,dict): flat.append({'outcomeId':oid,'selectionId':sid,'name':s.get('name') or s.get('selectionName'),'price':s.get('price')})
+              if len(flat) in (2,3) and any(x.get('price') is not None for x in flat):
+                one.append({'marketId':mid,'market_meta':{k:md.get(k) for k in ('marketName','name','marketType','period','line')},'outcomes':flat})
+            out['goldbet']={'fixtureId':fid,'event':f"{odds.get('participant1Name')} - {odds.get('participant2Name')}",'bookmakerFixtureId':book.get('bookmakerFixtureId'),'market_count':len(markets),'candidate_1x2_markets':one[:80]}
+            out['shared_reference']={'event':'Milan - Venezia','1x2':[{'selection':'1','odd':1.37},{'selection':'X','odd':4.75},{'selection':'2','odd':8.0}]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/quick-goldbet-shared-fingerprint.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:40000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/quick-goldbet-shared-fingerprint.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Compare Milan Venezia GoldBet shared prices'
+          git push
