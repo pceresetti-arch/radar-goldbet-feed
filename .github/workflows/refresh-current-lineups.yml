@@ -65,7 +65,6 @@ jobs:
             try:return datetime.fromisoformat(str(s).replace('Z','+00:00')).astimezone(timezone.utc)
             except:return None
 
-          # AAMS slate, only matches approaching kickoff.
           std=bet_json(f'{BET_BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
           targets={}
           def walk(x):
@@ -81,7 +80,6 @@ jobs:
               for v in x: walk(v)
           walk(std)
 
-          # Keep already confirmed XIs so the pipeline does not re-poll them.
           previous={}; oldp=pathlib.Path('feed/lineups-current.json')
           if oldp.exists():
             try:
@@ -118,36 +116,44 @@ jobs:
             return best if best and best['score']>=.58 else None
 
           def player_name(row):
-            return row.get('name') or (row.get('player') or {}).get('name') or (row.get('playerName') if isinstance(row,dict) else None)
+            return row.get('name') or (row.get('player') or {}).get('name') or row.get('playerName')
+          def normalize_team(t):
+            if not isinstance(t,dict): return None
+            starters=[]; bench=[]
+            for r in (t.get('starters') or t.get('players') or t.get('startingXI') or []):
+              if not isinstance(r,dict): continue
+              n=player_name(r)
+              if n: starters.append({'name':n,'id':r.get('id') or (r.get('player') or {}).get('id'),'shirt_number':r.get('shirtNumber') or r.get('shirt') or r.get('jerseyNumber'),'position_id':r.get('positionId'),'usual_position_id':r.get('usualPlayingPositionId'),'horizontal_layout':r.get('horizontalLayout'),'vertical_layout':r.get('verticalLayout')})
+            for r in (t.get('bench') or t.get('substitutes') or []):
+              if not isinstance(r,dict): continue
+              n=player_name(r)
+              if n: bench.append({'name':n,'id':r.get('id') or (r.get('player') or {}).get('id'),'shirt_number':r.get('shirtNumber') or r.get('shirt') or r.get('jerseyNumber')})
+            return {'team_id':t.get('id') or t.get('teamId'),'team_name':t.get('name') or t.get('teamName'),'formation':t.get('formation'),'starters':starters,'bench':bench,'raw_keys':list(t.keys())}
           def parse_lineup(line):
-            if not isinstance(line,dict) or not line:return {'present':False,'teams':[],'raw':line}
-            rawteams=line.get('lineups') or line.get('teams') or []
+            if not isinstance(line,dict) or not line:return {'present':False,'confirmed':False,'teams':[],'raw_keys':[]}
             teams=[]
-            for t in rawteams if isinstance(rawteams,list) else []:
-              starters=[]; bench=[]
-              plist=t.get('players') or t.get('starters') or []
-              for r in plist if isinstance(plist,list) else []:
-                if not isinstance(r,dict):continue
-                n=player_name(r)
-                if n: starters.append({'name':n,'id':r.get('id') or (r.get('player') or {}).get('id'),'shirt_number':r.get('shirt') or r.get('shirtNumber') or r.get('jerseyNumber'),'position':r.get('position') or r.get('usualPosition')})
-              bl=t.get('bench') or t.get('substitutes') or []
-              for r in bl if isinstance(bl,list) else []:
-                if not isinstance(r,dict):continue
-                n=player_name(r)
-                if n: bench.append({'name':n,'id':r.get('id') or (r.get('player') or {}).get('id')})
-              teams.append({'team_id':t.get('teamId'),'team_name':t.get('teamName'),'formation':t.get('formation'),'starters':starters[:11] if len(starters)>11 else starters,'bench':bench})
-            confirmed=len(teams)>=2 and all(len(t.get('starters') or [])>=11 for t in teams[:2])
-            return {'present':bool(rawteams),'confirmed':confirmed,'teams':teams,'raw_keys':list(line.keys())}
+            if isinstance(line.get('homeTeam'),dict) or isinstance(line.get('awayTeam'),dict):
+              for key in ('homeTeam','awayTeam'):
+                nt=normalize_team(line.get(key));
+                if nt: teams.append(nt)
+            else:
+              rawteams=line.get('lineups') or line.get('teams') or []
+              for t in rawteams if isinstance(rawteams,list) else []:
+                nt=normalize_team(t)
+                if nt: teams.append(nt)
+            confirmed=len(teams)>=2 and all(len(t.get('starters') or [])==11 for t in teams[:2])
+            present=any(len(t.get('starters') or [])>0 for t in teams)
+            return {'present':present,'confirmed':confirmed,'lineup_type':line.get('lineupType'),'provider_source':line.get('source'),'teams':teams,'raw_keys':list(line.keys())}
 
           results=[]
           for key,t in sorted(targets.items(),key=lambda kv:kv[1]['start_utc']):
             if key in previous:
               m=previous[key]; m['minutes_to_start']=t['minutes_to_start']; m['retained_from_previous']=True; results.append(m); continue
-            fm=best(t); detail=None; err=None; parsed={'present':False,'teams':[]}
+            fm=best(t); err=None; parsed={'present':False,'confirmed':False,'teams':[]}
             if fm:
               try:
                 d,_=fm_json(f'https://www.fotmob.com/api/data/matchDetails?matchId={fm["id"]}')
-                detail=((d.get('content') or {}).get('lineup') or {}); parsed=parse_lineup(detail)
+                parsed=parse_lineup(((d.get('content') or {}).get('lineup') or {}))
               except Exception as e: err=type(e).__name__+': '+str(e)[:180]
             status='SOURCE_CONFIRMED' if parsed.get('confirmed') else ('LINEUP_PRESENT' if parsed.get('present') else 'NOT_AVAILABLE')
             results.append({**t,'status':status,'retained_from_previous':False,'source':'FotMob','fotmob_match':None if not fm else {k:fm.get(k) for k in ('id','home','away','league','score','time_delta_min')},'lineup':parsed,'error':err})
