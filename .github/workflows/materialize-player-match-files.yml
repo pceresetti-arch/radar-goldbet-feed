@@ -1,0 +1,77 @@
+name: Materialize player match files
+
+on:
+  schedule:
+    - cron: '5-59/10 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'materialize-player-match-files-trigger.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-player-match-files
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build compact live index and per-match files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, shutil, collections
+          src=pathlib.Path('feed/player-props-current-by-match.json')
+          if not src.exists(): raise SystemExit('Missing current by-match player feed')
+          data=json.loads(src.read_text(encoding='utf-8'))
+          matches=data.get('matches',[])
+          outdir=pathlib.Path('feed/player-props-matches')
+          if outdir.exists(): shutil.rmtree(outdir)
+          outdir.mkdir(parents=True,exist_ok=True)
+          index=[]
+          for m in matches:
+            players=m.get('players') or {}
+            market_counts=collections.Counter()
+            row_count=0
+            for plist in players.values():
+              for r in plist or []:
+                market_counts[str(r.get('market'))]+=1; row_count+=1
+            mi=str(m.get('match_market_id') or '')
+            slug=re.sub(r'[^A-Za-z0-9._-]+','_',mi).strip('_') or re.sub(r'[^A-Za-z0-9._-]+','_',str(m.get('match') or 'match')).strip('_')
+            filename=f'{slug}.json'
+            payload={
+              'generated_at':data.get('generated_at'),'match':m.get('match'),'match_code':m.get('match_code'),
+              'match_event_id':m.get('match_event_id'),'match_market_id':m.get('match_market_id'),
+              'start_time':m.get('start_time'),'league':m.get('league'),'tournament_id':m.get('tournament_id'),
+              'authority_id':m.get('authority_id'),'player_count':len(players),'row_count':row_count,
+              'markets':dict(market_counts),'players':players
+            }
+            (outdir/filename).write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+            index.append({
+              'match':m.get('match'),'match_code':m.get('match_code'),'match_event_id':m.get('match_event_id'),
+              'match_market_id':m.get('match_market_id'),'start_time':m.get('start_time'),'league':m.get('league'),
+              'player_count':len(players),'row_count':row_count,'markets':dict(market_counts),
+              'file':f'feed/player-props-matches/{filename}'
+            })
+          index.sort(key=lambda x:(str(x.get('start_time')),str(x.get('match'))))
+          compact={
+            'generated_at':data.get('generated_at'),'source':data.get('source'),'scope':data.get('scope'),
+            'goldbet_alignment':data.get('goldbet_alignment'),'row_count':data.get('row_count'),
+            'match_count':len(index),'joined_rows':data.get('joined_rows'),'join_rate':data.get('join_rate'),
+            'content_sha256':data.get('content_sha256'),'matches':index
+          }
+          pathlib.Path('feed/player-props-live-index.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:50000])
+          PY
+      - name: Commit materialized files
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add -A feed/player-props-live-index.json feed/player-props-matches
+          git diff --cached --quiet && exit 0
+          git commit -m 'Materialize current player props by match'
+          git push
