@@ -1,0 +1,66 @@
+name: Extract Betflag player tab map
+
+on:
+  push:
+    paths:
+      - 'extract-player-tab-map-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract lmtW and player-related tabs
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          src=json.loads(pathlib.Path('feed/betflag-player-detail-probe.json').read_text(encoding='utf-8'))
+          target=None
+          for r in src.get('probes',[]):
+            if r.get('section')==0 and str(r.get('macroTab'))=='0' and r.get('leo_count',0)>0 and r.get('body_prefix'):
+              target=r; break
+          if not target:
+            raise SystemExit('No standard detail response found')
+          body=target['body_prefix']
+          obj=json.loads(body)
+          tabs=[]
+          for t in obj.get('lmtW') or []:
+            if not isinstance(t,dict): continue
+            slots=[]
+            for s in t.get('lotb') or []:
+              if isinstance(s,dict):
+                slots.append({k:s.get(k) for k in ('sn','ti','pl','ao','lt','img','isbb') if k in s})
+            tabs.append({
+              'tbN':t.get('tbN'),'tbI':t.get('tbI'),'si':t.get('si'),'img':t.get('img'),'lt':t.get('lt'),
+              'pl':t.get('pl'),'ao':t.get('ao'),'isbb':t.get('isbb'),'slots':slots
+            })
+          # Also list top-level keys and event-level identifiers for cross-checking.
+          leo=obj.get('leo') or []
+          event_compact=[]
+          for e in leo[:5]:
+            if isinstance(e,dict):
+              event_compact.append({k:e.get(k) for k in ('ei','ti','mi','tai','en','pi','evTag','ia') if k in e})
+          player_tabs=[]
+          for t in tabs:
+            txt=json.dumps(t,ensure_ascii=False).lower()
+            if any(k in txt for k in ('player','giocator','marcat','scorer','assist','tiro','tiri')) or t.get('pl') is True or any(s.get('pl') is True for s in t.get('slots',[])):
+              player_tabs.append(t)
+          out={
+            'event':src.get('event'),'response_keys':list(obj.keys()),'event_compact':event_compact,
+            'tab_count':len(tabs),'tabs':tabs,'player_candidate_tabs':player_tabs
+          }
+          pathlib.Path('feed/player-tab-map.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-tab-map.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract Betflag player tab map'
+          git push
