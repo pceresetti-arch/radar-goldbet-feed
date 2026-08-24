@@ -1,0 +1,54 @@
+name: Tiny player sport 104 summary
+
+on:
+  push:
+    paths:
+      - 'tiny-player104-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Reduce sport 104 result
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          src=json.loads(pathlib.Path('feed/player-sport-104.json').read_text(encoding='utf-8'))
+          s=src.get('player104_summary') or {}
+          tiny={
+            'root_keys':src.get('root_keys'),
+            'event_count_saved':len(s.get('events') or []),
+            'events':(s.get('events') or [])[:15],
+            'market_names':(s.get('market_names') or [])[:60],
+            'selection_samples':(s.get('selection_samples') or [])[:40],
+            'tabs':(s.get('tabs') or [])[:40],
+            'player_hits':(s.get('player_hits') or [])[:30],
+            'probe_hits':[]
+          }
+          for p in src.get('probes') or []:
+            sm=p.get('summary') or {}
+            if sm.get('events') or sm.get('market_names') or sm.get('selection_samples') or sm.get('player_hits'):
+              tiny['probe_hits'].append({
+                'kind':p.get('kind'),'disc':p.get('disc'),'tai':p.get('tai'),'ti':p.get('ti'),'mi':p.get('mi'),'ei':p.get('ei'),'section':p.get('section'),'status':p.get('status'),'root':p.get('root'),
+                'events':(sm.get('events') or [])[:8],
+                'market_names':(sm.get('market_names') or [])[:40],
+                'selection_samples':(sm.get('selection_samples') or [])[:30],
+                'tabs':(sm.get('tabs') or [])[:25],
+                'player_hits':(sm.get('player_hits') or [])[:20]
+              })
+          pathlib.Path('feed/player-sport-104-tiny.json').write_text(json.dumps(tiny,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(tiny,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-sport-104-tiny.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Summarize sport 104 diagnostic'
+          git push
