@@ -1,0 +1,41 @@
+name: Extract Betflag channel resolver
+
+on:
+  push:
+    paths:
+      - 'betflag-channel-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract module 5158 and channel constants
+        run: |
+          python - <<'PY'
+          import json,pathlib,re,urllib.request
+          from datetime import datetime,timezone
+          u='https://cdn-ltm.betflag.it/site/scripts/sport/bundle.min.js?263'
+          text=urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=30).read().decode('utf-8','replace')
+          contexts=[]
+          for pat in [r'5158:\(e,t,r\)=>',r'5158:',r'X-IdCanale',r'channelId=\$\{\(0,n\.OK\)\(\)\}']:
+            for m in re.finditer(pat,text):
+              contexts.append({'pattern':pat,'context':text[max(0,m.start()-2500):m.end()+5000]})
+              if len(contexts)>=30: break
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'count':len(contexts),'contexts':contexts}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-channel-resolver.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('contexts',len(contexts))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-channel-resolver.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract Betflag channel resolver'
+          git push
