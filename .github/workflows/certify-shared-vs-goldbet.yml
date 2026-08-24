@@ -1,0 +1,150 @@
+name: Certify shared AAMS prices vs GoldBet
+
+on:
+  push:
+    paths:
+      - 'certify-shared-goldbet-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compare simultaneous 1X2 snapshots
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import concurrent.futures, difflib, json, os, pathlib, re, unicodedata, urllib.parse, urllib.request
+          from datetime import datetime, timezone
+
+          token=os.environ.get('BRIDGE_TOKEN','').strip()
+          if not token: raise SystemExit('Missing BRIDGE_TOKEN')
+          generated=datetime.now(timezone.utc).isoformat()
+
+          def norm(s):
+            s=unicodedata.normalize('NFKD',str(s or '')).encode('ascii','ignore').decode().lower()
+            repl={
+              'ac milan':'milan','fc internazionale':'inter','internazionale':'inter',
+              'venezia fc':'venezia','juventus fc':'juventus','ssc napoli':'napoli',
+              'as roma':'roma','ss lazio':'lazio','acf fiorentina':'fiorentina',
+              'us sassuolo':'sassuolo','torino fc':'torino','udinese calcio':'udinese',
+              'hellas verona':'verona','parma calcio':'parma','cagliari calcio':'cagliari',
+              'atalanta bc':'atalanta','bologna fc':'bologna','como 1907':'como',
+              'pisa sc':'pisa','us cremonese':'cremonese','us lecce':'lecce'
+            }
+            for a,b in repl.items(): s=s.replace(a,b)
+            return ' '.join(re.findall(r'[a-z0-9]+',s))
+
+          # 1) Shared snapshot.
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          surl='https://sportservice.betflag.it/api/sport/pregame/getOverviewDefault/1?channelId=0'
+          with urllib.request.urlopen(urllib.request.Request(surl,headers=H),timeout=30) as r:
+            shared=json.loads(r.read(9000000).decode('utf-8','replace'))
+
+          shared_events=[]
+          def walk(x):
+            if isinstance(x,dict):
+              if x.get('si')==1 and x.get('ei') and x.get('en') and x.get('ed'):
+                prices=None
+                mm=x.get('mmkW') or {}
+                vals=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+                for m in vals:
+                  if not isinstance(m,dict) or str(m.get('mn','')).strip().upper()!='1X2': continue
+                  sp=m.get('spd') or {}
+                  spreads=sp.values() if isinstance(sp,dict) else (sp if isinstance(sp,list) else [])
+                  for z in spreads:
+                    if not isinstance(z,dict): continue
+                    q={str(q.get('sn')):q.get('ov') for q in (z.get('asl') or []) if isinstance(q,dict)}
+                    if all(k in q for k in ('1','X','2')): prices=[q['1'],q['X'],q['2']]
+                if prices:
+                  shared_events.append({'event_id':x.get('ei'),'name':x.get('en'),'norm':norm(x.get('en')),'date':x.get('ed'),'league':x.get('td'),'prices':prices})
+              for v in x.values(): walk(v)
+            elif isinstance(x,list):
+              for v in x: walk(v)
+          walk(shared)
+          # de-dupe events
+          tmp={}
+          for e in shared_events: tmp[str(e['event_id'])]=e
+          shared_events=list(tmp.values())
+
+          # 2) GoldBet snapshot, all pages concurrently.
+          base='https://radar-goldbet.p-ceresetti.workers.dev/odds'
+          offsets=list(range(0,18000,2000))
+          def page(off):
+            qs=urllib.parse.urlencode({'token':token,'bookmakers':'goldbet','state':'prematch','limit':'2000','offset':str(off)})
+            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarPriceCert/1.0'})
+            try:
+              with urllib.request.urlopen(req,timeout=75) as r:
+                d=json.loads(r.read().decode('utf-8','replace'))
+                return {'offset':off,'count':d.get('count'),'rows':d.get('odds') or [],'error':None}
+            except Exception as e:
+              return {'offset':off,'count':None,'rows':[],'error':type(e).__name__+': '+str(e)[:200]}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=9) as ex:
+            pages=list(ex.map(page,offsets))
+          total=max([p.get('count') or 0 for p in pages] or [0])
+          rows=[]
+          for p in pages:
+            if p['offset']<total or total==0: rows.extend(p['rows'])
+
+          gold=[]
+          for r in rows:
+            if not isinstance(r,dict): continue
+            if str(r.get('market','')).lower()!='1x2': continue
+            bms=r.get('bookmakers') or []
+            bm=None
+            if isinstance(bms,list):
+              for b in bms:
+                if isinstance(b,dict) and str(b.get('key','')).lower()=='goldbet': bm=b;break
+            elif isinstance(bms,dict): bm=bms.get('goldbet') or bms
+            if not isinstance(bm,dict): continue
+            o=bm.get('outcomes') or {}
+            if not all(k in o for k in ('HOME','DRAW','AWAY')): continue
+            name=r.get('event') or f"{r.get('home_team','')} - {r.get('away_team','')}"
+            gold.append({'event_id':r.get('event_id'),'name':name,'norm':norm(name),'commence_time':r.get('commence_time'),'league':r.get('league'),'prices':[o['HOME'],o['DRAW'],o['AWAY']],'last_update':bm.get('last_update')})
+
+          # 3) Best-match each shared event; only accept high-confidence lexical matches.
+          comparisons=[]
+          for s in shared_events:
+            best=None
+            for g in gold:
+              score=difflib.SequenceMatcher(None,s['norm'],g['norm']).ratio()
+              st=set(s['norm'].split()); gt=set(g['norm'].split())
+              jac=len(st&gt)/max(1,len(st|gt))
+              combined=.65*score+.35*jac
+              if best is None or combined>best[0]: best=(combined,score,jac,g)
+            if not best: continue
+            combined,score,jac,g=best
+            if combined<0.72: continue
+            exact=[abs(float(a)-float(b))<1e-9 for a,b in zip(s['prices'],g['prices'])]
+            diffs=[round(float(a)-float(b),4) for a,b in zip(s['prices'],g['prices'])]
+            comparisons.append({'shared_name':s['name'],'goldbet_name':g['name'],'match_score':round(combined,4),'shared_prices':s['prices'],'goldbet_prices':g['prices'],'exact_all':all(exact),'diffs':diffs,'goldbet_last_update':g['last_update'],'shared_date':s['date'],'goldbet_time':g['commence_time']})
+
+          # Prefer exact/high-score proof rows, but retain all accepted comparisons.
+          comparisons.sort(key=lambda x:(x['exact_all'],x['match_score']),reverse=True)
+          exact_count=sum(1 for x in comparisons if x['exact_all'])
+          near_count=sum(1 for x in comparisons if max(abs(d) for d in x['diffs'])<=0.05)
+          verdict='UNPROVEN'
+          if exact_count>=5: verdict='STRONG_EXACT_MATCH'
+          elif exact_count>=3 and near_count>=5: verdict='STRONG_NEAR_MATCH'
+          elif near_count>=5: verdict='NEAR_MATCH_ONLY'
+          elif comparisons: verdict='DIVERGENT_OR_INSUFFICIENT'
+
+          out={'generated_at':generated,'shared_event_count':len(shared_events),'goldbet_1x2_count':len(gold),'bridge_total_count':total,'page_status':[{'offset':p['offset'],'rows':len(p['rows']),'error':p['error']} for p in pages],'matched_count':len(comparisons),'exact_count':exact_count,'near_5c_count':near_count,'verdict':verdict,'comparisons':comparisons[:40]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/shared-goldbet-price-certification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:50000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/shared-goldbet-price-certification.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Certify shared AAMS pricing against GoldBet'
+          git push
