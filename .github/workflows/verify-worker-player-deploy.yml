@@ -1,0 +1,58 @@
+name: Verify Worker player deploy
+
+on:
+  push:
+    paths:
+      - 'verify-worker-player-deploy-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify public Worker and player forwarding
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+          base='https://radar-goldbet.p-ceresetti.workers.dev'
+          token=os.environ.get('BRIDGE_TOKEN','').strip()
+          def req(url):
+            try:
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarWorkerVerify/1.0'}),timeout=90) as r:
+                raw=r.read().decode('utf-8','replace')
+                try: data=json.loads(raw)
+                except: data={'raw':raw[:1000]}
+                return {'status':r.status,'data':data}
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode('utf-8','replace')
+              try: data=json.loads(raw)
+              except: data={'raw':raw[:1000]}
+              return {'status':e.code,'data':data}
+            except Exception as e:
+              return {'status':None,'error':type(e).__name__+': '+str(e)}
+          health=req(base+'/health')
+          qs=urllib.parse.urlencode({'token':token,'bookmakers':'goldbet','state':'prematch','content':'player','player':'Aubameyang','limit':'100','offset':'0'})
+          player=req(base+'/odds?'+qs)
+          data=player.get('data') if isinstance(player,dict) else None
+          rows=data.get('odds',[]) if isinstance(data,dict) else []
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'health':health,'player_status':player.get('status'),'player_count':data.get('count') if isinstance(data,dict) else None,'returned':len(rows),'rows':rows[:20]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/worker-player-deploy-verification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:30000])
+          PY
+      - name: Commit verification
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/worker-player-deploy-verification.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Verify deployed Worker player forwarding'
+          git push
