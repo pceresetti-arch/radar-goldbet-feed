@@ -1,0 +1,65 @@
+name: Test GoldBet player lane
+
+on:
+  push:
+    paths:
+      - 'goldbet-player-lane-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Query player-only lane through Radar Worker
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+          token=os.environ.get('BRIDGE_TOKEN','').strip()
+          base='https://radar-goldbet.p-ceresetti.workers.dev/odds'
+          q={'bookmakers':'goldbet','state':'prematch','content':'player','limit':'2000','offset':'0','token':token}
+          url=base+'?'+urllib.parse.urlencode(q)
+          req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBetPlayerLane/1.0'})
+          try:
+            with urllib.request.urlopen(req,timeout=90) as r:
+              body=r.read().decode('utf-8','replace'); status=r.status
+          except urllib.error.HTTPError as e:
+            status=e.code; body=e.read().decode('utf-8','replace')
+          try: data=json.loads(body)
+          except: data={'raw':body[:10000]}
+          rows=data.get('odds',[]) if isinstance(data,dict) else []
+          samples=[]
+          for row in rows[:100]:
+            samples.append({k:row.get(k) for k in ['event_id','event','league','market','line','scope','period','player','player_id','state']})
+            if isinstance(row,dict): samples[-1]['bookmakers']=row.get('bookmakers')
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'status':status,
+            'query':{k:v for k,v in q.items() if k!='token'},
+            'response_count': data.get('count') if isinstance(data,dict) else None,
+            'returned': data.get('returned') if isinstance(data,dict) else None,
+            'content': data.get('content') if isinstance(data,dict) else None,
+            'error': data.get('error') if isinstance(data,dict) else None,
+            'sample_count':len(samples),
+            'samples':samples,
+            'raw_keys':list(data.keys()) if isinstance(data,dict) else []
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/goldbet-player-lane-test.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:12000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/goldbet-player-lane-test.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Test GoldBet player-only lane'
+          git push
