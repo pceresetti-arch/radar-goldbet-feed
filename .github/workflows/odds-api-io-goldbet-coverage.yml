@@ -1,4 +1,4 @@
-name: Odds-API.io GoldBet coverage check
+name: Odds-API.io GoldBet player-prop probe
 
 on:
   push:
@@ -14,27 +14,112 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch public coverage sheet
+
+      - name: Probe GoldBet player props
+        env:
+          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_IO_KEY }}
         run: |
           python - <<'PY'
-          import csv, io, json, pathlib, urllib.request
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
           from datetime import datetime, timezone
-          u='https://docs.google.com/spreadsheets/d/162Xyr7So0UTnXomfirqYm-WtuIM-Jz6ngHoIIil1nkA/export?format=csv&gid=1125531260'
-          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=60) as r:
-              raw=r.read().decode('utf-8-sig','replace')
-          rows=list(csv.reader(io.StringIO(raw)))
-          matches=[row for row in rows if any('goldbet' in str(c).lower() for c in row)]
-          prop_rows=[row for row in rows if len(row)>=3 and 'football' in ' '.join(row).lower() and ('yes' in [str(c).strip().lower() for c in row] or 'player props' in ' '.join(row).lower())]
-          out={'generated_at':datetime.now(timezone.utc).isoformat(),'rows':len(rows),'headers':rows[:2],'goldbet_matches':matches,'football_player_prop_examples':prop_rows[:100]}
+
+          trigger_path = pathlib.Path('odds-api-io-goldbet-coverage-trigger.json')
+          trigger = json.loads(trigger_path.read_text(encoding='utf-8')) if trigger_path.exists() else {}
+          terms = [str(x).strip().lower() for x in trigger.get('match_terms', []) if str(x).strip()]
+          key = os.environ.get('ODDS_API_IO_KEY', '').strip()
+          out = {
+              'generated_at': datetime.now(timezone.utc).isoformat(),
+              'provider': 'odds-api.io v3',
+              'bookmaker': 'Goldbet IT',
+              'match_terms': terms,
+              'api_key_configured': bool(key),
+              'events_found': [],
+              'results': []
+          }
+
+          def get_json(path, params):
+              q = dict(params)
+              q['apiKey'] = key
+              url = 'https://api.odds-api.io/v3' + path + '?' + urllib.parse.urlencode(q)
+              req = urllib.request.Request(url, headers={'Accept':'application/json','User-Agent':'RadarGoldBet/1.0'})
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as r:
+                      raw = r.read().decode('utf-8','replace')
+                      return r.status, json.loads(raw)
+              except urllib.error.HTTPError as e:
+                  body = e.read().decode('utf-8','replace')[:4000]
+                  return e.code, {'error_body': body}
+              except Exception as e:
+                  return None, {'error': repr(e)}
+
+          if not key:
+              out['status'] = 'MISSING_SECRET_ODDS_API_IO_KEY'
+          else:
+              status, events = get_json('/events', {'sport':'football'})
+              out['events_http_status'] = status
+              if status == 200:
+                  if isinstance(events, dict):
+                      items = events.get('data') or events.get('events') or events.get('results') or []
+                  elif isinstance(events, list):
+                      items = events
+                  else:
+                      items = []
+
+                  def event_text(e):
+                      parts=[]
+                      for k in ('home','away','name','title'):
+                          v=e.get(k) if isinstance(e,dict) else None
+                          if v: parts.append(str(v))
+                      for k in ('league','sport'):
+                          v=e.get(k) if isinstance(e,dict) else None
+                          if isinstance(v,dict): parts.extend(str(x) for x in v.values() if isinstance(x,(str,int,float)))
+                          elif v: parts.append(str(v))
+                      return ' '.join(parts).lower()
+
+                  matched=[]
+                  for e in items:
+                      if not isinstance(e,dict): continue
+                      txt=event_text(e)
+                      if terms and not all(t in txt for t in terms): continue
+                      matched.append(e)
+                  if not terms:
+                      matched = items[:8]
+                  out['events_found'] = matched[:8]
+
+                  for e in matched[:5]:
+                      eid = e.get('id') or e.get('eventId') or e.get('event_id')
+                      if eid is None: continue
+                      s, data = get_json('/odds', {'eventId':eid,'bookmakers':'Goldbet IT'})
+                      rec={'event_id':eid,'http_status':s,'player_markets':[],'all_market_names':[]}
+                      if s == 200 and isinstance(data,dict):
+                          books=data.get('bookmakers') or {}
+                          gb=None
+                          if isinstance(books,dict):
+                              for bk, mkts in books.items():
+                                  if 'goldbet' in str(bk).lower(): gb=mkts; break
+                          if isinstance(gb,list):
+                              for m in gb:
+                                  if not isinstance(m,dict): continue
+                                  name=str(m.get('name') or m.get('market') or '')
+                                  rec['all_market_names'].append(name)
+                                  low=name.lower()
+                                  if any(x in low for x in ('player','scorer','marcat','goal scorer','goalscorer','assist','shot','tiro','tiri')):
+                                      rec['player_markets'].append(m)
+                      else:
+                          rec['response']=data
+                      out['results'].append(rec)
+              else:
+                  out['events_response'] = events
+
           pathlib.Path('feed').mkdir(exist_ok=True)
           pathlib.Path('feed/odds-api-io-goldbet-coverage.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
+
       - name: Commit result
         run: |
           git config user.name "radar-goldbet-bot"
           git config user.email "radar-goldbet-bot@users.noreply.github.com"
           git add feed/odds-api-io-goldbet-coverage.json
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Check Odds-API.io GoldBet player prop coverage"
+          git commit -m "Probe Odds-API.io GoldBet player props"
           git push
