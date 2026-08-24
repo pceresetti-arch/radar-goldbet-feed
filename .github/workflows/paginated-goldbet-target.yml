@@ -1,0 +1,61 @@
+name: Targeted paginated GoldBet fetch
+
+on:
+  workflow_dispatch:
+    inputs:
+      match_terms:
+        description: 'Comma separated match terms, e.g. malaga,deportivo'
+        required: true
+        default: 'malaga'
+      league_terms:
+        description: 'Optional league terms'
+        required: false
+        default: ''
+  push:
+    paths:
+      - 'paginated-trigger.json'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve terms
+        id: terms
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "match_terms=${{ inputs.match_terms }}" >> "$GITHUB_OUTPUT"
+            echo "league_terms=${{ inputs.league_terms }}" >> "$GITHUB_OUTPUT"
+          else
+            MATCH=$(node -e "const x=require('./paginated-trigger.json'); process.stdout.write((x.match_terms||[]).join(','))")
+            LEAGUE=$(node -e "const x=require('./paginated-trigger.json'); process.stdout.write((x.league_terms||[]).join(','))")
+            echo "match_terms=$MATCH" >> "$GITHUB_OUTPUT"
+            echo "league_terms=$LEAGUE" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Fetch all pages until target is found
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          BOOKMAKER: goldbet.it
+          STATE: prematch
+          LIMIT: '2000'
+          MAX_PAGES: '20'
+          MATCH_TERMS: ${{ steps.terms.outputs.match_terms }}
+          LEAGUE_TERMS: ${{ steps.terms.outputs.league_terms }}
+        run: node scripts/fetch-goldbet-paginated.js
+      - name: Commit refreshed feed
+        shell: bash
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add feed/latest.json feed/latest.meta.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh paginated GoldBet feed'
+          git push
