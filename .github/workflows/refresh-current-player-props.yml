@@ -21,11 +21,11 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Fetch and normalize current player markets
+      - name: Fetch normalize and index current player markets
         shell: bash
         run: |
           python - <<'PY'
-          import json, pathlib, re, urllib.request, time, hashlib
+          import json, pathlib, re, urllib.request, time, hashlib, collections
           from datetime import datetime, timezone
 
           BASE='https://sportservice.betflag.it/api/sport/pregame'
@@ -55,12 +55,16 @@ jobs:
             (2487,13509,'U/O Parate Giocatore'),
           ]
 
-          def fetch(tab,slot):
-            url=f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG_TOURNAMENT}/{tab}/{slot}/0?channelId=0'
+          def request_json(url,cap=16000000,timeout=35):
             req=urllib.request.Request(url,headers=H)
+            with urllib.request.urlopen(req,timeout=timeout) as r:
+              return r.status,json.loads(r.read(cap).decode('utf-8','replace'))
+
+          def fetch_player(tab,slot):
+            url=f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG_TOURNAMENT}/{tab}/{slot}/0?channelId=0'
             try:
-              with urllib.request.urlopen(req,timeout=35) as r:
-                return r.status,json.loads(r.read(14000000).decode('utf-8','replace')),url,None
+              status,data=request_json(url,14000000)
+              return status,data,url,None
             except Exception as e:
               return None,{},url,type(e).__name__+': '+str(e)[:220]
 
@@ -83,34 +87,48 @@ jobs:
                 for q in spread.get('asl') or []:
                   if not isinstance(q,dict): continue
                   rows.append({
-                    'market':mn,
-                    'line':None if str(spread_key)=='0.0' else spread_key,
-                    'selection':q.get('sn'),
-                    'odd':q.get('ov'),
-                    'selection_id':q.get('si'),
-                    'selection_type':q.get('sti'),
-                    'market_type':q.get('mti'),
-                    'market_id':q.get('mi'),
-                    'odds_id':q.get('oi')
+                    'market':mn,'line':None if str(spread_key)=='0.0' else spread_key,
+                    'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),
+                    'selection_type':q.get('sti'),'market_type':q.get('mti'),
+                    'market_id':q.get('mi'),'odds_id':q.get('oi')
                   })
             return rows
 
-          all_rows=[]; calls=[]; event_keys=set()
-          now=datetime.now(timezone.utc).isoformat()
+          # Build the real football-match map from the matching Today-Tomorrow aggregate.
+          match_map={}
+          standard_url=f'{BASE}/getOverviewEventsAams/0/1/0/{AGG_TOURNAMENT}/0/0/0?channelId=0'
+          standard_status=None; standard_error=None
+          try:
+            standard_status,standard=request_json(standard_url)
+            def walk_standard(x):
+              if isinstance(x,dict):
+                if x.get('mi') is not None and x.get('en') and not str(x.get('sn','')).lower().startswith('giocatori') and not str(x.get('en','')).startswith('('):
+                  if x.get('si') in (1,'1') or str(x.get('sn','')).lower()=='calcio':
+                    match_map[str(x.get('mi'))]={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','mi','tai')}
+                for v in x.values(): walk_standard(v)
+              elif isinstance(x,list):
+                for v in x: walk_standard(v)
+            walk_standard(standard)
+          except Exception as e:
+            standard_error=type(e).__name__+': '+str(e)[:220]
+
+          all_rows=[]; calls=[]; event_keys=set(); now=datetime.now(timezone.utc).isoformat()
           for idx,(tab,slot,label) in enumerate(TARGETS):
-            status,data,url,error=fetch(tab,slot)
+            status,data,url,error=fetch_player(tab,slot)
             if idx: time.sleep(0.10)
-            count_before=len(all_rows)
-            seen_events=[0]
+            count_before=len(all_rows); seen_events=[0]
             def walk(x):
               if isinstance(x,dict):
                 if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
                   seen_events[0]+=1
                   code,player=parse_player_event_name(x.get('en'))
+                  match=match_map.get(str(x.get('mi')))
                   base={
                     'event_id':x.get('ei'),'player_event':x.get('en'),'match_code':code,'player':player,
                     'start_time':x.get('ed'),'league':x.get('td'),'tournament_id':x.get('ti'),
                     'category_id':x.get('ci'),'authority_id':x.get('tai'),'match_market_id':x.get('mi'),
+                    'match':match.get('en') if match else None,'match_event_id':match.get('ei') if match else None,
+                    'match_start':match.get('ed') if match else x.get('ed'),
                     'source_sport':x.get('sn'),'source_category':x.get('cd'),'market_count_hint':x.get('nmK'),
                     'requested_tab':tab,'requested_slot':slot,'requested_market':label
                   }
@@ -124,46 +142,41 @@ jobs:
               elif isinstance(x,list):
                 for v in x: walk(v)
             walk(data)
-            calls.append({
-              'tab':tab,'slot':slot,'label':label,'status':status,'error':error,
-              'success':data.get('success') if isinstance(data,dict) else None,
-              'tn':data.get('tn') if isinstance(data,dict) else None,
-              'events_seen':seen_events[0],'rows_added':len(all_rows)-count_before,'url':url
-            })
+            calls.append({'tab':tab,'slot':slot,'label':label,'status':status,'error':error,'success':data.get('success') if isinstance(data,dict) else None,'tn':data.get('tn') if isinstance(data,dict) else None,'events_seen':seen_events[0],'rows_added':len(all_rows)-count_before,'url':url})
 
-          all_rows.sort(key=lambda r:(str(r.get('start_time')),str(r.get('league')),str(r.get('match_code')),str(r.get('player')),str(r.get('market')),str(r.get('line')),str(r.get('selection'))))
+          all_rows.sort(key=lambda r:(str(r.get('match_start')),str(r.get('league')),str(r.get('match') or r.get('match_code')),str(r.get('player')),str(r.get('market')),str(r.get('line')),str(r.get('selection'))))
           by_match={}
           for r in all_rows:
-            k=r.get('match_code') or str(r.get('match_market_id'))
-            m=by_match.setdefault(k,{'match_code':r.get('match_code'),'start_time':r.get('start_time'),'league':r.get('league'),'tournament_id':r.get('tournament_id'),'authority_id':r.get('authority_id'),'players':{}})
-            p=m['players'].setdefault(r.get('player'),[])
-            p.append({k:r.get(k) for k in ('market','line','selection','odd','event_id','selection_id','market_type','market_id','odds_id','requested_market')})
+            key=r.get('match') or r.get('match_code') or str(r.get('match_market_id'))
+            m=by_match.setdefault(key,{'match':r.get('match'),'match_code':r.get('match_code'),'match_event_id':r.get('match_event_id'),'match_market_id':r.get('match_market_id'),'start_time':r.get('match_start'),'league':r.get('league'),'tournament_id':r.get('tournament_id'),'authority_id':r.get('authority_id'),'players':{}})
+            m['players'].setdefault(r.get('player'),[]).append({k:r.get(k) for k in ('market','line','selection','odd','event_id','selection_id','market_type','market_id','odds_id','requested_market')})
 
           payload_for_hash=[{k:v for k,v in r.items() if k!='fetched_at'} for r in all_rows]
           digest=hashlib.sha256(json.dumps(payload_for_hash,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-          out={
-            'generated_at':now,
-            'source':'shared AAMS player service',
-            'scope':'Eventi Oggi-Domani',
+          market_counts=dict(collections.Counter(str(r.get('market')) for r in all_rows))
+          league_counts=dict(collections.Counter(str(r.get('league')) for r in all_rows))
+          joined=sum(1 for r in all_rows if r.get('match'))
+          meta={
+            'generated_at':now,'source':'shared AAMS player service','scope':'Eventi Oggi-Domani',
             'goldbet_alignment':'standard-market fingerprint STRONG_EXACT_MATCH; player prices not independently exposed by OddsPapi',
-            'row_count':len(all_rows),'match_count':len(by_match),'content_sha256':digest,
-            'calls':calls,'rows':all_rows
+            'row_count':len(all_rows),'match_count':len(by_match),'joined_rows':joined,'join_rate':round(joined/max(1,len(all_rows)),4),
+            'standard_match_map_count':len(match_map),'standard_status':standard_status,'standard_error':standard_error,
+            'content_sha256':digest,'markets':market_counts,'leagues':league_counts,'calls':calls
           }
-          compact={
-            'generated_at':now,'source':out['source'],'scope':out['scope'],'goldbet_alignment':out['goldbet_alignment'],
-            'row_count':len(all_rows),'match_count':len(by_match),'content_sha256':digest,
-            'calls':calls,'matches':list(by_match.values())
-          }
+          full={**meta,'rows':all_rows}
+          indexed={**meta,'matches':list(by_match.values())}
+          summary={**meta,'match_samples':[{k:m.get(k) for k in ('match','match_code','match_event_id','match_market_id','start_time','league')} for m in list(by_match.values())[:50]]}
           pathlib.Path('feed').mkdir(exist_ok=True)
-          pathlib.Path('feed/player-props-current.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          pathlib.Path('feed/player-props-current-by-match.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps({k:compact[k] for k in ('generated_at','row_count','match_count','content_sha256','calls')},ensure_ascii=False,indent=2))
+          pathlib.Path('feed/player-props-current.json').write_text(json.dumps(full,ensure_ascii=False,indent=2),encoding='utf-8')
+          pathlib.Path('feed/player-props-current-by-match.json').write_text(json.dumps(indexed,ensure_ascii=False,indent=2),encoding='utf-8')
+          pathlib.Path('feed/player-props-current-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(summary,ensure_ascii=False,indent=2)[:50000])
           PY
       - name: Commit current feed
         run: |
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/player-props-current.json feed/player-props-current-by-match.json
+          git add feed/player-props-current.json feed/player-props-current-by-match.json feed/player-props-current-summary.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh current player props feed'
           git push
