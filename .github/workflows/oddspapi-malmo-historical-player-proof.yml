@@ -1,0 +1,94 @@
+name: OddsPapi Malmo historical player proof
+
+on:
+  push:
+    paths:
+      - oddspapi-malmo-historical-player-proof-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect GoldBet historical player props
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          cfg=json.loads(pathlib.Path('oddspapi-malmo-historical-player-proof-trigger.json').read_text())
+          fid=cfg['fixtureId']
+          params={'fixtureId':fid,'bookmakers':'goldbet.it','apiKey':key}
+          url='https://api.oddspapi.io/v4/historical-odds?'+urllib.parse.urlencode(params)
+          req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/4.4'})
+          try:
+              with urllib.request.urlopen(req,timeout=120) as r:
+                  data=json.loads(r.read().decode())
+                  status=r.status
+          except urllib.error.HTTPError as e:
+              body=e.read().decode('utf-8','replace')
+              out={'generated_at':datetime.now(timezone.utc).isoformat(),'fixtureId':fid,'status':e.code,'error_body':body[:5000]}
+              pathlib.Path('feed').mkdir(exist_ok=True)
+              pathlib.Path('feed/oddspapi-malmo-historical-player-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+              raise SystemExit(0)
+
+          books=data.get('bookmakers') or {}
+          gb=books.get('goldbet.it') or {}
+          markets=gb.get('markets') or {}
+          market_summary=[]
+          nonzero_players=[]
+          scorer_rows=[]
+          for mid,md in markets.items():
+              outcomes=(md or {}).get('outcomes') or {}
+              pids=set(); entries=0
+              for oid,od in outcomes.items():
+                  players=(od or {}).get('players') or {}
+                  for pid,hist in players.items():
+                      pids.add(str(pid))
+                      if isinstance(hist,list):
+                          entries += len(hist)
+                          latest=hist[0] if hist else None
+                      elif isinstance(hist,dict):
+                          entries += 1
+                          latest=hist
+                      else:
+                          latest=None
+                      if str(pid) not in ('0','None',''):
+                          nonzero_players.append({'marketId':str(mid),'outcomeId':str(oid),'playerId':str(pid),'history_count':len(hist) if isinstance(hist,list) else 1,'latest':latest})
+                          if str(mid) in ('10730','10731','10732'):
+                              scorer_rows.append({'marketId':str(mid),'outcomeId':str(oid),'playerId':str(pid),'history':hist[:20] if isinstance(hist,list) else hist})
+              market_summary.append({'marketId':str(mid),'playerIds':sorted(pids)[:100],'player_count':len(pids),'history_entries':entries})
+
+          out={
+              'generated_at':datetime.now(timezone.utc).isoformat(),
+              'fixtureId':fid,
+              'status':status,
+              'bookmaker_present':bool(gb),
+              'market_count':len(markets),
+              'market_ids':sorted(str(k) for k in markets.keys()),
+              'has_anytime_scorer_market':'10730' in markets,
+              'has_first_scorer_market':'10731' in markets,
+              'has_last_scorer_market':'10732' in markets,
+              'nonzero_player_entries':len(nonzero_players),
+              'nonzero_players':nonzero_players[:500],
+              'scorer_rows':scorer_rows[:200],
+              'market_summary':market_summary
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/oddspapi-malmo-historical-player-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit proof
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/oddspapi-malmo-historical-player-proof.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Check Malmo GoldBet historical player props"
+          git push
