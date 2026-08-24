@@ -1,0 +1,76 @@
+name: Probe aggregate core player slots
+
+on:
+  push:
+    paths:
+      - 'probe-aggregate-core-player-slots-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe core scorer markets in today-tomorrow aggregate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request
+          from datetime import datetime,timezone
+          B='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          targets=[
+            (2484,13825,'Marcatore Plus'),(2484,19405,'Marcatore o Sostituto'),
+            (2484,22884,'Marc'),(2484,13819,'1° Marcatore'),
+            (2484,13820,'Marcatore 1T'),(2484,13826,'Marcatore 2T'),
+            (2487,13509,'U/O Parate Giocatore')]
+          def get(tab,slot):
+            u=f'{B}/getOverviewEventsAams/0/-1/0/1334500001/{tab}/{slot}/0?channelId=0'
+            try:
+              with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=35) as r:return r.status,json.loads(r.read(12000000).decode('utf-8','replace'))
+            except Exception as e:return None,{'error':type(e).__name__+': '+str(e)}
+          def parse(data):
+            ev=[]; rows=[]; mks=[]
+            def markets_for_event(e):
+              out=[];mm=e.get('mmkW')
+              vals=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+              for m in vals:
+                if not isinstance(m,dict):continue
+                mn=str(m.get('mn','')).strip();mks.append(mn)
+                spd=m.get('spd');sv=spd.values() if isinstance(spd,dict) else (spd if isinstance(spd,list) else [])
+                for spread in sv:
+                  if not isinstance(spread,dict):continue
+                  for q in spread.get('asl') or []:
+                    if isinstance(q,dict):out.append({'market':mn,'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),'market_type':q.get('mti'),'market_id':q.get('mi'),'odds_id':q.get('oi')})
+              return out
+            def walk(x):
+              if isinstance(x,dict):
+                if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
+                  item={k:x.get(k) for k in ('ei','en','ed','ti','ci','mi','tai','td','sn','cd','nmK')}; item['odds']=markets_for_event(x);ev.append(item)
+                for v in x.values():walk(v)
+              elif isinstance(x,list):
+                for v in x:walk(v)
+            walk(data)
+            for e in ev:
+              for o in e['odds']:
+                rows.append({'player_event':e['en'],'league':e['td'],'ti':e['ti'],'tai':e['tai'],**o})
+            return ev,rows,list(dict.fromkeys(mks))
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'markets':[]}
+          for tab,slot,label in targets:
+            s,d=get(tab,slot); ev,rows,mks=parse(d)
+            out['markets'].append({'tab':tab,'slot':slot,'label':label,'status':s,'success':d.get('success') if isinstance(d,dict) else None,'tn':d.get('tn') if isinstance(d,dict) else None,'event_count':len(ev),'row_count':len(rows),'market_names':mks,'tournaments':sorted({(str(x.get('ti')),str(x.get('tai')),str(x.get('td'))) for x in ev}),'samples':rows[:12]})
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/aggregate-core-player-slots.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:50000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/aggregate-core-player-slots.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe aggregate core player markets'
+          git push
