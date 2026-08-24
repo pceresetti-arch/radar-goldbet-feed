@@ -1,0 +1,50 @@
+name: Test Diretta GoldBet first-half opening markets
+
+on:
+  push:
+    paths:
+      - 'diretta-goldbet-first-half-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe first-half scopes for GoldBet 188
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,requests
+          from datetime import datetime,timezone
+          base='https://global.ds.lsapp.eu/odds/pq_graphql'; eid='xAQCcf1s'; bid='188'
+          s=requests.Session(); s.headers.update({'User-Agent':'Mozilla/5.0','Accept':'*/*','Referer':'https://www.diretta.it/','Origin':'https://www.diretta.it'})
+          scopes=['FIRST_HALF','1ST_HALF','FIRST_PERIOD','HALF_TIME']
+          types=['HOME_DRAW_AWAY','OVER_UNDER','BOTH_TEAMS_TO_SCORE']
+          rows=[]
+          for bs in scopes:
+            for bt in types:
+              p={'_hash':'ope2','eventId':eid,'bookmakerId':bid,'betType':bt,'betScope':bs}
+              try:
+                r=s.get(base,params=p,timeout=20); d=r.json() if r.status_code==200 else None
+                payload=((d or {}).get('data') or {}).get('findPrematchOddsForBookmaker') if isinstance(d,dict) else None
+                rows.append({'betType':bt,'betScope':bs,'status':r.status_code,'payload':payload})
+              except Exception as e: rows.append({'betType':bt,'betScope':bs,'error':repr(e)})
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'event':'Valencia - Real Betis','event_id':eid,'bookmaker_id':188,'rows':rows}
+          pathlib.Path('feed').mkdir(exist_ok=True); pathlib.Path('feed/diretta-goldbet-first-half-test.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:30000])
+          PY
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git pull --rebase || true
+          git add feed/diretta-goldbet-first-half-test.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Test Diretta GoldBet first-half opening markets'
+          git push
