@@ -1,0 +1,85 @@
+name: Probe GoldBet with real Chromium
+
+on:
+  push:
+    paths:
+      - 'browser-goldbet-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Selenium
+        run: python -m pip install -q selenium
+      - name: Open GoldBet and capture sport network
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, time, re
+          from datetime import datetime, timezone
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          options=Options()
+          options.add_argument('--headless=new')
+          options.add_argument('--no-sandbox')
+          options.add_argument('--disable-dev-shm-usage')
+          options.add_argument('--window-size=1440,1800')
+          options.add_argument('--lang=it-IT')
+          options.add_argument('--disable-blink-features=AutomationControlled')
+          options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36')
+          options.set_capability('goog:loggingPrefs', {'performance':'ALL','browser':'ALL'})
+          result={'generated_at':datetime.now(timezone.utc).isoformat(),'steps':[],'requests':[],'browser_logs':[]}
+          d=None
+          try:
+            d=webdriver.Chrome(options=options)
+            d.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source':"Object.defineProperty(navigator,'webdriver',{get:()=>undefined});"})
+            for url in ['https://www.goldbet.it/','https://www.goldbet.it/scommesse']:
+              try:
+                d.get(url); time.sleep(8)
+                text=(d.find_element('tag name','body').text if d.find_elements('tag name','body') else '')
+                result['steps'].append({'url':url,'final_url':d.current_url,'title':d.title,'html_bytes':len(d.page_source),'body_prefix':text[:5000]})
+              except Exception as e:
+                result['steps'].append({'url':url,'error':repr(e)})
+            logs=d.get_log('performance')
+            seen=set()
+            for x in logs:
+              try:
+                m=json.loads(x['message'])['message']
+                if m['method']!='Network.requestWillBeSent': continue
+                req=m['params']['request']; u=req.get('url','')
+                lu=u.lower()
+                if any(k in lu for k in ('/api/sport/','getsportserviceconfiguration','repo.lottomaticagroup.com','scommesseconfig','aams','giocatori','marcatori','player')):
+                  key=(req.get('method'),u)
+                  if key in seen: continue
+                  seen.add(key)
+                  headers={k:v for k,v in (req.get('headers') or {}).items() if k.lower() not in ('cookie','authorization','x-api-key')}
+                  result['requests'].append({'method':req.get('method'),'url':u,'headers':headers,'postData':(req.get('postData') or '')[:3000]})
+              except Exception: pass
+            try: result['browser_logs']=d.get_log('browser')[:100]
+            except Exception: pass
+          except Exception as e:
+            result['fatal_error']=repr(e)
+          finally:
+            if d:
+              try: d.quit()
+              except: pass
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/browser-goldbet-network-probe.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'steps':result.get('steps'),'request_count':len(result.get('requests',[])),'fatal':result.get('fatal_error')},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        if: always()
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          [ -f feed/browser-goldbet-network-probe.json ] || echo '{"status":"no_result"}' > feed/browser-goldbet-network-probe.json
+          git add feed/browser-goldbet-network-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe GoldBet browser network'
+          git push
