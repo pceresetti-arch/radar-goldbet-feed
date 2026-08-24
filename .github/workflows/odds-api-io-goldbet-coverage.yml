@@ -1,0 +1,40 @@
+name: Odds-API.io GoldBet coverage check
+
+on:
+  push:
+    paths:
+      - odds-api-io-goldbet-coverage-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch public coverage sheet
+        run: |
+          python - <<'PY'
+          import csv, io, json, pathlib, urllib.request
+          from datetime import datetime, timezone
+          u='https://docs.google.com/spreadsheets/d/162Xyr7So0UTnXomfirqYm-WtuIM-Jz6ngHoIIil1nkA/export?format=csv&gid=1125531260'
+          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=60) as r:
+              raw=r.read().decode('utf-8-sig','replace')
+          rows=list(csv.reader(io.StringIO(raw)))
+          matches=[row for row in rows if any('goldbet' in str(c).lower() for c in row)]
+          prop_rows=[row for row in rows if len(row)>=3 and 'football' in ' '.join(row).lower() and ('yes' in [str(c).strip().lower() for c in row] or 'player props' in ' '.join(row).lower())]
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'rows':len(rows),'headers':rows[:2],'goldbet_matches':matches,'football_player_prop_examples':prop_rows[:100]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/odds-api-io-goldbet-coverage.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit result
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/odds-api-io-goldbet-coverage.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Check Odds-API.io GoldBet player prop coverage"
+          git push
