@@ -2,7 +2,7 @@ name: Track Radar odds movement
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
   push:
     paths:
@@ -27,190 +27,121 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import concurrent.futures, hashlib, json, os, pathlib, re, urllib.parse, urllib.request
+          import concurrent.futures, hashlib, json, os, pathlib, urllib.parse, urllib.request
           from datetime import datetime, timezone, timedelta
           from zoneinfo import ZoneInfo
 
-          NOW=datetime.now(timezone.utc)
-          NOW_ISO=NOW.isoformat()
-          ROME=ZoneInfo('Europe/Rome')
+          NOW=datetime.now(timezone.utc); NOW_ISO=NOW.isoformat(); ROME=ZoneInfo('Europe/Rome')
           token=os.environ.get('BRIDGE_TOKEN','').strip()
           if not token: raise SystemExit('Missing BRIDGE_TOKEN')
-
-          STATE=pathlib.Path('feed/odds-movement-state.json')
-          SUMMARY=pathlib.Path('feed/odds-movement-current.json')
+          STATE=pathlib.Path('feed/odds-movement-state.json'); SUMMARY=pathlib.Path('feed/odds-movement-current.json')
           STATE.parent.mkdir(exist_ok=True)
-          try:
-            old=json.loads(STATE.read_text(encoding='utf-8')) if STATE.exists() else {}
-          except Exception:
-            old={}
+          try: old=json.loads(STATE.read_text(encoding='utf-8')) if STATE.exists() else {}
+          except Exception: old={}
           records=old.get('records') if isinstance(old,dict) else {}
           if not isinstance(records,dict): records={}
 
-          def parse_dt(s, local=False):
-            if not s: return None
+          def parse_dt(s,local=False):
+            if not s:return None
             try:
-              if local:
-                return datetime.strptime(str(s),'%d-%m-%Y %H:%M').replace(tzinfo=ROME).astimezone(timezone.utc)
+              if local:return datetime.strptime(str(s),'%d-%m-%Y %H:%M').replace(tzinfo=ROME).astimezone(timezone.utc)
               return datetime.fromisoformat(str(s).replace('Z','+00:00')).astimezone(timezone.utc)
-            except Exception:
-              return None
+            except Exception:return None
+          def minutes_to(s):
+            d=parse_dt(s); return None if not d else round((d-NOW).total_seconds()/60,1)
+          def key(parts):
+            return hashlib.sha1('|'.join('' if x is None else str(x) for x in parts).encode()).hexdigest()[:20]
 
-          def minutes_to(start):
-            d=parse_dt(start)
-            return None if not d else round((d-NOW).total_seconds()/60,1)
+          # Remove any T-40/T-30 duplicate produced by the old overlapping windows.
+          for rec in records.values():
+            cps=rec.get('checkpoints') or {}; a=cps.get('T-40'); b=cps.get('T-30')
+            if isinstance(a,dict) and isinstance(b,dict) and a.get('captured_at')==b.get('captured_at'):
+              ma=a.get('minutes_to_start'); mb=b.get('minutes_to_start')
+              try:
+                if abs(float(ma)-40) <= abs(float(mb)-30): cps.pop('T-30',None)
+                else: cps.pop('T-40',None)
+              except Exception: cps.pop('T-40',None)
 
-          def stable_key(parts):
-            raw='|'.join('' if x is None else str(x) for x in parts)
-            return hashlib.sha1(raw.encode('utf-8')).hexdigest()[:20]
+          observations=[]; errors=[]
 
-          checkpoints=[120,75,60,40,30,15]
-          observations=[]
-          errors=[]
-
-          # Direct GoldBet standard markets from the existing bridge.
-          base='https://radar-goldbet.p-ceresetti.workers.dev/odds'
-          offsets=list(range(0,20000,2000))
+          # GoldBet direct standard markets, same bookmaker only.
+          base='https://radar-goldbet.p-ceresetti.workers.dev/odds'; offsets=list(range(0,20000,2000))
           def page(off):
             qs=urllib.parse.urlencode({'token':token,'bookmakers':'goldbet','state':'prematch','limit':'2000','offset':str(off)})
-            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarMovement/1.0'})
+            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarMovement/2.0'})
             try:
               with urllib.request.urlopen(req,timeout=75) as r:
-                d=json.loads(r.read().decode('utf-8','replace'))
-                return {'offset':off,'count':d.get('count'),'rows':d.get('odds') or [],'error':None}
-            except Exception as e:
-              return {'offset':off,'count':None,'rows':[],'error':type(e).__name__+': '+str(e)[:180]}
-
-          with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
-            pages=list(ex.map(page,offsets))
-          total=max([p.get('count') or 0 for p in pages] or [0])
-          std_rows=[]
+                d=json.loads(r.read().decode('utf-8','replace')); return {'offset':off,'count':d.get('count'),'rows':d.get('odds') or [],'error':None}
+            except Exception as e:return {'offset':off,'count':None,'rows':[],'error':type(e).__name__+': '+str(e)[:180]}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex: pages=list(ex.map(page,offsets))
+          total=max([p.get('count') or 0 for p in pages] or [0]); std=[]
           for p in pages:
-            if p['error']: errors.append({'source':'goldbet','offset':p['offset'],'error':p['error']})
-            if total==0 or p['offset']<total: std_rows.extend(p['rows'])
+            if p['error']:errors.append({'source':'goldbet','offset':p['offset'],'error':p['error']})
+            if total==0 or p['offset']<total:std.extend(p['rows'])
+          def relevant(m):
+            s=str(m or '').lower(); return any(x in s for x in ('1x2','over','under','goal','btts','double','doppia','total','totale'))
+          for r in std:
+            if not isinstance(r,dict) or not relevant(r.get('market')):continue
+            start=r.get('commence_time'); sd=parse_dt(start)
+            if sd and (sd<NOW-timedelta(hours=12) or sd>NOW+timedelta(days=14)):continue
+            bms=r.get('bookmakers') or []; bm=None
+            if isinstance(bms,list):bm=next((b for b in bms if isinstance(b,dict) and str(b.get('key','')).lower()=='goldbet'),None)
+            elif isinstance(bms,dict):bm=bms.get('goldbet') or bms
+            if not isinstance(bm,dict):continue
+            outs=bm.get('outcomes') or {}
+            if not isinstance(outs,dict):continue
+            for sel,price in outs.items():
+              try:price=float(price)
+              except Exception:continue
+              observations.append({'source':'GOLDBET_DIRECT_STANDARD','bookmaker':'goldbet','event_id':r.get('event_id'),'event':r.get('event') or f"{r.get('home_team','')} - {r.get('away_team','')}",'league':r.get('league'),'start_time':start,'market':r.get('market'),'line':r.get('line'),'scope':r.get('scope'),'period':r.get('period'),'selection':str(sel),'player':None,'price':price,'source_last_update':bm.get('last_update')})
 
-          def relevant_standard_market(name):
-            s=str(name or '').lower()
-            return any(x in s for x in ('1x2','over','under','goal','btts','double','doppia','total','totale'))
-
-          for r in std_rows:
-            if not isinstance(r,dict): continue
-            market=str(r.get('market') or '')
-            if not relevant_standard_market(market): continue
-            start=r.get('commence_time')
-            sd=parse_dt(start)
-            if sd and (sd < NOW-timedelta(hours=12) or sd > NOW+timedelta(days=14)): continue
-            bms=r.get('bookmakers') or []
-            bm=None
-            if isinstance(bms,list):
-              bm=next((b for b in bms if isinstance(b,dict) and str(b.get('key','')).lower()=='goldbet'),None)
-            elif isinstance(bms,dict): bm=bms.get('goldbet') or bms
-            if not isinstance(bm,dict): continue
-            outcomes=bm.get('outcomes') or {}
-            if not isinstance(outcomes,dict): continue
-            for outcome,price in outcomes.items():
-              try: price=float(price)
-              except Exception: continue
-              observations.append({
-                'source':'GOLDBET_DIRECT_STANDARD','bookmaker':'goldbet','event_id':r.get('event_id'),
-                'event':r.get('event') or f"{r.get('home_team','')} - {r.get('away_team','')}",
-                'league':r.get('league'),'start_time':start,'market':market,'line':r.get('line'),
-                'scope':r.get('scope'),'period':r.get('period'),'selection':str(outcome),'player':None,
-                'price':price,'source_last_update':bm.get('last_update')
-              })
-
-          # Player props: autonomous shared AAMS feed already tied to real matches.
-          pfile=pathlib.Path('feed/player-props-current.json')
-          if pfile.exists():
+          # Player props from the autonomous AAMS GoldBet-aligned feed.
+          pf=pathlib.Path('feed/player-props-current.json')
+          if pf.exists():
             try:
-              pdata=json.loads(pfile.read_text(encoding='utf-8'))
-              for r in pdata.get('rows') or []:
-                if not isinstance(r,dict) or r.get('odd') is None: continue
-                try: price=float(r.get('odd'))
-                except Exception: continue
-                start=r.get('match_start')
-                sd=parse_dt(start,local=True)
-                start_iso=sd.isoformat() if sd else None
-                observations.append({
-                  'source':'SHARED_AAMS_PLAYER','bookmaker':'shared_aams_goldbet_aligned',
-                  'event_id':r.get('match_event_id') or r.get('match_market_id'),'event':r.get('match') or r.get('match_code'),
-                  'league':r.get('league'),'start_time':start_iso,'market':r.get('market'),'line':r.get('line'),
-                  'scope':'player','period':None,'selection':r.get('selection'),'player':r.get('player'),
-                  'price':price,'source_last_update':r.get('fetched_at')
-                })
-            except Exception as e:
-              errors.append({'source':'player_props','error':type(e).__name__+': '+str(e)[:180]})
+              pd=json.loads(pf.read_text(encoding='utf-8'))
+              for r in pd.get('rows') or []:
+                if not isinstance(r,dict) or r.get('odd') is None:continue
+                try:price=float(r.get('odd'))
+                except Exception:continue
+                sd=parse_dt(r.get('match_start'),local=True); start=sd.isoformat() if sd else None
+                observations.append({'source':'SHARED_AAMS_PLAYER','bookmaker':'shared_aams_goldbet_aligned','event_id':r.get('match_event_id') or r.get('match_market_id'),'event':r.get('match') or r.get('match_code'),'league':r.get('league'),'start_time':start,'market':r.get('market'),'line':r.get('line'),'scope':'player','period':None,'selection':r.get('selection'),'player':r.get('player'),'price':price,'source_last_update':r.get('fetched_at')})
+            except Exception as e:errors.append({'source':'player_props','error':type(e).__name__+': '+str(e)[:180]})
 
-          new_count=0; changed_count=0; checkpoint_count=0
-          seen_keys=set()
+          checkpoints=[120,75,60,40,30,15]
+          new_count=changed_count=checkpoint_count=0
           for o in observations:
-            key=stable_key([o['source'],o['bookmaker'],o['event_id'],o['market'],o['line'],o['scope'],o['period'],o['player'],o['selection']])
-            seen_keys.add(key)
-            mt=minutes_to(o.get('start_time'))
-            rec=records.get(key)
+            k=key([o['source'],o['bookmaker'],o['event_id'],o['market'],o['line'],o['scope'],o['period'],o['player'],o['selection']]); mt=minutes_to(o.get('start_time')); rec=records.get(k)
             if not isinstance(rec,dict):
-              rec={
-                'key':key,'source':o['source'],'bookmaker':o['bookmaker'],'event_id':o['event_id'],'event':o['event'],'league':o['league'],
-                'start_time':o['start_time'],'market':o['market'],'line':o['line'],'scope':o['scope'],'period':o['period'],
-                'player':o['player'],'selection':o['selection'],'first_seen_at':NOW_ISO,'open_price':o['price'],
-                'current_price':o['price'],'last_change_at':NOW_ISO,'change_count':0,'min_price':o['price'],'max_price':o['price'],
-                'checkpoints':{},'source_last_update':o.get('source_last_update')
-              }
-              records[key]=rec; new_count+=1
+              rec={'key':k,'source':o['source'],'bookmaker':o['bookmaker'],'event_id':o['event_id'],'event':o['event'],'league':o['league'],'start_time':o['start_time'],'market':o['market'],'line':o['line'],'scope':o['scope'],'period':o['period'],'player':o['player'],'selection':o['selection'],'first_seen_at':NOW_ISO,'open_price':o['price'],'current_price':o['price'],'last_change_at':NOW_ISO,'change_count':0,'min_price':o['price'],'max_price':o['price'],'checkpoints':{},'source_last_update':o.get('source_last_update')}
+              records[k]=rec; new_count+=1
             else:
-              oldp=rec.get('current_price')
-              try: different=abs(float(oldp)-float(o['price']))>1e-9
-              except Exception: different=oldp!=o['price']
+              try:different=abs(float(rec.get('current_price'))-float(o['price']))>1e-9
+              except Exception:different=rec.get('current_price')!=o['price']
               if different:
-                rec['current_price']=o['price']; rec['last_change_at']=NOW_ISO; rec['change_count']=int(rec.get('change_count') or 0)+1
-                rec['min_price']=min(float(rec.get('min_price',o['price'])),o['price'])
-                rec['max_price']=max(float(rec.get('max_price',o['price'])),o['price'])
-                rec['source_last_update']=o.get('source_last_update'); changed_count+=1
+                rec['current_price']=o['price']; rec['last_change_at']=NOW_ISO; rec['change_count']=int(rec.get('change_count') or 0)+1; rec['min_price']=min(float(rec.get('min_price',o['price'])),o['price']); rec['max_price']=max(float(rec.get('max_price',o['price'])),o['price']); rec['source_last_update']=o.get('source_last_update'); changed_count+=1
+            rec['last_observed_at']=NOW_ISO; rec['last_observed_minutes_to_start']=mt
             if mt is not None:
               cps=rec.setdefault('checkpoints',{})
+              # Non-overlapping ±5 minute checkpoint windows. Exact capture time is retained.
               for cp in checkpoints:
                 ck=f'T-{cp}'
-                if ck not in cps and mt <= cp and mt > cp-12:
-                  cps[ck]={'price':o['price'],'captured_at':NOW_ISO,'minutes_to_start':mt}
-                  checkpoint_count+=1
+                if ck not in cps and (cp-5) < mt <= (cp+5):
+                  cps[ck]={'price':o['price'],'captured_at':NOW_ISO,'minutes_to_start':mt,'target_minutes':cp,'distance_from_target_min':round(abs(mt-cp),1)}; checkpoint_count+=1
 
-          # Keep recent completed events for post-match/retro use; prune stale active state after 7 days.
-          pruned={}
-          for k,rec in records.items():
-            sd=parse_dt(rec.get('start_time'))
-            if sd and sd < NOW-timedelta(days=7): continue
-            pruned[k]=rec
-          records=pruned
-
+          # Retain seven days after kickoff for retro-analysis.
+          records={k:r for k,r in records.items() if not (parse_dt(r.get('start_time')) and parse_dt(r.get('start_time'))<NOW-timedelta(days=7))}
           movers=[]
-          for rec in records.values():
+          for r in records.values():
             try:
-              op=float(rec['open_price']); cp=float(rec['current_price'])
-              pp=round((1/cp-1/op)*100,3) if op>0 and cp>0 else 0
-              delta=round(cp-op,3)
-            except Exception: continue
-            if rec.get('change_count',0)>0:
-              movers.append({
-                'event':rec.get('event'),'start_time':rec.get('start_time'),'market':rec.get('market'),'line':rec.get('line'),
-                'player':rec.get('player'),'selection':rec.get('selection'),'source':rec.get('source'),'open':op,'current':cp,
-                'price_delta':delta,'implied_probability_delta_pp':pp,'changes':rec.get('change_count'),
-                'T-40':(rec.get('checkpoints') or {}).get('T-40'),'T-30':(rec.get('checkpoints') or {}).get('T-30')
-              })
+              op=float(r['open_price']); cp=float(r['current_price']); pp=round((1/cp-1/op)*100,3); delta=round(cp-op,3)
+            except Exception:continue
+            if r.get('change_count',0)>0:
+              movers.append({'event':r.get('event'),'start_time':r.get('start_time'),'market':r.get('market'),'line':r.get('line'),'player':r.get('player'),'selection':r.get('selection'),'source':r.get('source'),'open':op,'current':cp,'price_delta':delta,'implied_probability_delta_pp':pp,'changes':r.get('change_count'),'T-40':(r.get('checkpoints') or {}).get('T-40'),'T-30':(r.get('checkpoints') or {}).get('T-30')})
           movers.sort(key=lambda x:abs(x['implied_probability_delta_pp']),reverse=True)
-
-          state={
-            'generated_at':NOW_ISO,'method':'FIRST_SEEN -> every price change -> T-120/T-75/T-60/T-40/T-30/T-15 checkpoints',
-            'standard_source':'GoldBet direct bridge, same bookmaker only','player_source':'shared AAMS player feed; GoldBet-aligned but not independently player-certified',
-            'records':dict(sorted(records.items()))
-          }
-          summary={
-            'generated_at':NOW_ISO,'standard_bridge_total':total,'standard_rows_fetched':len(std_rows),'observations':len(observations),
-            'tracked_selections':len(records),'new_selections':new_count,'price_changes_this_run':changed_count,
-            'checkpoints_captured_this_run':checkpoint_count,'errors':errors,'top_movers':movers[:100]
-          }
-          STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8')
-          SUMMARY.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps(summary,ensure_ascii=False,indent=2)[:30000])
+          state={'generated_at':NOW_ISO,'method':'FIRST_SEEN -> every price change -> distinct T-120/T-75/T-60/T-40/T-30/T-15 checkpoints (5-minute polling)','standard_source':'GoldBet direct bridge, same bookmaker only','player_source':'shared AAMS player feed; GoldBet-aligned but not independently player-certified','records':dict(sorted(records.items()))}
+          summary={'generated_at':NOW_ISO,'standard_bridge_total':total,'standard_rows_fetched':len(std),'observations':len(observations),'tracked_selections':len(records),'new_selections':new_count,'price_changes_this_run':changed_count,'checkpoints_captured_this_run':checkpoint_count,'errors':errors,'top_movers':movers[:100]}
+          STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8'); SUMMARY.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8'); print(json.dumps(summary,ensure_ascii=False,indent=2)[:30000])
           PY
       - name: Commit movement state
         run: |
