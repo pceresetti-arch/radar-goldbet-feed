@@ -20,214 +20,147 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch GoldBet odds from OddsPapi
+      - name: Fetch GoldBet player props from OddsPapi v5
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
         run: |
           python - <<'PY'
-          import json
-          import os
-          import pathlib
-          import urllib.parse
-          import urllib.request
+          import json, os, pathlib, urllib.parse, urllib.request
           from datetime import datetime, timezone
 
-          key = os.environ.get("ODDSPAPI_KEY", "").strip()
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
           if not key:
-              raise SystemExit("Missing GitHub Actions secret: ODDSPAPI_KEY")
+              raise SystemExit('Missing GitHub Actions secret: ODDSPAPI_KEY')
 
-          trigger = json.loads(pathlib.Path("oddspapi-trigger.json").read_text(encoding="utf-8"))
-          sport_id = int(trigger.get("sportId", 10))
-          date_from = str(trigger.get("from"))
-          date_to = str(trigger.get("to"))
-          bookmaker = str(trigger.get("bookmaker", "goldbet.it"))
-          match_terms = trigger.get("match_terms", []) or []
-          if isinstance(match_terms, str):
-              match_terms = [match_terms]
-          match_terms = [str(x).strip().lower() for x in match_terms if str(x).strip()]
+          t=json.loads(pathlib.Path('oddspapi-trigger.json').read_text(encoding='utf-8'))
+          sport_id=int(t.get('sportId',10))
+          bookmaker=str(t.get('bookmaker','goldbet.it'))
+          terms=t.get('match_terms',[]) or []
+          if isinstance(terms,str): terms=[terms]
+          terms=[str(x).strip().lower() for x in terms if str(x).strip()]
 
-          BASE = "https://api.oddspapi.io/v4"
+          def epoch(s):
+              s=str(s).replace('Z','+00:00')
+              return int(datetime.fromisoformat(s).timestamp())
 
-          def get_json(endpoint, params):
-              q = dict(params)
-              q["apiKey"] = key
-              url = BASE + endpoint + "?" + urllib.parse.urlencode(q)
-              req = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "RadarGoldBetFeed/1.0"})
-              with urllib.request.urlopen(req, timeout=90) as resp:
-                  raw = resp.read().decode("utf-8")
-                  if resp.status != 200:
-                      raise SystemExit(f"OddsPapi returned HTTP {resp.status}")
-              return json.loads(raw)
+          start_from=epoch(t['from'])
+          start_to=epoch(t['to'])
+          BASE='https://v5.oddspapi.io/en'
 
-          fixtures_raw = get_json("/fixtures", {
-              "sportId": sport_id,
-              "from": date_from,
-              "to": date_to,
-              "statusId": 0,
-              "hasOdds": "true",
-              "bookmakers": bookmaker,
-              "language": "en",
+          def get(path, params):
+              q=dict(params); q['apiKey']=key
+              url=BASE+path+'?'+urllib.parse.urlencode(q)
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/5.0'})
+              with urllib.request.urlopen(req,timeout=90) as r:
+                  return json.loads(r.read().decode('utf-8'))
+
+          fixtures=get('/fixtures',{
+              'sportId':sport_id,
+              'bookmakers':bookmaker,
+              'startTimeFrom':start_from,
+              'startTimeTo':start_to,
           })
+          if not isinstance(fixtures,list): fixtures=[]
 
-          if isinstance(fixtures_raw, list):
-              fixtures = fixtures_raw
-          elif isinstance(fixtures_raw, dict) and isinstance(fixtures_raw.get("data"), list):
-              fixtures = fixtures_raw["data"]
-          else:
-              fixtures = []
+          def ftxt(f):
+              p=f.get('participants') or {}
+              tr=f.get('tournament') or {}
+              vals=[p.get('participant1Name'),p.get('participant2Name'),p.get('participant1ShortName'),p.get('participant2ShortName'),tr.get('tournamentName'),tr.get('categoryName')]
+              return ' '.join(str(x) for x in vals if x).lower()
 
-          def fixture_text(f):
-              vals = []
-              for k in ("participant1Name", "participant2Name", "participant1ShortName", "participant2ShortName", "tournamentName", "categoryName"):
-                  if f.get(k): vals.append(str(f.get(k)))
-              participants = f.get("participants")
-              if isinstance(participants, dict):
-                  for side in ("home", "away"):
-                      p = participants.get(side)
-                      if isinstance(p, dict) and p.get("name"):
-                          vals.append(str(p.get("name")))
-              return " ".join(vals).lower()
-
-          matches = [f for f in fixtures if all(term in fixture_text(f) for term in match_terms)] if match_terms else fixtures
-
-          out_dir = pathlib.Path("feed")
-          out_dir.mkdir(exist_ok=True)
-
-          diagnostic = {
-              "generated_at": datetime.now(timezone.utc).isoformat(),
-              "fixtures_returned": len(fixtures),
-              "matches_found": len(matches),
-              "match_terms": match_terms,
-              "bookmaker": bookmaker,
-              "fixture_candidates": [
-                  {
-                      "fixtureId": f.get("fixtureId"),
-                      "participant1Name": f.get("participant1Name"),
-                      "participant2Name": f.get("participant2Name"),
-                      "tournamentName": f.get("tournamentName"),
-                      "categoryName": f.get("categoryName"),
-                      "startTime": f.get("startTime"),
-                  }
-                  for f in matches[:20]
-              ],
+          matches=[f for f in fixtures if all(term in ftxt(f) for term in terms)] if terms else fixtures
+          outdir=pathlib.Path('feed'); outdir.mkdir(exist_ok=True)
+          now=datetime.now(timezone.utc).isoformat()
+          out={
+              'generated_at':now,
+              'api':'OddsPapi v5',
+              'bookmaker':bookmaker,
+              'match_terms':terms,
+              'fixtures_returned':len(fixtures),
+              'matches_found':len(matches),
           }
 
           if not matches:
-              diagnostic["sample_fixtures"] = [
-                  {
-                      "fixtureId": f.get("fixtureId"),
-                      "participant1Name": f.get("participant1Name"),
-                      "participant2Name": f.get("participant2Name"),
-                      "tournamentName": f.get("tournamentName"),
-                      "categoryName": f.get("categoryName"),
-                      "startTime": f.get("startTime"),
-                  }
-                  for f in fixtures[:30]
-              ]
-              (out_dir / "oddspapi-summary.json").write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2), encoding="utf-8")
+              out['sample_fixtures']=[{
+                  'fixtureId':f.get('fixtureId'),
+                  'participant1Name':(f.get('participants') or {}).get('participant1Name'),
+                  'participant2Name':(f.get('participants') or {}).get('participant2Name'),
+                  'tournamentName':(f.get('tournament') or {}).get('tournamentName'),
+                  'startTime':f.get('startTime'),
+              } for f in fixtures[:40]]
           else:
-              fixture = matches[0]
-              fixture_id = fixture.get("fixtureId")
-              if not fixture_id:
-                  raise SystemExit("Matched fixture has no fixtureId")
+              f=matches[0]
+              fid=f.get('fixtureId')
+              od=get('/fixtures/odds',{'fixtureId':fid,'bookmakers':bookmaker})
+              markets=get('/markets',{'sportId':sport_id})
+              mmap={str(m.get('marketId')):m for m in markets if isinstance(m,dict)} if isinstance(markets,list) else {}
+              raw=(od.get('odds') or {}).get(bookmaker,{}) if isinstance(od,dict) else {}
+              if not isinstance(raw,dict): raw={}
 
-              odds = get_json("/odds", {
-                  "fixtureId": fixture_id,
-                  "bookmakers": bookmaker,
-                  "oddsFormat": "decimal",
-                  "language": "en",
-                  "verbosity": 3,
+              rows=[]; player_ids=set(); market_ids=set()
+              for odds_id,sel in raw.items():
+                  if not isinstance(sel,dict): continue
+                  mid=sel.get('marketId'); pid=sel.get('playerId')
+                  meta=mmap.get(str(mid),{})
+                  is_player=bool(meta.get('playerProp')) or (pid not in (None,0,'0'))
+                  if not is_player: continue
+                  if pid not in (None,0,'0'): player_ids.add(str(pid))
+                  market_ids.add(str(mid))
+                  rows.append({
+                      'oddsId':str(odds_id),
+                      'marketId':mid,
+                      'marketName':meta.get('marketName'),
+                      'marketNameShort':meta.get('marketNameShort'),
+                      'marketType':meta.get('marketType'),
+                      'period':meta.get('period'),
+                      'playerProp':bool(meta.get('playerProp')),
+                      'playerId':pid,
+                      'outcomeId':sel.get('outcomeId'),
+                      'price':sel.get('price'),
+                      'active':sel.get('active'),
+                      'marketActive':sel.get('marketActive'),
+                      'mainLine':sel.get('mainLine'),
+                      'bookmakerOutcomeId':sel.get('bookmakerOutcomeId'),
+                      'bookmakerMarketId':sel.get('bookmakerMarketId'),
+                      'changedAt':sel.get('changedAt'),
+                  })
+
+              pmap={}
+              ids=sorted(player_ids)
+              for i in range(0,len(ids),100):
+                  pdata=get('/players',{'playerIds':','.join(ids[i:i+100])})
+                  if isinstance(pdata,list):
+                      for p in pdata:
+                          if isinstance(p,dict): pmap[str(p.get('playerId'))]=p.get('playerName')
+              for r in rows:
+                  r['playerName']=pmap.get(str(r.get('playerId')))
+
+              bm=(od.get('bookmakers') or {}).get(bookmaker,{}) if isinstance(od,dict) else {}
+              out.update({
+                  'fixtureId':fid,
+                  'participant1Name':(od.get('participants') or {}).get('participant1Name'),
+                  'participant2Name':(od.get('participants') or {}).get('participant2Name'),
+                  'tournamentName':(od.get('tournament') or {}).get('tournamentName'),
+                  'startTime':od.get('startTime'),
+                  'bookmakerFixtureId':bm.get('bookmakerFixtureId'),
+                  'fixturePath':bm.get('fixturePath'),
+                  'hasOdds':bm.get('hasOdds'),
+                  'suspended':bm.get('suspended'),
+                  'total_goldbet_selections':len(raw),
+                  'player_selection_count':len(rows),
+                  'player_market_ids':sorted(market_ids),
+                  'player_selections':rows,
               })
 
-              markets_raw = get_json("/markets", {"language": "en"})
-              market_catalog = markets_raw if isinstance(markets_raw, list) else markets_raw.get("data", []) if isinstance(markets_raw, dict) else []
-              market_map = {str(m.get("marketId")): m for m in market_catalog if isinstance(m, dict) and m.get("marketId") is not None}
-
-              book = (odds.get("bookmakerOdds") or {}).get(bookmaker, {}) if isinstance(odds, dict) else {}
-              raw_markets = book.get("markets") or {}
-
-              compact_markets = []
-              player_selections = []
-              market_ids = []
-              player_prop_market_ids = []
-
-              for market_id, market_data in raw_markets.items():
-                  market_ids.append(str(market_id))
-                  meta = market_map.get(str(market_id), {})
-                  is_player_prop = bool(meta.get("playerProp"))
-                  if is_player_prop:
-                      player_prop_market_ids.append(str(market_id))
-
-                  compact = {
-                      "marketId": str(market_id),
-                      "marketName": meta.get("marketName"),
-                      "marketType": meta.get("marketType"),
-                      "period": meta.get("period"),
-                      "playerProp": is_player_prop,
-                      "bookmakerMarketId": market_data.get("bookmakerMarketId") if isinstance(market_data, dict) else None,
-                      "marketActive": market_data.get("marketActive") if isinstance(market_data, dict) else None,
-                      "selections": [],
-                  }
-
-                  outcomes = market_data.get("outcomes") or {} if isinstance(market_data, dict) else {}
-                  for outcome_id, outcome_data in outcomes.items():
-                      players = outcome_data.get("players") or {} if isinstance(outcome_data, dict) else {}
-                      for player_id, selection in players.items():
-                          if not isinstance(selection, dict):
-                              continue
-                          row = {
-                              "outcomeId": str(outcome_id),
-                              "playerId": str(player_id),
-                              "playerName": selection.get("playerName"),
-                              "bookmakerOutcomeId": selection.get("bookmakerOutcomeId"),
-                              "price": selection.get("price"),
-                              "active": selection.get("active"),
-                              "mainLine": selection.get("mainLine"),
-                              "changedAt": selection.get("changedAt"),
-                              "bookmakerChangedAt": selection.get("bookmakerChangedAt"),
-                          }
-                          compact["selections"].append(row)
-                          if row["playerName"]:
-                              player_selections.append({
-                                  "marketId": str(market_id),
-                                  "marketName": meta.get("marketName"),
-                                  "marketType": meta.get("marketType"),
-                                  "period": meta.get("period"),
-                                  **row,
-                              })
-                  compact_markets.append(compact)
-
-              summary = {
-                  **diagnostic,
-                  "fixtureId": fixture_id,
-                  "participant1Name": odds.get("participant1Name") or fixture.get("participant1Name"),
-                  "participant2Name": odds.get("participant2Name") or fixture.get("participant2Name"),
-                  "tournamentName": odds.get("tournamentName") or fixture.get("tournamentName"),
-                  "categoryName": odds.get("categoryName") or fixture.get("categoryName"),
-                  "startTime": odds.get("startTime") or fixture.get("startTime"),
-                  "bookmakerFixtureId": book.get("bookmakerFixtureId"),
-                  "fixturePath": book.get("fixturePath"),
-                  "bookmakerIsActive": book.get("bookmakerIsActive"),
-                  "suspended": book.get("suspended"),
-                  "market_count": len(raw_markets),
-                  "market_ids": market_ids,
-                  "player_prop_market_count": len(player_prop_market_ids),
-                  "player_prop_market_ids": player_prop_market_ids,
-                  "player_selection_count": len(player_selections),
-                  "player_selections": player_selections,
-                  "markets": compact_markets,
-              }
-              (out_dir / "oddspapi-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-
-          meta = {
-              "generated_at": datetime.now(timezone.utc).isoformat(),
-              "trigger_id": trigger.get("trigger_id"),
-              "bookmaker": bookmaker,
-              "from": date_from,
-              "to": date_to,
-              "match_terms": match_terms,
+          outdir.joinpath('oddspapi-summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          meta={
+              'generated_at':now,
+              'trigger_id':t.get('trigger_id'),
+              'api':'OddsPapi v5',
+              'bookmaker':bookmaker,
+              'from':t.get('from'),'to':t.get('to'),'match_terms':terms,
           }
-          (out_dir / "oddspapi-meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+          outdir.joinpath('oddspapi-meta.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
 
       - name: Commit OddsPapi feed
@@ -239,5 +172,5 @@ jobs:
             echo "OddsPapi feed unchanged"
             exit 0
           fi
-          git commit -m "Refresh OddsPapi GoldBet feed"
+          git commit -m "Refresh OddsPapi v5 GoldBet player feed"
           git push
