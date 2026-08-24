@@ -1,0 +1,58 @@
+name: OddsPapi account coverage diagnostic
+
+on:
+  push:
+    paths:
+      - oddspapi-account-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect v4 subscription coverage
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          out={'generated_at':datetime.now(timezone.utc).isoformat()}
+          try:
+              url='https://api.oddspapi.io/v4/account?'+urllib.parse.urlencode({'apiKey':key})
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/diag'})
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  data=json.loads(r.read().decode())
+              data.pop('api_key',None)
+              # Keep only subscription/coverage fields useful to diagnose GoldBet player props.
+              subs=[]
+              for s in data.get('subscriptions') or []:
+                  if not isinstance(s,dict): continue
+                  books=s.get('bookmakers') or {}
+                  gold={k:v for k,v in books.items() if 'goldbet' in str(k).lower()}
+                  subs.append({
+                    'subscription_id':s.get('subscription_id'),
+                    'valid_from':s.get('valid_from'),'valid_until':s.get('valid_until'),
+                    'is_active':s.get('is_active'),'sport_ids':s.get('sport_ids'),
+                    'goldbet':gold,
+                    'bookmaker_count':len(books),
+                  })
+              out.update({'current_subscription_id':data.get('current_subscription_id'),'subscriptions':subs})
+          except Exception as e:
+              out['error']=str(e)
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/oddspapi-account-sanitized.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit diagnostic
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/oddspapi-account-sanitized.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Inspect OddsPapi account GoldBet coverage"
+          git push
