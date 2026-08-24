@@ -1,0 +1,46 @@
+name: Summarize Betflag player tab map
+
+on:
+  push:
+    paths:
+      - 'summarize-player-tab-map-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compact tabs and player candidates
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          data=json.loads(pathlib.Path('feed/player-tab-map.json').read_text(encoding='utf-8'))
+          tabs=[]; suspects=[]
+          kws=('player','giocator','marcat','scorer','assist','tiro','tiri','mvp','gol o assist','sost')
+          for t in data.get('tabs',[]):
+            row={'tbI':t.get('tbI'),'tbN':t.get('tbN'),'pl':t.get('pl'),'lt':t.get('lt'),'isbb':t.get('isbb'),'slots':[]}
+            for s in t.get('slots',[]):
+              sr={'ti':s.get('ti'),'sn':s.get('sn'),'pl':s.get('pl'),'ao':s.get('ao'),'lt':s.get('lt')}
+              row['slots'].append(sr)
+              txt=json.dumps(sr,ensure_ascii=False).lower()
+              if s.get('pl') is True or any(k in txt for k in kws): suspects.append({'tab':{'tbI':t.get('tbI'),'tbN':t.get('tbN')},'slot':sr})
+            txt=json.dumps(row,ensure_ascii=False).lower()
+            if t.get('pl') is True or any(k in str(t.get('tbN','')).lower() for k in kws): suspects.append({'tab':{'tbI':t.get('tbI'),'tbN':t.get('tbN'),'pl':t.get('pl')},'slot':None})
+            tabs.append(row)
+          out={'event':data.get('event'),'tab_count':len(tabs),'tab_names':[{'tbI':x['tbI'],'tbN':x['tbN']} for x in tabs],
+               'suspects':suspects,'tabs':tabs}
+          pathlib.Path('feed/player-tab-summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'event':out['event'],'tab_count':out['tab_count'],'tab_names':out['tab_names'],'suspects':out['suspects']},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-tab-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Summarize Betflag player tabs'
+          git push
