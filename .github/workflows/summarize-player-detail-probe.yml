@@ -1,0 +1,53 @@
+name: Summarize Betflag player-detail probe
+
+on:
+  push:
+    paths:
+      - 'summarize-player-detail-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build compact summary
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('feed/betflag-player-detail-probe.json')
+          raw=p.read_text(encoding='utf-8')
+          data=json.loads(raw)
+          def compact(r):
+            return {
+              'section':r.get('section'),'macroTab':r.get('macroTab'),'status':r.get('status'),
+              'success':r.get('success'),'eventId':r.get('eventId'),'tai':r.get('tai'),
+              'bytes':r.get('bytes'),'leo_count':r.get('leo_count'),'lmtW_count':r.get('lmtW_count'),
+              'player_signal_count':r.get('player_signal_count'),
+              'market_names':r.get('market_names',[])[:80],
+              'selection_names':r.get('selection_names',[])[:120],
+              'tabs':r.get('tabs',[])[:50],
+              'playerish_hits':r.get('playerish_hits',[])[:30],
+              'error':r.get('error')
+            }
+          out={
+            'source_bytes':len(raw.encode('utf-8')),
+            'event':data.get('event'),
+            'macro_candidates':data.get('macro_candidates'),
+            'best':[compact(x) for x in data.get('best',[])[:5]],
+            'all_probes':[compact(x) for x in data.get('probes',[])]
+          }
+          pathlib.Path('feed/player-detail-summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit summary
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-detail-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Summarize Betflag player-detail probe'
+          git push
