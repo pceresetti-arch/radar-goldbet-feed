@@ -1,0 +1,87 @@
+name: Quick shared sportservice brand fingerprint
+
+on:
+  push:
+    paths:
+      - 'quick-shared-brand-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fingerprint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Fingerprint brand outputs concurrently
+        shell: bash
+        run: |
+          python - <<'PY'
+          import concurrent.futures, hashlib, json, pathlib, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          base='https://sportservice.betflag.it/api/sport/pregame'
+          brands=list(range(0,12))
+
+          def one(brand):
+            out={'brand':brand}
+            for name,path in [('program','getProgram?channelId=0'),('overview','getOverviewDefault/1?channelId=0')]:
+              req=urllib.request.Request(f'{base}/{path}',headers={
+                'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+                'x-api-version':'1.0','X-Auth-Token':'','X-Brand':str(brand),'X-IdCanale':'0',
+                'Origin':'https://www.goldbet.it','Referer':'https://www.goldbet.it/'
+              })
+              try:
+                with urllib.request.urlopen(req,timeout=12) as r:
+                  body=r.read(2000000); status=r.status
+              except urllib.error.HTTPError as e:
+                body=e.read(120000); status=e.code
+              except Exception as e:
+                out[name]={'error':type(e).__name__+': '+str(e)[:180]}; continue
+              text=body.decode('utf-8','replace'); rec={'status':status,'bytes':len(body),'sha256':hashlib.sha256(body).hexdigest()[:20]}
+              try:
+                j=json.loads(text); rec['type']=type(j).__name__; rec['count']=len(j) if isinstance(j,(list,dict)) else None
+                if name=='program' and isinstance(j,list): rec['sports']=[x.get('n') for x in j[:10] if isinstance(x,dict)]
+                if name=='overview' and isinstance(j,dict):
+                  # collect first 8 event ids/names + first 1X2 price triples
+                  events=[]
+                  def walk(x):
+                    if len(events)>=8:return
+                    if isinstance(x,dict):
+                      if 'ei' in x and 'en' in x:
+                        prices=[]; mm=x.get('mmkW')
+                        vals=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+                        for m in vals:
+                          if not isinstance(m,dict) or m.get('mn')!='1X2': continue
+                          spd=m.get('spd'); ss=spd.values() if isinstance(spd,dict) else (spd if isinstance(spd,list) else [])
+                          for s in ss:
+                            if isinstance(s,dict): prices=[(q.get('sn'),q.get('ov')) for q in (s.get('asl') or []) if isinstance(q,dict)]
+                        events.append({'ei':x.get('ei'),'en':x.get('en'),'ti':x.get('ti'),'tai':x.get('tai'),'mi':x.get('mi'),'1x2':prices})
+                      for v in x.values(): walk(v)
+                    elif isinstance(x,list):
+                      for v in x: walk(v)
+                  walk(j); rec['events']=events
+              except Exception: rec['prefix']=text[:300]
+              out[name]=rec
+            return out
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
+            rows=list(ex.map(one,brands))
+          groups={}
+          for r in rows:
+            key=(r.get('program',{}).get('sha256'),r.get('overview',{}).get('sha256'))
+            groups.setdefault(str(key),[]).append(r['brand'])
+          result={'generated_at':datetime.now(timezone.utc).isoformat(),'rows':rows,'groups':groups}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/quick-shared-brand-fingerprint.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'groups':groups,'rows':rows},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/quick-shared-brand-fingerprint.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fingerprint shared sportservice brands'
+          git push
