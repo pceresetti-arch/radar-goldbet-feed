@@ -1,0 +1,74 @@
+name: Inspect real GoldBet market schema
+
+on:
+  push:
+    paths:
+      - 'inspect-real-goldbet-schema-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Inspect AC Milan Venezia GoldBet market structure
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,os,pathlib,urllib.parse,urllib.request
+          from datetime import datetime,timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          if not key: raise SystemExit('Missing ODDSPAPI_KEY')
+          fid='id1000002371945218'
+          params={'fixtureId':fid,'bookmakers':'goldbet.it','language':'en','oddsFormat':'decimal','verbosity':3,'apiKey':key}
+          url='https://api.oddspapi.io/v4/odds?'+urllib.parse.urlencode(params)
+          with urllib.request.urlopen(urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBetSchema/1.0'}),timeout=90) as r:
+            data=json.loads(r.read().decode('utf-8','replace'))
+          book=(data.get('bookmakerOdds') or {}).get('goldbet.it',{}) if isinstance(data,dict) else {}
+          markets=book.get('markets') or {}
+          summaries=[]
+          for mid,md in markets.items() if isinstance(markets,dict) else []:
+            if not isinstance(md,dict): continue
+            rec={'market_id':mid,'keys':list(md.keys()),'meta':{k:md.get(k) for k in ('marketName','name','marketType','period','line','marketId','id') if k in md}}
+            outs=md.get('outcomes')
+            if isinstance(outs,dict):
+              rec['outcome_keys']=list(outs.keys())[:30]
+              rec['outcome_samples']=[]
+              for oid,o in list(outs.items())[:6]:
+                if isinstance(o,dict):
+                  sm={'outcome_id':oid,'keys':list(o.keys()),'scalar':{k:v for k,v in o.items() if isinstance(v,(str,int,float,bool,type(None)))}}
+                  for nested_name in ('selections','prices','odds'):
+                    n=o.get(nested_name)
+                    if isinstance(n,dict):
+                      sm[nested_name+'_keys']=list(n.keys())[:20]
+                      sm[nested_name+'_samples']=[{'id':str(k),'value':v} for k,v in list(n.items())[:4]]
+                  rec['outcome_samples'].append(sm)
+                else: rec['outcome_samples'].append({'outcome_id':oid,'value':o})
+            elif isinstance(outs,list):
+              rec['outcome_samples']=outs[:6]
+            # Also expose any top-level nested dictionaries/lists other than outcomes, capped.
+            nested={}
+            for k,v in md.items():
+              if k=='outcomes': continue
+              if isinstance(v,dict): nested[k]={'keys':list(v.keys())[:30],'samples':[{'id':str(a),'value':b} for a,b in list(v.items())[:3]]}
+              elif isinstance(v,list): nested[k]=v[:5]
+            rec['nested']=nested
+            summaries.append(rec)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'fixtureId':fid,'event':f"{data.get('participant1Name')} - {data.get('participant2Name')}",'market_count':len(markets),'bookmakerFixtureId':book.get('bookmakerFixtureId'),'markets':summaries}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/real-goldbet-market-schema.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:60000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/real-goldbet-market-schema.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Inspect direct GoldBet market schema'
+          git push
