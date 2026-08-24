@@ -20,56 +20,51 @@ jobs:
           import json, pathlib, re, urllib.request, urllib.error
           from datetime import datetime, timezone
 
-          urls=[
-            'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/marketconfig.json',
-            'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/produzione/baseSettingsPlayBetsJson.json',
-            'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/produzione/scommesseconfig.json',
-          ]
-          results=[]
+          urls={
+            'marketconfig':'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/marketconfig.json',
+            'baseSettingsPlayBetsJson':'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/produzione/baseSettingsPlayBetsJson.json',
+            'scommesseconfig':'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/produzione/scommesseconfig.json',
+          }
+          results=[]; raws={}
           needles=re.compile(r'(player|giocator|marcat|wsf|wallstreet|api|sport|pregame|prompt|odd|quote|endpoint|url|service|market)',re.I)
-
           def walk(x,path='root',out=None):
               if out is None: out=[]
-              if len(out)>=1000: return out
+              if len(out)>=3000: return out
               if isinstance(x,dict):
                   for k,v in x.items():
                       p=f'{path}.{k}'
                       if needles.search(str(k)) or (isinstance(v,str) and needles.search(v)):
-                          out.append({'path':p,'value':v if not isinstance(v,(dict,list)) else str(v)[:1000]})
+                          out.append({'path':p,'value':v if not isinstance(v,(dict,list)) else v})
                       walk(v,p,out)
               elif isinstance(x,list):
                   for i,v in enumerate(x): walk(v,f'{path}[{i}]',out)
               return out
-
-          for u in urls:
+          for name,u in urls.items():
               req=urllib.request.Request(u,headers={'Accept':'application/json,text/plain,*/*','User-Agent':'Mozilla/5.0'})
               try:
                   with urllib.request.urlopen(req,timeout=60) as r:
-                      raw=r.read().decode('utf-8','replace')
-                      status=r.status
-                      ctype=r.headers.get('content-type')
+                      raw=r.read().decode('utf-8','replace'); status=r.status; ctype=r.headers.get('content-type')
+                  raws[name]=raw
                   try:
-                      data=json.loads(raw)
-                      hits=walk(data)
-                      top=list(data.keys()) if isinstance(data,dict) else None
+                      data=json.loads(raw); hits=walk(data); top=list(data.keys()) if isinstance(data,dict) else None
                   except Exception:
-                      data=None; top=None
-                      hits=[{'text':m.group(0)} for m in re.finditer(r'.{0,120}(?:player|giocator|marcat|wsf|wallstreet|api|pregame|prompt|odd|endpoint|url|service).{0,240}',raw,re.I)]
-                  results.append({'url':u,'status':status,'content_type':ctype,'bytes':len(raw),'top_keys':top,'hits':hits[:1000],'raw_prefix':raw[:1000]})
+                      data=None; top=None; hits=[]
+                  results.append({'name':name,'url':u,'status':status,'content_type':ctype,'bytes':len(raw),'top_keys':top,'hits':hits[:3000]})
               except urllib.error.HTTPError as e:
-                  results.append({'url':u,'status':e.code,'error_body':e.read().decode('utf-8','replace')[:3000]})
+                  results.append({'name':name,'url':u,'status':e.code,'error_body':e.read().decode('utf-8','replace')[:3000]})
               except Exception as e:
-                  results.append({'url':u,'error':repr(e)})
+                  results.append({'name':name,'url':u,'error':repr(e)})
 
-          out={'generated_at':datetime.now(timezone.utc).isoformat(),'results':results}
-          pathlib.Path('feed').mkdir(exist_ok=True)
-          pathlib.Path('feed/goldbet-public-config-diagnostic.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          outdir=pathlib.Path('feed'); outdir.mkdir(exist_ok=True)
+          outdir.joinpath('goldbet-public-config-diagnostic.json').write_text(json.dumps({'generated_at':datetime.now(timezone.utc).isoformat(),'results':results},ensure_ascii=False,indent=2),encoding='utf-8')
+          for name,raw in raws.items():
+              outdir.joinpath(f'goldbet-public-{name}.json').write_text(raw,encoding='utf-8')
           PY
       - name: Commit diagnostic
         run: |
           git config user.name "radar-goldbet-bot"
           git config user.email "radar-goldbet-bot@users.noreply.github.com"
-          git add feed/goldbet-public-config-diagnostic.json
+          git add feed/goldbet-public-config-diagnostic.json feed/goldbet-public-*.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Inspect GoldBet public frontend config"
           git push
