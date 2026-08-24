@@ -1,0 +1,121 @@
+name: Extract Giocatori Calcio overview
+
+on:
+  push:
+    paths:
+      - 'player-sport-overview-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract dedicated player sport feed
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          base='https://sportservice.betflag.it/api/sport/pregame'
+
+          def fetch(path,brand):
+            req=urllib.request.Request(base+'/'+path,headers={
+              'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+              'x-api-version':'1.0','X-Auth-Token':'','X-Brand':str(brand),'X-IdCanale':'0',
+              'Origin':'https://www.goldbet.it','Referer':'https://www.goldbet.it/'
+            })
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                return r.status,json.loads(r.read(8000000).decode('utf-8','replace'))
+            except Exception as e:
+              return None,{'error':type(e).__name__+': '+str(e)}
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'brands':{}}
+          for brand in (0,3):
+            ps,program=fetch('getProgram?channelId=0',brand)
+            player_sports=[]
+            if isinstance(program,list):
+              for s in program:
+                if isinstance(s,dict) and 'giocator' in str(s.get('n','')).lower():
+                  player_sports.append({k:s.get(k) for k in ('id','n','chId','vrt','img','nEfT','ne')})
+            sport_ids=[str(x.get('id')) for x in player_sports if x.get('id') is not None]
+            tabs=[]
+            for tab in range(0,10):
+              status,data=fetch(f'getOverviewDefault/{tab}?channelId=0',brand)
+              rec={'tab':tab,'status':status,'root_type':type(data).__name__}
+              if isinstance(data,dict):
+                rec['root_keys']=list(data.keys())
+                chosen={}
+                for sid in sport_ids:
+                  if sid in data: chosen[sid]=data[sid]
+                  elif sid.isdigit() and int(sid) in data: chosen[sid]=data[int(sid)]
+                # Fallback: inspect any root key whose serialized value explicitly looks player-ish.
+                if not chosen:
+                  for k,v in data.items():
+                    txt=json.dumps(v,ensure_ascii=False).lower()
+                    if any(w in txt for w in ('marcatore','giocatore','assist','tiri','player')):
+                      chosen[str(k)]=v
+                summaries=[]
+                for sid,v in chosen.items():
+                  markets=[]; selections=[]; events=[]; tabs_meta=[]; playerish=[]
+                  def walk(x,path='root'):
+                    if isinstance(x,dict):
+                      nm=x.get('mn') or x.get('mnd') or x.get('marketName') or x.get('sn')
+                      if isinstance(nm,str) and any(w in nm.lower() for w in ('marcat','assist','tir','giocator','gol','sost','porta')):
+                        playerish.append({'path':path,'name':nm,'obj':{k:x.get(k) for k in x.keys() if k in ('mn','mnd','sn','ov','si','sti','mti','mi','oi','slI','sslI','pl','tbI','tbN','ti','en','ei','td','tai')}})
+                      if 'ei' in x and 'en' in x:
+                        events.append({k:x.get(k) for k in ('si','ei','ti','mi','tai','en','ed','td','cd','pi')})
+                      if 'tbI' in x and 'tbN' in x:
+                        tabs_meta.append({k:x.get(k) for k in ('tbI','tbN','pl','isbb')})
+                      if 'mn' in x and isinstance(x.get('mn'),str): markets.append(x.get('mn'))
+                      if 'sn' in x and 'ov' in x: selections.append({'sn':x.get('sn'),'ov':x.get('ov'),'mti':x.get('mti'),'sti':x.get('sti'),'si':x.get('si')})
+                      for k,val in x.items(): walk(val,path+'.'+str(k))
+                    elif isinstance(x,list):
+                      for i,val in enumerate(x): walk(val,path+f'[{i}]')
+                  walk(v)
+                  summaries.append({
+                    'sport_id':sid,
+                    'serialized_bytes':len(json.dumps(v,ensure_ascii=False)),
+                    'events':events[:80],
+                    'tabs':list({(x.get('tbI'),x.get('tbN'),x.get('pl'),x.get('isbb')):x for x in tabs_meta}.values())[:100],
+                    'market_names':list(dict.fromkeys(markets))[:300],
+                    'selection_samples':selections[:300],
+                    'playerish_hits':playerish[:300],
+                    'raw':v
+                  })
+                rec['player_sports']=summaries
+              tabs.append(rec)
+            out['brands'][str(brand)]={'program_status':ps,'player_sports':player_sports,'overview_tabs':tabs}
+
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-sport-overview.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={}
+          for b,v in out['brands'].items():
+            compact[b]={'player_sports':v['player_sports'],'tabs':[]}
+            for t in v['overview_tabs']:
+              if t.get('player_sports'):
+                compact[b]['tabs'].append({
+                  'tab':t['tab'],
+                  'root_keys':t.get('root_keys'),
+                  'summaries':[{
+                    'sport_id':s['sport_id'],'bytes':s['serialized_bytes'],'events':s['events'][:10],
+                    'tabs':s['tabs'][:30],'market_names':s['market_names'][:80],
+                    'playerish_hits':s['playerish_hits'][:80]
+                  } for s in t['player_sports']]
+                })
+          pathlib.Path('feed/player-sport-overview-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:30000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-sport-overview.json feed/player-sport-overview-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract dedicated Giocatori Calcio feed'
+          git push
