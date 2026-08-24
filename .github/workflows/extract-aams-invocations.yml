@@ -1,0 +1,58 @@
+name: Extract exact AAMS invocations
+
+on:
+  push:
+    paths:
+      - 'aams-invocations-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract invocation-only contexts
+        run: |
+          python - <<'PY'
+          import json,pathlib,re,urllib.request
+          from datetime import datetime,timezone
+          url='https://cdn-ltm.betflag.it/site/scripts/sport/bundle.min.js?263'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/javascript,*/*'})
+          text=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','replace')
+          matches=[]
+          # Calls have a dot before method name; class method definition does not.
+          for m in re.finditer(r'\.getDetailsEventAams\s*\(',text):
+              start=m.start(); p=m.end(); depth=1; quote=None; esc=False
+              while p < len(text) and depth>0 and p-start<5000:
+                  ch=text[p]
+                  if quote:
+                      if esc: esc=False
+                      elif ch=='\\': esc=True
+                      elif ch==quote: quote=None
+                  else:
+                      if ch in ('\"',"'",'`'): quote=ch
+                      elif ch=='(': depth+=1
+                      elif ch==')': depth-=1
+                  p+=1
+              expr=text[m.start()+1:p]
+              matches.append({
+                  'expression':expr,
+                  'before':text[max(0,start-1800):start],
+                  'after':text[p:min(len(text),p+2200)]
+              })
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'count':len(matches),'matches':matches[:30]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/aams-invocations.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'count':len(matches),'expressions':[x['expression'] for x in matches[:30]]},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/aams-invocations.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract exact AAMS invocations'
+          git push
