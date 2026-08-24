@@ -1,0 +1,48 @@
+name: Final player price proof
+
+on:
+  push:
+    paths:
+      - 'final-player-price-proof-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract only player, markets and prices
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          src=json.loads(pathlib.Path('feed/first-real-player-odds.json').read_text(encoding='utf-8'))
+          out={'overview':{},'details':[]}
+          ov=src.get('overview') or {}
+          out['overview']={
+            'success':ov.get('success'),'tai':ov.get('tai'),'tn':ov.get('tn'),'leo_count':ov.get('leo_count'),'lmtW_count':ov.get('lmtW_count'),
+            'market_names':ov.get('market_names',[])[:50],'selection_samples':ov.get('selection_samples',[])[:40],
+            'tabs':ov.get('tabs',[])[:30]
+          }
+          for d in src.get('details') or []:
+            sels=d.get('selections') or []
+            markets=d.get('market_names') or []
+            if sels or markets:
+              out['details'].append({
+                'player_event':d.get('player_event'),'macroTab':d.get('macroTab'),'section':d.get('section'),
+                'status':d.get('status'),'success':d.get('success'),'leo_count':d.get('leo_count'),'lmtW_count':d.get('lmtW_count'),
+                'market_names':markets[:60],'selections':sels[:100],'tabs':d.get('tabs',[])[:30]
+              })
+          pathlib.Path('feed/final-player-price-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/final-player-price-proof.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prove player market selections and odds'
+          git push
