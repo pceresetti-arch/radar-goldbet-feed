@@ -45,6 +45,13 @@ jobs:
             (2484,13826,'Marcatore 2T'),
             (2484,13821,'Doppietta'),
             (2484,13822,'Tripletta'),
+            (2484,13816,'U/O Tiri in porta Plus'),
+            (2484,13817,'U/O Tiri Totali Plus'),
+            (2484,19401,'Assist o Sostituto'),
+            (2484,13495,'U/O Tiri In Porta Giocatore'),
+            (2484,13496,'U/O Tiri Totali Giocatore'),
+            (2484,13823,'Assist'),
+            (2484,13824,'Gol e Assist'),
             (2487,13509,'U/O Parate Giocatore'),
           ]
 
@@ -92,7 +99,7 @@ jobs:
           now=datetime.now(timezone.utc).isoformat()
           for idx,(tab,slot,label) in enumerate(TARGETS):
             status,data,url,error=fetch(tab,slot)
-            if idx: time.sleep(0.12)
+            if idx: time.sleep(0.10)
             count_before=len(all_rows)
             seen_events=[0]
             def walk(x):
