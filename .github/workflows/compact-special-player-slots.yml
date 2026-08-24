@@ -1,0 +1,46 @@
+name: Compact special player slots
+
+on:
+  push:
+    paths:
+      - 'compact-special-player-slots-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract special player slot catalog
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          src=json.loads(pathlib.Path('feed/all-player-tabs-summary.json').read_text(encoding='utf-8'))
+          tabs=src.get('tabs',[])
+          wanted=[]
+          for t in tabs:
+            name=str(t.get('tab_name',''))
+            if any(k in name.upper() for k in ('SPECIALI','GIOCATORI')):
+              wanted.append({'tab_id':t.get('tab_id'),'tab_name':name,'slots':t.get('slots',[])})
+          flat=[]
+          for t in tabs:
+            for s in t.get('slots',[]):
+              n=str(s.get('slot_name',''))
+              if any(k in n.lower() for k in ('assist','tir','porta','gol','marcat','sost','mvp')):
+                flat.append({'tab_id':t.get('tab_id'),'tab_name':t.get('tab_name'),'slot_id':s.get('slot_id'),'slot_name':n,'lt':s.get('lt'),'ao':s.get('ao')})
+          out={'special_tabs':wanted,'relevant_slots':flat}
+          pathlib.Path('feed/special-player-slots.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/special-player-slots.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract special player slot catalog'
+          git push
