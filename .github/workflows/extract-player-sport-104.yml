@@ -1,0 +1,104 @@
+name: Extract player sport 104
+
+on:
+  push:
+    paths:
+      - 'player-sport-104-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract key 104 and probe AAMS player branch
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def get(path,cap=10000000):
+            u=BASE+'/'+path.lstrip('/')
+            try:
+              with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:
+                return r.status,json.loads(r.read(cap).decode('utf-8','replace'))
+            except Exception as e:
+              return None,{'error':type(e).__name__+': '+str(e)[:250]}
+
+          status,root=get('getOverviewDefault/1?channelId=0')
+          p104=root.get('104') if isinstance(root,dict) else None
+          if p104 is None and isinstance(root,dict): p104=root.get(104)
+
+          def summarize(obj):
+            events=[]; markets=[]; sels=[]; tabs=[]; hits=[]
+            def walk(x,path='root'):
+              if isinstance(x,dict):
+                if 'ei' in x and 'en' in x:
+                  events.append({k:x.get(k) for k in ('si','ei','pi','ti','ci','mi','tai','en','ed','td','cd','nmK','oc','evTag')})
+                if isinstance(x.get('mn'),str): markets.append(x.get('mn'))
+                if isinstance(x.get('sn'),str) and 'ov' in x:
+                  sels.append({k:x.get(k) for k in ('sn','ov','si','sti','mti','mi','oi')})
+                if 'tbI' in x and ('tbN' in x or 'lotb' in x): tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','isbb','si')})
+                flat=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float))).lower()
+                if any(k in flat for k in ('marcat','assist','tiro','tiri','giocator','scorer','player','sostituto','mvp')):
+                  hits.append({'path':path,'obj':{k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))}})
+                for k,v in x.items(): walk(v,path+'.'+str(k))
+              elif isinstance(x,list):
+                for i,v in enumerate(x): walk(v,path+f'[{i}]')
+            walk(obj)
+            return {
+              'events':events[:200],
+              'market_names':list(dict.fromkeys(markets))[:300],
+              'selection_samples':sels[:400],
+              'tabs':list({(x.get('tbI'),x.get('tbN'),x.get('pl'),x.get('isbb')):x for x in tabs}.values())[:150],
+              'player_hits':hits[:250]
+            }
+
+          summary=summarize(p104) if p104 is not None else {}
+          probes=[]
+          # Use metadata discovered from key 104 first; fall back to known Serie A player tournament 29300.
+          candidates=[]
+          for e in summary.get('events',[]):
+            cand=(e.get('tai'),e.get('ti'),e.get('mi'),e.get('ei'))
+            if all(v is not None for v in cand) and cand not in candidates: candidates.append(cand)
+          if not candidates:
+            candidates=[(21,29300,'0',0),(21,29300,0,0)]
+
+          for disc in (104,-1):
+            for tai,ti,mi,ei in candidates[:8]:
+              # Overview calls: corrected path fTime/idDisc/tai/idTourn/idTab/idSlot/section
+              for section in (0,1):
+                s,o=get(f'getOverviewEventsAams/0/{disc}/{tai}/{ti}/0/0/{section}?channelId=0')
+                sm=summarize(o)
+                probes.append({'kind':'overview','disc':disc,'tai':tai,'ti':ti,'section':section,'status':s,'root':{k:o.get(k) for k in ('success','tai','tn','eventId') if isinstance(o,dict)},'summary':sm})
+              # Details if candidate has real event id/market id.
+              if ei not in (None,0) and mi not in (None,0,'0'):
+                for macro in (0,):
+                  s,o=get(f'getDetailsEventAams/{tai}/{ti}/{mi}/{ei}/{macro}/0?channelId=0')
+                  probes.append({'kind':'detail','disc':disc,'tai':tai,'ti':ti,'mi':mi,'ei':ei,'status':s,'root':{k:o.get(k) for k in ('success','tai','tn','eventId') if isinstance(o,dict)},'summary':summarize(o)})
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'overview_status':status,'root_keys':list(root.keys()) if isinstance(root,dict) else None,'player104_summary':summary,'probes':probes}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-sport-104.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={'root_keys':out['root_keys'],'player104_summary':summary,'probe_hits':[]}
+          for p in probes:
+            sm=p.get('summary',{})
+            if sm.get('events') or sm.get('player_hits') or sm.get('selection_samples'):
+              compact['probe_hits'].append(p)
+          pathlib.Path('feed/player-sport-104-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:50000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-sport-104.json feed/player-sport-104-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract player props from sport 104'
+          git push
