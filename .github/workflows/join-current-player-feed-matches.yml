@@ -1,0 +1,67 @@
+name: Join current player feed to matches
+
+on:
+  push:
+    paths:
+      - 'join-current-player-feed-matches-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  join:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Join current player rows to real match names by mi
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,time,re
+          from datetime import datetime,timezone
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          B='https://sportservice.betflag.it/api/sport/pregame'
+          matches={}
+          def walk(x):
+            if isinstance(x,dict):
+              if x.get('mi') is not None and x.get('en') and not str(x.get('sn','')).lower().startswith('giocatori') and not str(x.get('en','')).startswith('('):
+                if x.get('si') in (1,'1') or str(x.get('sn','')).lower()=='calcio':
+                  matches[str(x.get('mi'))]={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','mi','tai','home','away')}
+              for v in x.values():walk(v)
+            elif isinstance(x,list):
+              for v in x:walk(v)
+          for tab in range(10):
+            try:
+              u=f'{B}/getOverviewDefault/{tab}?channelId=0'
+              with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:d=json.loads(r.read(14000000).decode('utf-8','replace'))
+              walk(d)
+            except Exception:pass
+            if tab: time.sleep(.08)
+          src=json.loads(pathlib.Path('feed/player-props-current.json').read_text(encoding='utf-8'))
+          rows=src.get('rows',[])
+          joined=[];unmatched=[]
+          for r in rows:
+            m=matches.get(str(r.get('match_market_id')))
+            rr={**r,'match':m.get('en') if m else None,'match_event_id':m.get('ei') if m else None,'match_start':m.get('ed') if m else r.get('start_time')}
+            (joined if m else unmatched).append(rr)
+          by_match={}
+          for r in joined:
+            key=str(r.get('match'))
+            x=by_match.setdefault(key,{'match':r.get('match'),'match_event_id':r.get('match_event_id'),'match_market_id':r.get('match_market_id'),'start_time':r.get('match_start'),'league':r.get('league'),'players':{}})
+            x['players'].setdefault(r.get('player'),[]).append({k:r.get(k) for k in ('market','line','selection','odd','event_id','market_id','odds_id')})
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'standard_match_map_count':len(matches),'row_count':len(rows),'joined_rows':len(joined),'unmatched_rows':len(unmatched),'join_rate':round(len(joined)/max(1,len(rows)),4),'joined_match_count':len(by_match),'matches':list(by_match.values()),'unmatched_samples':[{k:r.get(k) for k in ('match_code','match_market_id','league','start_time','player','market','odd')} for r in unmatched[:30]]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-props-match-index.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          summary={k:out[k] for k in ('generated_at','standard_match_map_count','row_count','joined_rows','unmatched_rows','join_rate','joined_match_count')};summary['match_samples']=[{k:m.get(k) for k in ('match','match_event_id','match_market_id','start_time','league')} for m in list(by_match.values())[:30]];summary['unmatched_samples']=out['unmatched_samples']
+          pathlib.Path('feed/player-props-match-index-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-props-match-index.json feed/player-props-match-index-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Join current player props to real matches'
+          git push
