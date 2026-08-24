@@ -28,7 +28,6 @@ jobs:
           import json
           import os
           import pathlib
-          import sys
           import urllib.parse
           import urllib.request
           from datetime import datetime, timezone
@@ -37,9 +36,7 @@ jobs:
           if not token:
               raise SystemExit("Missing GitHub Actions secret: BRIDGE_TOKEN")
 
-          trigger_path = pathlib.Path("trigger.json")
-          trigger = json.loads(trigger_path.read_text(encoding="utf-8"))
-
+          trigger = json.loads(pathlib.Path("trigger.json").read_text(encoding="utf-8"))
           endpoint = str(trigger.get("endpoint", "odds")).strip().strip("/") or "odds"
           params = trigger.get("params", {}) or {}
           if not isinstance(params, dict):
@@ -50,8 +47,11 @@ jobs:
           query["token"] = token
           url = base + "?" + urllib.parse.urlencode(query)
 
-          req = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "RadarGoldBetFeed/1.0"})
-          with urllib.request.urlopen(req, timeout=60) as resp:
+          req = urllib.request.Request(
+              url,
+              headers={"Accept": "application/json", "User-Agent": "RadarGoldBetFeed/2.0"}
+          )
+          with urllib.request.urlopen(req, timeout=90) as resp:
               raw = resp.read()
               status = resp.status
 
@@ -63,22 +63,94 @@ jobs:
           except Exception as exc:
               raise SystemExit(f"Bridge did not return valid JSON: {exc}")
 
+          # Optional local filtering. This keeps GitHub files small even when
+          # odss-api returns thousands of GoldBet market records.
+          match_terms = trigger.get("match_terms", []) or []
+          if isinstance(match_terms, str):
+              match_terms = [match_terms]
+          match_terms = [str(x).strip().lower() for x in match_terms if str(x).strip()]
+
+          league_terms = trigger.get("league_terms", []) or []
+          if isinstance(league_terms, str):
+              league_terms = [league_terms]
+          league_terms = [str(x).strip().lower() for x in league_terms if str(x).strip()]
+
+          if endpoint == "odds" and isinstance(data, dict) and isinstance(data.get("odds"), list):
+              original_odds = data["odds"]
+
+              def searchable(row):
+                  return " ".join(str(row.get(k) or "") for k in (
+                      "event", "home_team", "away_team", "league", "market", "scope", "period"
+                  )).lower()
+
+              def league_text(row):
+                  return str(row.get("league") or "").lower()
+
+              filtered = []
+              for row in original_odds:
+                  text = searchable(row)
+                  if match_terms and not all(term in text for term in match_terms):
+                      continue
+                  if league_terms and not all(term in league_text(row) for term in league_terms):
+                      continue
+                  filtered.append(row)
+
+              # Small event catalogue for diagnostics/discovery.
+              events = {}
+              for row in original_odds:
+                  eid = str(row.get("event_id") or "")
+                  if not eid:
+                      continue
+                  events[eid] = {
+                      "event_id": eid,
+                      "event": row.get("event"),
+                      "home_team": row.get("home_team"),
+                      "away_team": row.get("away_team"),
+                      "league": row.get("league"),
+                      "commence_time": row.get("commence_time"),
+                  }
+
+              data = {
+                  "count": data.get("count"),
+                  "offset": data.get("offset"),
+                  "returned": data.get("returned"),
+                  "state": data.get("state"),
+                  "source_records": len(original_odds),
+                  "filtered_records": len(filtered),
+                  "match_terms": match_terms,
+                  "league_terms": league_terms,
+                  "odds": filtered,
+              }
+
+              catalog = {
+                  "generated_at": datetime.now(timezone.utc).isoformat(),
+                  "events_count": len(events),
+                  "events": sorted(events.values(), key=lambda x: (str(x.get("commence_time") or ""), str(x.get("event") or "")))
+              }
+          else:
+              catalog = None
+
           out_dir = pathlib.Path("feed")
           out_dir.mkdir(exist_ok=True)
           (out_dir / "latest.json").write_text(
-              json.dumps(data, ensure_ascii=False, indent=2),
-              encoding="utf-8"
+              json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
           )
+
+          if catalog is not None:
+              (out_dir / "events.json").write_text(
+                  json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+              )
 
           meta = {
               "generated_at": datetime.now(timezone.utc).isoformat(),
               "endpoint": endpoint,
               "params": params,
+              "match_terms": match_terms,
+              "league_terms": league_terms,
               "trigger_id": trigger.get("trigger_id"),
           }
           (out_dir / "latest.meta.json").write_text(
-              json.dumps(meta, ensure_ascii=False, indent=2),
-              encoding="utf-8"
+              json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
           )
           PY
 
@@ -87,6 +159,7 @@ jobs:
           git config user.name "radar-goldbet-bot"
           git config user.email "radar-goldbet-bot@users.noreply.github.com"
           git add feed/latest.json feed/latest.meta.json
+          if [ -f feed/events.json ]; then git add feed/events.json; fi
           if git diff --cached --quiet; then
             echo "Feed unchanged"
             exit 0
