@@ -1,0 +1,51 @@
+name: Test Diretta GoldBet bookmaker ID 109
+
+on:
+  push:
+    paths:
+      - 'diretta-goldbet-id109-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Query ope2 for candidate GoldBet ID 109
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, requests
+          from datetime import datetime, timezone
+          base='https://global.ds.lsapp.eu/odds/pq_graphql'
+          eid='xAQCcf1s'; bid='109'
+          H={'User-Agent':'Mozilla/5.0','Accept':'*/*','Referer':'https://www.diretta.it/','Origin':'https://www.diretta.it'}
+          s=requests.Session(); s.headers.update(H)
+          rows=[]
+          for bt,bs in [('HOME_DRAW_AWAY','FULL_TIME'),('OVER_UNDER','FULL_TIME'),('BOTH_TEAMS_TO_SCORE','FULL_TIME'),('DOUBLE_CHANCE','FULL_TIME')]:
+            p={'_hash':'ope2','eventId':eid,'bookmakerId':bid,'betType':bt,'betScope':bs}
+            try:
+              r=s.get(base,params=p,timeout=20)
+              data=r.json() if r.status_code==200 else None
+              payload=((data or {}).get('data') or {}).get('findPrematchOddsForBookmaker') if isinstance(data,dict) else None
+              rows.append({'betType':bt,'betScope':bs,'status':r.status_code,'url':r.url,'payload':payload,'body_prefix':r.text[:4000]})
+            except Exception as e: rows.append({'betType':bt,'betScope':bs,'error':repr(e)})
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'event':'Valencia - Real Betis','event_id':eid,'candidate_bookmaker_id':109,'candidate_name':'Goldbetshop','rows':rows}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/diretta-goldbet-id109-test.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:30000])
+          PY
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git pull --rebase || true
+          git add feed/diretta-goldbet-id109-test.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Test Diretta GoldBet bookmaker ID 109'
+          git push
