@@ -1,0 +1,114 @@
+name: Prove fTime 1 Giocatori Calcio feed
+
+on:
+  push:
+    paths:
+      - 'ftime1-player-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Query dedicated player feed with frontend fTime
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          B='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def get(path):
+            u=B+'/'+path
+            try:
+              with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:
+                return r.status,r.read(10000000).decode('utf-8','replace'),u
+            except urllib.error.HTTPError as e:
+              return e.code,e.read(300000).decode('utf-8','replace'),u
+            except Exception as e:
+              return None,'',u+' ERROR '+type(e).__name__+': '+str(e)
+
+          def parse(status,body,url,meta):
+            out={**meta,'url':url,'status':status,'bytes':len(body)}
+            try:
+              o=json.loads(body)
+              if isinstance(o,dict):
+                out.update({'success':o.get('success'),'tai':o.get('tai'),'tn':o.get('tn'),'id':o.get('id'),'eventId':o.get('eventId'),'leo_count':len(o.get('leo') or []),'lmtW_count':len(o.get('lmtW') or [])})
+              events=[]; markets=[]; sels=[]; tabs=[]; hits=[]
+              def walk(x,path=''):
+                if isinstance(x,dict):
+                  if 'ei' in x and 'en' in x:
+                    events.append({k:x.get(k) for k in ('si','ei','pi','ti','ci','mi','tai','en','ed','td','sn','cd','nmK','oc','evTag')})
+                  if isinstance(x.get('mn'),str): markets.append(x['mn'])
+                  if isinstance(x.get('sn'),str) and 'ov' in x:
+                    sels.append({k:x.get(k) for k in ('sn','ov','si','sti','mti','mi','oi','cls')})
+                  if 'tbI' in x and ('tbN' in x or 'lotb' in x): tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','isbb','si')})
+                  flat=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float))).lower()
+                  if any(k in flat for k in ('marcat','assist','tiro','tiri','porta','sostituto','mvp','gol o assist','pulisic','lautaro','leao','leão','vlahovic','yildiz')):
+                    hits.append({'path':path,'obj':{k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))}})
+                  for k,v in x.items(): walk(v,path+'.'+str(k))
+                elif isinstance(x,list):
+                  for i,v in enumerate(x): walk(v,path+f'[{i}]')
+              walk(o)
+              out['events']=events[:120]; out['market_names']=list(dict.fromkeys(markets))[:250]; out['selections']=sels[:400]
+              out['tabs']=list({(x.get('tbI'),x.get('tbN'),x.get('pl'),x.get('isbb')):x for x in tabs}.values())[:120]
+              out['player_hits']=hits[:150]; out['player_signal_count']=len(hits)
+              out['_obj']=o
+            except Exception as e:
+              out['parse_error']=type(e).__name__+': '+str(e)
+              out['body_prefix']=body[:10000]
+            return out
+
+          rows=[]
+          for tournament,name in ((29300,'Italia Serie A'),(30102,'Spagna Liga'),(8749373,'Arabia Saudita Premier League')):
+            for tai in (79,21,0):
+              for section in (0,1):
+                status,body,url=get(f'getOverviewEventsAams/1/-1/{tai}/{tournament}/0/0/{section}?channelId=0')
+                r=parse(status,body,url,{'tournament':tournament,'league':name,'candidate_tai':tai,'section':section})
+                rows.append(r)
+                if r.get('leo_count',0)>0:
+                  break
+              if rows[-1].get('leo_count',0)>0: break
+
+          # Open one real player event from the best populated overview.
+          populated=[x for x in rows if x.get('leo_count',0)>0 and x.get('events')]
+          details=[]
+          for src in populated[:3]:
+            for ev in src['events'][:3]:
+              tai=ev.get('tai') if ev.get('tai') is not None else src.get('tai') or src['candidate_tai']
+              ti=ev.get('ti') or src['tournament']; mi=ev.get('mi'); ei=ev.get('ei')
+              if None in (tai,ti,mi,ei): continue
+              tab_ids=[0]
+              for t in src.get('tabs',[]):
+                if t.get('tbI') is not None and t['tbI'] not in tab_ids: tab_ids.append(t['tbI'])
+              for mt in tab_ids[:6]:
+                for sec in (src['section'],0,1):
+                  status,body,url=get(f'getDetailsEventAams/{tai}/{ti}/{mi}/{ei}/{mt}/{sec}?channelId=0')
+                  d=parse(status,body,url,{'source_league':src['league'],'event_source':ev,'macroTab':mt,'section':sec})
+                  d.pop('_obj',None); details.append(d)
+                  if d.get('leo_count',0)>0 and (len(d.get('selections',[]))>5 or d.get('player_signal_count',0)>0): break
+                if details and details[-1].get('leo_count',0)>0 and (len(details[-1].get('selections',[]))>5 or details[-1].get('player_signal_count',0)>0): break
+              if details and details[-1].get('leo_count',0)>0: break
+
+          for r in rows: r.pop('_obj',None)
+          details.sort(key=lambda x:(x.get('player_signal_count',0),len(x.get('selections',[])),x.get('leo_count',0),x.get('bytes',0)),reverse=True)
+          rows.sort(key=lambda x:(x.get('leo_count',0),len(x.get('events',[])),x.get('player_signal_count',0),x.get('bytes',0)),reverse=True)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'best_overviews':rows[:8],'best_details':details[:8]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/ftime1-player-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={'best_overviews':[{k:x.get(k) for k in ('league','tournament','candidate_tai','section','status','bytes','success','tai','tn','leo_count','lmtW_count','events','market_names','selections','tabs','player_signal_count','player_hits','parse_error')} for x in rows[:5]],'best_details':details[:5]}
+          pathlib.Path('feed/ftime1-player-proof-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:50000])
+          PY
+      - name: Commit proof
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/ftime1-player-proof.json feed/ftime1-player-proof-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prove fTime 1 player markets and prices'
+          git push
