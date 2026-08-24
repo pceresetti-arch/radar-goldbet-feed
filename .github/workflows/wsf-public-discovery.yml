@@ -1,0 +1,102 @@
+name: WSF public API discovery
+
+on:
+  push:
+    paths:
+      - wsf-public-discovery-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect public WSF infrastructure and archived docs
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, ssl, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          UA={'User-Agent':'Mozilla/5.0 (Radar research; public endpoints only)','Accept':'*/*'}
+          def fetch(url, timeout=45):
+              req=urllib.request.Request(url,headers=UA)
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as r:
+                      b=r.read(2_000_000)
+                      return {'url':url,'status':r.status,'content_type':r.headers.get('content-type'),'final_url':r.geturl(),'text':b.decode('utf-8','replace')}
+              except urllib.error.HTTPError as e:
+                  return {'url':url,'status':e.code,'content_type':e.headers.get('content-type'),'final_url':url,'text':e.read(200000).decode('utf-8','replace')}
+              except Exception as e:
+                  return {'url':url,'error':repr(e),'text':''}
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat()}
+
+          # Certificate transparency: public subdomains only.
+          ct=fetch('https://crt.sh/?q=%25.wallstreetfootball.io&output=json')
+          names=[]
+          try:
+              rows=json.loads(ct['text'])
+              for row in rows:
+                  for field in ('name_value','common_name'):
+                      for n in str(row.get(field,'')).splitlines():
+                          n=n.strip().lower().lstrip('*.')
+                          if n.endswith('.wallstreetfootball.io') or n=='wallstreetfootball.io': names.append(n)
+          except Exception: pass
+          names=sorted(set(names))
+          out['certificate_subdomains']=names
+
+          # Current Stoplight custom-domain HTML. Keep only public technical hints.
+          dev=fetch('https://developer.wallstreetfootball.io/')
+          text=dev.get('text','')
+          hints=[]
+          patterns=[
+              r'https?://[^\"\'<> ]+', r'project(?:Id|_id|Slug|slug)[\"\' :=]+[A-Za-z0-9._-]+',
+              r'workspace(?:Id|_id|Slug|slug)[\"\' :=]+[A-Za-z0-9._-]+',
+              r'apiDescription(?:Url|Document)[^\"\']*[\"\'][^\"\']+', r'openapi[^\"\'<> ]*', r'swagger[^\"\'<> ]*'
+          ]
+          for p in patterns:
+              hints.extend(re.findall(p,text,re.I)[:100])
+          out['developer_page']={'status':dev.get('status'),'final_url':dev.get('final_url'),'bytes':len(text),'hints':sorted(set(hints))[:200],'prefix':text[:1500]}
+
+          # Wayback CDX: only archived public URLs, no authenticated content.
+          cdx_url='https://web.archive.org/cdx/search/cdx?'+urllib.parse.urlencode({
+              'url':'developer.wallstreetfootball.io/*','output':'json','fl':'timestamp,original,statuscode,mimetype,digest','filter':'statuscode:200','collapse':'urlkey','limit':'5000'
+          })
+          cdx=fetch(cdx_url,60)
+          archived=[]
+          try:
+              rows=json.loads(cdx['text'])
+              if rows and isinstance(rows[0],list):
+                  hdr=rows[0]
+                  for r in rows[1:]: archived.append(dict(zip(hdr,r)))
+          except Exception: pass
+          interesting=[]
+          rx=re.compile(r'(openapi|swagger|\.ya?ml|\.json|reference|docs|api|odds|market|player|fixture|event)',re.I)
+          for r in archived:
+              if rx.search(r.get('original','')): interesting.append(r)
+          out['wayback']={'status':cdx.get('status'),'count':len(archived),'interesting':interesting[:1000],'error_prefix':cdx.get('text','')[:500] if not archived else None}
+
+          # Probe only discovered public subdomains at root / openapi-ish paths; report statuses only.
+          probes=[]
+          likely=[n for n in names if re.search(r'(api|dev|developer|odds|feed|stream|trader|data)',n,re.I)]
+          for host in likely[:30]:
+              for path in ('/','/openapi.json','/swagger.json','/api-docs','/.well-known/openapi.json'):
+                  r=fetch('https://'+host+path,12)
+                  t=r.get('text','')
+                  probes.append({'host':host,'path':path,'status':r.get('status'),'final_url':r.get('final_url'),'content_type':r.get('content_type'),'bytes':len(t),'title':(re.search(r'<title[^>]*>(.*?)</title>',t,re.I|re.S).group(1).strip()[:150] if re.search(r'<title[^>]*>(.*?)</title>',t,re.I|re.S) else None),'error':r.get('error')})
+          out['public_probes']=probes
+
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/wsf-public-discovery.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit result
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/wsf-public-discovery.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Discover public WSF API infrastructure"
+          git push
