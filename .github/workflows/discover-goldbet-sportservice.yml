@@ -1,0 +1,165 @@
+name: Discover GoldBet sportservice
+
+on:
+  push:
+    paths:
+      - 'goldbet-service-discovery-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe GoldBet backend candidates and public CDN
+        shell: bash
+        run: |
+          python - <<'PY'
+          import concurrent.futures, json, pathlib, re, socket, ssl, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          hosts=[
+            'sportservice.goldbet.it',
+            'sportservice.gbo.it',
+            'sportservice-gb.goldbet.it',
+            'sportservicegb.goldbet.it',
+            'sport-api.goldbet.it',
+            'sports-api.goldbet.it',
+            'api-sport.goldbet.it',
+            'sportsservice.goldbet.it',
+            'sportservice.lottomatica.it',
+            'sportservice.lottomaticagroup.com',
+            'sportservice-gb.lottomaticagroup.com',
+            'sportservice.goldbet.lottomaticagroup.com'
+          ]
+          brands=list(range(0,9))
+          channels=[0,10,11,12,14,30,31,34,40,41]
+
+          def resolve(host):
+            try:
+              ips=sorted({x[4][0] for x in socket.getaddrinfo(host,443,type=socket.SOCK_STREAM)})
+              return {'host':host,'resolved':True,'ips':ips}
+            except Exception as e:
+              return {'host':host,'resolved':False,'error':type(e).__name__+': '+str(e)[:180]}
+
+          dns=[resolve(h) for h in hosts]
+          live_hosts=[x['host'] for x in dns if x.get('resolved')]
+
+          def fetch(url, headers=None, cap=1000000):
+            h={
+              'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/139 Safari/537.36',
+              'Accept':'application/json,text/plain,text/html,application/javascript,*/*',
+              'Accept-Language':'it-IT,it;q=0.9,en;q=0.7'
+            }
+            if headers: h.update(headers)
+            req=urllib.request.Request(url,headers=h)
+            try:
+              with urllib.request.urlopen(req,timeout=18) as r:
+                raw=r.read(cap); return {'status':r.status,'ctype':r.headers.get('content-type'),'body':raw.decode('utf-8','replace')}
+            except urllib.error.HTTPError as e:
+              return {'status':e.code,'ctype':e.headers.get('content-type'),'body':e.read(min(cap,120000)).decode('utf-8','replace')}
+            except Exception as e:
+              return {'error':type(e).__name__+': '+str(e)[:220],'body':''}
+
+          # First cheap root and getProgram pass, then only expand brand/channel on promising hosts.
+          probes=[]; promising=[]
+          for host in live_hosts:
+            root=fetch('https://'+host+'/',cap=100000)
+            probes.append({'host':host,'kind':'root','status':root.get('status'),'ctype':root.get('ctype'),'bytes':len(root.get('body','')),'prefix':root.get('body','')[:600]})
+            for brand in [0,1,2,3,4,5]:
+              url=f'https://{host}/api/sport/pregame/getProgram?channelId=0'
+              r=fetch(url,{
+                'x-api-version':'1.0','X-Auth-Token':'','X-Brand':str(brand),'X-IdCanale':'0',
+                'Origin':'https://www.goldbet.it','Referer':'https://www.goldbet.it/'
+              },cap=250000)
+              body=r.get('body',''); low=body.lower()
+              rec={'host':host,'kind':'getProgram','brand':brand,'channel':0,'status':r.get('status'),'ctype':r.get('ctype'),'bytes':len(body),
+                   'signals':{k:low.count(k) for k in ('calcio','tennis','basket','goldbet','betflag')},'prefix':body[:900]}
+              try:
+                j=json.loads(body); rec['json_type']=type(j).__name__; rec['list_count']=len(j) if isinstance(j,list) else None; rec['keys']=list(j)[:30] if isinstance(j,dict) else None
+              except: pass
+              probes.append(rec)
+              if r.get('status')==200 and len(body)>1000 and ('calcio' in low or rec.get('list_count',0)>5):
+                promising.append((host,brand)); break
+
+          expanded=[]
+          for host,brand in promising:
+            for ch in channels:
+              url=f'https://{host}/api/sport/pregame/getProgram?channelId={ch}'
+              r=fetch(url,{
+                'x-api-version':'1.0','X-Auth-Token':'','X-Brand':str(brand),'X-IdCanale':str(ch),
+                'Origin':'https://www.goldbet.it','Referer':'https://www.goldbet.it/'
+              },cap=350000)
+              body=r.get('body',''); low=body.lower()
+              rec={'host':host,'brand':brand,'channel':ch,'status':r.get('status'),'ctype':r.get('ctype'),'bytes':len(body),
+                   'signals':{k:low.count(k) for k in ('calcio','italia','spagna','goldbet','betflag')}}
+              try:
+                j=json.loads(body); rec['json_type']=type(j).__name__; rec['list_count']=len(j) if isinstance(j,list) else None
+                if isinstance(j,list) and j: rec['first_items']=[{k:x.get(k) for k in ('id','n','chId','vrt','img') if isinstance(x,dict)} for x in j[:4]]
+              except: rec['prefix']=body[:500]
+              expanded.append(rec)
+
+          # Crawl GoldBet public/static pages for explicit backend and X-Brand config.
+          seeds=[
+            'https://st-cdn001.akamaized.net/goldbet/it/',
+            'https://st-cdn001.akamaized.net/goldbet/it/index.html',
+            'https://repo.lottomaticagroup.com/intplatform/scommesse/dev/Config/gb/produzione/scommesseconfig.json'
+          ]
+          seed_results=[]; assets=[]
+          asset_re=re.compile(r'''(?:src|href)\s*=\s*["']([^"']+\.(?:js|mjs)(?:\?[^"']*)?)["']''',re.I)
+          for u in seeds:
+            r=fetch(u,cap=1800000); body=r.get('body','')
+            seed_results.append({'url':u,'status':r.get('status'),'ctype':r.get('ctype'),'bytes':len(body),'prefix':body[:1500]})
+            for rel in asset_re.findall(body):
+              a=urllib.parse.urljoin(u,rel)
+              h=urllib.parse.urlparse(a).hostname or ''
+              if any(x in h for x in ('akamaized.net','lottomaticagroup.com','goldbet.it')): assets.append(a)
+          assets=list(dict.fromkeys(assets))[:120]
+
+          def inspect_asset(a):
+            r=fetch(a,cap=3500000); body=r.get('body',''); low=body.lower()
+            needles=['react_app_be_url','sportservice','x-brand','x-idcanale','getdetailseventaams','getovervieweventsaams','/api/sport/']
+            matched=[n for n in needles if n in low]
+            if not matched: return None
+            snippets=[]
+            for n in matched:
+              start=0; nlow=n.lower()
+              for _ in range(8):
+                i=low.find(nlow,start)
+                if i<0: break
+                snippets.append(body[max(0,i-1000):i+2200]); start=i+len(nlow)
+            urls=list(dict.fromkeys(re.findall(r'https?://[^\s"\'<>\\]{6,500}',body,re.I)))[:200]
+            return {'url':a,'status':r.get('status'),'ctype':r.get('ctype'),'bytes':len(body),'matched':matched,'urls':urls,'snippets':snippets[:30]}
+
+          asset_hits=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+            for x in ex.map(inspect_asset,assets):
+              if x: asset_hits.append(x)
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'dns':dns,
+            'promising':promising,
+            'program_probes':probes,
+            'expanded':expanded,
+            'cdn':{'seeds':seed_results,'asset_count':len(assets),'assets':assets,'hits':asset_hits}
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/goldbet-sportservice-discovery.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+            'resolved_hosts':live_hosts,'promising':promising,
+            'good_expanded':[x for x in expanded if x.get('status')==200 and x.get('bytes',0)>1000],
+            'cdn_asset_count':len(assets),'cdn_hits':[{'url':x['url'],'matched':x['matched']} for x in asset_hits]
+          },ensure_ascii=False,indent=2))
+          PY
+      - name: Commit discovery
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/goldbet-sportservice-discovery.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Discover GoldBet sportservice host and brand'
+          git push
