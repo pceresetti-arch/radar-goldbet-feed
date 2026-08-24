@@ -1,0 +1,78 @@
+name: Probe AAMS player overview
+
+on:
+  push:
+    paths:
+      - 'player-overview-aams-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compare standard and player overview modes
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+          base='https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams'
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          cases=[
+            {'name':'Serie A','sport':1,'category':1577,'tai':21,'tournament':93},
+            {'name':'Liga','sport':1,'category':3017,'tai':79,'tournament':95},
+          ]
+          rows=[]
+          def collect(obj):
+            markets=[]; selections=[]; tabs=[]; events=[]; hits=[]
+            def walk(x):
+              if isinstance(x,dict):
+                if isinstance(x.get('mn'),str): markets.append(x['mn'])
+                if isinstance(x.get('sn'),str): selections.append(x['sn'])
+                if 'ei' in x and 'en' in x: events.append({k:x.get(k) for k in ('ei','en','ti','mi','tai','pi','td','cd')})
+                if any(k in x for k in ('tbI','pl','ao','lotb')): tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','ao','ti','sn') if k in x})
+                flat=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float))).lower()
+                if any(k in flat for k in ('marcat','scorer','player','giocator','assist','tiro','tiri','mvp','gol o assist','marc o sost')):
+                  hits.append({k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))})
+                for v in x.values(): walk(v)
+              elif isinstance(x,list):
+                for v in x: walk(v)
+            walk(obj)
+            return markets,selections,tabs,events,hits
+          for c in cases:
+            for mode in (0,1):
+              url=f"{base}/{c['sport']}/{c['category']}/{c['tai']}/{c['tournament']}/0/0/{mode}?channelId=0"
+              req=urllib.request.Request(url,headers=headers)
+              try:
+                with urllib.request.urlopen(req,timeout=25) as r:
+                  body=r.read(8000000).decode('utf-8','replace'); status=r.status
+              except urllib.error.HTTPError as e:
+                status=e.code; body=e.read(300000).decode('utf-8','replace')
+              except Exception as e:
+                rows.append({'league':c['name'],'mode':mode,'error':type(e).__name__+': '+str(e)[:200]}); continue
+              rec={'league':c['name'],'mode':mode,'url':url,'status':status,'bytes':len(body)}
+              try:
+                obj=json.loads(body); rec['json_type']=type(obj).__name__
+                if isinstance(obj,dict):
+                  rec['keys']=list(obj.keys()); rec['leo_count']=len(obj.get('leo') or []); rec['lmtW_count']=len(obj.get('lmtW') or []); rec['tai']=obj.get('tai'); rec['id']=obj.get('id'); rec['tn']=obj.get('tn')
+                m,s,t,e,h=collect(obj)
+                rec['market_names']=list(dict.fromkeys(m))[:200]; rec['selection_names']=list(dict.fromkeys(s))[:250]; rec['tabs']=t[:80]; rec['events']=e[:80]; rec['playerish_hits']=h[:80]; rec['player_signal_count']=len(h)
+                if mode==1 and (rec.get('leo_count',0) or rec['player_signal_count']): rec['body_prefix']=body[:300000]
+              except Exception: rec['body_prefix']=body[:10000]
+              rows.append(rec)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'rows':rows}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-overview-aams.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{k:r.get(k) for k in ('league','mode','status','bytes','leo_count','lmtW_count','tai','tn','player_signal_count','market_names','selection_names','events','tabs','error')} for r in rows],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-overview-aams.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe AAMS player overview mode'
+          git push
