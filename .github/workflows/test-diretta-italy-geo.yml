@@ -1,0 +1,56 @@
+name: Test Diretta Italian geo subdivisions
+
+on:
+  push:
+    paths:
+      - 'diretta-italy-geo-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe Italian geo codes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,requests
+          from datetime import datetime,timezone
+          base='https://global.ds.lsapp.eu/odds/pq_graphql'; eid='xAQCcf1s'
+          H={'User-Agent':'Mozilla/5.0','Accept':'*/*','Referer':'https://www.diretta.it/','Origin':'https://www.diretta.it'}
+          s=requests.Session();s.headers.update(H)
+          rows=[]
+          for sub in ['IT21','IT25','IT62','IT34','IT72','IT52','IT45']:
+            p={'_hash':'pobtm','eventId':eid,'projectId':'400','geoIpCode':'IT','geoIpSubdivisionCode':sub}
+            try:
+              r=s.get(base,params=p,timeout=20); rec={'sub':sub,'status':r.status_code,'url':r.url,'body_prefix':r.text[:1200]}
+              if r.status_code==200:
+                try:
+                  d=r.json(); menu=((d.get('data') or {}).get('getPrematchOddsBettingTypeMenu') or {})
+                  bks=[]
+                  for be in ((menu.get('settings') or {}).get('bookmakers') or []):
+                    inn=(be or {}).get('bookmaker') or {}
+                    if inn.get('id') is not None and inn.get('name'): bks.append({'id':inn['id'],'name':inn['name']})
+                  rec['bookmakers']=bks; rec['goldbet']=[b for b in bks if 'gold' in b['name'].lower()]
+                except Exception as e: rec['parse_error']=repr(e)
+              rows.append(rec)
+            except Exception as e: rows.append({'sub':sub,'error':repr(e)})
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'event_id':eid,'projectId':400,'rows':rows}
+          pathlib.Path('feed').mkdir(exist_ok=True);pathlib.Path('feed/diretta-italy-geo-test.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:30000])
+          PY
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git pull --rebase || true
+          git add feed/diretta-italy-geo-test.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Test Diretta Italian geo subdivisions'
+          git push
