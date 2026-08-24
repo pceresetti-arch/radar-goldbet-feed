@@ -1,0 +1,248 @@
+name: Refresh current lineups
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'refresh-current-lineups-trigger.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-current-lineups
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build multi-source lineup feed
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, unicodedata, urllib.request, urllib.parse, difflib, time
+          from datetime import datetime, timezone, timedelta
+          from zoneinfo import ZoneInfo
+
+          ROME=ZoneInfo('Europe/Rome')
+          NOW=datetime.now(timezone.utc)
+          BET_BASE='https://sportservice.betflag.it/api/sport/pregame'
+          AGG=1334500001
+          BET_H={
+            'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+          }
+          WEB_H={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/136 Safari/537.36','Accept':'application/json,text/plain,*/*'}
+
+          def get_json(url,headers=None,timeout=25,cap=18000000):
+            req=urllib.request.Request(url,headers=headers or WEB_H)
+            with urllib.request.urlopen(req,timeout=timeout) as r:
+              return r.status,json.loads(r.read(cap).decode('utf-8','replace'))
+
+          def norm(s):
+            s=unicodedata.normalize('NFKD',str(s or '')).encode('ascii','ignore').decode().lower()
+            s=re.sub(r'\b(fc|cf|sc|ac|afc|cd|fk|bk|calcio|club|deportivo|sporting|united|city)\b',' ',s)
+            s=re.sub(r'[^a-z0-9]+',' ',s)
+            return ' '.join(s.split())
+
+          def side_score(a,b):
+            a,b=norm(a),norm(b)
+            if not a or not b: return 0.0
+            seq=difflib.SequenceMatcher(None,a,b).ratio()
+            ta,tb=set(a.split()),set(b.split())
+            jac=len(ta&tb)/max(1,len(ta|tb))
+            contain=1.0 if a in b or b in a else 0.0
+            return 0.60*seq+0.25*jac+0.15*contain
+
+          def parse_aams_dt(s):
+            try:
+              return datetime.strptime(str(s),'%d-%m-%Y %H:%M').replace(tzinfo=ROME).astimezone(timezone.utc)
+            except Exception:
+              return None
+
+          def parse_iso(s):
+            if not s: return None
+            try:
+              return datetime.fromisoformat(str(s).replace('Z','+00:00')).astimezone(timezone.utc)
+            except Exception:
+              return None
+
+          # 1) Build the real Today-Tomorrow football slate directly from the shared AAMS service.
+          std_url=f'{BET_BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0'
+          _,std=get_json(std_url,BET_H)
+          targets={}
+          def walk(x):
+            if isinstance(x,dict):
+              if x.get('mi') is not None and x.get('en') and (x.get('si') in (1,'1') or str(x.get('sn','')).lower()=='calcio'):
+                name=str(x.get('en') or '')
+                if not name.startswith('('):
+                  dt=parse_aams_dt(x.get('ed'))
+                  if dt:
+                    delta=(dt-NOW).total_seconds()/60
+                    if -15 <= delta <= 120:
+                      targets[str(x.get('mi'))]={
+                        'match_market_id':str(x.get('mi')),'match_event_id':x.get('ei'),'match':name,
+                        'start_time':x.get('ed'),'start_utc':dt.isoformat(),'league':x.get('td'),
+                        'minutes_to_start':round(delta,1)
+                      }
+              for v in x.values(): walk(v)
+            elif isinstance(x,list):
+              for v in x: walk(v)
+          walk(std)
+
+          # Reuse already cross-confirmed lineups: official XI should not change after publication.
+          previous={}
+          p=pathlib.Path('feed/lineups-current.json')
+          if p.exists():
+            try:
+              old=json.loads(p.read_text(encoding='utf-8'))
+              previous={str(m.get('match_market_id')):m for m in old.get('matches',[]) if m.get('status')=='CROSS_CONFIRMED'}
+            except Exception: pass
+
+          dates=set()
+          for t in targets.values():
+            dt=parse_iso(t['start_utc'])
+            dates.add(dt.astimezone(ROME).date())
+            dates.add(dt.date())
+
+          sofa_events=[]; fot_events=[]; source_errors={}
+          for d in sorted(dates):
+            ds=d.strftime('%Y-%m-%d')
+            try:
+              _,j=get_json(f'https://api.sofascore.com/api/v1/sport/football/scheduled-events/{ds}')
+              for e in j.get('events',[]):
+                sofa_events.append({
+                  'id':e.get('id'),'home':(e.get('homeTeam') or {}).get('name'),'away':(e.get('awayTeam') or {}).get('name'),
+                  'start':datetime.fromtimestamp(e.get('startTimestamp'),timezone.utc) if e.get('startTimestamp') else None,'raw':e
+                })
+            except Exception as e:
+              source_errors[f'sofascore_schedule_{ds}']=type(e).__name__+': '+str(e)[:160]
+            try:
+              _,j=get_json(f'https://www.fotmob.com/api/matches?date={d.strftime("%Y%m%d")}')
+              for lg in j.get('leagues',[]):
+                for e in lg.get('matches',[]):
+                  fot_events.append({
+                    'id':e.get('id'),'home':(e.get('home') or {}).get('name'),'away':(e.get('away') or {}).get('name'),
+                    'start':parse_iso((e.get('status') or {}).get('utcTime')),'raw':e
+                  })
+            except Exception as e:
+              source_errors[f'fotmob_schedule_{ds}']=type(e).__name__+': '+str(e)[:160]
+
+          def split_match(name):
+            s=str(name or '')
+            for sep in (' - ',' vs ',' v '):
+              if sep in s:
+                a,b=s.split(sep,1); return a.strip(),b.strip()
+            return s,''
+
+          def best_match(target,events):
+            th,ta=split_match(target['match']); tdt=parse_iso(target['start_utc'])
+            best=None
+            for e in events:
+              if not e.get('home') or not e.get('away') or not e.get('start'): continue
+              dh=side_score(th,e['home']); da=side_score(ta,e['away'])
+              mins=abs((e['start']-tdt).total_seconds())/60
+              if mins>180 or dh<0.42 or da<0.42: continue
+              name=(dh+da)/2
+              score=.86*name+.14*max(0,1-mins/180)
+              if best is None or score>best['score']:
+                best={**e,'score':round(score,4),'home_score':round(dh,4),'away_score':round(da,4),'time_delta_min':round(mins,1)}
+            if best and best['score']>=0.60: return best
+            return None
+
+          def sofa_lineup(event_id):
+            try:
+              _,j=get_json(f'https://api.sofascore.com/api/v1/event/{event_id}/lineups')
+              out={}
+              for side in ('home','away'):
+                t=j.get(side) or {}; players=t.get('players') or []
+                starters=[]; bench=[]; all_names=[]
+                for row in players:
+                  pl=row.get('player') or {}; name=pl.get('name') or row.get('name')
+                  if not name: continue
+                  all_names.append(name)
+                  sub=row.get('substitute')
+                  rec={'name':name,'id':pl.get('id'),'shirt_number':row.get('shirtNumber') or row.get('jerseyNumber'),'position':row.get('position')}
+                  if sub is False: starters.append(rec)
+                  elif sub is True: bench.append(rec)
+                out[side]={'formation':t.get('formation'),'starters':starters,'bench':bench,'all_player_names':all_names}
+              out['source_confirmed']=bool(j.get('confirmed')) or (len(out['home']['starters'])>=11 and len(out['away']['starters'])>=11)
+              out['raw_confirmed']=j.get('confirmed')
+              return out,None
+            except Exception as e:
+              return None,type(e).__name__+': '+str(e)[:180]
+
+          def fotmob_lineup(match_id):
+            try:
+              _,j=get_json(f'https://www.fotmob.com/api/matchDetails?matchId={match_id}')
+              lines=(((j.get('content') or {}).get('lineup') or {}).get('lineups') or [])
+              out={'teams':[],'source_confirmed':False}
+              for t in lines:
+                players=[]
+                for row in t.get('players') or []:
+                  name=row.get('name') or (row.get('player') or {}).get('name')
+                  if name:
+                    players.append({'name':name,'id':row.get('id') or (row.get('player') or {}).get('id'),'shirt_number':row.get('shirt') or row.get('shirtNumber'),'position':row.get('position') or row.get('usualPosition')})
+                out['teams'].append({'team_id':t.get('teamId'),'team_name':t.get('teamName'),'formation':t.get('formation'),'starters':players[:11] if len(players)>=11 else players})
+              out['source_confirmed']=len(out['teams'])>=2 and all(len(t['starters'])>=11 for t in out['teams'][:2])
+              return out,None
+            except Exception as e:
+              return None,type(e).__name__+': '+str(e)[:180]
+
+          def names_from_sofa(s,side): return [x['name'] for x in ((s or {}).get(side) or {}).get('starters',[])]
+          def names_from_fot(f,idx):
+            teams=(f or {}).get('teams') or []
+            return [x['name'] for x in teams[idx].get('starters',[])] if len(teams)>idx else []
+          def xi_agreement(a,b):
+            A={norm(x) for x in a if norm(x)}; B={norm(x) for x in b if norm(x)}
+            if len(A)<8 or len(B)<8: return None
+            return round(len(A&B)/max(1,len(A|B)),4)
+
+          results=[]
+          for key,t in sorted(targets.items(),key=lambda kv:kv[1]['start_utc']):
+            if key in previous:
+              kept=previous[key]; kept['minutes_to_start']=t['minutes_to_start']; kept['retained_from_previous']=True
+              results.append(kept); continue
+            sm=best_match(t,sofa_events); fm=best_match(t,fot_events)
+            sline=serr=fline=ferr=None
+            if sm: sline,serr=sofa_lineup(sm['id'])
+            if fm: fline,ferr=fotmob_lineup(fm['id'])
+            ah=xi_agreement(names_from_sofa(sline,'home'),names_from_fot(fline,0))
+            aa=xi_agreement(names_from_sofa(sline,'away'),names_from_fot(fline,1))
+            cross=ah is not None and aa is not None and ah>=0.75 and aa>=0.75
+            one_confirmed=bool((sline or {}).get('source_confirmed')) or bool((fline or {}).get('source_confirmed'))
+            status='CROSS_CONFIRMED' if cross else ('SOURCE_CONFIRMED' if one_confirmed else ('LINEUP_PRESENT' if sline or fline else 'NOT_AVAILABLE'))
+            results.append({**t,'status':status,'retained_from_previous':False,
+              'sofascore':{'match':None if not sm else {k:sm.get(k) for k in ('id','home','away','score','time_delta_min')},'lineup':sline,'error':serr},
+              'fotmob':{'match':None if not fm else {k:fm.get(k) for k in ('id','home','away','score','time_delta_min')},'lineup':fline,'error':ferr},
+              'cross_source_agreement':{'home':ah,'away':aa}
+            })
+            time.sleep(.12)
+
+          counts={}
+          for r in results: counts[r['status']]=counts.get(r['status'],0)+1
+          payload={
+            'generated_at':NOW.isoformat(),'window':'T-120 to T+15 minutes','source_strategy':'SofaScore + FotMob, cross-check when both are present',
+            'target_count':len(results),'status_counts':counts,'source_errors':source_errors,'matches':results
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/lineups-current.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+          summary={k:v for k,v in payload.items() if k!='matches'}
+          summary['matches']=[{k:r.get(k) for k in ('match','start_time','league','minutes_to_start','status','match_market_id')} for r in results]
+          pathlib.Path('feed/lineups-current-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit lineup feed
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/lineups-current.json feed/lineups-current-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh current multi-source lineups'
+          git push
