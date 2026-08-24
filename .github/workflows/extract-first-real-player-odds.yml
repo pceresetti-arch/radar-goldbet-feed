@@ -1,0 +1,128 @@
+name: Extract first real player odds
+
+on:
+  push:
+    paths:
+      - 'first-real-player-odds-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract player overview markets and one player detail
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          src=json.loads(pathlib.Path('feed/correct-player-aams-pipeline.json').read_text(encoding='utf-8'))
+          overviews=src.get('player_overviews') or []
+          populated=sorted([x for x in overviews if x.get('leo_count',0)>0], key=lambda x:(x.get('leo_count',0),x.get('bytes',0)), reverse=True)
+          ov=populated[0] if populated else {}
+
+          # Tiny view of what is already present in the populated player overview.
+          overview_summary={
+            'candidate_tai':ov.get('candidate_tai'),'tab':ov.get('tab'),'slot':ov.get('slot'),'section':ov.get('section'),
+            'status':ov.get('status'),'success':ov.get('success'),'tai':ov.get('tai'),'tn':ov.get('tn'),
+            'leo_count':ov.get('leo_count'),'lmtW_count':ov.get('lmtW_count'),'eventId':ov.get('eventId'),
+            'events':(ov.get('events') or [])[:20],
+            'market_names':(ov.get('market_names') or [])[:120],
+            'selection_samples':(ov.get('selection_samples') or [])[:180],
+            'tabs':(ov.get('tabs') or [])[:80],
+            'player_signal_count':ov.get('player_signal_count'),
+            'player_hits':(ov.get('player_hits') or [])[:60]
+          }
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def get(path):
+            u=BASE+'/'+path
+            req=urllib.request.Request(u,headers=H)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                return r.status,json.loads(r.read(8000000).decode('utf-8','replace')),u
+            except urllib.error.HTTPError as e:
+              raw=e.read(300000).decode('utf-8','replace')
+              try: obj=json.loads(raw)
+              except: obj={'raw':raw[:10000]}
+              return e.code,obj,u
+            except Exception as e:
+              return None,{'error':type(e).__name__+': '+str(e)[:250]},u
+
+          def flatten_detail(obj):
+            markets=[]; selections=[]; tabs=[]
+            def walk(x,path=''):
+              if isinstance(x,dict):
+                if isinstance(x.get('mn'),str):
+                  markets.append({'path':path,'market':x.get('mn'),'slI':x.get('slI'),'sslI':x.get('sslI'),'mnd':x.get('mnd'),'pl':x.get('pl')})
+                if isinstance(x.get('sn'),str) and 'ov' in x:
+                  selections.append({'path':path,'selection':x.get('sn'),'odd':x.get('ov'),'si':x.get('si'),'sti':x.get('sti'),'mti':x.get('mti'),'mi':x.get('mi'),'oi':x.get('oi'),'cls':x.get('cls')})
+                if 'tbI' in x and ('tbN' in x or 'lotb' in x):
+                  tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','isbb','si')})
+                for k,v in x.items(): walk(v,path+'.'+str(k))
+              elif isinstance(x,list):
+                for i,v in enumerate(x): walk(v,path+f'[{i}]')
+            walk(obj)
+            return {
+              'market_rows':markets[:250],
+              'market_names':list(dict.fromkeys(x['market'] for x in markets))[:150],
+              'selections':selections[:500],
+              'tabs':list({(x.get('tbI'),x.get('tbN'),x.get('pl'),x.get('isbb')):x for x in tabs}.values())[:100]
+            }
+
+          # Target named players from the first populated overview so the proof is human-readable.
+          targets=[]
+          names=('Dany Mota','Andrea Colpani','Keita Balde','Keita Baldé')
+          events=ov.get('events') or []
+          for wanted in names:
+            e=next((x for x in events if wanted.lower().replace('é','e') in str(x.get('en','')).lower().replace('é','e')),None)
+            if e and all(e.get(k) is not None for k in ('tai','ti','mi','ei')):
+              if e not in targets: targets.append(e)
+          if not targets:
+            targets=[e for e in events[:3] if all(e.get(k) is not None for k in ('tai','ti','mi','ei'))]
+
+          details=[]
+          macro_candidates=[0]
+          for t in ov.get('tabs') or []:
+            v=t.get('tbI')
+            if v is not None and v not in macro_candidates: macro_candidates.append(v)
+
+          for e in targets[:3]:
+            for macro in macro_candidates[:8]:
+              for section in (0,1):
+                status,obj,url=get(f"getDetailsEventAams/{e['tai']}/{e['ti']}/{e['mi']}/{e['ei']}/{macro}/{section}?channelId=0")
+                flat=flatten_detail(obj)
+                rec={
+                  'player_event':e,'macroTab':macro,'section':section,'url':url,'status':status,
+                  'success':obj.get('success') if isinstance(obj,dict) else None,
+                  'eventId':obj.get('eventId') if isinstance(obj,dict) else None,
+                  'tai':obj.get('tai') if isinstance(obj,dict) else None,
+                  'tn':obj.get('tn') if isinstance(obj,dict) else None,
+                  'leo_count':len(obj.get('leo') or []) if isinstance(obj,dict) else None,
+                  'lmtW_count':len(obj.get('lmtW') or []) if isinstance(obj,dict) else None,
+                  **flat
+                }
+                details.append(rec)
+                if rec.get('selections'):
+                  break
+              if details and details[-1].get('selections'): break
+
+          details.sort(key=lambda x:(len(x.get('selections') or []),len(x.get('market_names') or []),x.get('leo_count') or 0), reverse=True)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'overview':overview_summary,'details':details[:8]}
+          pathlib.Path('feed/first-real-player-odds.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2)[:60000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/first-real-player-odds.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract first real player markets and odds'
+          git push
