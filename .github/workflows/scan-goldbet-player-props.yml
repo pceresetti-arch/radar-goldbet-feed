@@ -23,7 +23,7 @@ jobs:
           BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request
+          import json, os, pathlib, urllib.parse, urllib.request, collections
           from datetime import datetime, timezone
 
           token = os.environ.get('BRIDGE_TOKEN','').strip()
@@ -37,11 +37,15 @@ jobs:
           max_pages=int(trig.get('max_pages',10))
           base='https://radar-goldbet.p-ceresetti.workers.dev/odds'
           hits=[]; pages=[]; total_count=None
+          term_counts=collections.Counter()
+          term_examples={t:[] for t in terms}
+          event_market_counts=collections.Counter()
+          event_rows=[]
           for page in range(max_pages):
               offset=page*limit
               q={'bookmakers':'goldbet','state':'prematch','limit':str(limit),'offset':str(offset),'token':token}
               url=base+'?'+urllib.parse.urlencode(q)
-              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBetPlayerScan/1.0'})
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBetPlayerScan/2.0'})
               with urllib.request.urlopen(req,timeout=90) as resp:
                   data=json.loads(resp.read().decode('utf-8'))
               rows=data.get('odds',[]) if isinstance(data,dict) else []
@@ -50,8 +54,22 @@ jobs:
               for row in rows:
                   raw=json.dumps(row,ensure_ascii=False).lower()
                   matched=[t for t in terms if t in raw]
+                  for t in matched:
+                      term_counts[t]+=1
+                      if len(term_examples[t])<3:
+                          term_examples[t].append({
+                              'event':row.get('event'),
+                              'market':row.get('market'),
+                              'scope':row.get('scope'),
+                              'period':row.get('period'),
+                              'line':row.get('line')
+                          })
                   if matched:
                       hits.append({'matched_terms':matched,'row':row})
+                  ev=str(row.get('event') or '').lower()
+                  if ('malaga' in ev or 'málaga' in ev) and 'deportivo' in ev:
+                      event_market_counts[str(row.get('market'))]+=1
+                      event_rows.append(row)
               if len(rows)<limit:
                   break
           out={
@@ -61,6 +79,11 @@ jobs:
             'total_count':total_count,
             'pages':pages,
             'hit_count':len(hits),
+            'term_counts':dict(term_counts),
+            'term_examples':term_examples,
+            'target_event_record_count':len(event_rows),
+            'target_event_markets':dict(event_market_counts),
+            'target_event_rows':event_rows[:250],
             'hits':hits[:500]
           }
           pathlib.Path('feed').mkdir(exist_ok=True)
