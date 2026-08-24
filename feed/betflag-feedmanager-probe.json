@@ -1,0 +1,157 @@
+{
+  "generated_at": "2026-08-24T19:56:52.919321+00:00",
+  "frontend_references": [
+    {
+      "url": "https://cdn-ltm.betflag.it/site/scripts/newhome.min.js?111",
+      "status": 200,
+      "snippets": [
+        "W5uZWxJZCI6InNuZWFreS1jaGFpci1sbnh6bGdqIiwic2NwIjoiY29ubmVjdCIsImV4cCI6MTcyOTMyNjQzMCwiaXNzIjoiaHR0cHM6Ly90dW5uZWxzLmFwaS52aXN1YWxzdHVkaW8uY29tLyIsIm5iZiI6MTcyOTIzOTEzMH0.bVQww8Yi_R9-p-6NTwqmUUAO63IeLhaY3xx6rmDT62KkQe8UQh0xBlKP1DWyjkZKFbQw0QN6-AKjRPvBIB9G7g\",\"X-Feed-Token\":feedToken},dataType:\"json\",success:function(e){ComponentsBuilder(e),InitJsBehavior(),hideWaitMask()},error:function(e){console.error(e);var t=i?jsonLogged:jsonNoLogin;sleep(2e3).then(()=>{ComponentsBuilder(t),InitJsBehavior(),hideWaitMask()})}})}async function timeoutHandler(){await sleep(1),RefreshSportsLive()}function sleep(e){return new Promise(i=>setTimeout(i,e))}function UpdateSportItem(e){$('div[id*=\"live_\"] [data-eventid='+e.id+\"]\").html(CreateSportEvent(e))}function AddSportItem(e){document.querySelector('div[id*=\"live_\"]').swiper.prependSlide('<div class=\"swiper-slide sport-event\" data-eventId=\"'+e.id+'\">'+CreateSportEvent(e)+\"</div>\")}function RemoveSportItem(e){const i=document.querySelector('div[id*=\"live_\"]').swiper;var t=$('div[id*=\"live_\"] .swiper-slide[data-eventid=\"'+e+'\"]');t.length>0?i.removeSlide(t.index()):console.log(\"Slide non trovata\")}function RefreshSportsLive(){\"\"==feedUrl?console.log(\"feedmanager non configurato - no refresh\"):$.ajax({type:\"GET\",contentType:\"application/json; charset=utf-8\",crossDomain:!1,url:feedUrl+\"/sport/live\",headers:{\"X-Tunnel-Authorization\":\"tunnel eyJhbGciOiJFUzI1NiIsImtpZCI6IkEwQUQzODkwOTY4NjJERjY4NUI2RDMyMUE2N0I5RTE4MUZERUUzN0YiLCJ0eXAiOiJKV1QifQ.eyJjbHVzdGVySWQiOiJldXciLCJ0dW5uZWxJZCI6InNuZWFreS1oaWxsLXZoaHZzNmQiLCJzY3AiOiJjb25uZWN0IiwiZXhwIjoxNzI5MTcyMjI1LCJpc3MiOiJodHRwczovL3R1bm5lbHMuYXBpLnZpc3VhbHN0dWRpby5jb20vIiwibmJmIjoxNzI5MDg0OTI1fQ.zrF4Ycp-8ednzazIZ_6r6lbiT6emwPGFyuYdl7rHspvaIN-1guhhkwDa7_dV_10V8USdB9HtXm1HMi5Ahz5puQ\",\"X-Feed-Token\":feedToken},dataType:\"json\",success:function(e){updateSportComponent(e)},error:function(e){console.error(e)}})}function updateSportComponent(e){var i=$('div[id*=\"live_\"] [data-eventid]');e.events&&e.events.length>0&&(e.events.forEach(e=>{$('div[id*=\"live_\"] [data-eventid='+e.id+\"]\").length>0?UpdateSportItem(e):AddSportItem(e)}),i.each((i,t)=>{const a=$(t).data(\"eventid\");e.events.some(e=>e.id===a)||RemoveSportItem(a)}))}function InitJsBehavior(){$('[data-toggle=\"tooltip\"]').tooltip({html:!0}),$('[data-toggle=\"popover\"]').popover({sanitize:!1,html:!0}),$(\".bonus-carousel\").each(function(){InitializeFilteredCarousel(\"#\"+this.id)}),$(\".casino-carousel\").each(function(){InitializeCarousel(\"#\"+this.id)}),$(\".sport-carousel\").each(function(){InitializeCarousel(\"#\"+this.id)}),$(\".topwinners-carousel\").each(function(){InitializeCarousel(\"#\"+this.id)}),$(\".banner-carousel\").each(function(){InitializeCarousel(\"#\"+this.id)})}function ComponentsBuilder(e){var i=\"\";try{e.forEach((e,t)=>{i+=SingleComponentChoice(e,t)})}catch(t){i+=SingleComponentChoice(e,0)}$(\"#HomeContainer\").html(i)}function SingleComponentChoice(e,i){var t=\"<div class='componentContainer\";switch(e.type){case\"infoBoxes\":t+=\"'>\",t+=InfoBoxesRender(e);break;case\"signUp\":t+=\"'>\",t+=SignUpRender(e);break;case\"bonusCarousel\":var a=\"\";1==getCategorie(e.configuration.items).length&&(a=\" blueBackground\"),t+=a+\"'>\",t+=BonusCarouselRender(e,\"bonus_\"+i);break;case\"casinoCarousel\":t+=\"'>\",t+=CasinoCarouselRender(e,\"casino_\"+i);break;case\"jackpot\":t+=\" noPadding'>\",t+=JackpotRender(e);break;case\"sportLiveEventsCarousel\":t+=\" white-backg"
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "url": "https://feedmanager.betflag.it/",
+      "method": "GET",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/api/feed",
+      "method": "GET",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/swagger",
+      "method": "GET",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/swagger/index.html",
+      "method": "GET",
+      "status": 401,
+      "content_type": "text/html",
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/swagger/v1/swagger.json",
+      "method": "GET",
+      "status": 401,
+      "content_type": "application/json",
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/openapi.json",
+      "method": "GET",
+      "status": 401,
+      "content_type": "application/json",
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/api",
+      "method": "GET",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/api/feed",
+      "method": "OPTIONS",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/api/feed",
+      "method": "POST",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/api/feed?type=sport",
+      "method": "GET",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    },
+    {
+      "url": "https://feedmanager.betflag.it/api/feed?sport=calcio",
+      "method": "GET",
+      "status": 401,
+      "content_type": null,
+      "allow": null,
+      "access_control_allow_methods": null,
+      "bytes": 12,
+      "body_prefix": "Unauthorized",
+      "tokens": [
+        "Unauthorized"
+      ]
+    }
+  ]
+}
