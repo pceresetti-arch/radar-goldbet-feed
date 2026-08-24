@@ -1,0 +1,89 @@
+name: Analyze Betflag sport bundle routes
+
+on:
+  push:
+    paths:
+      - 'betflag-sport-bundle-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract event and market API routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          url='https://cdn-ltm.betflag.it/site/scripts/sport/bundle.min.js?263'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/javascript,*/*'})
+          with urllib.request.urlopen(req,timeout=30) as r:
+            text=r.read(12000000).decode('utf-8','replace')
+
+          low=text.lower()
+          needles=[
+            'marcat','giocator','player','assist','tiro','tiri','scorer','goalscorer',
+            'eventdetail','detail','market','mercat','quota','quote','bet','scommess',
+            'ajax','fetch(','xmlhttprequest','/api/','aams','prematch','prelive','sport/'
+          ]
+          snippets=[]
+          for n in needles:
+            start=0; count=0
+            while True:
+              i=low.find(n,start)
+              if i<0: break
+              snippets.append({'needle':n,'context':text[max(0,i-1000):i+2400]})
+              start=i+len(n); count+=1
+              if count>=20 or len(snippets)>=260: break
+
+          # Generic string literals that look like routes/endpoints/method names.
+          strings=[]
+          for m in re.finditer(r'''["']([^"']{3,500})["']''',text):
+            s=m.group(1)
+            ls=s.lower()
+            if any(k in ls for k in ('/sport','/api','event','market','quota','bet','player','giocator','marcat','aams','prematch','live')):
+              strings.append(s)
+          strings=list(dict.fromkeys(strings))[:3000]
+
+          paths=[]
+          for m in re.finditer(r'/(?:api|mobile|sport|live|event|sports)[A-Za-z0-9_./?&=%{}:,;()\-]{2,700}',text,re.I):
+            p=m.group(0).rstrip('),;]}')
+            if p not in paths: paths.append(p)
+            if len(paths)>=3000: break
+
+          urls=[]
+          for m in re.finditer(r'https?://[^\s"\'<>\\]{6,700}',text,re.I):
+            u=m.group(0).rstrip('),;]}')
+            if u not in urls: urls.append(u)
+            if len(urls)>=1000: break
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'url':url,'bytes':len(text),
+            'needle_counts':{n:low.count(n) for n in needles},
+            'interesting_strings':strings,
+            'paths':paths,
+            'urls':urls,
+            'snippets':snippets
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-sport-bundle-analysis.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+            'bytes':len(text),'needle_counts':out['needle_counts'],
+            'strings':strings[:120],'paths':paths[:120],'urls':urls[:80]
+          },ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-sport-bundle-analysis.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Analyze Betflag sport bundle routes'
+          git push
