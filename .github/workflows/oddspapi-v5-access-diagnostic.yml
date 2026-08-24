@@ -1,0 +1,63 @@
+name: OddsPapi v5 access diagnostic
+
+on:
+  push:
+    paths:
+      - oddspapi-v5-access-diagnostic-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test v5 access
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          cfg=json.loads(pathlib.Path('oddspapi-v5-access-diagnostic-trigger.json').read_text())
+          fid=cfg.get('fixtureId')
+          base='https://v5.oddspapi.io/en'
+
+          def call(path, params=None):
+              q=dict(params or {}); q['apiKey']=key
+              url=base+path+'?'+urllib.parse.urlencode(q)
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBet/5.0'})
+              try:
+                  with urllib.request.urlopen(req,timeout=60) as r:
+                      body=r.read().decode('utf-8','replace')
+                      return {'path':path,'status':r.status,'body':body[:5000]}
+              except urllib.error.HTTPError as e:
+                  body=e.read().decode('utf-8','replace')
+                  return {'path':path,'status':e.code,'body':body[:5000]}
+              except Exception as e:
+                  return {'path':path,'status':None,'error':repr(e)}
+
+          checks=[
+              call('/sports'),
+              call('/markets',{'sportId':10}),
+          ]
+          if fid:
+              checks.append(call('/fixtures',{'fixtureIds':fid,'bookmakers':'goldbet.it'}))
+              checks.append(call('/fixtures/odds',{'fixtureId':fid,'bookmakers':'goldbet.it'}))
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'fixtureId':fid,'checks':checks}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/oddspapi-v5-access-diagnostic.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit diagnostic
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/oddspapi-v5-access-diagnostic.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Diagnose OddsPapi v5 access"
+          git push
