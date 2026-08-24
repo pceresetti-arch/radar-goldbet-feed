@@ -1,0 +1,89 @@
+name: Quick Betflag player-market proof
+
+on:
+  push:
+    paths:
+      - 'quick-player-proof-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe two major football events
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          base='https://sportservice.betflag.it'
+          headers={
+            'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+          }
+          events=[
+            {'name':'Milan - Venezia','tai':21,'ti':93,'mi':'36351.2616','ei':16037202},
+            {'name':'Deportivo La Coruña - Valencia','tai':79,'ti':95,'mi':'36351.2884','ei':16038593}
+          ]
+          rows=[]
+          for ev in events:
+            for macro in ('0','-999'):
+              for section in ('0','1'):
+                path=f"/api/sport/pregame/getDetailsEventAams/{ev['tai']}/{ev['ti']}/{ev['mi']}/{ev['ei']}/{macro}/{section}?channelId=0"
+                url=base+path
+                req=urllib.request.Request(url,headers=headers)
+                try:
+                  with urllib.request.urlopen(req,timeout=20) as r:
+                    body=r.read(6000000).decode('utf-8','replace'); status=r.status
+                except urllib.error.HTTPError as e:
+                  status=e.code; body=e.read(200000).decode('utf-8','replace')
+                except Exception as e:
+                  rows.append({'event':ev['name'],'macro':macro,'section':section,'error':type(e).__name__+': '+str(e)[:200]}); continue
+                rec={'event':ev['name'],'macro':macro,'section':section,'status':status,'bytes':len(body)}
+                try:
+                  obj=json.loads(body); rec['json_type']=type(obj).__name__
+                  if isinstance(obj,dict):
+                    rec['success']=obj.get('success'); rec['eventId']=obj.get('eventId'); rec['tai']=obj.get('tai')
+                    rec['leo_count']=len(obj.get('leo') or []); rec['lmtW_count']=len(obj.get('lmtW') or [])
+                    markets=[]; sels=[]; tabs=[]; hits=[]
+                    def walk(x):
+                      if isinstance(x,dict):
+                        if isinstance(x.get('mn'),str): markets.append(x['mn'])
+                        if isinstance(x.get('sn'),str): sels.append(x['sn'])
+                        if any(k in x for k in ('tbI','pl','ao','lotb')):
+                          tabs.append({k:x.get(k) for k in ('tbI','tbN','pl','ao','ti','sn') if k in x})
+                        flat=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float))).lower()
+                        if any(k in flat for k in ('marcat','scorer','player','giocator','assist','tiro','tiri','mvp','gol o assist')):
+                          hits.append({k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))})
+                        for v in x.values(): walk(v)
+                      elif isinstance(x,list):
+                        for v in x: walk(v)
+                    walk(obj)
+                    rec['market_names']=list(dict.fromkeys(markets))[:250]
+                    rec['selection_names']=list(dict.fromkeys(sels))[:250]
+                    rec['tabs']=tabs[:100]
+                    rec['playerish_hits']=hits[:80]
+                    rec['player_signal_count']=len(hits)
+                    if rec['leo_count'] or rec['player_signal_count']:
+                      rec['body_prefix']=body[:250000]
+                except Exception:
+                  rec['body_prefix']=body[:10000]
+                rows.append(rec)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'rows':rows}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/quick-player-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{k:r.get(k) for k in ('event','macro','section','status','bytes','success','eventId','tai','leo_count','lmtW_count','player_signal_count','market_names','selection_names','tabs','error')} for r in rows],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/quick-player-proof.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prove Betflag player-market detail path'
+          git push
