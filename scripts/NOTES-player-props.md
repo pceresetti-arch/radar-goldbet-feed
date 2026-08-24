@@ -1,0 +1,1 @@
+Current provider account reports GoldBet player props unavailable. Do not treat provider player markets as GoldBet. End-to-end target remains exact GoldBet player prices. Direct page/API extraction is required for props; provider feed remains valid for standard markets.
