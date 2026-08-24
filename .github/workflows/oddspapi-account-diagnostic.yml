@@ -19,7 +19,7 @@ jobs:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request, urllib.error
+          import json, os, pathlib, urllib.parse, urllib.request
           from datetime import datetime, timezone
           key=os.environ.get('ODDSPAPI_KEY','').strip()
           out={'generated_at':datetime.now(timezone.utc).isoformat()}
@@ -29,17 +29,24 @@ jobs:
               with urllib.request.urlopen(req,timeout=60) as r:
                   data=json.loads(r.read().decode())
               data.pop('api_key',None)
-              # Keep only subscription/coverage fields useful to diagnose GoldBet player props.
               subs=[]
               for s in data.get('subscriptions') or []:
                   if not isinstance(s,dict): continue
                   books=s.get('bookmakers') or {}
-                  gold={k:v for k,v in books.items() if 'goldbet' in str(k).lower()}
+                  # Keep only likely GBO/Lottomatica-family Italian brands; no credentials or account secrets.
+                  family={}
+                  for k,v in books.items():
+                      kl=str(k).lower()
+                      if any(term in kl for term in ('goldbet','betflag','lottomatica','better')):
+                          family[k]=v
+                  props_true=[k for k,v in books.items() if isinstance(v,dict) and v.get('has_player_props') is True]
                   subs.append({
                     'subscription_id':s.get('subscription_id'),
                     'valid_from':s.get('valid_from'),'valid_until':s.get('valid_until'),
                     'is_active':s.get('is_active'),'sport_ids':s.get('sport_ids'),
-                    'goldbet':gold,
+                    'gbo_family':family,
+                    'player_prop_enabled_bookmaker_count':len(props_true),
+                    'player_prop_enabled_sample':props_true[:40],
                     'bookmaker_count':len(books),
                   })
               out.update({'current_subscription_id':data.get('current_subscription_id'),'subscriptions':subs})
@@ -54,5 +61,5 @@ jobs:
           git config user.email "radar-goldbet-bot@users.noreply.github.com"
           git add feed/oddspapi-account-sanitized.json
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Inspect OddsPapi account GoldBet coverage"
+          git commit -m "Inspect OddsPapi GBO family coverage"
           git push
