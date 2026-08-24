@@ -1,0 +1,124 @@
+name: Scan all Giocatori Calcio tabs
+
+on:
+  push:
+    paths:
+      - 'scan-all-player-tabs-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Discover and query every player tab and slot
+        shell: bash
+        run: |
+          python - <<'PY'
+          import concurrent.futures,json,pathlib,re,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def get(path):
+            req=urllib.request.Request(BASE+'/'+path,headers=H)
+            try:
+              with urllib.request.urlopen(req,timeout=25) as r:
+                return {'status':r.status,'obj':json.loads(r.read(10000000).decode('utf-8','replace')),'url':BASE+'/'+path}
+            except urllib.error.HTTPError as e:
+              raw=e.read(200000).decode('utf-8','replace')
+              try:o=json.loads(raw)
+              except:o={'raw':raw[:2000]}
+              return {'status':e.code,'obj':o,'url':BASE+'/'+path}
+            except Exception as e:return {'error':type(e).__name__+': '+str(e)[:200],'url':BASE+'/'+path,'obj':{}}
+
+          rootrec=get('getOverviewEventsAams/0/-1/21/29300/0/0/0?channelId=0')
+          root=rootrec['obj'] if isinstance(rootrec.get('obj'),dict) else {}
+
+          # Capture exact tab/slot IDs as delivered by the player branch.
+          tabs=[]; pairs=[(0,0,'DEFAULT',None)]
+          for t in root.get('lmtW') or []:
+            if not isinstance(t,dict): continue
+            tid=t.get('tbI'); tname=t.get('tbN'); slots=[]
+            for s in t.get('lotb') or []:
+              if not isinstance(s,dict): continue
+              sid=s.get('ti'); sname=s.get('sn')
+              slots.append({'slot_id':sid,'slot_name':sname,'pl':s.get('pl'),'ao':s.get('ao'),'lt':s.get('lt')})
+              if tid is not None and sid is not None: pairs.append((tid,sid,tname,sname))
+            if tid is not None and not slots: pairs.append((tid,0,tname,None))
+            tabs.append({'tab_id':tid,'tab_name':tname,'pl':t.get('pl'),'isbb':t.get('isbb'),'slots':slots})
+          # Also try each tab with slot 0 because some APIs ignore/omit slot lists.
+          for t in tabs:
+            if t['tab_id'] is not None: pairs.append((t['tab_id'],0,t['tab_name'],None))
+          # de-dupe
+          seen=set(); uniq=[]
+          for p in pairs:
+            k=(p[0],p[1])
+            if k not in seen: seen.add(k); uniq.append(p)
+
+          def extract(ev):
+            en=str(ev.get('en') or ''); m=re.match(r'^\(([^)]+)\)\s*(.+)$',en)
+            player=m.group(2).strip() if m else en
+            code=m.group(1) if m else None
+            rows=[]; mm=ev.get('mmkW') or {}
+            vals=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+            for mk in vals:
+              if not isinstance(mk,dict): continue
+              name=(mk.get('mn') or mk.get('mnd') or '').strip()
+              spd=mk.get('spd') or {}
+              spreads=spd.values() if isinstance(spd,dict) else (spd if isinstance(spd,list) else [])
+              for sp in spreads:
+                if not isinstance(sp,dict): continue
+                for sel in sp.get('asl') or []:
+                  if not isinstance(sel,dict): continue
+                  rows.append({'player':player,'match_code':code,'event_id':ev.get('ei'),'date':ev.get('ed'),'market':name,'line':sp.get('sl'),'selection':sel.get('sn'),'odd':sel.get('ov'),'market_type_id':sel.get('mti'),'selection_id':sel.get('si')})
+            return rows
+
+          def probe(p):
+            tid,sid,tname,sname=p
+            rec=get(f'getOverviewEventsAams/0/-1/21/29300/{tid}/{sid}/0?channelId=0')
+            obj=rec.get('obj') if isinstance(rec.get('obj'),dict) else {}
+            rows=[]
+            for ev in obj.get('leo') or []:
+              if isinstance(ev,dict): rows.extend(extract(ev))
+            markets=[]
+            for r in rows:
+              if r['market'] and r['market'] not in markets: markets.append(r['market'])
+            # Named proof per market, plus first samples.
+            samples=[]
+            wanted=('Dany Mota','Andrea Colpani','Keita Balde','Patrick Cutrone')
+            for w in wanted:
+              for r in rows:
+                if w.lower() in r['player'].lower():
+                  samples.append(r)
+                  if len([x for x in samples if w.lower() in x['player'].lower()])>=3: break
+            for r in rows[:12]:
+              if r not in samples:samples.append(r)
+            return {'tab_id':tid,'slot_id':sid,'tab_name':tname,'slot_name':sname,'status':rec.get('status'),'error':rec.get('error'),'success':obj.get('success'),'tn':obj.get('tn'),'event_count':len(obj.get('leo') or []),'market_names':markets,'selection_count':len(rows),'samples':samples[:24],'url':rec.get('url')}
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+            results=list(ex.map(probe,uniq))
+          # sort useful first
+          results.sort(key=lambda r:(r.get('selection_count',0),r.get('event_count',0)),reverse=True)
+          all_markets=[]
+          for r in results:
+            for m in r.get('market_names') or []:
+              if m not in all_markets: all_markets.append(m)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'root_status':rootrec.get('status'),'root_success':root.get('success'),'root_event_count':len(root.get('leo') or []),'tabs':tabs,'pair_count':len(uniq),'all_market_names':all_markets,'results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/all-player-tabs.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          small={'root_success':out['root_success'],'root_event_count':out['root_event_count'],'tabs':tabs,'all_market_names':all_markets,'useful_results':[r for r in results if r.get('selection_count',0)>0]}
+          pathlib.Path('feed/all-player-tabs-summary.json').write_text(json.dumps(small,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(small,ensure_ascii=False,indent=2)[:60000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/all-player-tabs.json feed/all-player-tabs-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Scan all Giocatori Calcio market tabs'
+          git push
