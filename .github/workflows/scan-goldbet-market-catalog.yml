@@ -1,0 +1,67 @@
+name: Scan GoldBet market catalog
+
+on:
+  push:
+    paths:
+      - 'goldbet-market-catalog-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan all GoldBet market labels and player-like rows
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, collections
+          from datetime import datetime, timezone
+          token=os.environ.get('BRIDGE_TOKEN','').strip()
+          base='https://radar-goldbet.p-ceresetti.workers.dev/odds'
+          limit=2000; offset=0; market_counts=collections.Counter(); keyword_rows=[]; player_field_rows=[]; pages=[]; total=None
+          terms=['marc','segna','assist','tiri','tiro','player','giocatore','gol o assist','sostituto','scorer','goalscorer']
+          while True:
+            q={'bookmakers':'goldbet','state':'prematch','limit':limit,'offset':offset,'token':token}
+            url=base+'?'+urllib.parse.urlencode(q)
+            with urllib.request.urlopen(urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarMarketCatalog/1.0'}),timeout=90) as r:
+              data=json.loads(r.read().decode('utf-8'))
+            rows=data.get('odds',[]); total=data.get('count',total); pages.append({'offset':offset,'returned':len(rows)})
+            for row in rows:
+              market_counts[str(row.get('market'))]+=1
+              raw=json.dumps(row,ensure_ascii=False).lower()
+              matched=[t for t in terms if t in raw]
+              if matched and len(keyword_rows)<500:
+                keyword_rows.append({'matched':matched,'row':row})
+              if row.get('player') is not None and len(player_field_rows)<500:
+                player_field_rows.append(row)
+            offset += len(rows)
+            if not rows or len(rows)<limit or (total is not None and offset>=int(total)): break
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'count':total,
+            'pages':pages,
+            'unique_market_count':len(market_counts),
+            'markets':dict(sorted(market_counts.items())),
+            'player_field_row_count_sampled':len(player_field_rows),
+            'player_field_rows':player_field_rows,
+            'keyword_hit_count_sampled':len(keyword_rows),
+            'keyword_rows':keyword_rows
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/goldbet-market-catalog-scan.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'count':total,'markets':dict(sorted(market_counts.items())),'player_rows':len(player_field_rows),'keyword_hits':len(keyword_rows)},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/goldbet-market-catalog-scan.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Scan complete GoldBet market catalog'
+          git push
