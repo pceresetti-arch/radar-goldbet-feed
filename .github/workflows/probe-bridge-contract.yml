@@ -1,0 +1,87 @@
+name: Probe Radar bridge contract
+
+on:
+  push:
+    paths:
+      - 'bridge-contract-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe bridge endpoints and player parameters
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error, concurrent.futures
+          from datetime import datetime, timezone
+          token=os.environ.get('BRIDGE_TOKEN','').strip()
+          base='https://radar-goldbet.p-ceresetti.workers.dev'
+          tests=[
+            ('sports','/sports',{}),
+            ('bookmakers','/bookmakers',{}),
+            ('coverage','/coverage',{}),
+            ('status','/status',{}),
+            ('markets','/markets',{}),
+            ('odds_baseline','/odds',{'bookmakers':'goldbet','state':'prematch','limit':'2'}),
+            ('odds_content_player','/odds',{'bookmakers':'goldbet','state':'prematch','content':'player','limit':'2'}),
+            ('odds_player_filter','/odds',{'bookmakers':'goldbet','state':'prematch','player':'haaland','limit':'2'}),
+            ('odds_content_all','/odds',{'bookmakers':'goldbet','state':'prematch','content':'all','limit':'2'}),
+            ('odds_unknown','/odds',{'bookmakers':'goldbet','state':'prematch','definitely_unknown_param':'1','limit':'2'}),
+          ]
+          def one(t):
+            name,path,params=t
+            q={**params,'token':token}
+            url=base+path+'?'+urllib.parse.urlencode(q)
+            req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarBridgeContract/1.0'})
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                body=r.read(120000).decode('utf-8','replace'); status=r.status; ctype=r.headers.get('content-type')
+            except urllib.error.HTTPError as e:
+              body=e.read(20000).decode('utf-8','replace'); status=e.code; ctype=e.headers.get('content-type')
+            except Exception as e:
+              return {'name':name,'path':path,'params':params,'error':repr(e)}
+            out={'name':name,'path':path,'params':params,'status':status,'content_type':ctype,'bytes':len(body)}
+            try:
+              data=json.loads(body)
+              out['top_keys']=list(data.keys()) if isinstance(data,dict) else None
+              if isinstance(data,dict):
+                for k in ('error','message','count','returned','state','content','allowed','hint'):
+                  if k in data: out[k]=data.get(k)
+                rows=data.get('odds') if isinstance(data.get('odds'),list) else data.get('data') if isinstance(data.get('data'),list) else None
+                if rows is not None:
+                  out['row_count']=len(rows)
+                  out['sample_rows']=[{
+                    'event':x.get('event') if isinstance(x,dict) else None,
+                    'market':x.get('market') if isinstance(x,dict) else None,
+                    'player':x.get('player') if isinstance(x,dict) else None,
+                    'player_id':x.get('player_id') if isinstance(x,dict) else None,
+                    'scope':x.get('scope') if isinstance(x,dict) else None,
+                    'period':x.get('period') if isinstance(x,dict) else None,
+                  } for x in rows[:2]]
+              else: out['json_type']=type(data).__name__
+            except Exception:
+              out['body_prefix']=body[:2000]
+            return out
+          with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+            results=list(ex.map(one,tests))
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/bridge-contract-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/bridge-contract-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Map Radar bridge contract'
+          git push
