@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install Selenium
         run: python -m pip install -q selenium
-      - name: Open Flashscore odds tab and capture real network
+      - name: Open Diretta.it odds tab and capture real network
         shell: bash
         run: |
           python - <<'PY'
@@ -28,111 +28,96 @@ jobs:
           from selenium.webdriver.chrome.options import Options
           from selenium.webdriver.common.by import By
 
-          target='https://www.flashscore.com/match/football/betis-vJbTeCGP/valencia-CQeaytrD/?mid=xAQCcf1s#/odds-comparison/1x2-odds/full-time'
+          target='https://www.diretta.it/partita/calcio/betis-vJbTeCGP/valencia-CQeaytrD/?mid=xAQCcf1s'
           out={'generated_at':datetime.now(timezone.utc).isoformat(),'target':target,'requests':[],'responses':[],'steps':[],'browser_logs':[]}
-
           options=Options()
-          options.add_argument('--headless=new')
-          options.add_argument('--no-sandbox')
-          options.add_argument('--disable-dev-shm-usage')
-          options.add_argument('--window-size=1440,2000')
-          options.add_argument('--lang=it-IT')
-          options.add_argument('--disable-blink-features=AutomationControlled')
+          options.add_argument('--headless=new'); options.add_argument('--no-sandbox'); options.add_argument('--disable-dev-shm-usage')
+          options.add_argument('--window-size=1440,2000'); options.add_argument('--lang=it-IT'); options.add_argument('--disable-blink-features=AutomationControlled')
           options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36')
           options.set_capability('goog:loggingPrefs', {'performance':'ALL','browser':'ALL'})
           d=None
           try:
-            d=webdriver.Chrome(options=options)
-            d.execute_cdp_cmd('Network.enable', {})
+            d=webdriver.Chrome(options=options); d.execute_cdp_cmd('Network.enable', {})
             d.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source':"Object.defineProperty(navigator,'webdriver',{get:()=>undefined});"})
-            d.get(target)
-            time.sleep(10)
-            # Try cookie buttons if present, then odds tab if SPA ignored hash.
-            for txt in ('Accept all','Accetta tutto','I agree','Consent'):
+            d.get(target); time.sleep(10)
+            for txt in ('Accetta tutto','Accetta','Accept all','I agree'):
               try:
                 els=d.find_elements(By.XPATH, f"//*[contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{txt.lower()}')]")
-                if els:
-                  els[0].click(); time.sleep(2); break
+                if els: els[0].click(); time.sleep(2); break
               except Exception: pass
-            try:
-              body=d.find_element(By.TAG_NAME,'body').text
-            except Exception:
-              body=''
-            out['steps'].append({'final_url':d.current_url,'title':d.title,'body_prefix':body[:7000],'html_bytes':len(d.page_source)})
-            # If odds are not visible, click an Odds/Quote tab.
-            if 'odds' not in body.lower() and 'quote' not in body.lower():
-              for label in ('Odds','Quote'):
-                try:
-                  els=d.find_elements(By.XPATH, f"//*[normalize-space(text())='{label}']")
-                  if els:
-                    els[0].click(); time.sleep(8); break
-                except Exception: pass
-            time.sleep(5)
-            logs=d.get_log('performance')
-            req_seen=set(); resp_seen=set(); response_ids={}
+            try: body=d.find_element(By.TAG_NAME,'body').text
+            except: body=''
+            out['steps'].append({'phase':'base','final_url':d.current_url,'title':d.title,'body_prefix':body[:7000],'html_bytes':len(d.page_source)})
+            clicked=False
+            for label in ('Comp. quote','Comparazione quote','Quote','Odds'):
+              try:
+                els=d.find_elements(By.XPATH, f"//*[contains(normalize-space(text()), '{label}')]")
+                for el in els[:5]:
+                  try:
+                    d.execute_script("arguments[0].click();",el); clicked=True; time.sleep(8); break
+                  except: pass
+                if clicked: break
+              except: pass
+            if not clicked:
+              try:
+                d.get(target+'#/comparazione-quote/quote-1x2/finale'); time.sleep(8)
+              except: pass
+            try: body2=d.find_element(By.TAG_NAME,'body').text
+            except: body2=''
+            out['steps'].append({'phase':'odds','final_url':d.current_url,'title':d.title,'body_prefix':body2[:10000],'html_bytes':len(d.page_source),'clicked':clicked})
+            time.sleep(3)
+            logs=d.get_log('performance'); req_seen=set(); resp_seen=set(); response_ids={}
             for x in logs:
               try:
                 m=json.loads(x['message'])['message']; method=m.get('method'); p=m.get('params',{})
                 if method=='Network.requestWillBeSent':
                   req=p.get('request',{}); u=req.get('url',''); lu=u.lower()
-                  if any(k in lu for k in ('lsapp.eu','pq_graphql','/odds/','odds-comparison')):
+                  if any(k in lu for k in ('lsapp.eu','pq_graphql','/odds/')):
                     key=(req.get('method'),u)
                     if key in req_seen: continue
-                    req_seen.add(key)
-                    q=parse_qs(urlparse(u).query)
+                    req_seen.add(key); q=parse_qs(urlparse(u).query)
                     headers={k:v for k,v in (req.get('headers') or {}).items() if k.lower() not in ('cookie','authorization','x-api-key')}
                     out['requests'].append({'method':req.get('method'),'url':u,'query':q,'headers':headers,'postData':(req.get('postData') or '')[:5000]})
                 elif method=='Network.responseReceived':
                   resp=p.get('response',{}); u=resp.get('url',''); lu=u.lower(); rid=p.get('requestId')
-                  if any(k in lu for k in ('lsapp.eu','pq_graphql','/odds/','odds-comparison')):
+                  if any(k in lu for k in ('lsapp.eu','pq_graphql','/odds/')):
                     key=(resp.get('status'),u)
                     if key in resp_seen: continue
-                    resp_seen.add(key)
-                    rec={'status':resp.get('status'),'url':u,'mimeType':resp.get('mimeType'),'headers':{k:v for k,v in (resp.get('headers') or {}).items() if k.lower() not in ('set-cookie','cookie')}}
+                    resp_seen.add(key); rec={'status':resp.get('status'),'url':u,'mimeType':resp.get('mimeType')}
                     if rid: response_ids[rid]=rec
                     out['responses'].append(rec)
-              except Exception: pass
-            # Try to pull bodies for captured odds responses.
-            for rid,rec in list(response_ids.items())[:20]:
+              except: pass
+            for rid,rec in list(response_ids.items())[:40]:
               try:
-                rb=d.execute_cdp_cmd('Network.getResponseBody', {'requestId':rid})
-                text=rb.get('body','')
-                rec['body_prefix']=text[:12000]
+                rb=d.execute_cdp_cmd('Network.getResponseBody', {'requestId':rid}); text=rb.get('body',''); rec['body_prefix']=text[:20000]
                 try:
-                  data=json.loads(text)
-                  eo=((data.get('data') or {}).get('findOddsByEventId') or {}) if isinstance(data,dict) else {}
-                  if eo:
-                    rec['findOdds_keys']=list(eo.keys())[:30]
+                  data=json.loads(text); root=(data.get('data') or {}) if isinstance(data,dict) else {}
+                  menu=root.get('getPrematchOddsBettingTypeMenu') or {}
+                  if menu:
                     bks=[]
-                    for be in ((eo.get('settings') or {}).get('bookmakers') or []):
+                    for be in ((menu.get('settings') or {}).get('bookmakers') or []):
                       inn=(be or {}).get('bookmaker') or {}
-                      if inn.get('name'): bks.append(inn.get('name'))
-                    rec['bookmakers']=bks
-                    rec['goldbet_present']=any('gold' in str(x).lower() for x in bks)
-                    openings=[]
-                    for market in eo.get('odds') or []:
-                      vals=[]
-                      for odd in (market or {}).get('odds') or []:
-                        if isinstance(odd,dict) and odd.get('opening') not in (None,''):
-                          vals.append({'value':odd.get('value'),'opening':odd.get('opening'),'movement':odd.get('movement')})
-                      if vals:
-                        openings.append({'bookmakerId':market.get('bookmakerId'),'bettingType':market.get('bettingType'),'bettingScope':market.get('bettingScope'),'handicap':market.get('handicap'),'odds':vals})
-                    rec['opening_market_count']=len(openings)
-                    rec['opening_examples']=openings[:40]
-                except Exception: pass
-              except Exception as e:
-                rec['body_error']=repr(e)
+                      if inn.get('id') is not None and inn.get('name'): bks.append({'id':inn.get('id'),'name':inn.get('name')})
+                    rec['menu_bookmakers']=bks; rec['goldbet_candidates']=[b for b in bks if 'gold' in str(b['name']).lower()]
+                    rec['market_menu']=[{'bettingType':it.get('bettingType'),'bettingScope':it.get('bettingScope'),'bookmakerIds':it.get('bookmakerIds')} for it in menu.get('items') or [] if isinstance(it,dict)]
+                  detail=root.get('findPrematchOddsForBookmaker')
+                  if detail is not None:
+                    rec['bookmaker_detail']=detail
+                except: pass
+              except Exception as e: rec['body_error']=repr(e)
             try: out['browser_logs']=d.get_log('browser')[:100]
-            except Exception: pass
-          except Exception as e:
-            out['fatal_error']=repr(e)
+            except: pass
+          except Exception as e: out['fatal_error']=repr(e)
           finally:
             if d:
               try:d.quit()
               except:pass
           pathlib.Path('feed').mkdir(exist_ok=True)
           pathlib.Path('feed/browser-diretta-odds-network.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps({'request_count':len(out['requests']),'response_count':len(out['responses']),'fatal':out.get('fatal_error'),'request_urls':[x['url'] for x in out['requests'][:10]]},ensure_ascii=False,indent=2))
+          menus=[]
+          for r in out['responses']:
+            if r.get('menu_bookmakers'): menus.extend(r['menu_bookmakers'])
+          print(json.dumps({'request_count':len(out['requests']),'response_count':len(out['responses']),'fatal':out.get('fatal_error'),'bookmakers':menus,'urls':[x['url'] for x in out['requests'][:20]]},ensure_ascii=False,indent=2)[:40000])
           PY
       - name: Commit result
         if: always()
