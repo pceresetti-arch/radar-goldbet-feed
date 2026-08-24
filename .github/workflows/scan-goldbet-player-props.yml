@@ -1,0 +1,76 @@
+name: Scan GoldBet player props
+
+on:
+  push:
+    paths:
+      - player-prop-scan-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-goldbet-player-prop-scan
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan all GoldBet prematch pages
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request
+          from datetime import datetime, timezone
+
+          token = os.environ.get('BRIDGE_TOKEN','').strip()
+          if not token:
+              raise SystemExit('Missing BRIDGE_TOKEN')
+          trig = json.loads(pathlib.Path('player-prop-scan-trigger.json').read_text(encoding='utf-8'))
+          terms = trig.get('terms', []) or []
+          if isinstance(terms, str): terms=[terms]
+          terms=[str(x).strip().lower() for x in terms if str(x).strip()]
+          limit=int(trig.get('limit',2000))
+          max_pages=int(trig.get('max_pages',10))
+          base='https://radar-goldbet.p-ceresetti.workers.dev/odds'
+          hits=[]; pages=[]; total_count=None
+          for page in range(max_pages):
+              offset=page*limit
+              q={'bookmakers':'goldbet','state':'prematch','limit':str(limit),'offset':str(offset),'token':token}
+              url=base+'?'+urllib.parse.urlencode(q)
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarGoldBetPlayerScan/1.0'})
+              with urllib.request.urlopen(req,timeout=90) as resp:
+                  data=json.loads(resp.read().decode('utf-8'))
+              rows=data.get('odds',[]) if isinstance(data,dict) else []
+              if total_count is None: total_count=data.get('count') if isinstance(data,dict) else None
+              pages.append({'offset':offset,'returned':len(rows)})
+              for row in rows:
+                  raw=json.dumps(row,ensure_ascii=False).lower()
+                  matched=[t for t in terms if t in raw]
+                  if matched:
+                      hits.append({'matched_terms':matched,'row':row})
+              if len(rows)<limit:
+                  break
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'trigger_id':trig.get('trigger_id'),
+            'terms':terms,
+            'total_count':total_count,
+            'pages':pages,
+            'hit_count':len(hits),
+            'hits':hits[:500]
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-prop-scan.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Commit scan
+        run: |
+          git config user.name "radar-goldbet-bot"
+          git config user.email "radar-goldbet-bot@users.noreply.github.com"
+          git add feed/player-prop-scan.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Scan GoldBet player props"
+          git push
