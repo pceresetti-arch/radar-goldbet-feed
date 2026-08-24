@@ -1,0 +1,65 @@
+name: Probe lineup source endpoints
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'probe-lineup-source-endpoints-trigger.json'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install browser-like HTTP client
+        run: pip install -q curl_cffi
+      - name: Probe current lineup data routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          from datetime import datetime, timezone
+          from curl_cffi import requests
+          date='2026-08-25'
+          ymd='20260825'
+          urls=[
+            ('sofa_www',f'https://www.sofascore.com/api/v1/sport/football/scheduled-events/{date}'),
+            ('sofa_www_inverse',f'https://www.sofascore.com/api/v1/sport/football/scheduled-events/{date}/inverse'),
+            ('sofa_api',f'https://api.sofascore.com/api/v1/sport/football/scheduled-events/{date}'),
+            ('sofa_api_inverse',f'https://api.sofascore.com/api/v1/sport/football/scheduled-events/{date}/inverse'),
+            ('fotmob_data',f'https://www.fotmob.com/api/data/matches?date={ymd}&timezone=Europe%2FRome&ccode3=ITA'),
+            ('fotmob_data_min',f'https://www.fotmob.com/api/data/matches?date={ymd}'),
+            ('fotmob_old',f'https://www.fotmob.com/api/matches?date={ymd}'),
+          ]
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'tests':[]}
+          headers={'Accept':'application/json,text/plain,*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8','Referer':'https://www.sofascore.com/','Origin':'https://www.sofascore.com'}
+          for name,url in urls:
+            rec={'name':name,'url':url}
+            try:
+              r=requests.get(url,headers=headers,impersonate='chrome',timeout=25)
+              rec.update({'status':r.status_code,'content_type':r.headers.get('content-type'),'length':len(r.content),'prefix':r.text[:160]})
+              try:
+                j=r.json(); rec['json_keys']=list(j.keys())[:20] if isinstance(j,dict) else [type(j).__name__]
+                if isinstance(j,dict):
+                  if isinstance(j.get('events'),list): rec['event_count']=len(j['events'])
+                  if isinstance(j.get('leagues'),list): rec['league_count']=len(j['leagues']); rec['match_count']=sum(len(x.get('matches') or []) for x in j['leagues'] if isinstance(x,dict))
+              except Exception as e: rec['json_error']=type(e).__name__
+            except Exception as e:
+              rec['error']=type(e).__name__+': '+str(e)[:240]
+            out['tests'].append(rec)
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/lineup-source-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit probe
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/lineup-source-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe browser-like lineup data endpoints'
+          git push
