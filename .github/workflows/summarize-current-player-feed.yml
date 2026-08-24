@@ -1,0 +1,47 @@
+name: Summarize current player feed
+
+on:
+  push:
+    paths:
+      - 'summarize-current-player-feed-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build compact player feed proof
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,collections
+          p=pathlib.Path('feed/player-props-current.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          rows=x.get('rows',[])
+          markets=collections.Counter(str(r.get('market')) for r in rows)
+          leagues=collections.Counter(str(r.get('league')) for r in rows)
+          matches=collections.Counter(str(r.get('match_code')) for r in rows)
+          samples=[]
+          seen=set()
+          for r in rows:
+            k=(r.get('match_code'),r.get('player'),r.get('market'))
+            if k in seen: continue
+            seen.add(k)
+            samples.append({k:r.get(k) for k in ('match_code','start_time','league','player','market','line','selection','odd','event_id','market_id','odds_id')})
+            if len(samples)>=30:break
+          out={'generated_at':x.get('generated_at'),'row_count':x.get('row_count',len(rows)),'match_count':x.get('match_count',len(matches)),'content_sha256':x.get('content_sha256'),'source':x.get('source'),'goldbet_alignment':x.get('goldbet_alignment'),'markets':dict(markets),'leagues':dict(leagues),'calls':x.get('calls',[]),'samples':samples}
+          pathlib.Path('feed/player-props-current-summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-props-current-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Summarize current player props feed'
+          git push
