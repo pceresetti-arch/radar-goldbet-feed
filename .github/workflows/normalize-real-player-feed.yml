@@ -1,0 +1,142 @@
+name: Normalize real player feed
+
+on:
+  push:
+    paths:
+      - 'normalize-player-feed-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Normalize player event market and odds
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error,re
+          from datetime import datetime,timezone
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def get(path):
+            u=BASE+'/'+path
+            with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:
+              return json.loads(r.read(12000000).decode('utf-8','replace')),u
+
+          # Correct player overview branch proven by previous diagnostics.
+          root,url=get('getOverviewEventsAams/0/104/21/29300/0/0/0?channelId=0')
+
+          tabs=[]
+          for t in root.get('lmtW') or []:
+            if not isinstance(t,dict): continue
+            slots=[]
+            for s in t.get('lotb') or []:
+              if isinstance(s,dict):
+                slots.append({k:s.get(k) for k in ('sn','ti','pl','ao','lt','img','isbb') if k in s})
+            tabs.append({k:t.get(k) for k in ('tbI','tbN','pl','isbb','si','img','lt') if k in t} | {'slots':slots})
+
+          def selections_for_event(ev):
+            rows=[]
+            mm=ev.get('mmkW') or {}
+            markets=mm.values() if isinstance(mm,dict) else mm if isinstance(mm,list) else []
+            for m in markets:
+              if not isinstance(m,dict): continue
+              mn=m.get('mn') or m.get('mnd')
+              spd=m.get('spd') or {}
+              spreads=spd.values() if isinstance(spd,dict) else spd if isinstance(spd,list) else []
+              for sp in spreads:
+                if not isinstance(sp,dict): continue
+                line=sp.get('sl'); ms=sp.get('ms')
+                for sel in sp.get('asl') or []:
+                  if not isinstance(sel,dict): continue
+                  rows.append({
+                    'market':mn,'line':line,'market_status':ms,
+                    'selection':sel.get('sn'),'odd':sel.get('ov'),
+                    'selection_id':sel.get('si'),'selection_type_id':sel.get('sti'),
+                    'market_type_id':sel.get('mti'),'market_id':sel.get('mi'),'odds_id':sel.get('oi'),
+                    'class':sel.get('cls')
+                  })
+            return rows
+
+          normalized=[]
+          for ev in root.get('leo') or []:
+            if not isinstance(ev,dict): continue
+            en=str(ev.get('en') or '')
+            m=re.match(r'^\(([^)]+)\)\s*(.+)$',en)
+            match_code=m.group(1) if m else None
+            player=m.group(2).strip() if m else en
+            sels=selections_for_event(ev)
+            for s in sels:
+              normalized.append({
+                'event_id':ev.get('ei'),'underlying_market_id':ev.get('mi'),'player_event':en,
+                'match_code':match_code,'player':player,
+                'league':ev.get('td'),'date':ev.get('ed'),'sport':ev.get('sn'),
+                **s
+              })
+
+          # Probe every exposed player tab/slot on same tournament; this reveals all player market families.
+          tab_results=[]
+          seen_pairs=[]
+          for t in tabs:
+            tid=t.get('tbI')
+            slots=t.get('slots') or []
+            if not slots:
+              pairs=[(tid,0)]
+            else:
+              pairs=[(tid,s.get('ti')) for s in slots if s.get('ti') is not None]
+            for tab_id,slot_id in pairs[:30]:
+              pair=(tab_id,slot_id)
+              if pair in seen_pairs or tab_id is None: continue
+              seen_pairs.append(pair)
+              try:
+                obj,u=get(f'getOverviewEventsAams/0/104/21/29300/{tab_id}/{slot_id}/0?channelId=0')
+              except Exception as e:
+                tab_results.append({'tab_id':tab_id,'slot_id':slot_id,'error':type(e).__name__+': '+str(e)[:180]}); continue
+              markets=[]; sample=[]; count=0
+              for ev in obj.get('leo') or []:
+                for s in selections_for_event(ev):
+                  count+=1
+                  if s.get('market') and s['market'] not in markets: markets.append(s['market'])
+                  if len(sample)<20:
+                    en=str(ev.get('en') or '')
+                    mm=re.match(r'^\(([^)]+)\)\s*(.+)$',en)
+                    sample.append({'player':mm.group(2).strip() if mm else en,'player_event':en,**s})
+              tab_results.append({
+                'tab_id':tab_id,'slot_id':slot_id,
+                'tab_name':t.get('tbN'),
+                'slot_name':next((s.get('sn') for s in slots if s.get('ti')==slot_id),None),
+                'status_success':obj.get('success'),'leo_count':len(obj.get('leo') or []),
+                'market_names':markets,'selection_count':count,'samples':sample
+              })
+
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'source_url':url,'success':root.get('success'),'tai':root.get('tai'),'tn':root.get('tn'),
+            'player_event_count':len(root.get('leo') or []),'tabs':tabs,
+            'normalized_default_market_count':len(normalized),
+            'normalized_default':normalized[:200],
+            'tab_results':tab_results
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/normalized-player-feed.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          tiny={
+            'success':out['success'],'league':out['tn'],'player_event_count':out['player_event_count'],
+            'tabs':tabs,
+            'default_market_rows':normalized[:35],
+            'tab_results':[{k:r.get(k) for k in ('tab_id','slot_id','tab_name','slot_name','status_success','leo_count','market_names','selection_count','samples','error')} for r in tab_results]
+          }
+          pathlib.Path('feed/normalized-player-feed-summary.json').write_text(json.dumps(tiny,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(tiny,ensure_ascii=False,indent=2)[:60000])
+          PY
+      - name: Commit normalized feed
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/normalized-player-feed.json feed/normalized-player-feed-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Normalize real player markets and prices'
+          git push
