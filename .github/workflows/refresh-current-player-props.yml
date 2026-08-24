@@ -34,7 +34,7 @@ jobs:
             'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
             'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
           }
-          AGG_TOURNAMENT=1334500001  # Eventi Oggi-Domani
+          AGG_TOURNAMENT=1334500001
           TARGETS=[
             (2484,13825,'Marcatore Plus'),
             (2484,19405,'Marcatore o Sostituto'),
@@ -94,12 +94,11 @@ jobs:
             status,data,url,error=fetch(tab,slot)
             if idx: time.sleep(0.12)
             count_before=len(all_rows)
-            seen_events=0
+            seen_events=[0]
             def walk(x):
-              nonlocal seen_events
               if isinstance(x,dict):
                 if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
-                  seen_events+=1
+                  seen_events[0]+=1
                   code,player=parse_player_event_name(x.get('en'))
                   base={
                     'event_id':x.get('ei'),'player_event':x.get('en'),'match_code':code,'player':player,
@@ -108,8 +107,7 @@ jobs:
                     'source_sport':x.get('sn'),'source_category':x.get('cd'),'market_count_hint':x.get('nmK'),
                     'requested_tab':tab,'requested_slot':slot,'requested_market':label
                   }
-                  odds=market_rows(x)
-                  for o in odds:
+                  for o in market_rows(x):
                     if o.get('odd') is None: continue
                     row={**base,**o,'fetched_at':now}
                     key=(row['event_id'],row['market'],str(row['line']),row['selection'],row['odd'],row['odds_id'])
@@ -123,7 +121,7 @@ jobs:
               'tab':tab,'slot':slot,'label':label,'status':status,'error':error,
               'success':data.get('success') if isinstance(data,dict) else None,
               'tn':data.get('tn') if isinstance(data,dict) else None,
-              'events_seen':seen_events,'rows_added':len(all_rows)-count_before,'url':url
+              'events_seen':seen_events[0],'rows_added':len(all_rows)-count_before,'url':url
             })
 
           all_rows.sort(key=lambda r:(str(r.get('start_time')),str(r.get('league')),str(r.get('match_code')),str(r.get('player')),str(r.get('market')),str(r.get('line')),str(r.get('selection'))))
