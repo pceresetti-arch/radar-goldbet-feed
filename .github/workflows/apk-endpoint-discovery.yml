@@ -15,59 +15,68 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download public Lottomatica betting APK
+      - name: Download and inspect public Lottomatica betting APK
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          mkdir -p feed /tmp/apk
           URL='https://repo.lottomaticagroup.com/intplatform/app/download/lottomatica-betting.apk'
-          curl -fL --retry 3 --connect-timeout 20 --max-time 180 "$URL" -o /tmp/app.apk
-          echo "apk_bytes=$(stat -c%s /tmp/app.apk)"
-          mkdir -p /tmp/apk
-          unzip -q /tmp/app.apk -d /tmp/apk
-      - name: Extract likely sports API strings
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p feed
+          HTTP=$(curl -L -sS --retry 2 --connect-timeout 20 --max-time 180 -w '%{http_code}' "$URL" -o /tmp/app.apk)
+          CURL_RC=$?
+          BYTES=0
+          [ -f /tmp/app.apk ] && BYTES=$(stat -c%s /tmp/app.apk 2>/dev/null || echo 0)
+          UNZIP_RC=999
+          if [ "$CURL_RC" = "0" ] && [ "$BYTES" -gt 10000 ]; then
+            unzip -q /tmp/app.apk -d /tmp/apk
+            UNZIP_RC=$?
+          fi
+          export APK_HTTP="$HTTP" APK_CURL_RC="$CURL_RC" APK_BYTES="$BYTES" APK_UNZIP_RC="$UNZIP_RC"
           : > /tmp/allstrings.txt
-          find /tmp/apk -type f -size -40M -print0 | while IFS= read -r -d '' f; do
-            strings -a -n 5 "$f" >> /tmp/allstrings.txt || true
-          done
+          if [ "$UNZIP_RC" = "0" ]; then
+            find /tmp/apk -type f -size -50M -print0 | while IFS= read -r -d '' f; do
+              strings -a -n 5 "$f" >> /tmp/allstrings.txt 2>/dev/null || true
+            done
+          fi
           python - <<'PY'
-          import json,re,pathlib
-          txt=pathlib.Path('/tmp/allstrings.txt').read_text(errors='ignore')
+          import json,re,pathlib,os
+          txt=pathlib.Path('/tmp/allstrings.txt').read_text(errors='ignore') if pathlib.Path('/tmp/allstrings.txt').exists() else ''
+          needles=('getdetailseventaams','getdetailsevent','/api/sport/','pregame','aams','giocatori','marcatori','player','sportservice','serviceconfiguration','wsf','goldbet','lottomatica','betflag','apiurl','baseurl')
           lines=[]
-          needles=('getdetailseventaams','/api/sport/','pregame','aams','giocatori','marcatori','player','sportservice','serviceconfiguration','wsf','betflag','goldbet','lottomatica')
           for raw in txt.splitlines():
-              s=raw.strip()
-              l=s.lower()
-              if 5 <= len(s) <= 500 and any(n in l for n in needles):
-                  lines.append(s)
+              s=raw.strip(); l=s.lower()
+              if 5 <= len(s) <= 800 and any(n in l for n in needles): lines.append(s)
           urls=[]
-          for m in re.finditer(r'https?://[^\s"\'<>]{5,300}',txt,re.I):
-              u=m.group(0).rstrip('),;]}')
-              lu=u.lower()
-              if any(k in lu for k in ('sport','bet','lottomatica','goldbet','aams','api','wsf')):
-                  urls.append(u)
+          for m in re.finditer(r'https?://[^\s"\'<>]{5,400}',txt,re.I):
+              u=m.group(0).rstrip('),;]}'); lu=u.lower()
+              if any(k in lu for k in ('sport','bet','lottomatica','goldbet','aams','api','wsf')): urls.append(u)
           def uniq(xs):
               out=[]; seen=set()
               for x in xs:
-                  if x not in seen:
-                      seen.add(x); out.append(x)
+                  if x not in seen: seen.add(x); out.append(x)
               return out
           data={
-              'source':'public lottomatica-betting.apk',
-              'matched_lines':uniq(lines)[:4000],
-              'urls':uniq(urls)[:2000]
+            'source_url':'https://repo.lottomaticagroup.com/intplatform/app/download/lottomatica-betting.apk',
+            'http_status':os.getenv('APK_HTTP'),
+            'curl_rc':int(os.getenv('APK_CURL_RC','-1')),
+            'bytes':int(os.getenv('APK_BYTES','0')),
+            'unzip_rc':int(os.getenv('APK_UNZIP_RC','-1')),
+            'matched_line_count':len(uniq(lines)),
+            'url_count':len(uniq(urls)),
+            'matched_lines':uniq(lines)[:5000],
+            'urls':uniq(urls)[:2500]
           }
-          pathlib.Path('feed/apk-endpoint-discovery.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
-          print('matched_lines',len(data['matched_lines']),'urls',len(data['urls']))
+          pathlib.Path('feed/apk-endpoint-discovery.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:data[k] for k in ('http_status','curl_rc','bytes','unzip_rc','matched_line_count','url_count')}))
           PY
       - name: Commit discovery result
+        if: always()
         shell: bash
         run: |
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          if [ ! -f feed/apk-endpoint-discovery.json ]; then
+            printf '%s\n' '{"status":"workflow_failed_before_diagnostic"}' > feed/apk-endpoint-discovery.json
+          fi
           git add feed/apk-endpoint-discovery.json
           git diff --cached --quiet && exit 0
           git commit -m 'Discover GBO sports API endpoints from APK'
