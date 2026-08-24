@@ -1,0 +1,99 @@
+name: Diagnose Diretta opening variants
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'diretta-opening-variants-trigger.json'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe active odds query variants
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          H={'User-Agent':'Mozilla/5.0','Accept':'*/*','Referer':'https://www.flashscore.it/','Origin':'https://www.flashscore.it','x-fsign':'SW9D1eZo'}
+          def get(url,cap=5000000):
+            try:
+              with urllib.request.urlopen(urllib.request.Request(url,headers=H),timeout=20) as r:
+                return r.status,r.read(cap).decode('utf-8','replace')
+            except urllib.error.HTTPError as e:
+              return e.code,e.read(200000).decode('utf-8','replace')
+            except Exception as e:
+              return None,type(e).__name__+': '+str(e)
+
+          st,feed=get('https://www.flashscore.com/x/feed/f_1_0_3_en_1')
+          def fields(sec):
+            d={}
+            for p in sec.split(chr(0xAC)):
+              if chr(0xF7) in p:
+                k,_,v=p.partition(chr(0xF7)); d[k]=v
+            return d
+          events=[]
+          if st==200:
+            for sec in feed.split('~'):
+              f=fields(sec)
+              if f.get('AA') and f.get('AE') and f.get('AF'):
+                try: ts=int(f.get('AD') or 0)
+                except: ts=0
+                events.append((ts,f['AA'],f['AE'],f['AF']))
+          now=int(datetime.now(timezone.utc).timestamp())
+          events=sorted([x for x in events if x[0]>=now-1800])[:3]
+
+          hosts=['https://global.ds.lsapp.eu/odds/pq_graphql','https://2.ds.lsapp.eu/odds/pq_graphql','https://46.ds.lsapp.eu/odds/pq_graphql']
+          pids=['2','46','2002']
+          hashes=['oce','ope']
+          rows=[]; successes=[]
+          for ts,eid,home,away in events:
+            for host in hosts:
+              for pid in pids:
+                for hsh in hashes:
+                  q=urllib.parse.urlencode({'_hash':hsh,'eventId':eid,'projectId':pid,'geoIpCode':'IT'})
+                  status,body=get(host+'?'+q)
+                  rec={'event':f'{home} - {away}','event_id':eid,'host':host,'projectId':pid,'hash':hsh,'status':status,'body_prefix':body[:250]}
+                  if status==200:
+                    try:
+                      data=json.loads(body); eo=((data.get('data') or {}).get('findOddsByEventId') or {})
+                      rec['usable']=bool(eo); rec['keys']=list(eo.keys())[:20] if isinstance(eo,dict) else []
+                      if eo:
+                        bks=[]
+                        for be in ((eo.get('settings') or {}).get('bookmakers') or []):
+                          inn=(be or {}).get('bookmaker') or {}; n=inn.get('name')
+                          if n: bks.append(n)
+                        rec['bookmakers']=bks[:100]
+                        opening=0
+                        for m in eo.get('odds') or []:
+                          for o in (m or {}).get('odds') or []:
+                            if isinstance(o,dict) and o.get('opening') not in (None,''): opening+=1
+                        rec['opening_values']=opening
+                        successes.append(rec)
+                    except Exception as e: rec['parse_error']=str(e)
+                  rows.append(rec)
+                  if successes: break
+                if successes: break
+              if successes: break
+            if successes: break
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'events':events,'successes':successes,'probes':rows}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/diretta-opening-variants.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'success_count':len(successes),'successes':successes[:3],'probe_count':len(rows)},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/diretta-opening-variants.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe Diretta opening odds variants'
+          git push
