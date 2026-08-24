@@ -1,0 +1,88 @@
+name: Inspect nested GoldBet player odds
+
+on:
+  push:
+    paths:
+      - 'inspect-goldbet-player-nesting-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Inspect players nesting and scalar odds
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,os,pathlib,urllib.parse,urllib.request,re
+          from datetime import datetime,timezone
+          key=os.environ.get('ODDSPAPI_KEY','').strip()
+          if not key: raise SystemExit('Missing ODDSPAPI_KEY')
+          fid='id1000002371945218'
+          p={'fixtureId':fid,'bookmakers':'goldbet.it','language':'en','oddsFormat':'decimal','verbosity':3,'apiKey':key}
+          u='https://api.oddspapi.io/v4/odds?'+urllib.parse.urlencode(p)
+          with urllib.request.urlopen(urllib.request.Request(u,headers={'Accept':'application/json','User-Agent':'RadarGoldBetPlayerNest/1.0'}),timeout=90) as r:
+            data=json.loads(r.read().decode('utf-8','replace'))
+          book=(data.get('bookmakerOdds') or {}).get('goldbet.it',{})
+          markets=book.get('markets') or {}
+          rows=[]; market_summaries=[]
+          def scalars(x,path=''):
+            out=[]
+            if isinstance(x,dict):
+              for k,v in x.items():
+                p2=f'{path}.{k}' if path else str(k)
+                if isinstance(v,(str,int,float,bool,type(None))): out.append((p2,v))
+                else: out.extend(scalars(v,p2))
+            elif isinstance(x,list):
+              for i,v in enumerate(x): out.extend(scalars(v,f'{path}[{i}]'))
+            return out
+          for mid,md in markets.items():
+            if not isinstance(md,dict): continue
+            ms={'market_id':mid,'bookmakerMarketId':md.get('bookmakerMarketId'),'marketActive':md.get('marketActive'),'outcomes':[]}
+            outs=md.get('outcomes') or {}
+            for oid,o in outs.items() if isinstance(outs,dict) else []:
+              if not isinstance(o,dict): continue
+              players=o.get('players')
+              os={'outcome_id':oid,'player_type':type(players).__name__,'player_count':len(players) if isinstance(players,(dict,list)) else None}
+              samples=[]
+              if isinstance(players,dict):
+                for pid,pv in list(players.items())[:50]:
+                  samples.append({'player_key':pid,'type':type(pv).__name__,'scalar_fields':scalars(pv)[:80],'raw':pv})
+                  for path,val in scalars(pv):
+                    low=(str(pid)+' '+path+' '+str(val)).lower()
+                    if any(k in low for k in ('price','odd','name','player','line','active','main')):
+                      rows.append({'market_id':mid,'outcome_id':oid,'player_key':pid,'path':path,'value':val})
+              elif isinstance(players,list):
+                for i,pv in enumerate(players[:50]): samples.append({'player_index':i,'type':type(pv).__name__,'scalar_fields':scalars(pv)[:80],'raw':pv})
+              else:
+                os['raw_players']=players
+              os['samples']=samples
+              ms['outcomes'].append(os)
+            market_summaries.append(ms)
+          # Search entire GoldBet payload for known Milan/Venezia player-ish tokens and common prop words.
+          raw_text=json.dumps(book,ensure_ascii=False)
+          tokens=['leao','pulisic','gimenez','fofana','oristanio','marcat','scorer','assist','shots','tiri','player','goal']
+          token_counts={t:raw_text.lower().count(t) for t in tokens}
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'fixtureId':fid,'event':f"{data.get('participant1Name')} - {data.get('participant2Name')}",'market_count':len(markets),'token_counts':token_counts,'market_summaries':market_summaries,'interesting_scalar_rows':rows[:1000]}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/real-goldbet-player-nesting.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={'fixtureId':fid,'event':out['event'],'market_count':len(markets),'token_counts':token_counts,'markets':[]}
+          for m in market_summaries:
+            compact['markets'].append({'market_id':m['market_id'],'bookmakerMarketId':m['bookmakerMarketId'],'marketActive':m['marketActive'],'outcomes':[{'outcome_id':o['outcome_id'],'player_type':o['player_type'],'player_count':o['player_count'],'samples':o['samples'][:5]} for o in m['outcomes']]})
+          pathlib.Path('feed/real-goldbet-player-nesting-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:60000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/real-goldbet-player-nesting.json feed/real-goldbet-player-nesting-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Inspect direct GoldBet nested player odds'
+          git push
