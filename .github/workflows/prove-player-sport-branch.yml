@@ -1,0 +1,105 @@
+name: Prove Giocatori Calcio branch
+
+on:
+  push:
+    paths:
+      - 'prove-player-sport-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Query player sport and search player events
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,urllib.error
+          from datetime import datetime,timezone
+
+          BASE='https://sportservice.betflag.it'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def req(path,method='GET',payload=None,cap=8000000):
+            h=dict(H); data=None
+            if payload is not None:
+              h['Content-Type']='application/json'; data=json.dumps(payload,ensure_ascii=False).encode()
+            u=BASE+path
+            try:
+              with urllib.request.urlopen(urllib.request.Request(u,data=data,headers=h,method=method),timeout=25) as r:
+                return {'url':u,'status':r.status,'body':r.read(cap).decode('utf-8','replace')}
+            except urllib.error.HTTPError as e:
+              return {'url':u,'status':e.code,'body':e.read(300000).decode('utf-8','replace')}
+            except Exception as e:
+              return {'url':u,'error':type(e).__name__+': '+str(e)[:250],'body':''}
+
+          def summarize_response(rec):
+            body=rec.get('body',''); out={'url':rec.get('url'),'status':rec.get('status'),'error':rec.get('error'),'bytes':len(body)}
+            try:
+              obj=json.loads(body); out['json_type']=type(obj).__name__
+              if isinstance(obj,dict):
+                out['keys']=list(obj.keys())[:100]; out['leo_count']=len(obj.get('leo') or []); out['lmtW_count']=len(obj.get('lmtW') or []); out['tai']=obj.get('tai'); out['tn']=obj.get('tn'); out['success']=obj.get('success')
+              events=[]; markets=[]; sels=[]; playerhits=[]
+              def walk(x,path=''):
+                if isinstance(x,dict):
+                  if 'ei' in x and ('en' in x or 'sn' in x): events.append({'path':path,**{k:x.get(k) for k in ('si','ei','pi','ti','ci','mi','tai','en','ed','td','sn','cd','nmK','oc')}})
+                  if isinstance(x.get('mn'),str): markets.append(x['mn'])
+                  if isinstance(x.get('sn'),str): sels.append(x['sn'])
+                  flat=' '.join(str(v) for v in x.values() if isinstance(v,(str,int,float))).lower()
+                  if any(k in flat for k in ('pulisic','leao','leão','lautaro','marcat','assist','tiro','tiri','scorer','player')):
+                    playerhits.append({'path':path,'obj':{k:v for k,v in x.items() if isinstance(v,(str,int,float,bool,type(None)))}})
+                  for k,v in x.items(): walk(v,path+'.'+str(k))
+                elif isinstance(x,list):
+                  for i,v in enumerate(x): walk(v,path+f'[{i}]')
+              walk(obj)
+              out['events']=events[:120]; out['market_names']=list(dict.fromkeys(markets))[:180]; out['selection_names']=list(dict.fromkeys(sels))[:250]; out['player_hits']=playerhits[:100]
+              if events or playerhits: out['body_prefix']=body[:300000]
+            except Exception: out['body_prefix']=body[:12000]
+            return out
+
+          # Dedicated player branch: id=-1, category=14260, Serie A players tournament=29300.
+          direct=[]
+          for tai in (21,79,0):
+            for tab,slot in ((0,0),(-999,0),(2454,13617)):
+              for mode in (0,1):
+                p=f'/api/sport/pregame/getOverviewEventsAams/-1/14260/{tai}/29300/{tab}/{slot}/{mode}?channelId=0'
+                direct.append({'tai':tai,'tab':tab,'slot':slot,'mode':mode,**summarize_response(req(p))})
+
+          # Internal search often exposes the AAMS event identifiers directly.
+          searches=[]
+          for q in ('Pulisic','Leao','Leão','Lautaro','Vlahovic','Yildiz','Mbappe','Yamal','Haaland'):
+            r=req('/api/sport/pregame/searchEvents/APP?channelId=0','POST',{'evtToSearch':q})
+            searches.append({'query':q,**summarize_response(r)})
+
+          # Check all homepage overview modes for a dedicated -1 key.
+          defaults=[]
+          for tab in range(0,10):
+            r=req(f'/api/sport/pregame/getOverviewDefault/{tab}?channelId=0',cap=3000000)
+            body=r.get('body',''); row={'tab':tab,'status':r.get('status'),'bytes':len(body),'error':r.get('error')}
+            try:
+              j=json.loads(body); row['keys']=list(j.keys()) if isinstance(j,dict) else None
+              if isinstance(j,dict) and '-1' in j: row['player_branch']=summarize_response({'url':r.get('url'),'status':r.get('status'),'body':json.dumps(j['-1'],ensure_ascii=False)})
+            except: pass
+            defaults.append(row)
+
+          ranked=sorted(direct,key=lambda x:(len(x.get('events',[])),len(x.get('player_hits',[])),x.get('bytes',0)),reverse=True)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'best_direct':ranked[:6],'direct':direct,'searches':searches,'defaults':defaults}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-sport-proof.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={
+            'best_direct':[{k:x.get(k) for k in ('tai','tab','slot','mode','status','bytes','success','leo_count','lmtW_count','tai','tn','events','market_names','selection_names','player_hits','error')} for x in ranked[:6]],
+            'searches':[{k:x.get(k) for k in ('query','status','bytes','events','market_names','selection_names','player_hits','error')} for x in searches],
+            'defaults':defaults
+          }
+          print(json.dumps(compact,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-sport-proof.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prove dedicated Giocatori Calcio API branch'
+          git push
