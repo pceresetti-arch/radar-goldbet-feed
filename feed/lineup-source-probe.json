@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-08-24T22:22:09.069347+00:00",
+  "tests": [
+    {
+      "name": "sofa_www",
+      "url": "https://www.sofascore.com/api/v1/sport/football/scheduled-events/2026-08-25",
+      "status": 403,
+      "content_type": "application/json",
+      "length": 48,
+      "prefix": "{\"error\": {\"code\": 403, \"reason\": \"Forbidden\" }}",
+      "json_keys": [
+        "error"
+      ]
+    },
+    {
+      "name": "sofa_www_inverse",
+      "url": "https://www.sofascore.com/api/v1/sport/football/scheduled-events/2026-08-25/inverse",
+      "status": 403,
+      "content_type": "application/json",
+      "length": 48,
+      "prefix": "{\"error\": {\"code\": 403, \"reason\": \"Forbidden\" }}",
+      "json_keys": [
+        "error"
+      ]
+    },
+    {
+      "name": "sofa_api",
+      "url": "https://api.sofascore.com/api/v1/sport/football/scheduled-events/2026-08-25",
+      "status": 403,
+      "content_type": "application/json",
+      "length": 48,
+      "prefix": "{\"error\": {\"code\": 403, \"reason\": \"Forbidden\" }}",
+      "json_keys": [
+        "error"
+      ]
+    },
+    {
+      "name": "sofa_api_inverse",
+      "url": "https://api.sofascore.com/api/v1/sport/football/scheduled-events/2026-08-25/inverse",
+      "status": 403,
+      "content_type": "application/json",
+      "length": 48,
+      "prefix": "{\"error\": {\"code\": 403, \"reason\": \"Forbidden\" }}",
+      "json_keys": [
+        "error"
+      ]
+    },
+    {
+      "name": "fotmob_data",
+      "url": "https://www.fotmob.com/api/data/matches?date=20260825&timezone=Europe%2FRome&ccode3=ITA",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 79172,
+      "prefix": "{\"leagues\":[{\"ccode\":\"ENG\",\"id\":938221,\"primaryId\":133,\"name\":\"EFL Cup\",\"matches\":[{\"id\":6005657,\"leagueId\":938221,\"time\":\"25.08.2026 20:00\",\"home\":{\"id\":8344,\"",
+      "json_keys": [
+        "leagues",
+        "date"
+      ],
+      "league_count": 46,
+      "match_count": 154
+    },
+    {
+      "name": "fotmob_data_min",
+      "url": "https://www.fotmob.com/api/data/matches?date=20260825",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "length": 73963,
+      "prefix": "{\"leagues\":[{\"ccode\":\"ENG\",\"id\":938221,\"primaryId\":133,\"name\":\"EFL Cup\",\"matches\":[{\"id\":6005657,\"leagueId\":938221,\"time\":\"25.08.2026 20:00\",\"home\":{\"id\":8344,\"",
+      "json_keys": [
+        "leagues",
+        "date"
+      ],
+      "league_count": 42,
+      "match_count": 146
+    },
+    {
+      "name": "fotmob_old",
+      "url": "https://www.fotmob.com/api/matches?date=20260825",
+      "status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "length": 209822,
+      "prefix": "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta name=\"apple-itunes-app\" content=\"app-id=488575683\"/><link rel=\"alternate\" href=\"android-app://com.mobilefoo",
+      "json_error": "JSONDecodeError"
+    }
+  ]
+}
