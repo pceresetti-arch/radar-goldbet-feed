@@ -1,0 +1,68 @@
+name: Live special player slots
+
+on:
+  push:
+    paths:
+      - 'live-special-player-slots-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Read SPECIALI GIOCATORI live
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          u='https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/21/29300/0/0/0?channelId=0'
+          with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30) as r:data=json.loads(r.read(3000000).decode('utf-8','replace'))
+          found=[]
+          def walk(x):
+            if isinstance(x,dict):
+              if x.get('tbI')==2487 or 'SPECIALI GIOCATORI' in str(x.get('tbN','')).upper():
+                found.append(x)
+              for v in x.values():walk(v)
+            elif isinstance(x,list):
+              for v in x:walk(v)
+          walk(data)
+          tabs=[]
+          for t in found:
+            slots=[]
+            for key in ('los','ls','slots','lotb'):
+              v=t.get(key)
+              if isinstance(v,list):
+                for s in v:
+                  if isinstance(s,dict): slots.append({k:s.get(k) for k in ('slI','slN','id','n','pl','ao','lt')})
+            # generic recursive slot-like extraction below tab
+            def scan(v):
+              if isinstance(v,dict):
+                if any(k in v for k in ('slI','slotId')) and any(k in v for k in ('slN','sn','n')):
+                  slots.append({k:v.get(k) for k in ('slI','slN','id','n','sn','pl','ao','lt')})
+                for z in v.values():scan(z)
+              elif isinstance(v,list):
+                for z in v:scan(z)
+            scan(t)
+            uniq=[];seen=set()
+            for s in slots:
+              ident=(s.get('slI') or s.get('id'),s.get('slN') or s.get('n') or s.get('sn'))
+              if ident not in seen and ident!=(None,None): seen.add(ident);uniq.append(s)
+            tabs.append({'tab_id':t.get('tbI'),'tab_name':t.get('tbN'),'keys':list(t.keys()),'slots':uniq})
+          out={'success':data.get('success') if isinstance(data,dict) else None,'found_count':len(found),'tabs':tabs}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/live-special-player-slots.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/live-special-player-slots.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Read live special player slots'
+          git push
