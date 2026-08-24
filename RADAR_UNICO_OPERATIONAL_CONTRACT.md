@@ -96,6 +96,144 @@ Per ogni partita il Radar deve valutare, quando i dati sono disponibili:
 - Avversario diretto e zona difensiva che dovrà attaccare.
 - Probabilità che il suo ruolo cambi durante la partita.
 
+### 8A. Profilo spaziale e ruolo-condizionato del giocatore
+Il Radar deve distinguere il rendimento del giocatore in base a DOVE e COME viene utilizzato, non soltanto ai numeri stagionali aggregati.
+
+Quando i dati evento/posizionali sono disponibili, valutare:
+- posizione nominale e posizione media reale;
+- centravanti, seconda punta, ala destra/sinistra, trequartista, mezzala offensiva e altri ruoli effettivamente occupati;
+- produzione di gol, xG, tiri, tiri in porta e tocchi area per ruolo;
+- minuti/esposizione giocati in ciascun ruolo, per evitare di sopravvalutare piccoli campioni;
+- zone di tiro: area piccola, zona centrale dell'area, mezzi spazi, lato destro/sinistro, fuori area;
+- lato dal quale riceve più palloni pericolosi;
+- attacchi primo palo, secondo palo, centro area, cut-back e profondità alle spalle della linea;
+- frequenza con cui entra nelle zone ad alto xG rispetto alla semplice conversione dei gol;
+- piede/testa usati nelle conclusioni e compatibilità col tipo di occasioni che l'avversario concede;
+- variazione del profilo quando parte largo ma stringe dentro oppure quando viene schierato più vicino alla porta.
+
+Regola: il Radar non deve usare il semplice conteggio "gol segnati da quella posizione" senza normalizzarlo per minuti, tiri, xG e numero di ingressi/ricezioni in quella zona.
+
+### 8B. Teammate Network — chi gli gioca vicino e chi lo alimenta
+Per ogni candidato player-prop, identificare i compagni che aumentano o riducono la sua probabilità di produrre l'evento.
+
+Valutare, quando disponibile:
+- quali giocatori occupano le zone immediatamente vicine;
+- coppie ricorrenti ala-terzino, punta-trequartista, punta-seconda punta, mezzala-ala;
+- passaggi progressivi e passaggi ricevuti fra i due giocatori;
+- key pass / xA del compagno verso il candidato;
+- assist effettivi del compagno verso il candidato, ma pesati per volume di occasioni create;
+- chi gli serve più cross, cut-back, filtranti o palle inattive;
+- combinazioni a tre più frequenti che portano il candidato al tiro;
+- presenza/assenza del principale creatore di occasioni per quel giocatore;
+- variazione di xG/tiri/tocchi area del candidato con e senza determinati compagni in campo;
+- compatibilità piede/lato: per esempio ala che rientra + terzino sovrapposto oppure esterno che crossa sul lato forte della punta.
+
+Per i mercati Assist, il Radar deve fare anche il percorso inverso: identificare quali compagni sono i destinatari più probabili delle occasioni create dal candidato.
+
+### 8C. Assist–Finisher Pair Model
+Costruire, quando i dati lo consentono, una rete creatore→finalizzatore.
+
+Per ogni coppia rilevante stimare:
+- passaggi che generano tiro;
+- xA creato verso quel finalizzatore;
+- big chances create;
+- assist reali, senza attribuire eccessivo peso alla conversione casuale;
+- frequenza di presenza contemporanea in campo;
+- lato/zona in cui nasce la connessione;
+- tipo di servizio: cross, cut-back, filtrante, piazzato, transizione;
+- compatibilità con la struttura difensiva avversaria.
+
+Questo modulo deve alimentare sia mercati Assist sia Gol/Assist e può aumentare o diminuire la probabilità marcatore del finalizzatore.
+
+### 8D. Opponent Concession Map — cosa concede l'avversario e dove
+Non basta sapere quanti gol concede una squadra. Il Radar deve cercare COME li concede.
+
+Quando disponibile:
+- tiri/xG concessi per zona;
+- percentuale di occasioni concesse centralmente, da fascia destra/sinistra, primo/secondo palo;
+- cross e cut-back concessi;
+- passaggi filtranti e transizioni concesse;
+- occasioni da palla inattiva;
+- vulnerabilità sui duelli aerei;
+- tiri concessi al centravanti, alle ali, ai trequartisti e ai centrocampisti d'inserimento;
+- lato difensivo maggiormente attaccabile;
+- difensore/terzino specifico responsabile della zona;
+- portiere: rendimento sui tipi di tiro rilevanti, senza sovrappesare campioni piccoli.
+
+Il profilo del candidato deve essere confrontato direttamente con la mappa delle concessioni avversarie.
+
+### 8E. Occupazione delle zone e cannibalizzazione fra compagni
+Il Radar deve controllare se un compagno favorisce il candidato oppure gli sottrae volume.
+
+Valutare:
+- sovrapposizione delle zone di tiro;
+- chi attacca il primo palo / secondo palo / centro area;
+- chi prende rigori e piazzati;
+- chi assorbe più tiri quando entrambi sono in campo;
+- se la presenza di una seconda punta libera spazio o sottrae conclusioni;
+- se un'ala larga aumenta i cross oppure un'ala invertita entra nella stessa zona del centravanti;
+- variazione di share di tiri, xG e tocchi area nelle diverse combinazioni di XI.
+
+### 8F. Tipo di occasione attesa
+Il Radar deve prevedere non solo QUANTE occasioni, ma QUALI occasioni il giocatore potrebbe ricevere.
+
+Classificare quando possibile:
+- attacco posizionale;
+- transizione;
+- recupero alto;
+- cross;
+- cut-back;
+- filtrante/profondità;
+- seconda palla;
+- corner/punizione;
+- rigore.
+
+Confrontare il tipo di occasione più probabile nella partita con i tipi di occasione nei quali il giocatore produce più xG/tiri/assist.
+
+### 8G. Game-state profile
+Valutare come cambia il candidato in base al punteggio:
+- 0-0;
+- squadra avanti;
+- squadra sotto;
+- ultimi 20-30 minuti;
+- necessità di rimonta;
+- possibile gestione del vantaggio.
+
+Questo influenza soprattutto tiri, assist, mercati 1T/2T e rischio sostituzione.
+
+### 8H. Chemistry / lineup continuity
+Quando rilevante, valutare:
+- minuti giocati insieme dal reparto offensivo;
+- stabilità della catena laterale e delle coppie offensive;
+- cambi recenti di allenatore/modulo;
+- nuovi acquisti o giocatori rientrati che possono alterare automatismi;
+- continuità dell'XI nelle ultime partite.
+
+La chimica non va trattata come narrativa: deve essere supportata, quando possibile, da minuti condivisi, sequenze/passaggi e produzione offensiva.
+
+### 8I. Archetype Matchup
+Se non esiste un campione sufficiente contro lo specifico difensore, evitare H2H rumorosi e confrontare invece archetipi simili.
+
+Esempi:
+- punta fisica contro centrali deboli nel gioco aereo;
+- attaccante rapido contro linea alta/lenta;
+- ala 1v1 contro terzino frequentemente isolato;
+- trequartista tra le linee contro mediana che concede ricezioni centrali;
+- incursore contro difesa che perde marcature sul lato debole.
+
+Il confronto per archetipi deve avere più peso di pochi precedenti testa-a-testa.
+
+### 8J. Sample-size, regressione e affidabilità del segnale
+Ogni split posizionale, coppia di giocatori o matchup deve essere pesato per qualità e quantità del campione.
+
+Il Radar deve:
+- evitare conclusioni forti da pochi minuti/pochi tiri;
+- usare xG/xA e volume come base più stabile dei soli gol/assist;
+- applicare regressione verso medie di giocatore/ruolo/lega quando il campione è piccolo;
+- pesare maggiormente dati recenti solo quando c'è una reale variazione di ruolo/tattica;
+- distinguere pattern persistenti da conversione anomala;
+- assegnare internamente un livello di affidabilità al modulo: ALTO / MEDIO / BASSO.
+
 ### 9. Primo tempo / secondo tempo
 - P(>=1 gol 1T), xG 1T e ritmo iniziale previsto.
 - Tendenza delle squadre a partire forte o lentamente.
@@ -142,6 +280,8 @@ Per ogni BET:
 - Classe A/B/C
 - 1-3 motivi decisivi
 - Sintesi del matchup diretto / zona di campo che genera il vantaggio
+- Eventuale compagno/connessione offensiva decisiva
+- Tipo di occasione attesa che sostiene la giocata
 
 Per NO BET: una riga sintetica con il motivo principale.
 
