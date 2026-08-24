@@ -1,0 +1,54 @@
+name: Extract Betflag overview filter state semantics
+
+on:
+  push:
+    paths:
+      - 'overview-state-semantics-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Inspect component state around eventDiscipline query
+        run: |
+          python -m pip install -q jsbeautifier
+          python - <<'PY'
+          import json,pathlib,urllib.request,jsbeautifier,re
+          from datetime import datetime,timezone
+          u='https://cdn-ltm.betflag.it/site/scripts/sport/bundle.min.js?263'
+          text=urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=30).read().decode('utf-8','replace')
+          needle='queryKey:["eventDiscipline"'
+          idx=text.find(needle)
+          if idx<0:
+            idx=text.find('eventDiscipline')
+          raw=text[max(0,idx-35000):min(len(text),idx+18000)]
+          opts=jsbeautifier.default_options(); opts.indent_size=2; opts.wrap_line_length=140
+          pretty=jsbeautifier.beautify(raw,opts)
+          lines=pretty.splitlines()
+          hit=next((i for i,l in enumerate(lines) if 'eventDiscipline' in l),len(lines)//2)
+          section='\n'.join(lines[max(0,hit-260):min(len(lines),hit+180)])
+          # Pull state declarations and route-param assignments from the neighborhood.
+          state_lines=[l.strip() for l in section.splitlines() if 'useState' in l or 'useParams' in l or 'useSearchParams' in l or 'useRef' in l]
+          assignments=[]
+          for l in section.splitlines():
+            s=l.strip()
+            if any(k in s for k in ['const {','let {',' = vl()',' = ml()',' = (0,','idTab','idSlot','idTourn','idManageSection']):
+              assignments.append(s)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'needle_index':idx,'state_lines':state_lines[:120],'assignments':assignments[:200],'pretty':section}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/overview-state-semantics.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'state_lines':out['state_lines'],'assignments':out['assignments'][:80]},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/overview-state-semantics.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract Betflag overview filter state semantics'
+          git push
