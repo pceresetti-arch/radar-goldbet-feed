@@ -1,0 +1,61 @@
+name: Probe player today tomorrow aggregate
+
+on:
+  push:
+    paths:
+      - 'probe-player-today-tomorrow-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe aggregate player tournaments
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request
+          from datetime import datetime, timezone
+          B='https://sportservice.betflag.it/api/sport/pregame'
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          def get(path):
+            try:
+              with urllib.request.urlopen(urllib.request.Request(B+'/'+path,headers=H),timeout=30) as r:return r.status,json.loads(r.read(12000000).decode('utf-8','replace'))
+            except Exception as e:return None,{'error':type(e).__name__+': '+str(e)}
+          def summarize(x):
+            ev=[]; mk=[]; tabs=[]; sels=[]
+            def w(v):
+              if isinstance(v,dict):
+                if 'ei' in v and 'en' in v: ev.append({k:v.get(k) for k in ('ei','en','ti','ci','mi','tai','ed','td','cd','sn','nmK')})
+                if isinstance(v.get('mn'),str): mk.append(v.get('mn'))
+                if 'tbI' in v and 'tbN' in v: tabs.append({k:v.get(k) for k in ('tbI','tbN','pl','isbb')})
+                if isinstance(v.get('sn'),str) and 'ov' in v: sels.append({k:v.get(k) for k in ('sn','ov','si','mti','sti','mi','oi')})
+                for z in v.values(): w(z)
+              elif isinstance(v,list):
+                for z in v:w(z)
+            w(x)
+            return {'event_count':len(ev),'unique_tournaments':sorted({(str(e.get('ti')),str(e.get('tai')),str(e.get('td'))) for e in ev})[:100],'events':ev[:30],'market_names':list(dict.fromkeys(mk))[:50],'tabs':list({(t.get('tbI'),t.get('tbN')):t for t in tabs}.values())[:30],'selection_samples':sels[:20]}
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'attempts':[]}
+          for ti in (1334500001,1234500001):
+            for tai in (0,1,21,79,34,16,23,15,26,3):
+              s,d=get(f'getOverviewEventsAams/0/-1/{tai}/{ti}/0/0/0?channelId=0')
+              sm=summarize(d)
+              out['attempts'].append({'ti':ti,'tai':tai,'status':s,'success':d.get('success') if isinstance(d,dict) else None,'tn':d.get('tn') if isinstance(d,dict) else None,**sm})
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/player-today-tomorrow-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          compact={'generated_at':out['generated_at'],'hits':[x for x in out['attempts'] if x['event_count']>0]}
+          pathlib.Path('feed/player-today-tomorrow-probe-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(compact,ensure_ascii=False,indent=2)[:40000])
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-today-tomorrow-probe.json feed/player-today-tomorrow-probe-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe aggregate player today tomorrow feed'
+          git push
