@@ -1,0 +1,57 @@
+name: Extract selected player props
+
+on:
+  push:
+    paths:
+      - 'selected-player-props-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract selected current player prices
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, unicodedata, re
+          from datetime import datetime, timezone
+          def norm(s):
+              s=unicodedata.normalize('NFKD',str(s or '')).encode('ascii','ignore').decode().lower()
+              return re.sub(r'[^a-z0-9]+',' ',s).strip()
+          trig=json.loads(pathlib.Path('selected-player-props-trigger.json').read_text(encoding='utf-8'))
+          src=json.loads(pathlib.Path('feed/player-props-current-by-match.json').read_text(encoding='utf-8'))
+          match_terms=[norm(x) for x in trig.get('match_terms',[]) if str(x).strip()]
+          player_terms=[norm(x) for x in trig.get('player_terms',[]) if str(x).strip()]
+          market_terms=[norm(x) for x in trig.get('market_terms',[]) if str(x).strip()]
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'source_generated_at':src.get('generated_at'),'source_class':src.get('source_class'),'matches':[]}
+          for m in src.get('matches',[]):
+              mt=norm(m.get('match'))
+              if match_terms and not any(t in mt for t in match_terms): continue
+              om={k:m.get(k) for k in ('match','match_code','match_event_id','match_market_id','start_time','league')}; om['players']={}
+              for pname, rows in (m.get('players') or {}).items():
+                  pn=norm(pname)
+                  if player_terms and not any(t in pn or pn in t for t in player_terms): continue
+                  keep=[]
+                  for r in rows or []:
+                      mn=norm(r.get('market'))
+                      if market_terms and not any(t in mn for t in market_terms): continue
+                      keep.append(r)
+                  if keep: om['players'][pname]=keep
+              out['matches'].append(om)
+          pathlib.Path('feed/selected-player-props.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/selected-player-props.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extract selected current player props'
+          git pull --rebase origin main
+          git push origin HEAD:main
