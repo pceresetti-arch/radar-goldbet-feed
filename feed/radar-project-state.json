@@ -33,7 +33,8 @@
       "certified TRUE OPEN for all 1X2 and at least one FT Over"
     ],
     "player_props_block_standard_ready": false,
-    "player_bet_requires_player_market_bet_ready": true
+    "player_bet_requires_player_market_bet_ready": true,
+    "player_props_operational_primary": "BetFlag/AAMS"
   },
   "official_xi": {
     "lineup_type": "standard",
@@ -45,25 +46,26 @@
     "xi_change_invalidates_player_analysis": true
   },
   "market_policy": {
-    "operational_bookmaker": "GoldBet",
+    "operational_bookmaker_standard": "GoldBet",
+    "operational_source_player_props": "BetFlag/AAMS shared player service",
     "mms_primary_markets": ["1X2 FT", "OVER FT"],
     "strong_drop_absolute_decimal": 0.2,
     "strong_drop_requires_true_open": true,
     "first_seen_is_diagnostic_only": true,
     "final_gate_required": true,
     "bet_condition": "current_price >= FINAL_GATE",
-    "player_props_fallback": {
+    "player_props_policy": {
       "enabled": true,
-      "source": "BetFlag/AAMS shared player service",
-      "activation": "use whenever direct GoldBet player-prop prices are unavailable or incomplete",
-      "status": "OPERATIONAL_PROXY",
-      "user_validation": "On 2026-08-25 the user confirmed observed BetFlag/AAMS player-prop prices matched GoldBet exactly on the checked Saudi fixtures.",
+      "role": "PRIMARY_OPERATIONAL_SOURCE",
+      "activation": "use directly for every player-prop scan; do not wait for direct GoldBet player prices",
+      "user_validation": "On 2026-08-25 the user confirmed the checked BetFlag/AAMS player-prop prices matched GoldBet exactly on the Saudi fixtures.",
       "rules": [
-        "Use the BetFlag/AAMS prices to scan and price all available player props rather than stopping the analysis when GoldBet direct is unavailable.",
-        "Keep the source explicitly labelled BetFlag/AAMS proxy and never relabel it as GoldBet direct.",
-        "Apply the normal final price gate plus a small prudential safety margin when the wager price is proxy-derived.",
-        "If a directly observed GoldBet price is later available, it overrides the proxy for the final acceptance check.",
-        "Continue same-market and same-selection identity checks before classifying a BET."
+        "Use BetFlag/AAMS directly to scan and price all available player props: scorers, first-half/second-half scorers, first scorer, scorer-or-substitute/Plus, goals or assists, assists, shots, shots on target and other available player markets.",
+        "Keep the actual source explicitly labelled BetFlag/AAMS and never relabel it as GoldBet direct.",
+        "When recent calibration shows BetFlag/AAMS and GoldBet are substantially aligned, apply FINAL GATE directly to the BetFlag/AAMS price with no automatic proxy penalty.",
+        "If calibration becomes stale or material drift is detected, apply a prudential buffer and flag the source-risk explicitly.",
+        "If a fresh direct GoldBet player price is also available, use it as a cross-check; only a material same-selection divergence changes the operational acceptance price.",
+        "Continue exact fixture, player, market, line and selection identity checks before classifying a BET."
       ]
     }
   },
@@ -95,7 +97,7 @@
   },
   "price_certification": {
     "goldbet_standard": "DIRECT_CERTIFIED_WHEN_FRESH_AND_MAPPED",
-    "player_props": "BETFLAG_AAMS_OPERATIONAL_PROXY_USER_VALIDATED_AGAINST_GOLDBET_2026_08_25; NOT_GOLDBET_DIRECT; DIRECT_GOLDBET_OVERRIDES_WHEN_AVAILABLE"
+    "player_props": "BETFLAG_AAMS_PRIMARY_OPERATIONAL_USER_VALIDATED_AGAINST_GOLDBET_2026_08_25; SOURCE_LABEL_REQUIRED; GOLDBET_DIRECT_USED_AS_CALIBRATION_CROSSCHECK_WHEN_AVAILABLE"
   },
   "prospective_validation": {
     "ledger": "feed/player-context-validation-ledger.json",
@@ -119,7 +121,7 @@
     "mms_signals": "feed/radar-mms-primary-signals.json"
   },
   "priority_roadmap": [
-    "direct GoldBet player-prop certification",
+    "continuous BetFlag/AAMS vs GoldBet player-prop calibration and drift monitoring",
     "calibrated minutes/substitution model",
     "automatic ablation/OOS testing",
     "quantitative lineup impact delta",
