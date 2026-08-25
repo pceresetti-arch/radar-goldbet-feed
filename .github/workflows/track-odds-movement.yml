@@ -65,7 +65,6 @@ jobs:
             if aa is not None and bb is not None:return abs(aa-bb)<1e-9
             return str(a)==str(b)
 
-          # Remove any T-40/T-30 duplicate produced by old overlapping windows.
           for rec in records.values():
             cps=rec.get('checkpoints') or {}; a=cps.get('T-40'); b=cps.get('T-30')
             if isinstance(a,dict) and isinstance(b,dict) and a.get('captured_at')==b.get('captured_at'):
@@ -76,12 +75,10 @@ jobs:
               except Exception: cps.pop('T-40',None)
 
           observations=[]; errors=[]
-
-          # GoldBet direct standard markets, same bookmaker only.
           base='https://radar-goldbet.p-ceresetti.workers.dev/odds'; offsets=list(range(0,20000,2000))
           def page(off):
             qs=urllib.parse.urlencode({'token':token,'bookmakers':'goldbet','state':'prematch','limit':'2000','offset':str(off)})
-            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarMovement/3.0'})
+            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarMovement/3.1'})
             try:
               with urllib.request.urlopen(req,timeout=75) as r:
                 d=json.loads(r.read().decode('utf-8','replace')); return {'offset':off,'count':d.get('count'),'rows':d.get('odds') or [],'error':None}
@@ -108,7 +105,6 @@ jobs:
               except Exception:continue
               observations.append({'source':'GOLDBET_DIRECT_STANDARD','bookmaker':'goldbet','event_id':r.get('event_id'),'event':r.get('event') or f"{r.get('home_team','')} - {r.get('away_team','')}",'league':r.get('league'),'start_time':start,'market':r.get('market'),'line':r.get('line'),'scope':r.get('scope'),'period':r.get('period'),'selection':str(sel),'player':None,'price':price,'source_last_update':bm.get('last_update')})
 
-          # Player props from autonomous AAMS GoldBet-aligned feed.
           pf=pathlib.Path('feed/player-props-current.json')
           if pf.exists():
             try:
@@ -142,7 +138,6 @@ jobs:
                 if ck not in cps and (cp-5) < mt <= (cp+5):
                   cps[ck]={'price':o['price'],'captured_at':NOW_ISO,'minutes_to_start':mt,'target_minutes':cp,'distance_from_target_min':round(abs(mt-cp),1)}; checkpoint_count+=1
 
-          # Attach certified TRUE OPEN from Diretta/Flashscore to direct GoldBet records.
           true_open_attached=0
           def true_open_match(rec,row):
             if not isinstance(row,dict):return False
@@ -166,7 +161,6 @@ jobs:
               if true_open_match(rec,row):
                 rec['true_open_price']=row.get('true_open'); rec['true_open_status']='TRUE_OPEN_CERTIFIED'; rec['true_open_source']='Diretta/Flashscore GoldBet'; rec['true_open_flashscore_event_id']=tev.get('flashscore_event_id'); rec['true_open_certified_at']=tev.get('certified_at'); rec['diretta_current_at_capture']=row.get('diretta_current'); true_open_attached+=1; break
 
-          # Retain seven days after kickoff for retro-analysis.
           records={k:r for k,r in records.items() if not (parse_dt(r.get('start_time')) and parse_dt(r.get('start_time'))<NOW-timedelta(days=7))}
           movers=[]
           for r in records.values():
@@ -183,12 +177,19 @@ jobs:
           summary={'generated_at':NOW_ISO,'standard_bridge_total':total,'standard_rows_fetched':len(std),'observations':len(observations),'tracked_selections':len(records),'new_selections':new_count,'price_changes_this_run':changed_count,'checkpoints_captured_this_run':checkpoint_count,'true_open_index_events':len(true_events),'true_open_attached_records':true_open_attached,'errors':errors,'top_movers':movers[:100]}
           STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8'); SUMMARY.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8'); print(json.dumps(summary,ensure_ascii=False,indent=2)[:30000])
           PY
-      - name: Commit movement state
+      - name: Commit movement state safely
+        shell: bash
         run: |
+          set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git pull --rebase || true
           git add feed/odds-movement-state.json feed/odds-movement-current.json
           git diff --cached --quiet && exit 0
           git commit -m 'Track Radar odds movement'
-          git push
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to persist movement state after retries' >&2
+          exit 1
