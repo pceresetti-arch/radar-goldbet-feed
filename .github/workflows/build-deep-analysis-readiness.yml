@@ -22,9 +22,12 @@ on:
 permissions:
   contents: write
 
+# Do not cancel a running readiness build when several upstream feeds finish
+# almost simultaneously. cancel-in-progress=true could starve this workflow
+# during the exact pre-match window when many sources refresh together.
 concurrency:
   group: radar-deep-analysis-readiness
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
