@@ -1,0 +1,141 @@
+name: Build Radar MMS primary signals
+
+on:
+  push:
+    paths:
+      - 'feed/odds-movement-state.json'
+      - 'RADAR_MMS_PRIMARY_RULE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-mms-primary-signals
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build strong GoldBet 1X2 and OVER drops
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          from datetime import datetime, timezone
+
+          NOW=datetime.now(timezone.utc).isoformat()
+          src=pathlib.Path('feed/odds-movement-state.json')
+          outp=pathlib.Path('feed/radar-mms-primary-signals.json')
+          try:
+            data=json.loads(src.read_text(encoding='utf-8'))
+          except Exception:
+            data={}
+          records=(data.get('records') or {}) if isinstance(data,dict) else {}
+          if not isinstance(records,dict): records={}
+
+          THRESHOLD=0.20
+          signals=[]
+          skipped_no_true_open=0
+
+          def f(v):
+            try:return float(v)
+            except:return None
+
+          def is_full_time(rec):
+            period=str(rec.get('period') or '').strip().lower()
+            scope=str(rec.get('scope') or '').strip().lower()
+            if period and period not in ('full_time','fulltime','match','ft'): return False
+            if scope in ('first_half','1st_half','first_period','1h','1t'): return False
+            return True
+
+          def market_kind(rec):
+            market=str(rec.get('market') or '').strip().lower()
+            sel=str(rec.get('selection') or '').strip().upper()
+            if market=='1x2': return '1X2'
+            if sel=='OVER' and any(x in market for x in ('total','over','under')) and 'team' not in market:
+              return 'OVER'
+            return None
+
+          for rec in records.values():
+            if not isinstance(rec,dict): continue
+            if rec.get('source')!='GOLDBET_DIRECT_STANDARD': continue
+            if str(rec.get('bookmaker') or '').lower()!='goldbet': continue
+            if not is_full_time(rec): continue
+            kind=market_kind(rec)
+            if not kind: continue
+            if rec.get('true_open_status')!='TRUE_OPEN_CERTIFIED' or rec.get('true_open_price') is None:
+              skipped_no_true_open += 1
+              continue
+
+            true_open=f(rec.get('true_open_price')); current=f(rec.get('current_price'))
+            if true_open is None or current is None: continue
+            cps=rec.get('checkpoints') or {}
+            cp40=f((cps.get('T-40') or {}).get('price'))
+            cp30=f((cps.get('T-30') or {}).get('price'))
+            drops={
+              'T-40': round(true_open-cp40,3) if cp40 is not None else None,
+              'T-30': round(true_open-cp30,3) if cp30 is not None else None,
+              'CURRENT': round(true_open-current,3),
+            }
+            qualifying=[(k,v) for k,v in drops.items() if v is not None and v+1e-9>=THRESHOLD]
+            if not qualifying: continue
+            max_point,max_drop=max(qualifying,key=lambda x:x[1])
+            active=drops['CURRENT']+1e-9>=THRESHOLD
+            status='ACTIVE_DROP' if active else 'REBOUNDED_AFTER_DROP'
+            signals.append({
+              'status':status,
+              'market_kind':kind,
+              'event':rec.get('event'),
+              'league':rec.get('league'),
+              'start_time':rec.get('start_time'),
+              'market':rec.get('market'),
+              'line':rec.get('line'),
+              'selection':rec.get('selection'),
+              'true_open':true_open,
+              'T-40':cp40,
+              'T-30':cp30,
+              'current':current,
+              'drop_T40':drops['T-40'],
+              'drop_T30':drops['T-30'],
+              'drop_current':drops['CURRENT'],
+              'max_drop':max_drop,
+              'max_drop_point':max_point,
+              'threshold':THRESHOLD,
+              'opening_quality':'TRUE_OPEN_CERTIFIED',
+              'true_open_source':rec.get('true_open_source'),
+              'last_observed_at':rec.get('last_observed_at')
+            })
+
+          signals.sort(key=lambda x:(x['status']!='ACTIVE_DROP',-x['max_drop'],str(x.get('start_time') or '')))
+          active=[x for x in signals if x['status']=='ACTIVE_DROP']
+          rebounded=[x for x in signals if x['status']=='REBOUNDED_AFTER_DROP']
+          out={
+            'generated_at':NOW,
+            'rule':'GoldBet TRUE OPEN -> T-40/T-30/CURRENT; full-time 1X2 + OVER only; strong drop >= 0.20',
+            'threshold':THRESHOLD,
+            'benchmark':'TRUE_OPEN_CERTIFIED_ONLY',
+            'active_drop_count':len(active),
+            'rebounded_after_drop_count':len(rebounded),
+            'signal_count':len(signals),
+            'skipped_without_true_open':skipped_no_true_open,
+            'active_drops':active,
+            'rebounded_after_drop':rebounded,
+            'signals':signals
+          }
+          outp.parent.mkdir(exist_ok=True)
+          outp.write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:out[k] for k in ('active_drop_count','rebounded_after_drop_count','signal_count','skipped_without_true_open')},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit MMS signals
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git pull --rebase || true
+          git add feed/radar-mms-primary-signals.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Build Radar MMS primary signals'
+          git push
