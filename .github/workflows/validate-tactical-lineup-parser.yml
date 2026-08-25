@@ -21,12 +21,14 @@ jobs:
         run: |
           git show 7d511f9991a40ff90d5309c3d8da81c9d7fdf78e:feed/lineups-current.json > /tmp/lineups-history.json
           python scripts/enrich_lineups_tactical.py --input /tmp/lineups-history.json --output /tmp/tactical-history.json --summary /tmp/tactical-history-summary.json
+          python scripts/add_tactical_role_sanity.py --input /tmp/tactical-history.json --summary /tmp/tactical-history-summary.json
           python - <<'PY'
           import json, pathlib
           p=json.loads(pathlib.Path('/tmp/tactical-history.json').read_text())
           confirmed=[m for m in p['matches'] if m['positioning_status'] in ('PROVIDER_TACTICAL_CONFIRMED','PROVIDER_TACTICAL_AVAILABLE')]
           assert len(p['matches']) == 12, len(p['matches'])
           assert len(confirmed) >= 9, len(confirmed)
+          assert p.get('role_sanity_method') == 'usual-position-v1'
           athletic=next(m for m in p['matches'] if m['match_market_id']=='36341.1308')
           assert athletic['positioning_status']=='PROVIDER_TACTICAL_CONFIRMED', athletic['positioning_status']
           home=athletic['teams'][0]
@@ -38,18 +40,23 @@ jobs:
               assert expected in roles, (expected, roles)
           non_gk=[x for x in home['starters'] if x['role_code']!='GK']
           assert all(x['direct_opponents'] for x in non_gk)
+          assert all('role_vs_usual' in x for x in home['starters'])
           report={
             'validated': True,
             'historical_source_commit':'7d511f9991a40ff90d5309c3d8da81c9d7fdf78e',
             'historical_match_count':len(p['matches']),
             'tactical_available_or_confirmed':len(confirmed),
+            'role_sanity_counts':p.get('role_sanity_counts',{}),
             'athletic_club':{
               'listed_formation':home['listed_formation'],
               'detected_shape':home['detected_shape'],
               'coordinate_coverage':home['coordinate_coverage'],
-              'roles':roles
+              'roles':roles,
+              'role_sanity_counts':home.get('role_sanity_counts',{}),
+              'out_of_usual_line':home.get('out_of_usual_line',[])
             },
-            'method_version':p['method_version']
+            'method_version':p['method_version'],
+            'role_sanity_method':p.get('role_sanity_method')
           }
           pathlib.Path('feed/tactical-parser-validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
           print(json.dumps(report,ensure_ascii=False,indent=2))
