@@ -35,7 +35,7 @@ jobs:
           BASE='https://sportservice.betflag.it/api/sport/pregame'
           H={'Accept':'application/json,text/plain,*/*','Accept-Language':'it-IT,it;q=0.9','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/','User-Agent':'Mozilla/5.0'}
           AGG=1334500001
-          TARGETS=[(2484,13845,'Gol o Assist'),(2484,19392,'Assist o Sostituto o Marcatore Plus')]
+          TARGETS=[(2487,13845,'Gol o Assist'),(2484,19392,'Assist o Sostituto o Marcatore Plus')]
 
           def get(url,cap=16000000):
             req=urllib.request.Request(url,headers=H)
@@ -86,19 +86,19 @@ jobs:
               if isinstance(x,dict):
                 if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
                   ev[0]+=1; code,player=parse_name(x.get('en')); match=match_map.get(str(x.get('mi')))
-                  base={'event_id':x.get('ei'),'player':player,'match_code':code,'match_market_id':x.get('mi'),'match':match.get('en') if match else None,'match_event_id':match.get('ei') if match else None,'match_start':match.get('ed') if match else x.get('ed'),'league':x.get('td'),'authority_id':x.get('tai'),'requested_market':label,'requested_slot':slot}
+                  base={'event_id':x.get('ei'),'player':player,'match_code':code,'match_market_id':x.get('mi'),'match':match.get('en') if match else None,'match_event_id':match.get('ei') if match else None,'match_start':match.get('ed') if match else x.get('ed'),'league':x.get('td'),'authority_id':x.get('tai'),'requested_market':label,'requested_slot':slot,'requested_tab':tab}
                   for o in market_rows(x): rows.append({**base,**o,'fetched_at':now})
                 for v in x.values(): walk(v)
               elif isinstance(x,list):
                 for v in x: walk(v)
             walk(data)
-            calls.append({'slot':slot,'label':label,'status':st,'error':err,'events_seen':ev[0],'rows_added':len(rows)-before})
+            calls.append({'tab':tab,'slot':slot,'label':label,'status':st,'error':err,'events_seen':ev[0],'rows_added':len(rows)-before})
 
           by_match={}
           for r in rows:
             key=str(r.get('match_market_id') or r.get('match') or r.get('match_code'))
             m=by_match.setdefault(key,{'match':r.get('match'),'match_code':r.get('match_code'),'match_event_id':r.get('match_event_id'),'match_market_id':r.get('match_market_id'),'start_time':r.get('match_start'),'league':r.get('league'),'authority_id':r.get('authority_id'),'players':{}})
-            m['players'].setdefault(r.get('player'),[]).append({k:r.get(k) for k in ('market','line','selection','odd','event_id','selection_id','market_type','market_id','odds_id','requested_market','requested_slot')})
+            m['players'].setdefault(r.get('player'),[]).append({k:r.get(k) for k in ('market','line','selection','odd','event_id','selection_id','market_type','market_id','odds_id','requested_market','requested_slot','requested_tab')})
           meta={'generated_at':now,'source_class':'SHARED_AAMS','markets':['Gol o Assist','Assist o Sostituto o Marcatore Plus'],'row_count':len(rows),'match_count':len(by_match),'calls':calls}
           feed=pathlib.Path('feed'); feed.mkdir(exist_ok=True)
           (feed/'gol-assist-current.json').write_text(json.dumps({**meta,'rows':rows},ensure_ascii=False,indent=2),encoding='utf-8')
