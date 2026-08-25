@@ -55,4 +55,4 @@ for mid in ids:
     rows.append(rec)
 ROOT.mkdir(exist_ok=True)
 (ROOT/'fotmob-heatmap-probe.json').write_text(json.dumps({'matches':rows},ensure_ascii=False,indent=2),encoding='utf-8')
-print(json.dumps({'probed':len(rows),'statuses':{r['status'] for r in rows}},ensure_ascii=False))
+print(json.dumps({'probed':len(rows),'statuses':sorted({r['status'] for r in rows})},ensure_ascii=False))
