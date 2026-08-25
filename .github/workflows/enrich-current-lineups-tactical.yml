@@ -5,6 +5,9 @@ on:
     workflows: ["Refresh current lineups"]
     types: [completed]
   workflow_dispatch:
+  push:
+    paths:
+      - 'tactical-lineup-trigger.json'
 
 permissions:
   contents: write
