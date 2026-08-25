@@ -1,0 +1,128 @@
+name: Refresh Gol Assist player markets
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'refresh-gol-assist-player-markets-trigger.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-gol-assist-player-markets
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 20
+      - name: Fetch Gol o Assist and Plus equivalent
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, urllib.request, shutil
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          H={'Accept':'application/json,text/plain,*/*','Accept-Language':'it-IT,it;q=0.9','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/','User-Agent':'Mozilla/5.0'}
+          AGG=1334500001
+          TARGETS=[(2484,13845,'Gol o Assist'),(2484,19392,'Assist o Sostituto o Marcatore Plus')]
+
+          def get(url,cap=16000000):
+            req=urllib.request.Request(url,headers=H)
+            with urllib.request.urlopen(req,timeout=22) as r:
+              return r.status,json.loads(r.read(cap).decode('utf-8','replace'))
+
+          standard_url=f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0'
+          status,standard=get(standard_url)
+          match_map={}
+          def walk_standard(x):
+            if isinstance(x,dict):
+              if x.get('mi') is not None and x.get('en') and not str(x.get('sn','')).lower().startswith('giocatori') and not str(x.get('en','')).startswith('('):
+                if x.get('si') in (1,'1') or str(x.get('sn','')).lower()=='calcio':
+                  match_map[str(x.get('mi'))]={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','mi','tai')}
+              for v in x.values(): walk_standard(v)
+            elif isinstance(x,list):
+              for v in x: walk_standard(v)
+          walk_standard(standard)
+
+          def parse_name(name):
+            s=str(name or '').strip(); m=re.match(r'^\(([^)]+)\)\s*(.*)$',s)
+            return (m.group(1).strip(),m.group(2).strip()) if m else ('',s)
+
+          def market_rows(event):
+            out=[]; mm=event.get('mmkW'); markets=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+            for market in markets:
+              if not isinstance(market,dict): continue
+              mn=str(market.get('mn') or '').strip(); spd=market.get('spd'); spreads=spd.items() if isinstance(spd,dict) else enumerate(spd or []) if isinstance(spd,list) else []
+              for sk,spread in spreads:
+                if not isinstance(spread,dict): continue
+                for q in spread.get('asl') or []:
+                  if isinstance(q,dict) and q.get('ov') is not None:
+                    out.append({'market':mn,'line':None if str(sk)=='0.0' else sk,'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),'market_type':q.get('mti'),'market_id':q.get('mi'),'odds_id':q.get('oi')})
+            return out
+
+          def fetch(t):
+            tab,slot,label=t; url=f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0'
+            try: return t,*get(url,14000000),None
+            except Exception as e: return t,None,{},type(e).__name__+': '+str(e)[:200]
+
+          now=datetime.now(timezone.utc).isoformat(); rows=[]; calls=[]
+          with ThreadPoolExecutor(max_workers=2) as ex:
+            futs=[ex.submit(fetch,t) for t in TARGETS]
+            results=[f.result() for f in as_completed(futs)]
+          for t,st,data,err in results:
+            tab,slot,label=t; before=len(rows); ev=[0]
+            def walk(x):
+              if isinstance(x,dict):
+                if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
+                  ev[0]+=1; code,player=parse_name(x.get('en')); match=match_map.get(str(x.get('mi')))
+                  base={'event_id':x.get('ei'),'player':player,'match_code':code,'match_market_id':x.get('mi'),'match':match.get('en') if match else None,'match_event_id':match.get('ei') if match else None,'match_start':match.get('ed') if match else x.get('ed'),'league':x.get('td'),'authority_id':x.get('tai'),'requested_market':label,'requested_slot':slot}
+                  for o in market_rows(x): rows.append({**base,**o,'fetched_at':now})
+                for v in x.values(): walk(v)
+              elif isinstance(x,list):
+                for v in x: walk(v)
+            walk(data)
+            calls.append({'slot':slot,'label':label,'status':st,'error':err,'events_seen':ev[0],'rows_added':len(rows)-before})
+
+          by_match={}
+          for r in rows:
+            key=str(r.get('match_market_id') or r.get('match') or r.get('match_code'))
+            m=by_match.setdefault(key,{'match':r.get('match'),'match_code':r.get('match_code'),'match_event_id':r.get('match_event_id'),'match_market_id':r.get('match_market_id'),'start_time':r.get('match_start'),'league':r.get('league'),'authority_id':r.get('authority_id'),'players':{}})
+            m['players'].setdefault(r.get('player'),[]).append({k:r.get(k) for k in ('market','line','selection','odd','event_id','selection_id','market_type','market_id','odds_id','requested_market','requested_slot')})
+          meta={'generated_at':now,'source_class':'SHARED_AAMS','markets':['Gol o Assist','Assist o Sostituto o Marcatore Plus'],'row_count':len(rows),'match_count':len(by_match),'calls':calls}
+          feed=pathlib.Path('feed'); feed.mkdir(exist_ok=True)
+          (feed/'gol-assist-current.json').write_text(json.dumps({**meta,'rows':rows},ensure_ascii=False,indent=2),encoding='utf-8')
+          (feed/'gol-assist-current-by-match.json').write_text(json.dumps({**meta,'matches':list(by_match.values())},ensure_ascii=False,indent=2),encoding='utf-8')
+          hot=feed/'hot'/'gol-assist';
+          if hot.exists(): shutil.rmtree(hot)
+          hot.mkdir(parents=True,exist_ok=True); rome=ZoneInfo('Europe/Rome'); nr=datetime.now(rome); count=0
+          for key,m in by_match.items():
+            try: ko=datetime.strptime(str(m.get('start_time')),'%d-%m-%Y %H:%M').replace(tzinfo=rome); mins=(ko-nr).total_seconds()/60
+            except Exception: continue
+            if -15 <= mins <= 120:
+              safe=str(m.get('match_market_id') or key).replace('/','_'); (hot/f'{safe}.json').write_text(json.dumps({'generated_at':now,'minutes_to_kickoff':round(mins,1),**m},ensure_ascii=False,indent=2),encoding='utf-8'); count+=1
+          (feed/'hot'/'gol-assist-index.json').write_text(json.dumps({'generated_at':now,'count':count,'markets':meta['markets']},ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({**meta,'hot_count':count},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit Gol Assist feed
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/gol-assist-current.json feed/gol-assist-current-by-match.json feed/hot/gol-assist feed/hot/gol-assist-index.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh Gol Assist player markets'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((i*2))
+          done
+          exit 1
