@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - 'scripts/build_player_matchup_context.py'
+      - 'scripts/build_player_heatmap_context.py'
       - 'scripts/archive_player_context_validation.py'
       - 'player-matchup-context-trigger.json'
 
@@ -33,6 +34,8 @@ jobs:
         run: pip install -q curl_cffi
       - name: Build current player matchup context
         run: python scripts/build_player_matchup_context.py
+      - name: Build robust player heatmap context
+        run: python scripts/build_player_heatmap_context.py
       - name: Archive prospective player-context snapshot
         run: python scripts/archive_player_context_validation.py
       - name: Commit matchup context safely
@@ -41,9 +44,9 @@ jobs:
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/player-matchup-context-current.json feed/player-matchup-context-current-summary.json feed/player-context-validation-ledger.json
+          git add feed/player-matchup-context-current.json feed/player-matchup-context-current-summary.json feed/player-heatmap-context-current.json feed/player-heatmap-context-current-summary.json feed/player-context-validation-ledger.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh player matchup context and OOS ledger'
+          git commit -m 'Refresh player matchup heatmap context and OOS ledger'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
