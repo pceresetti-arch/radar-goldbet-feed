@@ -1,0 +1,80 @@
+name: Probe player market slots
+
+on:
+  push:
+    paths:
+      - 'probe-player-market-slots-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe BetFlag/AAMS player market slots
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request, time, random
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+          from datetime import datetime, timezone
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          HEADERS={
+            'Accept':'application/json,text/plain,*/*',
+            'Accept-Language':'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/',
+            'User-Agent':'Mozilla/5.0'
+          }
+          AGG=1334500001
+          tab=2484
+          slots=list(range(13800,13861))+list(range(19390,19421))+list(range(22870,22896))
+
+          def req(slot):
+            url=f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0'
+            try:
+              r=urllib.request.Request(url,headers=HEADERS)
+              with urllib.request.urlopen(r,timeout=18) as resp:
+                data=json.loads(resp.read(8000000).decode('utf-8','replace'))
+              names=set(); player_events=0
+              def walk(x):
+                nonlocal player_events
+                if isinstance(x,dict):
+                  if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
+                    player_events+=1
+                    mm=x.get('mmkW')
+                    markets=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
+                    for m in markets:
+                      if isinstance(m,dict) and m.get('mn'): names.add(str(m.get('mn')).strip())
+                  for v in x.values(): walk(v)
+                elif isinstance(x,list):
+                  for v in x: walk(v)
+              walk(data)
+              return {'slot':slot,'status':200,'player_events':player_events,'market_names':sorted(names)}
+            except Exception as e:
+              return {'slot':slot,'status':None,'player_events':0,'market_names':[],'error':type(e).__name__+': '+str(e)[:180]}
+
+          out=[]
+          with ThreadPoolExecutor(max_workers=10) as ex:
+            futs=[ex.submit(req,s) for s in slots]
+            for f in as_completed(futs): out.append(f.result())
+          out.sort(key=lambda x:x['slot'])
+          hits=[x for x in out if x['player_events'] or x['market_names']]
+          payload={'generated_at':datetime.now(timezone.utc).isoformat(),'hits':hits,'all_count':len(out)}
+          pathlib.Path('feed/player-market-slot-probe.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(payload,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit probe result
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-market-slot-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag player market slots'
+          git pull --rebase origin main
+          git push origin HEAD:main
