@@ -2,7 +2,7 @@ name: Refresh Diretta GoldBet TRUE OPEN
 
 on:
   schedule:
-    - cron: '12,42 * * * *'
+    - cron: '7-57/10 * * * *'
   workflow_dispatch:
   push:
     paths:
@@ -204,12 +204,19 @@ jobs:
           OUT.parent.mkdir(exist_ok=True);OUT.write_text(json.dumps(out,ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8')
           print(json.dumps({k:out[k] for k in ('feed_url','target_count','flashscore_event_count','matched_count','unmatched_count','queried_this_run','certified_this_run','certified_total')},ensure_ascii=False,indent=2))
           PY
-      - name: Commit TRUE OPEN index
+      - name: Commit TRUE OPEN index safely
+        shell: bash
         run: |
+          set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git pull --rebase || true
           git add feed/diretta-goldbet-true-open-index.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh Diretta GoldBet TRUE OPEN index'
-          git push
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to persist TRUE OPEN index after retries' >&2
+          exit 1
