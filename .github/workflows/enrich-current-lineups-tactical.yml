@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - 'tactical-lineup-trigger.json'
+      - 'scripts/filter_official_lineups_for_tactical.py'
 
 permissions:
   contents: write
@@ -25,8 +26,10 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: main
+      - name: Gate tactical enrichment to official XI only
+        run: python scripts/filter_official_lineups_for_tactical.py
       - name: Build tactical positioning feed
-        run: python scripts/enrich_lineups_tactical.py
+        run: python scripts/enrich_lineups_tactical.py --input feed/lineups-official-for-tactical.json
       - name: Cross-check inferred roles with provider usual positions
         run: python scripts/add_tactical_role_sanity.py
       - name: Commit tactical lineup feed safely
@@ -35,7 +38,7 @@ jobs:
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/lineups-tactical-current.json feed/lineups-tactical-current-summary.json
+          git add feed/lineups-official-for-tactical.json feed/lineups-tactical-current.json feed/lineups-tactical-current-summary.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh tactical lineup positioning'
           for attempt in 1 2 3 4; do
