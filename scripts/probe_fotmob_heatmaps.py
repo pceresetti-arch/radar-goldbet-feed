@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, pathlib, urllib.parse
+import json, pathlib
 from curl_cffi import requests
 
 ROOT=pathlib.Path('feed')
@@ -51,8 +51,6 @@ for m in ctx.get('matches') or []:
     for t in m.get('teams') or []:
         for mid in (t.get('recent_match_ids') or [])[:1]:
             if mid not in ids: ids.append(mid)
-# Add high-coverage clubs to test whether heatmaps are provider/competition dependent.
-# FotMob IDs: Manchester City 8456, Liverpool 8650, Real Madrid 8633, Bayern 9823.
 for tid in (8456,8650,8633,9823):
     for mid in recent_ids_from_team(tid,2):
         if mid not in ids: ids.append(mid)
@@ -64,28 +62,28 @@ for mid in ids:
         d=get(f'https://www.fotmob.com/api/data/matchDetails?matchId={mid}').json()
         facts=((d.get('content') or {}).get('matchFacts') or {})
         candidates=heatmap_candidates(d)
-        hu=facts.get('heatmapUrl')
+        hu=(d.get('content') or {}).get('heatmapUrl') or facts.get('heatmapUrl')
         if not hu:
             for c in candidates:
                 v=c.get('value') or ''
-                if 'http' in v and 'heatmap' in v.lower():
-                    try: hu=json.loads(v) if v.startswith('"') else v
-                    except Exception: hu=v
-                    if isinstance(hu,str): hu=hu.strip('"')
-                    break
-        rec['matchFacts_keys']=sorted(facts.keys())
-        rec['heatmap_candidates']=candidates[:20]
-        rec['heatmap_url']=hu
+                if '/api/data/heatmap/' in v:
+                    hu=v.strip('"'); break
+        rec['matchFacts_keys']=sorted(facts.keys()); rec['heatmap_candidates']=candidates[:20]; rec['heatmap_url']=hu
         if not hu:
             rec['status']='NO_HEATMAP_URL'; rows.append(rec); continue
-        url='https://www.fotmob.com/api/data/heatmap/match/{}/heatmaps?{}'.format(mid,urllib.parse.urlencode({'heatmapUrl':hu}))
-        r=get(url)
-        rec['http_status']=r.status_code; rec['content_type']=r.headers.get('content-type')
+        if str(hu).startswith('/api/data/heatmap/'):
+            url='https://www.fotmob.com'+str(hu)
+        elif str(hu).startswith('http') and '/api/data/heatmap/' in str(hu):
+            url=str(hu)
+        else:
+            url='https://www.fotmob.com/api/data/heatmap/match/{}/heatmaps?heatmapUrl={}'.format(mid,str(hu))
+        rec['request_url']=url
+        r=get(url); rec['http_status']=r.status_code; rec['content_type']=r.headers.get('content-type')
         try:
             payload=r.json(); rec['payload_type']=type(payload).__name__
             if isinstance(payload,dict): rec['top_keys']=sorted(payload.keys())
             elif isinstance(payload,list): rec['list_length']=len(payload)
-            rec['sample']=short(payload); rec['status']='OK_JSON'
+            rec['sample']=short(payload); rec['status']='OK_JSON' if r.ok else 'HTTP_JSON_ERROR'
         except Exception:
             rec['payload_type']='text'; rec['sample']=r.text[:3500]; rec['status']='OK_TEXT' if r.ok else 'HTTP_ERROR'
     except Exception as e:
