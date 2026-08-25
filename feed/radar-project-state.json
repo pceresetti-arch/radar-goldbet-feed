@@ -1,0 +1,124 @@
+{
+  "schema_version": "radar-project-state-v1",
+  "as_of": "2026-08-25",
+  "source_of_truth": "RADAR_UNICO_MASTER.md",
+  "objective": "Autonomously detect matches, wait for reliable fresh inputs, execute deep analysis, and notify the complete operational evaluation rather than a simple ready alert.",
+  "competition_perimeter": [
+    "Allsvenskan",
+    "Superettan",
+    "Eliteserien",
+    "Danish Superliga",
+    "Eredivisie",
+    "Belgian top flight",
+    "Scottish Premiership",
+    "Primeira Liga",
+    "Bundesliga Germany",
+    "Bundesliga Austria",
+    "Super Lig Turkey",
+    "La Liga",
+    "Ligue 1",
+    "Premier League",
+    "J1 League",
+    "Saudi Pro League",
+    "UEFA Champions League",
+    "UEFA Europa League",
+    "UEFA Conference League"
+  ],
+  "readiness": {
+    "machine_state": "READY_DEEP_ANALYSIS",
+    "standard_requires": [
+      "fresh official FotMob standard XI",
+      "tactical layer synchronized to XI fingerprint",
+      "fresh GoldBet standard odds",
+      "certified TRUE OPEN for all 1X2 and at least one FT Over"
+    ],
+    "player_props_block_standard_ready": false,
+    "player_bet_requires_player_market_bet_ready": true
+  },
+  "official_xi": {
+    "lineup_type": "standard",
+    "confirmed": true,
+    "complete_11v11": true,
+    "allowed_status": ["SOURCE_CONFIRMED", "CROSS_CONFIRMED"],
+    "forbidden_as_official": ["lastStarting11", "lastStartingLineups", "predicted", "probable", "expected"],
+    "xi_fingerprint_required": true,
+    "xi_change_invalidates_player_analysis": true
+  },
+  "market_policy": {
+    "operational_bookmaker": "GoldBet",
+    "mms_primary_markets": ["1X2 FT", "OVER FT"],
+    "strong_drop_absolute_decimal": 0.2,
+    "strong_drop_requires_true_open": true,
+    "first_seen_is_diagnostic_only": true,
+    "final_gate_required": true,
+    "bet_condition": "current_price >= FINAL_GATE"
+  },
+  "player_context": {
+    "lookback_matches_default": 6,
+    "minutes_model": "PRELIMINARY_UNCALIBRATED",
+    "features": [
+      "starts",
+      "appearances",
+      "average_minutes_when_selected",
+      "P60/P75/P90 preliminary",
+      "historical_starting_position",
+      "shot_origin",
+      "shot_xG",
+      "shots_on_target",
+      "shot_situation_type",
+      "opponent_concession_map"
+    ],
+    "heatmap": {
+      "source": "FotMob location-density",
+      "pitch": "105x68",
+      "id_bridge": "matchDetails.content.playerStats.optaId -> FotMob player id",
+      "features": ["centroid", "dispersion", "dominant_zone", "final_third_share", "box_share", "central_share"],
+      "gps": false,
+      "touch_by_touch": false,
+      "optional": true,
+      "standalone_edge_allowed": false
+    }
+  },
+  "price_certification": {
+    "goldbet_standard": "DIRECT_CERTIFIED_WHEN_FRESH_AND_MAPPED",
+    "player_props": "AAMS_BETFLAG_GOLDBET_ALIGNED_NOT_YET_INDEPENDENTLY_CERTIFIED_PLAYER_BY_PLAYER"
+  },
+  "prospective_validation": {
+    "ledger": "feed/player-context-validation-ledger.json",
+    "anti_hindsight": true,
+    "first_pre_kickoff_snapshot_immutable": true,
+    "exact_xi_fingerprint": true,
+    "promotion_requires_oos_improvement": true,
+    "metrics": ["Brier", "log-loss", "calibration", "CLV", "ROI/yield where observed price exists", "league/market/role robustness"]
+  },
+  "feeds": {
+    "readiness_summary": "feed/deep-analysis-readiness-summary.json",
+    "readiness_detail": "feed/deep-analysis-readiness.json",
+    "lineups": "feed/lineups-current.json",
+    "tactical": "feed/lineups-tactical-current.json",
+    "standard_odds_movement": "feed/odds-movement-current.json",
+    "true_open_index": "feed/diretta-goldbet-true-open-index.json",
+    "player_props": "feed/player-props-current.json",
+    "player_matchup_context": "feed/player-matchup-context-current.json",
+    "player_heatmap_context": "feed/player-heatmap-context-current.json",
+    "player_context_oos_ledger": "feed/player-context-validation-ledger.json",
+    "mms_signals": "feed/radar-mms-primary-signals.json"
+  },
+  "priority_roadmap": [
+    "direct GoldBet player-prop certification",
+    "calibrated minutes/substitution model",
+    "automatic ablation/OOS testing",
+    "quantitative lineup impact delta",
+    "creator-finisher network",
+    "movement quality score",
+    "TRUE OPEN for first-half markets",
+    "data confidence score",
+    "correlation/exposure engine",
+    "model drift monitoring"
+  ],
+  "privacy": {
+    "repository_public": true,
+    "store_personal_bankroll_or_receipts_here": false,
+    "store_detailed_personal_financial_history_here": false
+  }
+}
