@@ -10,11 +10,13 @@ on:
       - 'Track Radar odds movement'
       - 'Refresh current player props'
       - 'Refresh Diretta GoldBet TRUE OPEN'
+      - 'Build player matchup context'
     types: [completed]
   workflow_dispatch:
   push:
     paths:
       - 'deep-analysis-readiness-trigger.json'
+      - 'scripts/build_deep_analysis_readiness.py'
 
 permissions:
   contents: write
