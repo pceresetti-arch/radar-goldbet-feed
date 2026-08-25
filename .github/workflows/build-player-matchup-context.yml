@@ -1,0 +1,50 @@
+name: Build player matchup context
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_run:
+    workflows: ["Refresh current lineups"]
+    types: [completed]
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/build_player_matchup_context.py'
+      - 'player-matchup-context-trigger.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-player-matchup-context
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Install browser-like client
+        run: pip install -q curl_cffi
+      - name: Build current player matchup context
+        run: python scripts/build_player_matchup_context.py
+      - name: Commit matchup context safely
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-matchup-context-current.json feed/player-matchup-context-current-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh player matchup context'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to persist player matchup context after retries' >&2
+          exit 1
