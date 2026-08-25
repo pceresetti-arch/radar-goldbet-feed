@@ -10,12 +10,13 @@ Obiettivo finale: intercettare autonomamente una partita del perimetro, aspettar
 ## 1. Gerarchia delle fonti di verità
 Ordine operativo:
 1. `RADAR_UNICO_MASTER.md` — regole e architettura globale.
-2. `RADAR_UNICO_OPERATIONAL_CONTRACT.md` — contratto completo di Deep Matchup Analysis e mercati.
-3. `RADAR_PLAYER_CONTEXT_RULE.md` — ufficialità XI, fingerprint e player-market gate.
-4. `RADAR_MMS_PRIMARY_RULE.md` — MMS primario TRUE OPEN GoldBet su 1X2/OVER FT.
-5. `TRUE_OPEN_MOVEMENT_POLICY.md` e `RADAR_ODDS_MOVEMENT_CONTRACT.md` — dettagli movimento/TRUE OPEN.
-6. `RADAR_UNICO_LINEUP_PIPELINE.md` — pipeline formazioni/tattica.
-7. Feed machine-readable correnti in `feed/` — stato operativo live.
+2. `RADAR_FAST_PATH.md` — corsia rapida, provenienza prezzi e proxy BetFlag→GoldBet.
+3. `RADAR_UNICO_OPERATIONAL_CONTRACT.md` — contratto completo di Deep Matchup Analysis e mercati.
+4. `RADAR_PLAYER_CONTEXT_RULE.md` — ufficialità XI, fingerprint e player-market gate.
+5. `RADAR_MMS_PRIMARY_RULE.md` — MMS primario TRUE OPEN GoldBet su 1X2/OVER FT.
+6. `TRUE_OPEN_MOVEMENT_POLICY.md` e `RADAR_ODDS_MOVEMENT_CONTRACT.md` — dettagli movimento/TRUE OPEN.
+7. `RADAR_UNICO_LINEUP_PIPELINE.md` — pipeline formazioni/tattica.
+8. Feed machine-readable correnti in `feed/` — stato operativo live, inclusa `feed/shared-goldbet-proxy-policy.json`.
 
 In caso di conflitto tra vecchie chat e questo repository, va prima verificato se il repository contiene una decisione più recente esplicitamente consolidata. Non ricostruire regole dal risultato ex post.
 
@@ -95,14 +96,14 @@ Prima di qualsiasi BET analizzare almeno, quando i dati sono disponibili:
 Dati non verificabili devono ridurre la confidenza, non essere riempiti con supposizioni presentate come fatti.
 
 ## 6. Player Context Gate
-Per promuovere a BET un mercato giocatore è richiesto `player_market_bet_ready = true` oltre al normale price gate.
+Per promuovere a BET un mercato giocatore è richiesto `player_market_bet_ready = true` oltre al normale price gate o, per il proxy, oltre al PROXY GATE.
 
 Richiede:
 - player props freschi;
 - `player-matchup-context` fresco;
 - stesso `xi_fingerprint` dell’XI ufficiale.
 
-Se la quota player esiste ma il contesto è stale/missing/mismatched, il mercato può essere solo `WATCH/ATTESA`, non BET.
+Se la quota player esiste ma il contesto è stale/missing/mismatched, il mercato può essere solo `WATCH/ATTESA`, non BET, anche se il prezzo diretto o proxy supera il gate.
 
 ### Contesto player attualmente disponibile
 - starts/appearances;
@@ -162,16 +163,45 @@ Il Radar deve partire dal mercato/prezzo disponibile e scandagliare sistematicam
 
 Mai inventare un mercato o una quota mancante.
 
-## 9. GoldBet e certificazione prezzi
-GoldBet è il riferimento operativo.
+## 9. GoldBet, BetFlag/AAMS e certificazione prezzi
+GoldBet resta il riferimento operativo primario.
 
-### Standard markets
-Le quote standard GoldBet provengono dal bridge diretto e sono trattate come GoldBet reali quando il feed è fresco e correttamente mappato.
+### Standard markets — `GOLDBET_DIRECT_STANDARD`
+Le quote standard GoldBet provengono dal bridge diretto e sono trattate come GoldBet reali quando il feed è fresco e correttamente mappato. Queste quote possono passare direttamente il FINAL PRICE GATE.
 
-### Player props
-I player props attuali provengono da servizio AAMS/BetFlag fortemente allineato agli eventi GoldBet, ma i prezzi del singolo player NON sono ancora indipendentemente certificati GoldBet player-by-player. Non presentarli come certificazione diretta GoldBet finché non sarà implementato il relativo modulo.
+### Player props diretti
+La certificazione diretta GoldBet player-by-player non è ancora disponibile in modo sistematico. Se viene trovata una quota GoldBet diretta della stessa fixture/giocatore/mercato/linea/selezione, essa prevale sempre su qualunque proxy.
 
-Priorità tecnica aperta: certificazione diretta GoldBet di ogni player market/prezzo/timestamp.
+### Player props condivisi — `SHARED_AAMS`
+I player props correnti provengono dal servizio AAMS/BetFlag. Il prezzo grezzo NON deve essere presentato come GoldBet diretto.
+
+### Proxy operativo — `GOLDBET_ALIGNED_PROXY`
+Il Radar può usare il prezzo BetFlag/AAMS come proxy operativo di GoldBet quando la calibrazione cross-brand corrente lo autorizza.
+
+Prima di usarlo deve leggere `feed/shared-goldbet-proxy-policy.json` e verificare:
+- freshness <=45 minuti;
+- `proxy_player_gate_allowed=true`;
+- verdict `STRONG_EXACT_MATCH` oppure `STRONG_NEAR_MATCH`;
+- almeno 8 fixture simultanee abbinate;
+- nessun segnale di divergenza materiale;
+- feed player fresco e mapping esatto fixture/giocatore/mercato/linea/selezione.
+
+La calibrazione cross-brand è costruita su snapshot simultanei di mercati standard 1X2 dove BetFlag/AAMS e GoldBet diretto sono entrambi osservabili. È evidenza forte della condivisione/allineamento del pricing, ma NON prova matematica che ogni singolo player prop sia identico. Per questo il proxy usa un buffer prudenziale.
+
+Con policy forte/fresca:
+`PROXY_GATE = max(FINAL_GATE * 1.03, FINAL_GATE + 0.05)`
+
+Il player prop è:
+- `BET` se esiste prezzo GoldBet diretto >= FINAL GATE;
+- `BET (PROXY BETFLAG→GOLDBET)` se manca il diretto e proxy_price >= PROXY_GATE;
+- `NO BET` se il proxy è sotto PROXY_GATE;
+- `ATTESA / NO BET — PROXY NON CERTIFICATO` se la policy è stale/debole/non ammessa.
+
+Ogni BET proxy deve mostrare esplicitamente fonte proxy, quota proxy, FINAL GATE, PROXY GATE, buffer e stato/freschezza della calibrazione. Non scrivere mai “quota GoldBet @X” quando X proviene dal proxy.
+
+La pipeline di certificazione salva anche exact-rate, near-rate, mean absolute difference, P95 e max difference. Il buffer potrà essere modificato solo sulla base di evidenza prospettica accumulata, non per adattarsi a una singola giocata.
+
+Priorità tecnica aperta: certificazione diretta GoldBet di ogni player market/prezzo/timestamp. Quando sarà disponibile, il prezzo diretto sostituirà il proxy per il final gate.
 
 ## 10. MMS primario
 Mercati principali:
@@ -192,23 +222,30 @@ Regole:
 
 Un crollo è un trigger/prioritizzazione, NON una BET automatica.
 
+Per i player props proxy non attribuire a GoldBet un movimento osservato soltanto sul feed BetFlag/AAMS: il movimento proxy deve restare etichettato separatamente.
+
 ## 11. FINAL GATE unico e vincolante
 Per ogni candidata:
 1. stimare P Radar;
 2. calcolare fair odds;
-3. fissare un unico FINAL GATE;
-4. confrontare con il prezzo corrente reale.
+3. fissare un unico FINAL GATE del modello;
+4. confrontare con il prezzo operativo ammesso.
 
-BET solo se:
-`quota corrente >= FINAL GATE`
+Con prezzo GoldBet diretto:
+`BET solo se quota GoldBet corrente >= FINAL GATE`.
 
-Sotto gate = NO BET.
+Con player price proxy certificato:
+`BET (PROXY BETFLAG→GOLDBET) solo se proxy_price >= PROXY_GATE`, dove il PROXY GATE è derivato dal FINAL GATE secondo la policy corrente.
+
+Sotto il rispettivo gate = NO BET.
 
 Classificazione operativa:
 - A: forte value / alta qualità dati;
 - B: value moderato;
 - C: borderline ma ancora sopra gate;
 - D / ATTESA / NO BET: gate non superato o dati insufficienti.
+
+La provenienza del prezzo è separata dalla classe A/B/C: una A può essere `DIRECT` o `PROXY`, ma il proxy deve essere dichiarato.
 
 Una decisione utente sotto soglia deve essere distinta come USER OVERRIDE e non retro-etichettata come BET del modello.
 
@@ -224,16 +261,21 @@ Il Radar deve:
 - non sommare superficialmente confidence/edge di mercati dipendenti.
 
 ## 13. Readiness e notifiche
-I sensori ChatGPT attivi devono notificare solo quando:
-1. una gara diventa READY e l’analisi approfondita è già stata completata;
-2. avviene un delta materiale dopo la prima valutazione;
-3. entro circa 20 minuti dal kickoff un input standard critico rimane stale/guasto e impedisce una valutazione affidabile (`ALERT DATI INCOMPLETI`).
+I sensori ChatGPT attivi devono notificare quando:
+1. una gara entra nella finestra operativa e c’è già un’analisi preliminare utile;
+2. una gara diventa READY e l’analisi approfondita è stata completata;
+3. avviene un delta materiale dopo la prima valutazione;
+4. entro circa 20 minuti dal kickoff un input critico rimane stale/guasto e impedisce una valutazione affidabile (`ALERT DATI INCOMPLETI`).
+
+Il Radar non deve restare silenzioso soltanto perché manca un layer non essenziale: deve distinguere PRELIMINARY, READY, WATCH e DATA INCOMPLETE.
 
 Delta materiale include:
 - cambio XI/fingerprint;
 - cambio ruolo/posizionamento;
 - nuovo/rientrato crollo >=0.20;
-- quota che attraversa il FINAL GATE;
+- quota diretta che attraversa il FINAL GATE;
+- quota proxy che attraversa il PROXY GATE;
+- variazione della policy BetFlag→GoldBet (proxy abilitato/disabilitato o buffer cambiato);
 - player context che promuove/declassa una candidata.
 
 Evitare notifiche rumorose e duplicati.
@@ -245,7 +287,8 @@ Acquisizione repository:
 - odds movement: circa ogni 5 min;
 - player props: circa ogni 5 min;
 - TRUE OPEN: circa ogni 10 min;
-- readiness: circa ogni 5 min e/o trigger downstream.
+- readiness: circa ogni 5 min e/o trigger downstream;
+- calibrazione BetFlag/AAMS→GoldBet: circa ogni 30 min, con policy valida al massimo 45 min.
 
 I task ChatGPT hanno una frequenza pratica inferiore rispetto ai sensori GitHub. Il progetto usa due task sfalsati circa ogni 30 minuti (`:05` e `:35`). Questo introduce possibile latenza di notifica fino al passaggio successivo del task; non esiste al momento un webhook GitHub→ChatGPT event-driven affidabile disponibile nel progetto.
 
@@ -256,13 +299,18 @@ Una vera retro-analisi di performance può usare come pre-bet evidence solo dati
 - classificazione;
 - P stimata;
 - fair;
-- gate;
+- FINAL GATE;
+- PROXY GATE quando applicabile;
 - quota osservata/presa;
+- fonte prezzo `DIRECT` o `PROXY`;
+- stato/timestamp della calibrazione proxy quando applicabile;
 - motivazione;
 - XI/ruolo;
 - timestamp/snapshot.
 
 Mai ricostruire retroattivamente una previsione e presentarla come se fosse esistita pre-match.
+
+Le performance delle BET proxy devono essere auditabili separatamente dalle BET con quota GoldBet diretta, così da poter verificare se l’ipotesi di trasferibilità del pricing player regge davvero nel tempo.
 
 ### OOS player context
 `feed/player-context-validation-ledger.json` conserva snapshot prospettici legati all’esatto `xi_fingerprint`.
@@ -279,7 +327,7 @@ Nessun nuovo modulo deve diventare edge autonomo prima di miglioramento OOS repl
 
 ## 16. Roadmap prioritaria consolidata
 Ordine attuale di sviluppo:
-1. certificazione diretta GoldBet player props;
+1. certificazione diretta GoldBet player props e validazione prospettica del proxy BetFlag/AAMS;
 2. modello minuti/sostituzioni calibrato;
 3. ablation/OOS automatico dei moduli;
 4. delta quantitativo della formazione/lineup impact;
@@ -293,7 +341,9 @@ Ordine attuale di sviluppo:
 ## 17. Cose che il Radar NON deve fare
 - inventare quote, formazioni o dati mancanti;
 - chiamare ufficiale una probabile/lastStarting11;
-- chiamare GoldBet un prezzo player non certificato direttamente senza indicare il caveat;
+- chiamare GoldBet diretto un prezzo BetFlag/AAMS proxy;
+- usare il proxy se la policy è stale/debole/non ammessa;
+- usare il proxy senza applicare il PROXY GATE;
 - trasformare un crollo quota in BET automatica;
 - trasformare heatmap/minutes model non calibrati in bonus percentuali arbitrari;
 - forzare un numero minimo di giocate;
@@ -308,9 +358,10 @@ Ordine attuale di sviluppo:
 - XI ufficiale + fingerprint;
 - sintesi tattica e matchup;
 - player minutes/position/heatmap/concession context quando disponibile;
-- TRUE OPEN/T-40/T-30/current per i segnali rilevanti;
-- shortlist BET A/B/C con mercato, selezione, prezzo, P, fair, FINAL GATE, edge, rischio e stake suggerito;
-- WATCH/ATTESA se player context non completo;
+- TRUE OPEN/T-40/T-30/current per i segnali standard rilevanti;
+- shortlist BET A/B/C con mercato, selezione, fonte prezzo, prezzo, P, fair, FINAL GATE, eventuale PROXY GATE, edge, rischio e stake suggerito;
+- etichetta esplicita `BET (PROXY BETFLAG→GOLDBET)` quando applicabile;
+- WATCH/ATTESA se player context o proxy policy non sono sufficienti;
 - NO BET importanti.
 
 ## 19. Privacy e separazione dati personali
