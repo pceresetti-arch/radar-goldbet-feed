@@ -68,6 +68,10 @@ props_age=age_minutes(props.get('generated_at'))
 movement_age=age_minutes(movement.get('generated_at'))
 lineup_age=age_minutes(lineups.get('generated_at'))
 tactical_age=age_minutes(tactical.get('generated_at'))
+lineup_feed_fresh=lineup_age is not None and lineup_age<=15
+tactical_feed_fresh=tactical_age is not None and tactical_age<=20
+movement_feed_fresh=movement_age is not None and movement_age<=15
+props_feed_fresh=props_age is not None and props_age<=20
 
 out=[]
 for m in lineups.get('matches') or []:
@@ -77,27 +81,39 @@ for m in lineups.get('matches') or []:
     recs=MOV_BY_EID.get(eid) or MOV_BY_NAME.get(norm(m.get('match'))) or []
     pr=PROP_BY_MM.get(mmid) or PROP_BY_EID.get(eid) or []
 
-    lineup_ready=m.get('status') in ('SOURCE_CONFIRMED','CROSS_CONFIRMED')
+    lineup_confirmed=m.get('status') in ('SOURCE_CONFIRMED','CROSS_CONFIRMED')
+    lineup_ready=lineup_confirmed and lineup_feed_fresh
     tactical_status=t.get('positioning_status')
-    tactical_ready=tactical_status in ('PROVIDER_TACTICAL_CONFIRMED','PROVIDER_TACTICAL_AVAILABLE')
+    tactical_available=tactical_status in ('PROVIDER_TACTICAL_CONFIRMED','PROVIDER_TACTICAL_AVAILABLE')
+    tactical_ready=tactical_available and tactical_feed_fresh
     odds_1x2=[r for r in recs if is_main_1x2(r)]
     odds_over=[r for r in recs if is_main_over(r)]
-    odds_ready=len(odds_1x2)>=3 and len(odds_over)>=1 and movement_age is not None and movement_age<=15
+    odds_ready=len(odds_1x2)>=3 and len(odds_over)>=1 and movement_feed_fresh
     true_1x2=[r for r in odds_1x2 if r.get('true_open_status')=='TRUE_OPEN_CERTIFIED' and r.get('true_open_price') is not None]
     true_over=[r for r in odds_over if r.get('true_open_status')=='TRUE_OPEN_CERTIFIED' and r.get('true_open_price') is not None]
     true_open_ready=len(true_1x2)>=3 and len(true_over)>=1
-    props_ready=bool(pr) and props_age is not None and props_age<=20
+    props_available=bool(pr)
+    props_ready=props_available and props_feed_fresh
+    standard_ready=lineup_ready and tactical_ready and odds_ready and true_open_ready
 
     reasons=[]
-    if not lineup_ready:reasons.append('WAIT_LINEUP')
-    if lineup_ready and not tactical_ready:reasons.append('WAIT_TACTICAL')
+    warnings=[]
+    if not lineup_confirmed:reasons.append('WAIT_LINEUP')
+    elif not lineup_feed_fresh:reasons.append('STALE_LINEUP_FEED')
+    if lineup_confirmed and not tactical_available:reasons.append('WAIT_TACTICAL')
+    elif tactical_available and not tactical_feed_fresh:reasons.append('STALE_TACTICAL_FEED')
     if not odds_ready:reasons.append('WAIT_GOLDBET_ODDS')
     if odds_ready and not true_open_ready:reasons.append('WAIT_TRUE_OPEN_1X2_OVER')
-    if not props_ready:reasons.append('WAIT_PLAYER_PROPS')
+    if not props_available:warnings.append('PLAYER_PROPS_NOT_OFFERED_OR_NOT_MAPPED')
+    elif not props_feed_fresh:warnings.append('PLAYER_PROPS_STALE')
 
-    if not reasons:state='READY_DEEP_ANALYSIS'
-    elif lineup_ready and tactical_ready and odds_ready and true_open_ready:state='READY_STANDARD_ONLY'
-    else:state=reasons[0]
+    if standard_ready:
+        state='READY_DEEP_ANALYSIS'
+        analysis_scope='FULL_WITH_PLAYER_PROPS' if props_ready else 'STANDARD_COMPLETE_PLAYER_PROPS_OPTIONAL_MISSING'
+        reasons=[]
+    else:
+        state=reasons[0] if reasons else 'WAIT_DATA'
+        analysis_scope='NOT_READY'
 
     drops=[]
     for r in odds_1x2+odds_over:
@@ -109,12 +125,12 @@ for m in lineups.get('matches') or []:
     out.append({
         'match_market_id':mmid,'match_event_id':m.get('match_event_id'),'match':m.get('match'),'league':m.get('league'),
         'start_time':m.get('start_time'),'start_utc':m.get('start_utc'),'minutes_to_start':m.get('minutes_to_start'),
-        'readiness':state,'blocking_reasons':reasons,
-        'lineup_status':m.get('status'),'lineup_ready':lineup_ready,
-        'tactical_status':tactical_status,'tactical_confidence':t.get('positioning_confidence'),'tactical_ready':tactical_ready,
+        'readiness':state,'analysis_scope':analysis_scope,'blocking_reasons':reasons,'warnings':warnings,
+        'lineup_status':m.get('status'),'lineup_confirmed':lineup_confirmed,'lineup_feed_fresh':lineup_feed_fresh,'lineup_ready':lineup_ready,
+        'tactical_status':tactical_status,'tactical_confidence':t.get('positioning_confidence'),'tactical_feed_fresh':tactical_feed_fresh,'tactical_ready':tactical_ready,
         'goldbet_1x2_selection_count':len(odds_1x2),'goldbet_over_selection_count':len(odds_over),'goldbet_odds_ready':odds_ready,
         'true_open_1x2_count':len(true_1x2),'true_open_over_count':len(true_over),'true_open_ready':true_open_ready,
-        'player_prop_rows':len(pr),'player_props_ready':props_ready,
+        'player_prop_rows':len(pr),'player_props_available':props_available,'player_props_ready':props_ready,
         'strong_drop_count':len(drops),'strong_drops':drops[:20]
     })
 
@@ -123,13 +139,15 @@ counts=defaultdict(int)
 for x in out:counts[x['readiness']]+=1
 ready=[x for x in out if x['readiness']=='READY_DEEP_ANALYSIS']
 payload={
-    'generated_at':NOW.isoformat(),'contract':'Notify/analyze when READY_DEEP_ANALYSIS; do not promote incomplete data to final BET.',
+    'generated_at':NOW.isoformat(),
+    'contract':'READY_DEEP_ANALYSIS requires fresh confirmed XI + tactical positioning + current GoldBet 1X2/Over + certified TRUE OPEN. Player props enhance scope but do not block a complete standard-market analysis when unavailable.',
     'input_freshness_minutes':{'lineups':lineup_age,'tactical':tactical_age,'odds_movement':movement_age,'player_props':props_age},
+    'freshness_limits_minutes':{'lineups':15,'tactical':20,'odds_movement':15,'player_props':20},
     'match_count':len(out),'readiness_counts':dict(counts),'ready_count':len(ready),'ready_matches':ready,'matches':out
 }
 ROOT.mkdir(exist_ok=True)
 (ROOT/'deep-analysis-readiness.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
 summary={k:v for k,v in payload.items() if k!='matches'}
-summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','strong_drop_count')} for m in ready]
+summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','strong_drop_count')} for m in ready]
 (ROOT/'deep-analysis-readiness-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(summary,ensure_ascii=False,indent=2))
