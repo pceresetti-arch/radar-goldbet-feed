@@ -1,0 +1,65 @@
+name: Validate tactical lineup parser
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'validate-tactical-lineup-trigger.json'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Validate against confirmed historical lineup sample
+        run: |
+          git show 7d511f9991a40ff90d5309c3d8da81c9d7fdf78e:feed/lineups-current.json > /tmp/lineups-history.json
+          python scripts/enrich_lineups_tactical.py --input /tmp/lineups-history.json --output /tmp/tactical-history.json --summary /tmp/tactical-history-summary.json
+          python - <<'PY'
+          import json, pathlib
+          p=json.loads(pathlib.Path('/tmp/tactical-history.json').read_text())
+          confirmed=[m for m in p['matches'] if m['positioning_status'] in ('PROVIDER_TACTICAL_CONFIRMED','PROVIDER_TACTICAL_AVAILABLE')]
+          assert len(p['matches']) == 12, len(p['matches'])
+          assert len(confirmed) >= 9, len(confirmed)
+          athletic=next(m for m in p['matches'] if m['match_market_id']=='36341.1308')
+          assert athletic['positioning_status']=='PROVIDER_TACTICAL_CONFIRMED', athletic['positioning_status']
+          home=athletic['teams'][0]
+          assert home['listed_formation']=='3-4-3', home['listed_formation']
+          assert home['detected_shape']=='3-4-3', home['detected_shape']
+          assert home['coordinate_coverage']==1.0, home['coordinate_coverage']
+          roles=[x['role_code'] for x in home['starters']]
+          for expected in ('GK','LCB','CB','RCB','LWB','LCM','RCM','RWB','LW','ST','RW'):
+              assert expected in roles, (expected, roles)
+          non_gk=[x for x in home['starters'] if x['role_code']!='GK']
+          assert all(x['direct_opponents'] for x in non_gk)
+          report={
+            'validated': True,
+            'historical_source_commit':'7d511f9991a40ff90d5309c3d8da81c9d7fdf78e',
+            'historical_match_count':len(p['matches']),
+            'tactical_available_or_confirmed':len(confirmed),
+            'athletic_club':{
+              'listed_formation':home['listed_formation'],
+              'detected_shape':home['detected_shape'],
+              'coordinate_coverage':home['coordinate_coverage'],
+              'roles':roles
+            },
+            'method_version':p['method_version']
+          }
+          pathlib.Path('feed/tactical-parser-validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit validation report
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/tactical-parser-validation.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Validate tactical lineup parser'
+          git pull --rebase origin main
+          git push
