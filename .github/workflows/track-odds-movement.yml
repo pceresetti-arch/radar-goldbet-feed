@@ -28,7 +28,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import concurrent.futures, hashlib, json, os, pathlib, urllib.parse, urllib.request
+          import concurrent.futures, hashlib, json, os, pathlib, shutil, urllib.parse, urllib.request
           from datetime import datetime, timezone, timedelta
           from zoneinfo import ZoneInfo
 
@@ -78,7 +78,7 @@ jobs:
           base='https://radar-goldbet.p-ceresetti.workers.dev/odds'; offsets=list(range(0,20000,2000))
           def page(off):
             qs=urllib.parse.urlencode({'token':token,'bookmakers':'goldbet','state':'prematch','limit':'2000','offset':str(off)})
-            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarMovement/3.1'})
+            req=urllib.request.Request(base+'?'+qs,headers={'Accept':'application/json','User-Agent':'RadarMovement/4.0'})
             try:
               with urllib.request.urlopen(req,timeout=75) as r:
                 d=json.loads(r.read().decode('utf-8','replace')); return {'offset':off,'count':d.get('count'),'rows':d.get('odds') or [],'error':None}
@@ -173,8 +173,47 @@ jobs:
             if r.get('change_count',0)>0 or certified:
               movers.append({'event':r.get('event'),'start_time':r.get('start_time'),'market':r.get('market'),'line':r.get('line'),'player':r.get('player'),'selection':r.get('selection'),'source':r.get('source'),'opening_quality':'TRUE_OPEN_CERTIFIED' if certified else 'OPEN_RADAR_PROXY','true_open':r.get('true_open_price') if certified else None,'first_seen':first,'current':current,'benchmark_open':benchmark,'price_delta_from_benchmark':delta,'implied_probability_delta_pp_from_benchmark':pp,'changes':r.get('change_count'),'T-40':(r.get('checkpoints') or {}).get('T-40'),'T-30':(r.get('checkpoints') or {}).get('T-30')})
           movers.sort(key=lambda x:abs(x['implied_probability_delta_pp_from_benchmark']),reverse=True)
-          state={'generated_at':NOW_ISO,'method':'TRUE OPEN CERTIFIED (when available) -> distinct T-40 -> T-30 -> CURRENT; FIRST_SEEN retained only as proxy/fallback','standard_source':'GoldBet direct bridge, same bookmaker only','true_open_source':'Diretta/Flashscore GoldBet ope2, bookmakerId 188, project 400 Italy','player_source':'shared AAMS player feed; GoldBet-aligned but not independently player-certified','records':dict(sorted(records.items()))}
-          summary={'generated_at':NOW_ISO,'standard_bridge_total':total,'standard_rows_fetched':len(std),'observations':len(observations),'tracked_selections':len(records),'new_selections':new_count,'price_changes_this_run':changed_count,'checkpoints_captured_this_run':checkpoint_count,'true_open_index_events':len(true_events),'true_open_attached_records':true_open_attached,'errors':errors,'top_movers':movers[:100]}
+
+          # Materialize a tiny direct-GoldBet hot feed for imminent fixtures.
+          hot_root=pathlib.Path('feed/hot'); hot_dir=hot_root/'standard-odds'
+          if hot_dir.exists(): shutil.rmtree(hot_dir)
+          hot_dir.mkdir(parents=True,exist_ok=True)
+          grouped={}
+          for r in records.values():
+            if r.get('source')!='GOLDBET_DIRECT_STANDARD':continue
+            mt=minutes_to(r.get('start_time'))
+            if mt is None or mt < -15 or mt > 120:continue
+            eid=str(r.get('event_id') or '')
+            if not eid:continue
+            g=grouped.setdefault(eid,{
+              'generated_at':NOW_ISO,
+              'source_class':'GOLDBET_DIRECT_STANDARD',
+              'goldbet_direct':True,
+              'price_gate_eligible':True,
+              'event_id':r.get('event_id'),'event':r.get('event'),'league':r.get('league'),
+              'start_time':r.get('start_time'),'minutes_to_start':mt,'markets':[]
+            })
+            cps=r.get('checkpoints') or {}
+            g['markets'].append({
+              'market':r.get('market'),'line':r.get('line'),'scope':r.get('scope'),'period':r.get('period'),
+              'selection':r.get('selection'),'current_price':r.get('current_price'),
+              'source_last_update':r.get('source_last_update'),'last_observed_at':r.get('last_observed_at'),
+              'opening_quality':'TRUE_OPEN_CERTIFIED' if r.get('true_open_status')=='TRUE_OPEN_CERTIFIED' else 'OPEN_RADAR_PROXY',
+              'true_open':r.get('true_open_price'),'first_seen':r.get('first_seen_price'),
+              'T-40':cps.get('T-40'),'T-30':cps.get('T-30'),'change_count':r.get('change_count')
+            })
+          for eid,g in grouped.items():
+            g['markets'].sort(key=lambda x:(str(x.get('market')),str(x.get('line')),str(x.get('scope')),str(x.get('selection'))))
+            (hot_dir/f'{eid}.json').write_text(json.dumps(g,ensure_ascii=False,indent=2),encoding='utf-8')
+          hot_index={
+            'generated_at':NOW_ISO,'hot_window_minutes':[-15,120],'count':len(grouped),
+            'source_class':'GOLDBET_DIRECT_STANDARD','goldbet_direct':True,'price_gate_eligible':True,
+            'fixtures':[{k:g.get(k) for k in ('event_id','event','league','start_time','minutes_to_start')} for g in sorted(grouped.values(),key=lambda x:(x.get('start_time') or '',x.get('event') or ''))]
+          }
+          (hot_root/'standard-odds-index.json').write_text(json.dumps(hot_index,ensure_ascii=False,indent=2),encoding='utf-8')
+
+          state={'generated_at':NOW_ISO,'method':'TRUE OPEN CERTIFIED (when available) -> distinct T-40 -> T-30 -> CURRENT; FIRST_SEEN retained only as proxy/fallback','standard_source':'GoldBet direct bridge, same bookmaker only','true_open_source':'Diretta/Flashscore GoldBet ope2, bookmakerId 188, project 400 Italy','player_source':'shared AAMS player feed; never independently player-certified','records':dict(sorted(records.items()))}
+          summary={'generated_at':NOW_ISO,'standard_bridge_total':total,'standard_rows_fetched':len(std),'observations':len(observations),'tracked_selections':len(records),'new_selections':new_count,'price_changes_this_run':changed_count,'checkpoints_captured_this_run':checkpoint_count,'true_open_index_events':len(true_events),'true_open_attached_records':true_open_attached,'hot_direct_goldbet_fixtures':len(grouped),'errors':errors,'top_movers':movers[:100]}
           STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8'); SUMMARY.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8'); print(json.dumps(summary,ensure_ascii=False,indent=2)[:30000])
           PY
       - name: Commit movement state safely
@@ -183,7 +222,7 @@ jobs:
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/odds-movement-state.json feed/odds-movement-current.json
+          git add feed/odds-movement-state.json feed/odds-movement-current.json feed/hot/standard-odds feed/hot/standard-odds-index.json
           git diff --cached --quiet && exit 0
           git commit -m 'Track Radar odds movement'
           for attempt in 1 2 3 4; do
