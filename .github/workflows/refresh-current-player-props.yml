@@ -2,7 +2,7 @@ name: Refresh current player props
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
   push:
     paths:
@@ -94,7 +94,6 @@ jobs:
                   })
             return rows
 
-          # Build the real football-match map from the matching Today-Tomorrow aggregate.
           match_map={}
           standard_url=f'{BASE}/getOverviewEventsAams/0/1/0/{AGG_TOURNAMENT}/0/0/0?channelId=0'
           standard_status=None; standard_error=None
@@ -172,11 +171,19 @@ jobs:
           pathlib.Path('feed/player-props-current-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps(summary,ensure_ascii=False,indent=2)[:50000])
           PY
-      - name: Commit current feed
+      - name: Commit current feed safely
+        shell: bash
         run: |
+          set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
           git add feed/player-props-current.json feed/player-props-current-by-match.json feed/player-props-current-summary.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh current player props feed'
-          git push
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to persist player-props feed after retries' >&2
+          exit 1
