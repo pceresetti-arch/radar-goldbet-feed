@@ -1,24 +1,33 @@
 {
-  "generated_at": "2026-08-25T16:21:30.099259+00:00",
-  "contract": "READY requires fresh official FotMob standard XI + tactical layer synchronized to that XI + current GoldBet 1X2/Over + certified TRUE OPEN. Player props do not block standard analysis, but a player-market BET additionally requires fresh minutes/position/concession context matched to the same XI fingerprint.",
+  "generated_at": "2026-08-25T16:38:50.517007+00:00",
+  "contract": "READY standard requires fresh official FotMob standard XI + tactical layer synchronized to that XI + current GoldBet 1X2/Over + certified TRUE OPEN. Player BET additionally requires fresh player context matched to XI. If direct GoldBet player price is absent, a fresh strong GOLDBET_ALIGNED_PROXY policy may provide the operational price path subject to PROXY_GATE.",
   "input_freshness_minutes": {
-    "lineups": 1.1,
-    "tactical": 0.6,
-    "odds_movement": 2.2,
-    "player_props": 2.2,
-    "player_context": 0.5
+    "lineups": 18.4,
+    "tactical": 17.9,
+    "odds_movement": 19.6,
+    "player_props": 19.5,
+    "player_context": 17.8,
+    "shared_goldbet_proxy_policy": 3.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
     "tactical": 20,
     "odds_movement": 15,
     "player_props": 20,
-    "player_context": 30
+    "player_context": 30,
+    "shared_goldbet_proxy_policy": 45.0
+  },
+  "proxy_policy": {
+    "verdict": "STRONG_NEAR_MATCH",
+    "fresh": true,
+    "proxy_player_gate_allowed": true,
+    "formula": "max(final_gate * 1.03, final_gate + 0.05)",
+    "source_class": "GOLDBET_ALIGNED_PROXY"
   },
   "match_count": 36,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 33,
-    "WAIT_GOLDBET_ODDS": 3
+    "STALE_LINEUP_FEED": 3
   },
   "ready_count": 0,
   "ready_matches": [],
@@ -64,6 +73,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -108,6 +122,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -163,6 +182,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -218,6 +242,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -240,16 +269,17 @@
       "start_time": "25-08-2026 18:45",
       "start_utc": "2026-08-25T16:45:00+00:00",
       "minutes_to_start": 24.6,
-      "readiness": "WAIT_GOLDBET_ODDS",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_GOLDBET_ODDS"
       ],
       "warnings": [],
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "8f491238dd23246a35cc",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
@@ -270,6 +300,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": true,
       "player_market_bet_ready": true,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": true,
+      "player_operational_proxy_ready": true,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -314,6 +349,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 2,
       "strong_drops": [
         {
@@ -391,6 +431,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -419,9 +464,10 @@
       "start_time": "25-08-2026 19:00",
       "start_utc": "2026-08-25T17:00:00+00:00",
       "minutes_to_start": 39.6,
-      "readiness": "WAIT_GOLDBET_ODDS",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_GOLDBET_ODDS"
       ],
       "warnings": [
@@ -430,7 +476,7 @@
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "73ff2322308134db3d26",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
@@ -451,6 +497,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": true,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -462,9 +513,10 @@
       "start_time": "25-08-2026 19:00",
       "start_utc": "2026-08-25T17:00:00+00:00",
       "minutes_to_start": 39.6,
-      "readiness": "WAIT_GOLDBET_ODDS",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_GOLDBET_ODDS"
       ],
       "warnings": [
@@ -473,7 +525,7 @@
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "8c1f5a65dce3edf8b075",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
@@ -494,6 +546,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": true,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -555,6 +612,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -599,6 +661,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -660,6 +727,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 2,
       "strong_drops": [
         {
@@ -725,6 +797,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -780,6 +857,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -835,6 +917,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -879,6 +966,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -923,6 +1015,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": true,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -967,6 +1064,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": true,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1011,6 +1113,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1055,6 +1162,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 2,
       "strong_drops": [
         {
@@ -1120,6 +1232,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -1175,6 +1292,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1219,6 +1341,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 2,
       "strong_drops": [
         {
@@ -1284,6 +1411,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": true,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1328,6 +1460,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -1383,6 +1520,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -1438,6 +1580,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -1493,6 +1640,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1537,6 +1689,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -1592,6 +1749,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 2,
       "strong_drops": [
         {
@@ -1657,6 +1819,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1701,6 +1868,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1745,6 +1917,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1789,6 +1966,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 0,
       "strong_drops": []
     },
@@ -1833,6 +2015,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
@@ -1888,6 +2075,11 @@
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
       "player_market_bet_ready": false,
+      "player_proxy_policy_verdict": "STRONG_NEAR_MATCH",
+      "player_proxy_policy_age_minutes": 3.6,
+      "player_proxy_price_ready": false,
+      "player_operational_proxy_ready": false,
+      "player_proxy_gate_formula": "max(final_gate * 1.03, final_gate + 0.05)",
       "strong_drop_count": 1,
       "strong_drops": [
         {
