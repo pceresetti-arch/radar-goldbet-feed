@@ -51,7 +51,21 @@
     "strong_drop_requires_true_open": true,
     "first_seen_is_diagnostic_only": true,
     "final_gate_required": true,
-    "bet_condition": "current_price >= FINAL_GATE"
+    "bet_condition": "current_price >= FINAL_GATE",
+    "player_props_fallback": {
+      "enabled": true,
+      "source": "BetFlag/AAMS shared player service",
+      "activation": "use whenever direct GoldBet player-prop prices are unavailable or incomplete",
+      "status": "OPERATIONAL_PROXY",
+      "user_validation": "On 2026-08-25 the user confirmed observed BetFlag/AAMS player-prop prices matched GoldBet exactly on the checked Saudi fixtures.",
+      "rules": [
+        "Use the BetFlag/AAMS prices to scan and price all available player props rather than stopping the analysis when GoldBet direct is unavailable.",
+        "Keep the source explicitly labelled BetFlag/AAMS proxy and never relabel it as GoldBet direct.",
+        "Apply the normal final price gate plus a small prudential safety margin when the wager price is proxy-derived.",
+        "If a directly observed GoldBet price is later available, it overrides the proxy for the final acceptance check.",
+        "Continue same-market and same-selection identity checks before classifying a BET."
+      ]
+    }
   },
   "player_context": {
     "lookback_matches_default": 6,
@@ -81,7 +95,7 @@
   },
   "price_certification": {
     "goldbet_standard": "DIRECT_CERTIFIED_WHEN_FRESH_AND_MAPPED",
-    "player_props": "AAMS_BETFLAG_GOLDBET_ALIGNED_NOT_YET_INDEPENDENTLY_CERTIFIED_PLAYER_BY_PLAYER"
+    "player_props": "BETFLAG_AAMS_OPERATIONAL_PROXY_USER_VALIDATED_AGAINST_GOLDBET_2026_08_25; NOT_GOLDBET_DIRECT; DIRECT_GOLDBET_OVERRIDES_WHEN_AVAILABLE"
   },
   "prospective_validation": {
     "ledger": "feed/player-context-validation-ledger.json",
