@@ -12,22 +12,23 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
 
-      - name: Deploy patched Worker
+      - name: Deploy Radar fast-path Worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
 
-      - name: Verify live player-prop forwarding
+      - name: Verify live fast path
         env:
           BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request
+          import json, os, pathlib, urllib.parse, urllib.request, time
           from datetime import datetime, timezone
 
           base='https://radar-goldbet.p-ceresetti.workers.dev'
@@ -35,67 +36,66 @@ jobs:
           if not token:
               raise SystemExit('Missing GitHub secret BRIDGE_TOKEN')
 
-          def get(path, params=None):
+          def get(path, params=None, timeout=90):
               url=base+path
               if params:
                   url += '?' + urllib.parse.urlencode(params)
-              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarPostDeployVerify/1.0'})
-              with urllib.request.urlopen(req,timeout=90) as r:
-                  return r.status, json.loads(r.read().decode('utf-8','replace'))
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarPostDeployVerify/6.0'})
+              started=time.perf_counter()
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  body=json.loads(r.read().decode('utf-8','replace'))
+                  return r.status, body, round((time.perf_counter()-started)*1000)
 
-          hs, health=get('/health')
-          ps, player=get('/odds', {
+          hs, health, health_ms=get('/health')
+          fs, fixture, fixture_ms=get('/live/fixture', {'q':'__health_probe__','limit':'20'})
+          ps, player, protected_ms=get('/odds', {
               'token':token,
               'bookmakers':'goldbet',
               'state':'prematch',
               'content':'player',
-              'limit':'500',
+              'limit':'50',
               'offset':'0'
           })
-
-          rows=player.get('odds',[]) if isinstance(player,dict) else []
-          player_rows=[x for x in rows if isinstance(x,dict) and x.get('player')]
-          markets=sorted({str(x.get('market')) for x in player_rows if x.get('market')})
-          samples=[]
-          for x in player_rows[:30]:
-              samples.append({
-                  'event_id':x.get('event_id'),
-                  'event':x.get('event'),
-                  'market':x.get('market'),
-                  'line':x.get('line'),
-                  'scope':x.get('scope'),
-                  'period':x.get('period'),
-                  'player':x.get('player'),
-                  'player_id':x.get('player_id'),
-                  'bookmakers':x.get('bookmakers')
-              })
 
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
               'health_status':hs,
               'health_version':health.get('version') if isinstance(health,dict) else None,
-              'player_props_forwarding':health.get('player_props_forwarding') if isinstance(health,dict) else None,
-              'odds_status':ps,
-              'response_count':player.get('count') if isinstance(player,dict) else None,
-              'returned':player.get('returned') if isinstance(player,dict) else None,
-              'player_row_count':len(player_rows),
-              'unique_player_markets':markets,
-              'samples':samples
+              'public_fast_path':health.get('public_fast_path') if isinstance(health,dict) else None,
+              'health_ms':health_ms,
+              'fixture_status':fs,
+              'fixture_ms':fixture_ms,
+              'fixture_contract':fixture.get('contract') if isinstance(fixture,dict) else None,
+              'fixture_direct_source':((fixture.get('direct_goldbet') or {}).get('source_class')) if isinstance(fixture,dict) else None,
+              'fixture_shared_source':((fixture.get('shared_player_props') or {}).get('source_class')) if isinstance(fixture,dict) else None,
+              'protected_odds_status':ps,
+              'protected_odds_ms':protected_ms,
+              'protected_response_count':player.get('count') if isinstance(player,dict) else None
           }
 
           pathlib.Path('feed').mkdir(exist_ok=True)
-          pathlib.Path('feed/live-player-props-verification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          pathlib.Path('feed/live-fast-path-verification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
 
-          if hs != 200 or out['health_version'] != '5.0-player-props':
-              raise SystemExit('Patched Worker health contract not live')
-          print(json.dumps({k:v for k,v in out.items() if k!='samples'},ensure_ascii=False,indent=2))
+          if hs != 200 or out['health_version'] != '6.0-fast-path' or not out['public_fast_path']:
+              raise SystemExit('Radar fast-path health contract not live')
+          if fs != 200 or out['fixture_direct_source'] != 'GOLDBET_DIRECT_ODSS' or out['fixture_shared_source'] != 'SHARED_AAMS':
+              raise SystemExit('Radar public fast-path provenance contract failed')
+          if ps != 200:
+              raise SystemExit('Protected direct GoldBet bridge failed')
+
+          print(json.dumps(out,ensure_ascii=False,indent=2))
           PY
 
       - name: Commit verification result
         run: |
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/live-player-props-verification.json
+          git add feed/live-fast-path-verification.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Verify live GoldBet player props'
-          git push
+          git commit -m 'Verify Radar fast path'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
