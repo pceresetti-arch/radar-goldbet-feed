@@ -1,0 +1,71 @@
+{
+  "schema": "radar-retro-analysis-v1",
+  "recorded_at": "2026-08-25T20:42:00Z",
+  "fixture": "Valencia - Real Betis",
+  "competition": "La Liga",
+  "kickoff_local": "2026-08-25T21:00:00+02:00",
+  "anti_hindsight": true,
+  "pre_match_sources": [
+    "feed/analysis-history/2026-08-25-valencia-real-betis-t47.json",
+    "feed/analysis-history/2026-08-25-valencia-real-betis-deep-final.json",
+    "feed/analysis-history/2026-08-25-valencia-real-betis-true-open-correction-t13.json"
+  ],
+  "pre_match_model": {
+    "xg_valencia": 1.16,
+    "xg_real_betis": 1.20,
+    "xg_total": 2.36,
+    "p_home": 0.351,
+    "p_draw": 0.279,
+    "p_away": 0.370,
+    "p_btts_yes": 0.480,
+    "xg_first_half": 0.98,
+    "p_any_goal_first_half": 0.625
+  },
+  "pre_match_movement_t13": {
+    "real_betis": {"true_open": 2.65, "current": 2.60, "delta": -0.05},
+    "draw": {"true_open": 3.15, "current": 3.25, "delta": 0.10},
+    "valencia": {"true_open": 2.65, "current": 2.70, "delta": 0.05},
+    "btts_no": {"true_open": 2.00, "current": 1.90, "delta": -0.10},
+    "btts_yes": {"true_open": 1.72, "current": 1.80, "delta": 0.08},
+    "strong_mms": false,
+    "t40": "NOT_CAPTURED",
+    "t30": "NOT_CAPTURED"
+  },
+  "pre_match_verdict": "NO_BET",
+  "user_bet": {
+    "selection": "Antony Over 3.5 total shots",
+    "price": 2.50,
+    "stake_eur": 5.0,
+    "radar_pre_match_probability": "0.39-0.40",
+    "radar_fair": "2.50-2.56",
+    "final_gate": 2.65,
+    "classification_corrected": "RADAR_BORDERLINE_RECOMMENDED_BELOW_GATE",
+    "process_note": "The selection was recommended by Radar despite price being below the documented final gate; this is a price-discipline error, not a pure user override."
+  },
+  "post_match": {
+    "final_score": "Valencia 0-1 Real Betis",
+    "goal": "Pablo Garcia 83'",
+    "assist": "Fran Garcia",
+    "antony_total_shots": 4,
+    "antony_shot_threshold_result": "WON",
+    "bet_return_eur": 12.5,
+    "bet_profit_eur": 7.5
+  },
+  "retro_assessment": {
+    "match_model": "GOOD_DIRECTIONALLY",
+    "one_x_two": "NO_BET_CORRECT; model and de-vigged market were nearly identical pre-kickoff",
+    "scoring_environment": "GOOD; 0-1 final aligned with low-scoring / BTTS-No lean, though single-match outcome is not proof of calibration",
+    "first_half": "MISS_ON_OUTCOME; model gave 62.5% for any 1H goal and match was 0-0 at HT, but 37.5% no-goal remained substantial",
+    "player_scorer_markets": "NO_BET_CORRECT; main evaluated scorers did not score; winner came from a substitute/secondary scorer",
+    "antony_shot_thesis": "GOOD; Antony generated four attempts, including blocked/long-range attempts, fitting the low-block volume thesis",
+    "antony_price_decision": "ERROR; @2.50 was approximately fair at p=39-40% and below FINAL GATE 2.65",
+    "outcome_interpretation": "WINNING_RESULT_DOES_NOT_VALIDATE_PRICE_EDGE; the bet won exactly at the 4-shot threshold, so the result should not be used to relax the gate"
+  },
+  "method_changes": [
+    "Keep separate labels for selection-quality and price-discipline.",
+    "Do not classify a Radar-recommended below-gate bet as USER_OVERRIDE.",
+    "For shot props versus low blocks, model blocked/low-xG attempts separately from scoring probability.",
+    "Preserve full XI fingerprint/named XI in future analysis archives for exact post-match auditability.",
+    "Never relax FINAL GATE because a below-gate bet happened to win."
+  ]
+}
