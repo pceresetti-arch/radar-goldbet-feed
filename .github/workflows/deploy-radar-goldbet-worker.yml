@@ -4,10 +4,17 @@ on:
   push:
     paths:
       - 'cloudflare-deploy-trigger.json'
+      - 'worker/src/**'
+      - 'wrangler.jsonc'
+      - 'wrangler.toml'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: deploy-radar-goldbet-worker
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -23,7 +30,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
 
-      - name: Verify live fast path
+      - name: Verify live BetFlag operational path
         env:
           BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
         run: |
@@ -40,46 +47,56 @@ jobs:
               url=base+path
               if params:
                   url += '?' + urllib.parse.urlencode(params)
-              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarPostDeployVerify/6.0'})
+              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarPostDeployVerify/7.0'})
               started=time.perf_counter()
-              with urllib.request.urlopen(req,timeout=timeout) as r:
-                  body=json.loads(r.read().decode('utf-8','replace'))
-                  return r.status, body, round((time.perf_counter()-started)*1000)
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as r:
+                      body=json.loads(r.read().decode('utf-8','replace'))
+                      return r.status, body, round((time.perf_counter()-started)*1000)
+              except urllib.error.HTTPError as e:
+                  body=json.loads(e.read().decode('utf-8','replace'))
+                  return e.code, body, round((time.perf_counter()-started)*1000)
 
           hs, health, health_ms=get('/health')
           fs, fixture, fixture_ms=get('/live/fixture', {'q':'__health_probe__','limit':'20'})
-          ps, player, protected_ms=get('/odds', {
+          ps, protected, protected_ms=get('/odds', {
               'token':token,
               'bookmakers':'goldbet',
               'state':'prematch',
               'content':'player',
-              'limit':'50',
+              'limit':'20',
               'offset':'0'
           })
 
+          endpoints=health.get('endpoints') if isinstance(health,dict) else []
+          betflag=((fixture.get('betflag_player_props') or {}).get('source_class')) if isinstance(fixture,dict) else None
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
               'health_status':hs,
               'health_version':health.get('version') if isinstance(health,dict) else None,
               'public_fast_path':health.get('public_fast_path') if isinstance(health,dict) else None,
+              'exact_player_price_proof':health.get('exact_player_price_proof') if isinstance(health,dict) else None,
+              'player_price_endpoint_present':'/live/player-price' in (endpoints or []),
               'health_ms':health_ms,
               'fixture_status':fs,
               'fixture_ms':fixture_ms,
               'fixture_contract':fixture.get('contract') if isinstance(fixture,dict) else None,
               'fixture_direct_source':((fixture.get('direct_goldbet') or {}).get('source_class')) if isinstance(fixture,dict) else None,
-              'fixture_shared_source':((fixture.get('shared_player_props') or {}).get('source_class')) if isinstance(fixture,dict) else None,
+              'fixture_betflag_source':betflag,
               'protected_odds_status':ps,
               'protected_odds_ms':protected_ms,
-              'protected_response_count':player.get('count') if isinstance(player,dict) else None
+              'protected_response_count':protected.get('count') if isinstance(protected,dict) else None
           }
 
           pathlib.Path('feed').mkdir(exist_ok=True)
           pathlib.Path('feed/live-fast-path-verification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
 
-          if hs != 200 or out['health_version'] != '6.0-fast-path' or not out['public_fast_path']:
-              raise SystemExit('Radar fast-path health contract not live')
-          if fs != 200 or out['fixture_direct_source'] != 'GOLDBET_DIRECT_ODSS' or out['fixture_shared_source'] != 'SHARED_AAMS':
-              raise SystemExit('Radar public fast-path provenance contract failed')
+          if hs != 200 or out['health_version'] != '7.0-betflag-operational' or not out['public_fast_path']:
+              raise SystemExit('Radar v7 health contract not live')
+          if not out['exact_player_price_proof'] or not out['player_price_endpoint_present']:
+              raise SystemExit('Exact BetFlag player-price proof endpoint not live')
+          if fs != 200 or out['fixture_direct_source'] != 'GOLDBET_DIRECT_ODSS' or out['fixture_betflag_source'] != 'BETFLAG_AAMS_DIRECT':
+              raise SystemExit('Radar v7 provenance contract failed')
           if ps != 200:
               raise SystemExit('Protected direct GoldBet bridge failed')
 
@@ -92,7 +109,7 @@ jobs:
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
           git add feed/live-fast-path-verification.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Verify Radar fast path'
+          git commit -m 'Verify Radar v7 BetFlag operational path'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
