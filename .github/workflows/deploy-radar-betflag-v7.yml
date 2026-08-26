@@ -36,6 +36,41 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           npx --yes wrangler@4 deploy --config wrangler.v7.jsonc
 
+      - name: Explicitly enable workers.dev route
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p feed
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/radar-betflag-v7/subdomain"
+          curl -fsS "$api" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H 'Accept: application/json' \
+            > feed/radar-betflag-v7-subdomain-before.json
+          curl -fsS -X POST "$api" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json' \
+            --data '{"enabled":true,"previews_enabled":false}' \
+            > feed/radar-betflag-v7-subdomain-enable.json
+          curl -fsS "$api" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H 'Accept: application/json' \
+            > feed/radar-betflag-v7-subdomain-after.json
+          python - <<'PY'
+          import json, pathlib
+          for name in ['before','enable','after']:
+              p=pathlib.Path(f'feed/radar-betflag-v7-subdomain-{name}.json')
+              body=json.loads(p.read_text(encoding='utf-8'))
+              print(name, json.dumps(body, ensure_ascii=False))
+          after=json.loads(pathlib.Path('feed/radar-betflag-v7-subdomain-after.json').read_text(encoding='utf-8'))
+          result=after.get('result') or {}
+          if not after.get('success') or result.get('enabled') is not True:
+              raise SystemExit('workers.dev subdomain did not enable')
+          PY
+
       - name: Verify v7 health and direct BetFlag price
         shell: bash
         run: |
@@ -55,7 +90,7 @@ jobs:
               url += sep + 'cb=' + str(int(time.time()*1000))
               req=urllib.request.Request(url,headers={
                   'Accept':'application/json',
-                  'User-Agent':'RadarBetFlagV7Verify/1.0',
+                  'User-Agent':'RadarBetFlagV7Verify/2.0',
                   'Cache-Control':'no-cache, no-store, max-age=0',
                   'Pragma':'no-cache'
               })
@@ -124,10 +159,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          [ -f feed/radar-betflag-v7-status.json ] || exit 0
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/radar-betflag-v7-status.json
+          git add feed/radar-betflag-v7-status.json feed/radar-betflag-v7-subdomain-before.json feed/radar-betflag-v7-subdomain-enable.json feed/radar-betflag-v7-subdomain-after.json 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m 'Record clean BetFlag v7 Worker status'
           for attempt in 1 2 3 4; do
