@@ -1,0 +1,27 @@
+{
+  "schema_version": "radar-analysis-work-queue-v1",
+  "updated_at": "2026-08-26",
+  "items": [
+    {
+      "id": "cross-market-movement-mci",
+      "priority": "HIGH",
+      "status": "QUEUED_RESEARCH_SHADOW",
+      "spec": "RADAR_MARKET_CONFIRMATION_MODEL.md",
+      "state": "feed/market-confirmation-research-state.json",
+      "summary": "Incrociare TRUE OPEN e movimenti cross-market per costruire family scores, coerenza, accelerazione post-XI e un Market Confirmation Index validato OOS.",
+      "operational_constraint": "Nessun peso intuitivo o correttore MCI modifica P Radar/FINAL GATE finché non supera development, holdout temporale e OOS robustness.",
+      "next_steps": [
+        "dataset TRUE OPEN multi-market",
+        "de-vigging",
+        "family features",
+        "coherence classifier",
+        "post-XI acceleration",
+        "ablation",
+        "development weight estimation",
+        "freeze",
+        "holdout/OOS",
+        "promotion decision"
+      ]
+    }
+  ]
+}
