@@ -29,20 +29,17 @@ jobs:
           mkdir -p feed
           npx --yes wrangler@4 deployments status --name radar-goldbet --json > feed/cloudflare-deployment-current.json
           npx --yes wrangler@4 versions list --name radar-goldbet --json > feed/cloudflare-versions-current.json
-          curl -fsS \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/radar-goldbet/content" \
-            -o /tmp/radar-goldbet-live-script.bin
           python - <<'PY'
-          import hashlib, json, pathlib, urllib.request, urllib.error
+          import json, pathlib, urllib.request, urllib.error
           from datetime import datetime, timezone
 
-          raw=pathlib.Path('/tmp/radar-goldbet-live-script.bin').read_bytes()
+          deployments=json.loads(pathlib.Path('feed/cloudflare-deployment-current.json').read_text(encoding='utf-8'))
+          versions=json.loads(pathlib.Path('feed/cloudflare-versions-current.json').read_text(encoding='utf-8'))
           try:
               with urllib.request.urlopen(
                   urllib.request.Request(
                       'https://radar-goldbet.p-ceresetti.workers.dev/health',
-                      headers={'Accept':'application/json','User-Agent':'RadarCloudflareDiagnostic/1.0'}
+                      headers={'Accept':'application/json','User-Agent':'RadarCloudflareDiagnostic/2.0'}
                   ), timeout=30
               ) as r:
                   text=r.read().decode('utf-8','replace')
@@ -54,13 +51,11 @@ jobs:
               body=json.loads(text)
           except Exception:
               body={'raw':text[:2000]}
+
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
-              'script_bytes':len(raw),
-              'script_sha256':hashlib.sha256(raw).hexdigest(),
-              'script_contains_v7_marker':b'7.0-betflag-operational' in raw,
-              'script_contains_player_price_marker':b'/live/player-price' in raw,
-              'script_contains_old_bridge_marker':b'Radar Unico GoldBet Bridge' in raw,
+              'deployment_status':deployments,
+              'recent_versions':versions,
               'public_health_status':status,
               'public_health_body':body
           }
@@ -71,12 +66,13 @@ jobs:
           PY
 
       - name: Commit diagnostic
+        if: always()
         shell: bash
         run: |
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/cloudflare-deployment-current.json feed/cloudflare-versions-current.json feed/cloudflare-runtime-diagnostic.json
+          git add feed/cloudflare-deployment-current.json feed/cloudflare-versions-current.json feed/cloudflare-runtime-diagnostic.json 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m 'Record Cloudflare runtime diagnostic'
           for attempt in 1 2 3 4; do
