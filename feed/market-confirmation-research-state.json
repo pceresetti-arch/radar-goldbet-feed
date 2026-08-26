@@ -1,0 +1,39 @@
+{
+  "schema_version": "market-confirmation-research-v1",
+  "as_of": "2026-08-26",
+  "status": "RESEARCH_SHADOW_MODE",
+  "contract": "RADAR_MARKET_CONFIRMATION_MODEL.md",
+  "objective": "Cross and normalize TRUE OPEN-to-current movements across 1X2, handicap/DNB, O-U FT, team totals, first-half markets and player props to derive interpretable market-family signals and an OOS-validated Market Confirmation Index.",
+  "operational_use_now": {
+    "mms_primary": "TRUE_OPEN_CERTIFIED GoldBet same-book/same-market/same-line/same-selection",
+    "single_drop_threshold_decimal": 0.20,
+    "cross_market_model_can_change_final_gate": false,
+    "reason": "weights/correctors are not yet OOS validated"
+  },
+  "research_queue": [
+    "Build comparable TRUE OPEN -> intermediate -> pre-XI -> post-XI -> T-40 -> T-30 -> CURRENT -> CLOSE series",
+    "Convert prices to de-vigged implied probabilities and compute probability-point deltas",
+    "Build Team Strength, Match Goals, Team Scoring, First Half and Player-Specific family features",
+    "Create cross-market coherence/divergence classifier",
+    "Create post-XI acceleration features",
+    "Run ablation tests against the base model",
+    "Estimate weights only on development data",
+    "Freeze rules and weights before temporal holdout/OOS",
+    "Evaluate Brier, log-loss, calibration, lift, CLV and ROI/yield where valid",
+    "Run bootstrap, sensitivity and leave-one-league-out robustness",
+    "Promote to operational corrector only if replicably useful OOS"
+  ],
+  "candidate_outputs": [
+    "TEAM_STRENGTH_SCORE",
+    "MATCH_GOALS_SCORE",
+    "TEAM_SCORING_SCORE",
+    "FIRST_HALF_SCORE",
+    "PLAYER_SPECIFIC_SCORE",
+    "COHERENCE_SCORE",
+    "POST_XI_ACCELERATION_SCORE",
+    "MCI_TOTAL"
+  ],
+  "anti_overfit": true,
+  "no_hindsight": true,
+  "notes": "No intuitive fixed weights are operational. Movement remains information, not a standalone betting decision."
+}
