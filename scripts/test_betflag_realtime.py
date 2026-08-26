@@ -17,14 +17,20 @@ CASES = [
     ('negative_control_wrong_player', {'q': 'Monaco Gornik', 'player': 'Mika Biereth XXX', 'market': 'Marcatore', 'selection': 'Si'}),
 ]
 
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36 RadarRealtimeTest/1.0',
+    'Accept': 'application/json,text/plain,*/*',
+}
+
 
 def request_case(label, params):
     url = BASE + '?' + urllib.parse.urlencode(params)
+    request = urllib.request.Request(url, headers=HEADERS)
     started = time.perf_counter()
     status = None
     body = b''
     try:
-        with urllib.request.urlopen(url, timeout=20) as response:
+        with urllib.request.urlopen(request, timeout=20) as response:
             status = response.status
             body = response.read()
     except urllib.error.HTTPError as exc:
