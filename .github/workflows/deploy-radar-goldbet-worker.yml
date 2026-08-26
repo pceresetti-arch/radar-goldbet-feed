@@ -22,8 +22,24 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+
+      - name: Check Cloudflare deployment credentials
+        id: cf
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Deploy Radar fast-path Worker
+        if: steps.cf.outputs.ready == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -31,11 +47,12 @@ jobs:
           command: deploy
 
       - name: Verify live BetFlag operational path
+        if: steps.cf.outputs.ready == 'true'
         env:
           BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request, time
+          import json, os, pathlib, urllib.parse, urllib.request, urllib.error, time
           from datetime import datetime, timezone
 
           base='https://radar-goldbet.p-ceresetti.workers.dev'
@@ -60,18 +77,12 @@ jobs:
           hs, health, health_ms=get('/health')
           fs, fixture, fixture_ms=get('/live/fixture', {'q':'__health_probe__','limit':'20'})
           ps, protected, protected_ms=get('/odds', {
-              'token':token,
-              'bookmakers':'goldbet',
-              'state':'prematch',
-              'content':'player',
-              'limit':'20',
-              'offset':'0'
+              'token':token,'bookmakers':'goldbet','state':'prematch','content':'player','limit':'20','offset':'0'
           })
-
           endpoints=health.get('endpoints') if isinstance(health,dict) else []
-          betflag=((fixture.get('betflag_player_props') or {}).get('source_class')) if isinstance(fixture,dict) else None
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
+              'deployment_state':'LIVE_VERIFIED',
               'health_status':hs,
               'health_version':health.get('version') if isinstance(health,dict) else None,
               'public_fast_path':health.get('public_fast_path') if isinstance(health,dict) else None,
@@ -82,15 +93,13 @@ jobs:
               'fixture_ms':fixture_ms,
               'fixture_contract':fixture.get('contract') if isinstance(fixture,dict) else None,
               'fixture_direct_source':((fixture.get('direct_goldbet') or {}).get('source_class')) if isinstance(fixture,dict) else None,
-              'fixture_betflag_source':betflag,
+              'fixture_betflag_source':((fixture.get('betflag_player_props') or {}).get('source_class')) if isinstance(fixture,dict) else None,
               'protected_odds_status':ps,
               'protected_odds_ms':protected_ms,
               'protected_response_count':protected.get('count') if isinstance(protected,dict) else None
           }
-
           pathlib.Path('feed').mkdir(exist_ok=True)
-          pathlib.Path('feed/live-fast-path-verification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-
+          pathlib.Path('feed/cloudflare-deploy-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
           if hs != 200 or out['health_version'] != '7.0-betflag-operational' or not out['public_fast_path']:
               raise SystemExit('Radar v7 health contract not live')
           if not out['exact_player_price_proof'] or not out['player_price_endpoint_present']:
@@ -99,17 +108,38 @@ jobs:
               raise SystemExit('Radar v7 provenance contract failed')
           if ps != 200:
               raise SystemExit('Protected direct GoldBet bridge failed')
-
           print(json.dumps(out,ensure_ascii=False,indent=2))
           PY
 
-      - name: Commit verification result
+      - name: Record missing-credentials blocker
+        if: steps.cf.outputs.ready != 'true'
+        shell: bash
         run: |
+          python - <<'PY'
+          import json, pathlib
+          from datetime import datetime, timezone
+          out={
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'deployment_state':'BLOCKED_MISSING_CLOUDFLARE_CREDENTIALS',
+            'required_github_secrets':['CLOUDFLARE_API_TOKEN','CLOUDFLARE_ACCOUNT_ID'],
+            'worker_code_version':'7.0-betflag-operational',
+            'operational_fallback':'GitHub Actions BetFlag price proof on demand',
+            'fallback_workflow':'.github/workflows/betflag-price-proof-on-demand.yml'
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/cloudflare-deploy-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,indent=2))
+          PY
+
+      - name: Commit deployment status
+        shell: bash
+        run: |
+          set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/live-fast-path-verification.json
+          git add feed/cloudflare-deploy-status.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Verify Radar v7 BetFlag operational path'
+          git commit -m 'Record Radar Worker deployment status'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
