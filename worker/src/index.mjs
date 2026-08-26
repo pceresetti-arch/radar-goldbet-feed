@@ -1,6 +1,9 @@
 const UPSTREAM_BASE = 'https://odss-api.com/api/v1';
-const SHARED_AAMS_BASE = 'https://sportservice.betflag.it/api/sport/pregame';
+const BETFLAG_AAMS_BASE = 'https://sportservice.betflag.it/api/sport/pregame';
 const AAMS_AGG_TOURNAMENT = 1334500001;
+const BETFLAG_EXACT_FRESHNESS_SECONDS = 45;
+const BETFLAG_SCAN_CACHE_SECONDS = 12;
+const GOLDBET_CACHE_SECONDS = 8;
 
 const ALLOWED_PARAMS = {
   sports: [],
@@ -13,17 +16,14 @@ const ALLOWED_PARAMS = {
   history: ['event_id', 'book', 'market', 'from', 'to', 'limit']
 };
 
-const CORE_PLAYER_TARGETS = [
+const PLAYER_TARGETS = [
   [2484, 13825, 'Marcatore Plus'],
   [2484, 19405, 'Marcatore o Sostituto'],
   [2484, 22884, 'Marc'],
   [2484, 13819, '1° Marcatore'],
   [2484, 19403, '1° Marcatore o Sostituto'],
   [2484, 13820, 'Marcatore 1T'],
-  [2484, 13826, 'Marcatore 2T']
-];
-
-const EXTRA_PLAYER_TARGETS = [
+  [2484, 13826, 'Marcatore 2T'],
   [2484, 13821, 'Doppietta'],
   [2484, 13822, 'Tripletta'],
   [2484, 13816, 'U/O Tiri in porta Plus'],
@@ -35,6 +35,11 @@ const EXTRA_PLAYER_TARGETS = [
   [2484, 13824, 'Gol e Assist'],
   [2487, 13509, 'U/O Parate Giocatore']
 ];
+
+const CORE_TARGET_LABELS = new Set([
+  'Marcatore Plus', 'Marcatore o Sostituto', 'Marc', '1° Marcatore',
+  '1° Marcatore o Sostituto', 'Marcatore 1T', 'Marcatore 2T'
+]);
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -61,6 +66,52 @@ function clampInt(value, fallback, min, max) {
   return Math.max(min, Math.min(max, parsed));
 }
 
+function normalized(value) {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function canonicalMarket(value) {
+  const n = normalized(value)
+    .replace(/°/g, '')
+    .replace(/\bprimo\b/g, '1')
+    .replace(/\bsecondo\b/g, '2');
+  const aliases = new Map([
+    ['marcatore', 'marc'], ['marcatore anytime', 'marc'], ['anytime', 'marc'], ['marc', 'marc'],
+    ['marcatore 1t', 'marcatore 1t'], ['marcatore primo tempo', 'marcatore 1t'], ['marcatore 1 tempo', 'marcatore 1t'],
+    ['marcatore 2t', 'marcatore 2t'], ['marcatore secondo tempo', 'marcatore 2t'], ['marcatore 2 tempo', 'marcatore 2t'],
+    ['primo marcatore', '1 marcatore'], ['1 marcatore', '1 marcatore'], ['1 marcatore o sostituto', '1 marcatore o sostituto'],
+    ['marcatore o sostituto', 'marcatore o sostituto'], ['marc o sost', 'marcatore o sostituto'],
+    ['marcatore plus', 'marcatore plus'], ['assist', 'assist'], ['assist o sostituto', 'assist o sostituto'],
+    ['gol e assist', 'gol e assist'], ['goal e assist', 'gol e assist'],
+    ['doppietta', 'doppietta'], ['tripletta', 'tripletta'],
+    ['u/o tiri totali giocatore', 'u/o tiri totali giocatore'], ['tiri totali giocatore', 'u/o tiri totali giocatore'],
+    ['u/o tiri in porta giocatore', 'u/o tiri in porta giocatore'], ['tiri in porta giocatore', 'u/o tiri in porta giocatore'],
+    ['u/o tiri totali plus', 'u/o tiri totali plus'], ['u/o tiri in porta plus', 'u/o tiri in porta plus'],
+    ['u/o parate giocatore', 'u/o parate giocatore']
+  ]);
+  return aliases.get(n) || n;
+}
+
+function resolvePlayerTarget(market) {
+  const wanted = canonicalMarket(market);
+  for (const target of PLAYER_TARGETS) {
+    if (canonicalMarket(target[2]) === wanted) return target;
+  }
+  return null;
+}
+
+async function sha256Hex(value) {
+  const bytes = new TextEncoder().encode(value);
+  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+  return [...digest].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function secureEqual(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string' || !a || !b) return false;
   const enc = new TextEncoder();
@@ -78,25 +129,19 @@ async function secureEqual(a, b) {
 async function isAuthorized(request, env, url) {
   const expected = env.BRIDGE_TOKEN;
   if (!expected) return false;
-
   const queryToken = url.searchParams.get('token') || '';
   if (await secureEqual(queryToken, expected)) return true;
-
   const auth = request.headers.get('Authorization') || '';
-  const bearer = auth.replace(/^Bearer\s+/i, '');
-  return secureEqual(bearer, expected);
+  return secureEqual(auth.replace(/^Bearer\s+/i, ''), expected);
 }
 
 function buildUpstreamUrl(endpoint, incomingUrl) {
   const upstream = new URL(`${UPSTREAM_BASE}/${endpoint}`);
-  const allowed = ALLOWED_PARAMS[endpoint] || [];
-
-  for (const key of allowed) {
+  for (const key of ALLOWED_PARAMS[endpoint] || []) {
     for (const value of incomingUrl.searchParams.getAll(key)) {
       if (value !== '') upstream.searchParams.append(key, value);
     }
   }
-
   return upstream;
 }
 
@@ -106,12 +151,8 @@ async function fetchJson(url, options = {}, timeoutMs = 15000) {
   try {
     const response = await fetch(url, { ...options, signal: controller.signal });
     const text = await response.text();
-    let data = null;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = { raw: text.slice(0, 2000) };
-    }
+    let data;
+    try { data = JSON.parse(text); } catch { data = { raw: text.slice(0, 2000) }; }
     return { status: response.status, ok: response.ok, data };
   } finally {
     clearTimeout(timer);
@@ -119,36 +160,20 @@ async function fetchJson(url, options = {}, timeoutMs = 15000) {
 }
 
 async function proxyEndpoint(endpoint, request, env, incomingUrl) {
-  if (!env.ODSS_API_KEY) {
-    return json({ error: 'Worker misconfigured: missing ODSS_API_KEY' }, 500);
-  }
-
-  const upstreamUrl = buildUpstreamUrl(endpoint, incomingUrl);
-  const response = await fetch(upstreamUrl, {
+  if (!env.ODSS_API_KEY) return json({ error: 'Worker misconfigured: missing ODSS_API_KEY' }, 500);
+  const response = await fetch(buildUpstreamUrl(endpoint, incomingUrl), {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'x-api-key': env.ODSS_API_KEY,
-      'User-Agent': 'RadarGoldBetBridge/6.0'
-    }
+    headers: { Accept: 'application/json', 'x-api-key': env.ODSS_API_KEY, 'User-Agent': 'RadarGoldBetBridge/7.0' }
   });
-
   const headers = new Headers(response.headers);
-  headers.set('Access-Control-Allow-Origin', '*');
-  headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  headers.set('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+  Object.entries(CORS_HEADERS).forEach(([k, v]) => headers.set(k, v));
   headers.set('Cache-Control', 'no-store');
-
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers
-  });
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }
 
-function aamsHeaders() {
+function betflagHeaders() {
   return {
-    'User-Agent': 'Mozilla/5.0 RadarGoldBetFastPath/6.0',
+    'User-Agent': 'Mozilla/5.0 RadarBetFlagOperational/7.0',
     Accept: 'application/json,text/plain,*/*',
     'x-api-version': '1.0',
     'X-Auth-Token': '',
@@ -200,12 +225,9 @@ function marketRows(event) {
 function buildMatchMap(standard) {
   const matchMap = new Map();
   function walk(node) {
-    if (Array.isArray(node)) {
-      for (const value of node) walk(value);
-      return;
-    }
+    if (Array.isArray(node)) { node.forEach(walk); return; }
     if (!node || typeof node !== 'object') return;
-    const sportName = String(node.sn || '').toLowerCase();
+    const sportName = normalized(node.sn);
     const eventName = String(node.en || '');
     if (node.mi != null && eventName && !sportName.startsWith('giocatori') && !eventName.startsWith('(')) {
       if (node.si === 1 || node.si === '1' || sportName === 'calcio') {
@@ -221,21 +243,18 @@ function buildMatchMap(standard) {
         });
       }
     }
-    for (const value of Object.values(node)) walk(value);
+    Object.values(node).forEach(walk);
   }
   walk(standard);
   return matchMap;
 }
 
-function collectPlayerRows(data, requestedMarket, matchMap, fetchedAt, seen) {
+function collectPlayerRows(data, requestedMarket, matchMap, fetchedAt, seen = new Set()) {
   const rows = [];
   function walk(node) {
-    if (Array.isArray(node)) {
-      for (const value of node) walk(value);
-      return;
-    }
+    if (Array.isArray(node)) { node.forEach(walk); return; }
     if (!node || typeof node !== 'object') return;
-    if ('ei' in node && 'en' in node && String(node.sn || '').toLowerCase().startsWith('giocatori')) {
+    if ('ei' in node && 'en' in node && normalized(node.sn).startsWith('giocatori')) {
       const [matchCode, player] = parsePlayerEventName(node.en);
       const match = matchMap.get(String(node.mi));
       const base = {
@@ -261,90 +280,114 @@ function collectPlayerRows(data, requestedMarket, matchMap, fetchedAt, seen) {
         rows.push({ ...base, ...quote, fetched_at: fetchedAt });
       }
     }
-    for (const value of Object.values(node)) walk(value);
+    Object.values(node).forEach(walk);
   }
   walk(data);
   return rows;
 }
 
-async function fetchAamsAggregate(mode = 'core') {
+function standardBetflagUrl() {
+  return `${BETFLAG_AAMS_BASE}/getOverviewEventsAams/0/1/0/${AAMS_AGG_TOURNAMENT}/0/0/0?channelId=0`;
+}
+
+function targetBetflagUrl(target) {
+  const [tab, slot] = target;
+  return `${BETFLAG_AAMS_BASE}/getOverviewEventsAams/0/-1/0/${AAMS_AGG_TOURNAMENT}/${tab}/${slot}/0?channelId=0`;
+}
+
+async function fetchBetflagTargets(targets) {
   const started = Date.now();
   const fetchedAt = new Date().toISOString();
-  const targets = mode === 'full' ? [...CORE_PLAYER_TARGETS, ...EXTRA_PLAYER_TARGETS] : CORE_PLAYER_TARGETS;
-  const standardUrl = `${SHARED_AAMS_BASE}/getOverviewEventsAams/0/1/0/${AAMS_AGG_TOURNAMENT}/0/0/0?channelId=0`;
-  const targetUrls = targets.map(([tab, slot, label]) => ({
-    tab,
-    slot,
-    label,
-    url: `${SHARED_AAMS_BASE}/getOverviewEventsAams/0/-1/0/${AAMS_AGG_TOURNAMENT}/${tab}/${slot}/0?channelId=0`
-  }));
-
-  const headers = aamsHeaders();
+  const headers = betflagHeaders();
   const [standardResult, ...targetResults] = await Promise.all([
-    fetchJson(standardUrl, { headers }, 16000),
-    ...targetUrls.map((target) => fetchJson(target.url, { headers }, 16000))
+    fetchJson(standardBetflagUrl(), { headers }, 16000),
+    ...targets.map((target) => fetchJson(targetBetflagUrl(target), { headers }, 16000))
   ]);
-
   const matchMap = buildMatchMap(standardResult.data);
-  const seen = new Set();
   const rows = [];
+  const seen = new Set();
   const calls = [];
-  for (let i = 0; i < targetUrls.length; i += 1) {
-    const target = targetUrls[i];
+  for (let i = 0; i < targets.length; i += 1) {
+    const target = targets[i];
     const result = targetResults[i];
-    const added = collectPlayerRows(result.data, target.label, matchMap, fetchedAt, seen);
+    const added = collectPlayerRows(result.data, target[2], matchMap, fetchedAt, seen);
     rows.push(...added);
-    calls.push({ label: target.label, status: result.status, ok: result.ok, rows_added: added.length });
+    calls.push({ tab: target[0], slot: target[1], label: target[2], status: result.status, ok: result.ok, rows_added: added.length });
   }
-
+  const sourceHealthy = standardResult.ok && targetResults.every((result) => result.ok);
   return {
     generated_at: fetchedAt,
-    source_class: 'SHARED_AAMS',
-    source: 'shared AAMS player service',
+    source_class: 'BETFLAG_AAMS_DIRECT',
+    source: 'sportservice.betflag.it direct AAMS player service',
+    source_url_host: 'sportservice.betflag.it',
+    betflag_direct: true,
     goldbet_direct: false,
-    price_gate_eligible: false,
-    mode,
+    source_healthy: sourceHealthy,
+    price_gate_eligible_at_fetch: sourceHealthy && rows.length > 0,
+    freshness_policy_seconds: BETFLAG_EXACT_FRESHNESS_SECONDS,
     elapsed_ms: Date.now() - started,
     match_map_count: matchMap.size,
     row_count: rows.length,
+    standard_status: standardResult.status,
     calls,
     rows
   };
 }
 
-async function getCachedAamsAggregate(request, mode, ctx) {
+async function fetchBetflagAggregate(mode = 'core') {
+  const targets = mode === 'full' ? PLAYER_TARGETS : PLAYER_TARGETS.filter((target) => CORE_TARGET_LABELS.has(target[2]));
+  return fetchBetflagTargets(targets);
+}
+
+async function getCachedBetflagAggregate(request, mode, ctx) {
   const cache = caches.default;
   const cacheUrl = new URL(request.url);
-  cacheUrl.pathname = `/_radar_cache/aams-player-props/${mode}`;
+  cacheUrl.pathname = `/_radar_cache/betflag-player-props/${mode}`;
   cacheUrl.search = '';
   const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
   const cached = await cache.match(cacheKey);
-  if (cached) {
-    return { payload: await cached.json(), cache: 'HIT' };
-  }
-
-  const payload = await fetchAamsAggregate(mode);
-  const response = json(payload, 200, { 'Cache-Control': 'public, s-maxage=12, max-age=0' });
+  if (cached) return { payload: await cached.json(), cache: 'HIT' };
+  const payload = await fetchBetflagAggregate(mode);
+  const response = json(payload, 200, { 'Cache-Control': `public, s-maxage=${BETFLAG_SCAN_CACHE_SECONDS}, max-age=0` });
   ctx.waitUntil(cache.put(cacheKey, response.clone()));
   return { payload, cache: 'MISS' };
 }
 
-function filterAamsRows(rows, url) {
-  const matchMarketId = String(url.searchParams.get('match_market_id') || '').trim().toLowerCase();
-  const q = String(url.searchParams.get('q') || '').trim().toLowerCase();
-  const player = String(url.searchParams.get('player') || '').trim().toLowerCase();
-  const market = String(url.searchParams.get('market') || '').trim().toLowerCase();
-  const league = String(url.searchParams.get('league') || '').trim().toLowerCase();
-  const limit = clampInt(url.searchParams.get('limit'), 300, 1, 1000);
+function sourceFreshness(generatedAt) {
+  const ts = Date.parse(String(generatedAt || ''));
+  const ageSeconds = Number.isFinite(ts) ? Math.max(0, (Date.now() - ts) / 1000) : Number.POSITIVE_INFINITY;
+  return {
+    age_seconds: Number.isFinite(ageSeconds) ? Math.round(ageSeconds * 10) / 10 : null,
+    max_age_seconds: BETFLAG_EXACT_FRESHNESS_SECONDS,
+    fresh: Number.isFinite(ageSeconds) && ageSeconds <= BETFLAG_EXACT_FRESHNESS_SECONDS
+  };
+}
 
+function filterBetflagRows(rows, url, { exactPlayer = false, exactMarket = false } = {}) {
+  const matchMarketId = normalized(url.searchParams.get('match_market_id'));
+  const q = normalized(url.searchParams.get('q'));
+  const player = normalized(url.searchParams.get('player'));
+  const market = canonicalMarket(url.searchParams.get('market'));
+  const league = normalized(url.searchParams.get('league'));
+  const selection = normalized(url.searchParams.get('selection'));
+  const line = normalized(url.searchParams.get('line'));
+  const limit = clampInt(url.searchParams.get('limit'), 300, 1, 1000);
   const filtered = [];
   for (const row of rows || []) {
-    if (matchMarketId && String(row.match_market_id || '').toLowerCase() !== matchMarketId) continue;
-    if (player && !String(row.player || '').toLowerCase().includes(player)) continue;
-    if (market && !String(row.market || '').toLowerCase().includes(market)) continue;
-    if (league && !String(row.league || '').toLowerCase().includes(league)) continue;
+    if (matchMarketId && normalized(row.match_market_id) !== matchMarketId) continue;
+    if (player) {
+      const rp = normalized(row.player);
+      if (exactPlayer ? rp !== player : !rp.includes(player)) continue;
+    }
+    if (market) {
+      const rm = canonicalMarket(row.requested_market || row.market);
+      if (exactMarket ? rm !== market : !rm.includes(market)) continue;
+    }
+    if (league && !normalized(row.league).includes(league)) continue;
+    if (selection && normalized(row.selection) !== selection) continue;
+    if (line && normalized(row.line) !== line) continue;
     if (q) {
-      const haystack = [row.match, row.match_code, row.player, row.league].map((x) => String(x || '').toLowerCase()).join(' ');
+      const haystack = [row.match, row.match_code, row.league].map(normalized).join(' ');
       const terms = q.split(/\s+/).filter(Boolean);
       if (!terms.every((term) => haystack.includes(term))) continue;
     }
@@ -354,11 +397,129 @@ function filterAamsRows(rows, url) {
   return filtered;
 }
 
+function validatePublicQuery(url) {
+  const q = String(url.searchParams.get('q') || '').trim();
+  const eventId = String(url.searchParams.get('event_id') || '').trim();
+  const player = String(url.searchParams.get('player') || '').trim();
+  const matchMarketId = String(url.searchParams.get('match_market_id') || '').trim();
+  if (!eventId && !player && !matchMarketId && q.length < 3) {
+    return 'Specify event_id, match_market_id, player, or q with at least 3 characters';
+  }
+  return null;
+}
+
+function validateExactPriceQuery(url) {
+  const player = String(url.searchParams.get('player') || '').trim();
+  const market = String(url.searchParams.get('market') || '').trim();
+  const q = String(url.searchParams.get('q') || '').trim();
+  const matchMarketId = String(url.searchParams.get('match_market_id') || '').trim();
+  if (!player) return 'player is required';
+  if (!market) return 'market is required';
+  if (!matchMarketId && q.length < 3) return 'Specify match_market_id or q with at least 3 characters';
+  if (!resolvePlayerTarget(market)) return `Unsupported player market: ${market}`;
+  return null;
+}
+
+async function certificateFor(row, payload, exactCount) {
+  const freshness = sourceFreshness(payload.generated_at);
+  const canonical = {
+    source_class: payload.source_class,
+    source_host: payload.source_url_host,
+    fetched_at: payload.generated_at,
+    match: row?.match || null,
+    match_market_id: row?.match_market_id || null,
+    match_event_id: row?.match_event_id || null,
+    player: row?.player || null,
+    requested_market: row?.requested_market || null,
+    market: row?.market || null,
+    line: row?.line ?? null,
+    selection: row?.selection || null,
+    odd: row?.odd ?? null,
+    selection_id: row?.selection_id ?? null,
+    market_id: row?.market_id ?? null,
+    odds_id: row?.odds_id ?? null
+  };
+  const fingerprint = await sha256Hex(JSON.stringify(canonical));
+  const eligible = Boolean(payload.source_healthy && freshness.fresh && exactCount === 1 && row && row.odd != null);
+  return {
+    proof_id: `bf-${fingerprint.slice(0, 20)}`,
+    sha256: fingerprint,
+    exact_identity_match: exactCount === 1,
+    source_healthy: Boolean(payload.source_healthy),
+    freshness,
+    price_gate_eligible: eligible,
+    canonical
+  };
+}
+
+async function publicPlayerProps(request, url, ctx) {
+  const error = validatePublicQuery(url);
+  if (error) return json({ error }, 400);
+  const mode = url.searchParams.get('full') === '1' ? 'full' : 'core';
+  const { payload, cache } = await getCachedBetflagAggregate(request, mode, ctx);
+  const rows = filterBetflagRows(payload.rows, url);
+  const freshness = sourceFreshness(payload.generated_at);
+  return json({
+    generated_at: payload.generated_at,
+    served_at: new Date().toISOString(),
+    cache,
+    source_class: payload.source_class,
+    source: payload.source,
+    betflag_direct: true,
+    goldbet_direct: false,
+    source_healthy: payload.source_healthy,
+    freshness,
+    scan_price_gate_capable: Boolean(payload.source_healthy && freshness.fresh),
+    price_gate_rule: 'Use /live/player-price for exact fixture+player+market certification before BET.',
+    mode,
+    upstream_elapsed_ms: payload.elapsed_ms,
+    total_source_rows: payload.row_count,
+    returned: rows.length,
+    rows
+  }, 200, { 'Cache-Control': 'no-store' });
+}
+
+async function publicPlayerPrice(url) {
+  const error = validateExactPriceQuery(url);
+  if (error) return json({ error }, 400);
+  const target = resolvePlayerTarget(url.searchParams.get('market'));
+  const payload = await fetchBetflagTargets([target]);
+  let rows = filterBetflagRows(payload.rows, url, { exactPlayer: true, exactMarket: true });
+  const requestedSelection = String(url.searchParams.get('selection') || '').trim();
+  const requestedLine = String(url.searchParams.get('line') || '').trim();
+  if (!requestedSelection && rows.length > 1) {
+    const yesRows = rows.filter((row) => normalized(row.selection) === 'si');
+    if (yesRows.length === 1) rows = yesRows;
+  }
+  if (!requestedLine && rows.length > 1 && rows.some((row) => row.line != null)) {
+    // Keep ambiguity explicit for line-based markets: caller must supply line.
+  }
+  const row = rows.length === 1 ? rows[0] : null;
+  const certificate = await certificateFor(row, payload, rows.length);
+  return json({
+    generated_at: payload.generated_at,
+    served_at: new Date().toISOString(),
+    source_class: payload.source_class,
+    source: payload.source,
+    betflag_direct: true,
+    goldbet_direct: false,
+    upstream_elapsed_ms: payload.elapsed_ms,
+    target: { tab: target[0], slot: target[1], market: target[2] },
+    returned: rows.length,
+    price_gate_eligible: certificate.price_gate_eligible,
+    certificate,
+    quote: row,
+    candidates: rows.length === 1 ? undefined : rows.slice(0, 25),
+    note: certificate.price_gate_eligible
+      ? 'Certified fresh BetFlag/AAMS operational player price.'
+      : 'No unique fresh exact quote; do not classify BET from this response.'
+  }, row ? 200 : 404, { 'Cache-Control': 'no-store' });
+}
+
 async function getDirectGoldbetData(url, env) {
   if (!env.ODSS_API_KEY) throw new Error('Missing ODSS_API_KEY');
   const upstream = new URL(`${UPSTREAM_BASE}/odds`);
-  const copyKeys = ['sport', 'market', 'league', 'event_id', 'content', 'player', 'q'];
-  for (const key of copyKeys) {
+  for (const key of ['sport', 'market', 'league', 'event_id', 'content', 'player', 'q']) {
     const value = url.searchParams.get(key);
     if (value) upstream.searchParams.set(key, value);
   }
@@ -366,22 +527,16 @@ async function getDirectGoldbetData(url, env) {
   upstream.searchParams.set('state', url.searchParams.get('state') || 'prematch');
   upstream.searchParams.set('limit', String(clampInt(url.searchParams.get('limit'), 250, 1, 500)));
   upstream.searchParams.set('offset', String(clampInt(url.searchParams.get('offset'), 0, 0, 100000)));
-
   const started = Date.now();
   const result = await fetchJson(upstream.toString(), {
-    headers: {
-      Accept: 'application/json',
-      'x-api-key': env.ODSS_API_KEY,
-      'User-Agent': 'RadarGoldBetFastPath/6.0'
-    }
+    headers: { Accept: 'application/json', 'x-api-key': env.ODSS_API_KEY, 'User-Agent': 'RadarGoldBetFastPath/7.0' }
   }, 15000);
-
   return {
     generated_at: new Date().toISOString(),
     source_class: 'GOLDBET_DIRECT_ODSS',
     source: 'odss-api direct bookmaker filter',
     goldbet_direct: true,
-    price_gate_eligible: true,
+    price_gate_eligible: result.ok,
     upstream_status: result.status,
     elapsed_ms: Date.now() - started,
     data: result.data
@@ -397,45 +552,10 @@ async function getCachedDirectGoldbet(request, url, env, ctx) {
   const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
   const cached = await cache.match(cacheKey);
   if (cached) return { payload: await cached.json(), cache: 'HIT' };
-
   const payload = await getDirectGoldbetData(url, env);
-  const response = json(payload, 200, { 'Cache-Control': 'public, s-maxage=8, max-age=0' });
+  const response = json(payload, 200, { 'Cache-Control': `public, s-maxage=${GOLDBET_CACHE_SECONDS}, max-age=0` });
   ctx.waitUntil(cache.put(cacheKey, response.clone()));
   return { payload, cache: 'MISS' };
-}
-
-function validatePublicQuery(url) {
-  const q = String(url.searchParams.get('q') || '').trim();
-  const eventId = String(url.searchParams.get('event_id') || '').trim();
-  const player = String(url.searchParams.get('player') || '').trim();
-  const matchMarketId = String(url.searchParams.get('match_market_id') || '').trim();
-  if (!eventId && !player && !matchMarketId && q.length < 3) {
-    return 'Specify event_id, match_market_id, player, or q with at least 3 characters';
-  }
-  return null;
-}
-
-async function publicPlayerProps(request, url, ctx) {
-  const error = validatePublicQuery(url);
-  if (error) return json({ error }, 400);
-  const mode = url.searchParams.get('full') === '1' ? 'full' : 'core';
-  const { payload, cache } = await getCachedAamsAggregate(request, mode, ctx);
-  const rows = filterAamsRows(payload.rows, url);
-  return json({
-    generated_at: payload.generated_at,
-    served_at: new Date().toISOString(),
-    cache,
-    source_class: payload.source_class,
-    source: payload.source,
-    goldbet_direct: false,
-    price_gate_eligible: false,
-    note: 'Preliminary player-market scan only. Do not use as GoldBet final price gate.',
-    mode,
-    upstream_elapsed_ms: payload.elapsed_ms,
-    total_source_rows: payload.row_count,
-    returned: rows.length,
-    rows
-  }, 200, { 'Cache-Control': 'no-store' });
 }
 
 async function publicGoldbet(request, url, env, ctx) {
@@ -450,68 +570,51 @@ async function publicFixture(request, url, env, ctx) {
   if (error) return json({ error }, 400);
   const mode = url.searchParams.get('full') === '1' ? 'full' : 'core';
   const started = Date.now();
-  const [directResult, aamsResult] = await Promise.allSettled([
+  const [directResult, betflagResult] = await Promise.allSettled([
     getCachedDirectGoldbet(request, url, env, ctx),
-    getCachedAamsAggregate(request, mode, ctx)
+    getCachedBetflagAggregate(request, mode, ctx)
   ]);
-
-  let directGoldbet;
-  if (directResult.status === 'fulfilled') {
-    directGoldbet = { ...directResult.value.payload, cache: directResult.value.cache };
-  } else {
-    directGoldbet = {
-      source_class: 'GOLDBET_DIRECT_ODSS',
-      goldbet_direct: true,
-      price_gate_eligible: false,
-      error: directResult.reason instanceof Error ? directResult.reason.message : String(directResult.reason)
-    };
-  }
-
-  let sharedPlayerProps;
-  if (aamsResult.status === 'fulfilled') {
-    const payload = aamsResult.value.payload;
-    const rows = filterAamsRows(payload.rows, url);
-    sharedPlayerProps = {
+  const directGoldbet = directResult.status === 'fulfilled'
+    ? { ...directResult.value.payload, cache: directResult.value.cache }
+    : { source_class: 'GOLDBET_DIRECT_ODSS', goldbet_direct: true, price_gate_eligible: false, error: String(directResult.reason) };
+  let betflagPlayerProps;
+  if (betflagResult.status === 'fulfilled') {
+    const payload = betflagResult.value.payload;
+    const rows = filterBetflagRows(payload.rows, url);
+    const freshness = sourceFreshness(payload.generated_at);
+    betflagPlayerProps = {
       generated_at: payload.generated_at,
-      cache: aamsResult.value.cache,
+      cache: betflagResult.value.cache,
       source_class: payload.source_class,
       source: payload.source,
-      goldbet_direct: false,
-      price_gate_eligible: false,
-      mode,
+      betflag_direct: true,
+      source_healthy: payload.source_healthy,
+      freshness,
+      exact_price_endpoint: '/live/player-price',
       returned: rows.length,
       rows
     };
   } else {
-    sharedPlayerProps = {
-      source_class: 'SHARED_AAMS',
-      goldbet_direct: false,
-      price_gate_eligible: false,
-      error: aamsResult.reason instanceof Error ? aamsResult.reason.message : String(aamsResult.reason)
-    };
+    betflagPlayerProps = { source_class: 'BETFLAG_AAMS_DIRECT', betflag_direct: true, price_gate_eligible: false, error: String(betflagResult.reason) };
   }
-
   return json({
     generated_at: new Date().toISOString(),
     elapsed_ms: Date.now() - started,
     contract: {
-      final_price_gate_source: 'GOLDBET_DIRECT_ODSS only',
-      shared_aams_role: 'candidate discovery / market sanity only'
+      standard_markets_primary: 'GoldBet direct when fresh and mapped',
+      player_props_primary: 'BetFlag/AAMS direct operational source',
+      player_props_final_gate: 'Requires unique fresh certificate from /live/player-price',
+      goldbet_player_crosscheck: 'Use direct GoldBet when available as calibration/cross-check, not as a prerequisite.'
     },
     direct_goldbet: directGoldbet,
-    shared_player_props: sharedPlayerProps
+    betflag_player_props: betflagPlayerProps
   });
 }
 
 export default {
   async fetch(request, env, ctx) {
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
-    }
-
-    if (request.method !== 'GET') {
-      return json({ error: 'Method not allowed' }, 405, { Allow: 'GET, OPTIONS' });
-    }
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS_HEADERS });
+    if (request.method !== 'GET') return json({ error: 'Method not allowed' }, 405, { Allow: 'GET, OPTIONS' });
 
     const url = new URL(request.url);
     const endpoint = url.pathname.replace(/^\/+|\/+$/g, '') || 'health';
@@ -520,16 +623,18 @@ export default {
       return json({
         ok: true,
         service: 'radar-goldbet',
-        version: '6.0-fast-path',
+        version: '7.0-betflag-operational',
         player_props_forwarding: true,
         public_fast_path: true,
-        cache_ttl_seconds: { direct_goldbet: 8, shared_aams: 12 },
+        exact_player_price_proof: true,
+        cache_ttl_seconds: { direct_goldbet: GOLDBET_CACHE_SECONDS, betflag_scan: BETFLAG_SCAN_CACHE_SECONDS, betflag_exact: 0 },
+        freshness_policy_seconds: { betflag_exact_price: BETFLAG_EXACT_FRESHNESS_SECONDS },
         provenance_contract: {
-          GOLDBET_DIRECT_ODSS: 'eligible for final price gate when a matching quote is returned',
-          SHARED_AAMS: 'never eligible for GoldBet final price gate'
+          BETFLAG_AAMS_DIRECT: 'primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE',
+          GOLDBET_DIRECT_ODSS: 'direct GoldBet source when fresh/mapped; player props used as cross-check when available'
         },
         endpoints: [
-          '/health', '/live/goldbet', '/live/player-props', '/live/fixture',
+          '/health', '/live/goldbet', '/live/player-props', '/live/player-price', '/live/fixture',
           '/sports', '/bookmakers', '/leagues', '/odds', '/history'
         ],
         protected_endpoints: ['/sports', '/bookmakers', '/leagues', '/odds', '/history'],
@@ -539,14 +644,11 @@ export default {
 
     try {
       if (endpoint === 'live/player-props') return await publicPlayerProps(request, url, ctx);
+      if (endpoint === 'live/player-price') return await publicPlayerPrice(url);
       if (endpoint === 'live/goldbet') return await publicGoldbet(request, url, env, ctx);
       if (endpoint === 'live/fixture') return await publicFixture(request, url, env, ctx);
     } catch (error) {
-      console.error(JSON.stringify({
-        event: 'fast_path_error',
-        endpoint,
-        message: error instanceof Error ? error.message : String(error)
-      }));
+      console.error(JSON.stringify({ event: 'fast_path_error', endpoint, message: error instanceof Error ? error.message : String(error) }));
       return json({ error: 'Fast path request failed' }, 502);
     }
 
@@ -554,24 +656,17 @@ export default {
       return json({
         error: 'Endpoint non valido',
         endpoints: [
-          '/health', '/live/goldbet', '/live/player-props', '/live/fixture',
+          '/health', '/live/goldbet', '/live/player-props', '/live/player-price', '/live/fixture',
           '/sports', '/bookmakers', '/leagues', '/odds', '/history'
         ]
       }, 404);
     }
 
-    if (!(await isAuthorized(request, env, url))) {
-      return json({ error: 'Unauthorized' }, 401);
-    }
-
+    if (!(await isAuthorized(request, env, url))) return json({ error: 'Unauthorized' }, 401);
     try {
       return await proxyEndpoint(endpoint, request, env, url);
     } catch (error) {
-      console.error(JSON.stringify({
-        event: 'upstream_error',
-        endpoint,
-        message: error instanceof Error ? error.message : String(error)
-      }));
+      console.error(JSON.stringify({ event: 'upstream_error', endpoint, message: error instanceof Error ? error.message : String(error) }));
       return json({ error: 'Upstream request failed' }, 502);
     }
   }
