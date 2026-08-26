@@ -7,6 +7,7 @@ on:
       - 'worker/src/**'
       - 'wrangler.jsonc'
       - 'wrangler.toml'
+      - '.github/workflows/deploy-radar-goldbet-worker.yml'
   workflow_dispatch:
 
 permissions:
@@ -19,7 +20,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
         with:
@@ -68,18 +69,67 @@ jobs:
               started=time.perf_counter()
               try:
                   with urllib.request.urlopen(req,timeout=timeout) as r:
-                      body=json.loads(r.read().decode('utf-8','replace'))
+                      raw=r.read().decode('utf-8','replace')
+                      try: body=json.loads(raw)
+                      except Exception: body={'raw':raw[:2000]}
                       return r.status, body, round((time.perf_counter()-started)*1000)
               except urllib.error.HTTPError as e:
-                  body=json.loads(e.read().decode('utf-8','replace'))
+                  raw=e.read().decode('utf-8','replace')
+                  try: body=json.loads(raw)
+                  except Exception: body={'raw':raw[:2000]}
                   return e.code, body, round((time.perf_counter()-started)*1000)
 
-          hs, health, health_ms=get('/health')
+          health=None
+          hs=None
+          health_ms=None
+          health_ok=False
+          for attempt in range(1, 9):
+              hs, health, health_ms=get('/health')
+              endpoints=health.get('endpoints') if isinstance(health,dict) else []
+              health_ok=(
+                  hs == 200 and
+                  isinstance(health,dict) and
+                  health.get('version') == '7.0-betflag-operational' and
+                  bool(health.get('public_fast_path')) and
+                  bool(health.get('exact_player_price_proof')) and
+                  '/live/player-price' in (endpoints or [])
+              )
+              print(json.dumps({
+                  'attempt':attempt,
+                  'status':hs,
+                  'health_ms':health_ms,
+                  'version':health.get('version') if isinstance(health,dict) else None,
+                  'public_fast_path':health.get('public_fast_path') if isinstance(health,dict) else None,
+                  'exact_player_price_proof':health.get('exact_player_price_proof') if isinstance(health,dict) else None,
+                  'player_price_endpoint_present':'/live/player-price' in (endpoints or []),
+                  'body':health
+              },ensure_ascii=False))
+              if health_ok:
+                  break
+              time.sleep(5)
+
+          endpoints=health.get('endpoints') if isinstance(health,dict) else []
+          if not health_ok:
+              out={
+                  'generated_at':datetime.now(timezone.utc).isoformat(),
+                  'deployment_state':'DEPLOYED_VERIFICATION_FAILED',
+                  'health_status':hs,
+                  'health_version':health.get('version') if isinstance(health,dict) else None,
+                  'public_fast_path':health.get('public_fast_path') if isinstance(health,dict) else None,
+                  'exact_player_price_proof':health.get('exact_player_price_proof') if isinstance(health,dict) else None,
+                  'player_price_endpoint_present':'/live/player-price' in (endpoints or []),
+                  'health_ms':health_ms,
+                  'health_body':health
+              }
+              pathlib.Path('feed').mkdir(exist_ok=True)
+              pathlib.Path('feed/cloudflare-deploy-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+              print(json.dumps(out,ensure_ascii=False,indent=2))
+              raise SystemExit('Radar v7 health contract not live after propagation retries')
+
           fs, fixture, fixture_ms=get('/live/fixture', {'q':'__health_probe__','limit':'20'})
           ps, protected, protected_ms=get('/odds', {
               'token':token,'bookmakers':'goldbet','state':'prematch','content':'player','limit':'20','offset':'0'
           })
-          endpoints=health.get('endpoints') if isinstance(health,dict) else []
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
               'deployment_state':'LIVE_VERIFIED',
@@ -100,15 +150,11 @@ jobs:
           }
           pathlib.Path('feed').mkdir(exist_ok=True)
           pathlib.Path('feed/cloudflare-deploy-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          if hs != 200 or out['health_version'] != '7.0-betflag-operational' or not out['public_fast_path']:
-              raise SystemExit('Radar v7 health contract not live')
-          if not out['exact_player_price_proof'] or not out['player_price_endpoint_present']:
-              raise SystemExit('Exact BetFlag player-price proof endpoint not live')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
           if fs != 200 or out['fixture_direct_source'] != 'GOLDBET_DIRECT_ODSS' or out['fixture_betflag_source'] != 'BETFLAG_AAMS_DIRECT':
               raise SystemExit('Radar v7 provenance contract failed')
           if ps != 200:
               raise SystemExit('Protected direct GoldBet bridge failed')
-          print(json.dumps(out,ensure_ascii=False,indent=2))
           PY
 
       - name: Record missing-credentials blocker
@@ -132,9 +178,11 @@ jobs:
           PY
 
       - name: Commit deployment status
+        if: always()
         shell: bash
         run: |
           set -e
+          [ -f feed/cloudflare-deploy-status.json ] || exit 0
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
           git add feed/cloudflare-deploy-status.json
