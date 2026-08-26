@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-project-state-v3",
+  "schema_version": "radar-project-state-v4",
   "as_of": "2026-08-26",
   "source_of_truth": "RADAR_UNICO_MASTER.md",
-  "objective": "Autonomously detect matches, wait for reliable fresh inputs, execute deep analysis, certify the exact operational player price, and notify the complete evaluation rather than a simple ready alert.",
+  "objective": "Autonomously detect matches, use pre-XI research to anticipate candidates, rediscover value after the official XI, execute deep analysis, certify the exact operational player price, and notify the complete evaluation rather than a simple ready alert.",
   "competition_perimeter": [
     "Allsvenskan",
     "Superettan",
@@ -46,6 +46,36 @@
     "xi_fingerprint_required": true,
     "xi_change_invalidates_player_analysis": true
   },
+  "analysis_pipeline": {
+    "contract": "RADAR_PRE_XI_POST_XI_DISCOVERY_AND_SPEED_RULE.md",
+    "pre_xi_discovery_required": true,
+    "pre_xi_shortlist_persistent": true,
+    "pre_xi_shortlist_is_exclusive_filter": false,
+    "post_xi_dual_lane_required": true,
+    "post_xi_lanes": ["PRE_XI_REVALIDATION", "POST_XI_FULL_REDISCOVERY"],
+    "candidate_origin_labels": [
+      "PRE_XI_IDENTIFIED",
+      "POST_XI_DISCOVERY",
+      "PRE_XI_PROMOTED_POST_XI",
+      "PRE_XI_INVALIDATED_POST_XI"
+    ],
+    "speed_budget_is_target_not_sla": true,
+    "speed_targets": {
+      "one_fixture_seconds": "45-90",
+      "three_fixtures_minutes": "~2",
+      "five_fixtures_minutes": "~3"
+    },
+    "fail_fast": true,
+    "fail_fast_rules": [
+      "parallelize independent retrievals",
+      "use batch scans for player markets",
+      "certify exact realtime prices only for final candidates",
+      "fallback or mark NON VERIFICABILE when a secondary source stalls",
+      "do not delay verdicts for non-material ornamental data",
+      "return ANALISI INCOMPLETA/ATTESA with missing block instead of hanging indefinitely"
+    ],
+    "final_fast_path": "XI -> matchup/model -> TRUE OPEN/movement -> props -> exact price -> FINAL GATE"
+  },
   "market_policy": {
     "operational_bookmaker_standard": "GoldBet",
     "operational_source_player_props": "BetFlag/AAMS direct player service",
@@ -73,6 +103,7 @@
     "primary_source_class": "BETFLAG_AAMS_DIRECT",
     "primary_host": "sportservice.betflag.it",
     "cloudflare_worker": "radar-betflag-v7",
+    "cloudflare_worker_url": "https://radar-betflag-v7.p-ceresetti.workers.dev",
     "cloudflare_worker_version": "7.0-betflag-operational",
     "cloudflare_exact_endpoint": "/live/player-price",
     "cloudflare_deployment_state": "LIVE_VERIFIED",
@@ -82,6 +113,20 @@
     "request_file": "betflag-price-proof-request.json",
     "latest_proof": "feed/betflag-price-proof-latest.json",
     "proof_archive": "feed/price-proofs/",
+    "latest_speed_precision_test": "feed/quote-realtime-test-latest.json",
+    "latest_speed_precision_summary": {
+      "tested_at": "2026-08-26T20:33:59.489303+00:00",
+      "positive_all_http_200": true,
+      "positive_all_unique_exact": true,
+      "positive_all_price_gate_eligible": true,
+      "negative_control_rejected": true,
+      "repeat_identity_stable": true,
+      "repeat_price_stable": true,
+      "mean_total_seconds": 2.326,
+      "median_total_seconds": 2.633,
+      "max_positive_seconds": 2.7379,
+      "mean_upstream_ms": 2171.7
+    },
     "first_positive_proof": {
       "match": "Monaco - Gornik Zabrze",
       "player": "Mika Biereth",
@@ -148,7 +193,9 @@
     "first_pre_kickoff_snapshot_immutable": true,
     "exact_xi_fingerprint": true,
     "promotion_requires_oos_improvement": true,
-    "metrics": ["Brier", "log-loss", "calibration", "CLV", "ROI/yield where observed price exists", "league/market/role robustness"]
+    "candidate_origin_comparison_required": true,
+    "pipeline_latency_metrics_required": true,
+    "metrics": ["Brier", "log-loss", "calibration", "CLV", "ROI/yield where observed price exists", "league/market/role robustness", "PRE_XI vs POST_XI discovery lift", "pipeline P50/P95 latency", "source timeout/incomplete rate"]
   },
   "feeds": {
     "readiness_summary": "feed/deep-analysis-readiness-summary.json",
@@ -160,6 +207,7 @@
     "player_props_periodic": "feed/player-props-current.json",
     "betflag_exact_price_proof": "feed/betflag-price-proof-latest.json",
     "betflag_worker_status": "feed/betflag-v7-worker-status.json",
+    "quote_realtime_test": "feed/quote-realtime-test-latest.json",
     "player_matchup_context": "feed/player-matchup-context-current.json",
     "player_heatmap_context": "feed/player-heatmap-context-current.json",
     "player_context_oos_ledger": "feed/player-context-validation-ledger.json",
@@ -168,6 +216,7 @@
     "market_confirmation_research": "feed/market-confirmation-research-state.json"
   },
   "priority_roadmap": [
+    "operational PRE-XI persistent shortlist + mandatory POST-XI full rediscovery with origin labels and latency audit",
     "cross-market movement / Market Confirmation Index research in shadow mode: TRUE OPEN, de-vigging, family scores, coherence, post-XI acceleration, ablation and OOS validation",
     "continuous BetFlag/AAMS vs GoldBet player-prop calibration and drift monitoring",
     "calibrated minutes/substitution model",
