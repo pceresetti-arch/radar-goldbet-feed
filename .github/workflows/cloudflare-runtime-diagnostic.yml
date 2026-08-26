@@ -30,34 +30,52 @@ jobs:
           npx --yes wrangler@4 deployments status --name radar-goldbet --json > feed/cloudflare-deployment-current.json
           npx --yes wrangler@4 versions list --name radar-goldbet --json > feed/cloudflare-versions-current.json
           python - <<'PY'
-          import json, pathlib, urllib.request, urllib.error
+          import json, pathlib, urllib.request, urllib.error, subprocess
           from datetime import datetime, timezone
 
           deployments=json.loads(pathlib.Path('feed/cloudflare-deployment-current.json').read_text(encoding='utf-8'))
           versions=json.loads(pathlib.Path('feed/cloudflare-versions-current.json').read_text(encoding='utf-8'))
-          try:
-              with urllib.request.urlopen(
-                  urllib.request.Request(
-                      'https://radar-goldbet.p-ceresetti.workers.dev/health',
-                      headers={'Accept':'application/json','User-Agent':'RadarCloudflareDiagnostic/2.0'}
-                  ), timeout=30
-              ) as r:
-                  text=r.read().decode('utf-8','replace')
-                  status=r.status
-          except urllib.error.HTTPError as e:
-              text=e.read().decode('utf-8','replace')
-              status=e.code
-          try:
-              body=json.loads(text)
-          except Exception:
-              body={'raw':text[:2000]}
+          active_versions=deployments.get('versions') if isinstance(deployments,dict) else []
+          active_id=(active_versions or [{}])[0].get('version_id')
+          if active_id:
+              subprocess.run([
+                  'npx','--yes','wrangler@4','versions','view',active_id,
+                  '--name','radar-goldbet','--json'
+              ], check=True, stdout=open('feed/cloudflare-version-active.json','w',encoding='utf-8'))
+          else:
+              pathlib.Path('feed/cloudflare-version-active.json').write_text('{}',encoding='utf-8')
+          version_view=json.loads(pathlib.Path('feed/cloudflare-version-active.json').read_text(encoding='utf-8'))
+
+          def probe(headers=None):
+              h={'Accept':'application/json','User-Agent':'RadarCloudflareDiagnostic/3.0'}
+              if headers: h.update(headers)
+              req=urllib.request.Request('https://radar-goldbet.p-ceresetti.workers.dev/health',headers=h)
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      text=r.read().decode('utf-8','replace'); status=r.status
+              except urllib.error.HTTPError as e:
+                  text=e.read().decode('utf-8','replace'); status=e.code
+              try: body=json.loads(text)
+              except Exception: body={'raw':text[:2000]}
+              return status, body
+
+          normal_status, normal_body=probe()
+          override_status, override_body=(None,None)
+          if active_id:
+              override_status, override_body=probe({
+                  'Cloudflare-Workers-Version-Overrides':f'radar-goldbet="{active_id}"'
+              })
 
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
               'deployment_status':deployments,
+              'active_version_id':active_id,
+              'active_version_view':version_view,
               'recent_versions':versions,
-              'public_health_status':status,
-              'public_health_body':body
+              'public_health_status':normal_status,
+              'public_health_body':normal_body,
+              'override_health_status':override_status,
+              'override_health_body':override_body
           }
           pathlib.Path('feed/cloudflare-runtime-diagnostic.json').write_text(
               json.dumps(out,ensure_ascii=False,indent=2), encoding='utf-8'
@@ -72,7 +90,7 @@ jobs:
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/cloudflare-deployment-current.json feed/cloudflare-versions-current.json feed/cloudflare-runtime-diagnostic.json 2>/dev/null || true
+          git add feed/cloudflare-deployment-current.json feed/cloudflare-versions-current.json feed/cloudflare-version-active.json feed/cloudflare-runtime-diagnostic.json 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m 'Record Cloudflare runtime diagnostic'
           for attempt in 1 2 3 4; do
