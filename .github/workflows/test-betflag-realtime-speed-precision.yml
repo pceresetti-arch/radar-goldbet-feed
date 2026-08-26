@@ -1,0 +1,152 @@
+name: Test BetFlag realtime speed and precision
+
+on:
+  push:
+    paths:
+      - 'quote-realtime-test-trigger.json'
+      - '.github/workflows/test-betflag-realtime-speed-precision.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run exact-price tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price'
+          mkdir -p /tmp/radar-test
+
+          run_case() {
+            label="$1"; shift
+            url="$BASE?$*"
+            safe="$(echo "$label" | tr ' ' '_' | tr -cd '[:alnum:]_-')"
+            metrics=$(curl -sS --get \
+              --data-urlencode "q=Monaco Gornik" \
+              "$@" \
+              -o "/tmp/radar-test/${safe}.json" \
+              -w '%{http_code} %{time_total}' \
+              "$BASE")
+            http_code=$(echo "$metrics" | awk '{print $1}')
+            time_total=$(echo "$metrics" | awk '{print $2}')
+            python - "$label" "$http_code" "$time_total" "/tmp/radar-test/${safe}.json" <<'PY'
+import json, sys
+label, http_code, time_total, path = sys.argv[1:]
+try:
+    d=json.load(open(path))
+except Exception:
+    d={}
+cert=d.get('certificate') or {}
+quote=d.get('quote') or {}
+out={
+  'label': label,
+  'http_code': int(http_code),
+  'curl_time_total_seconds': float(time_total),
+  'generated_at': d.get('generated_at'),
+  'served_at': d.get('served_at'),
+  'source_class': d.get('source_class'),
+  'upstream_elapsed_ms': d.get('upstream_elapsed_ms'),
+  'returned': d.get('returned'),
+  'price_gate_eligible': d.get('price_gate_eligible'),
+  'proof_id': cert.get('proof_id'),
+  'exact_identity_match': cert.get('exact_identity_match'),
+  'source_healthy': cert.get('source_healthy'),
+  'freshness': cert.get('freshness'),
+  'quote': {
+    'match': quote.get('match'),
+    'match_event_id': quote.get('match_event_id'),
+    'match_market_id': quote.get('match_market_id'),
+    'player': quote.get('player'),
+    'requested_market': quote.get('requested_market'),
+    'market': quote.get('market'),
+    'selection': quote.get('selection'),
+    'line': quote.get('line'),
+    'odd': quote.get('odd'),
+    'selection_id': quote.get('selection_id'),
+    'market_id': quote.get('market_id'),
+    'odds_id': quote.get('odds_id')
+  }
+}
+print(json.dumps(out, ensure_ascii=False))
+PY
+          }
+
+          run_case 'biereth_anytime_1' \
+            --data-urlencode 'player=Mika Biereth' \
+            --data-urlencode 'market=Marcatore' \
+            --data-urlencode 'selection=Si' > /tmp/radar-test/case1.ndjson
+
+          sleep 1
+          run_case 'biereth_anytime_2' \
+            --data-urlencode 'player=Mika Biereth' \
+            --data-urlencode 'market=Marcatore' \
+            --data-urlencode 'selection=Si' > /tmp/radar-test/case2.ndjson
+
+          run_case 'biereth_1t' \
+            --data-urlencode 'player=Mika Biereth' \
+            --data-urlencode 'market=Marcatore 1T' \
+            --data-urlencode 'selection=Si' > /tmp/radar-test/case3.ndjson
+
+          run_case 'negative_control_wrong_player' \
+            --data-urlencode 'player=Mika Biereth XXX' \
+            --data-urlencode 'market=Marcatore' \
+            --data-urlencode 'selection=Si' > /tmp/radar-test/case4.ndjson
+
+          python - <<'PY'
+import json, statistics, datetime
+paths=['/tmp/radar-test/case1.ndjson','/tmp/radar-test/case2.ndjson','/tmp/radar-test/case3.ndjson','/tmp/radar-test/case4.ndjson']
+cases=[json.loads(open(p).read()) for p in paths]
+pos=cases[:3]
+neg=cases[3]
+lat=[c['curl_time_total_seconds'] for c in pos]
+ups=[c['upstream_elapsed_ms'] for c in pos if isinstance(c.get('upstream_elapsed_ms'), (int,float))]
+q1=pos[0].get('quote') or {}
+q2=pos[1].get('quote') or {}
+identity_keys=['match_event_id','match_market_id','player','requested_market','selection','selection_id','market_id','odds_id']
+identity_stable=all(q1.get(k)==q2.get(k) for k in identity_keys)
+price_stable=q1.get('odd')==q2.get('odd')
+report={
+  'schema_version':'quote-realtime-test-v1',
+  'tested_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+  'worker':'https://radar-betflag-v7.p-ceresetti.workers.dev',
+  'positive_cases':3,
+  'negative_cases':1,
+  'summary':{
+    'positive_all_http_200':all(c.get('http_code')==200 for c in pos),
+    'positive_all_unique_exact':all(c.get('returned')==1 and c.get('exact_identity_match') is True for c in pos),
+    'positive_all_price_gate_eligible':all(c.get('price_gate_eligible') is True for c in pos),
+    'negative_control_rejected':neg.get('http_code')==404 and neg.get('returned')==0 and neg.get('price_gate_eligible') is False,
+    'repeat_identity_stable':identity_stable,
+    'repeat_price_stable':price_stable,
+    'mean_total_seconds':round(statistics.mean(lat),4),
+    'median_total_seconds':round(statistics.median(lat),4),
+    'max_total_seconds':round(max(lat),4),
+    'mean_upstream_ms':round(statistics.mean(ups),1) if ups else None
+  },
+  'cases':cases
+}
+open('feed/quote-realtime-test-latest.json','w').write(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(report['summary'],ensure_ascii=False,indent=2))
+PY
+
+      - name: Commit test report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-bot'
+          git config user.email 'radar-bot@users.noreply.github.com'
+          git add feed/quote-realtime-test-latest.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Record realtime BetFlag speed and precision test'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
