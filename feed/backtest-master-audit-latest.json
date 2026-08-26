@@ -1,0 +1,130 @@
+{
+  "schema_version": "backtest-master-audit-v1",
+  "generated_at": "2026-08-26T21:34:07+00:00",
+  "local_timezone": "Europe/Rome",
+  "local_date": "2026-08-26",
+  "scope": "technical and quantitative audit; no retrospective reconstruction of prices, probabilities or decisions",
+  "material_findings": [
+    {
+      "id": "CONTRACT_DRIFT_PLAYER_SOURCE",
+      "severity": "HIGH",
+      "status": "FIXED_IN_SOURCE_DOCS_AND_GENERATOR",
+      "detail": "MASTER and several specialist contracts still described the legacy SHARED_AAMS/GOLDBET_ALIGNED_PROXY path although radar-project-state-v4 and BETFLAG_REALTIME_CONTRACT define BetFlag/AAMS direct as the primary operational player source.",
+      "actions": [
+        "Added explicit superseding v7 sections to MASTER, FAST_PATH, PLAYER_CONTEXT, OPERATIONAL, ODDS_MOVEMENT and DOUBLES contracts.",
+        "Updated scripts/build_deep_analysis_readiness.py to remove the proxy-policy gate and require an exact fresh BetFlag/AAMS v7 proof at decision time."
+      ],
+      "historical_preservation": "Existing SHARED_AAMS and PROXY_BETFLAG_GOLDBET records remain unchanged."
+    },
+    {
+      "id": "OUTCOME_JOIN_MISSING",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "detail": "player-context-validation-ledger has 23 entries and all 23 remain outcome_status=PENDING although every listed kickoff is already in the past at audit time.",
+      "impact": "Brier, log-loss, calibration, ablation, CLV and outcome-based player-context validation remain unavailable.",
+      "anti_hindsight": "No outcomes, prices, probabilities or decisions were reconstructed."
+    },
+    {
+      "id": "LEDGER_VALIDATION_STATUS_NULL",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "detail": "20/23 entries are VALID_PRE_KICKOFF; 3/23 have no validation_status field despite retaining immutable first pre-kickoff snapshots.",
+      "impact": "These three entries must not enter the validated OOS sample until schema status is resolved."
+    },
+    {
+      "id": "GOLDBET_STANDARD_SOURCE_FAILURE",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "detail": "Latest odds movement run returned HTTP 429 for all 10 GoldBet offsets; standard_bridge_total=0 and standard_rows_fetched=0.",
+      "impact": "Retained observations are last-known-good only and must not be treated as fresh/current."
+    },
+    {
+      "id": "LIVE_FEED_STALENESS",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "detail": "At audit time, readiness, lineup, tactical, odds movement, player-context and MMS artifacts are stale. readiness ready_count=0; MMS latest generation is 2026-08-25T06:53:48Z.",
+      "impact": "No live operational conclusion should be derived from preserved files."
+    },
+    {
+      "id": "PIPELINE_LATENCY_SAMPLE_INSUFFICIENT",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "detail": "Exact-price Worker test has 3 positive calls plus 1 negative control; positive mean 2.326s, median 2.633s, max 2.7379s, all exact/eligible and negative control rejected.",
+      "impact": "This validates the exact-price block only; it does not establish full-pipeline P50/P95 or the 45-90s/~2m/~3m process targets."
+    },
+    {
+      "id": "PRE_POST_XI_ABLATION_NOT_YET_OBSERVED",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "detail": "The v4 contract and labels are defined, but no prospective candidate-origin dataset or same-sample revalidation-only versus full-rediscovery ablation is present yet.",
+      "impact": "PRE-XI anticipation rate and POST-XI rediscovery lift are not calculable."
+    },
+    {
+      "id": "MCI_SHADOW_DATASET_NOT_YET_BUILT",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "detail": "Market Confirmation Model is correctly frozen in RESEARCH_SHADOW_MODE, but the state contains only the roadmap; no de-vigged multi-market development/holdout dataset or ablation output exists.",
+      "impact": "MCI must not change P Radar or FINAL GATE."
+    }
+  ],
+  "quantitative_checkpoint": {
+    "player_context_ledger": {
+      "schema_version": "player-context-oos-v3",
+      "updated_at": "2026-08-26T14:27:02.863539+00:00",
+      "entries": 23,
+      "outcomes_joined": 0,
+      "valid_pre_kickoff": 20,
+      "missing_validation_status": 3,
+      "immutable_player_price_fixtures": 8,
+      "legacy_player_quotes": 2434,
+      "player_names_across_fixtures": 332,
+      "legacy_source_label": "shared AAMS GoldBet-aligned; player prices not independently GoldBet-certified"
+    },
+    "true_open_index": {
+      "bookmaker": "GoldBet",
+      "certified_total": 311,
+      "certified_this_run": 0,
+      "latest_certified_at": "2026-08-26T14:08:37.966821+00:00"
+    },
+    "readiness": {
+      "generated_at": "2026-08-26T19:18:17.272826+00:00",
+      "match_count": 64,
+      "ready_count": 0,
+      "wait_official_standard_xi": 60,
+      "stale_lineup_feed": 4
+    },
+    "odds_movement": {
+      "generated_at": "2026-08-26T16:57:04.413954+00:00",
+      "observations": 8712,
+      "tracked_selections": 46172,
+      "true_open_attached_records": 1521,
+      "standard_rows_fetched": 0,
+      "goldbet_http_429_offsets": 10
+    },
+    "exact_price_worker_test": {
+      "tested_at": "2026-08-26T20:33:59.489303+00:00",
+      "positive_calls": 3,
+      "negative_controls": 1,
+      "mean_seconds": 2.326,
+      "median_seconds": 2.633,
+      "max_positive_seconds": 2.7379,
+      "all_positive_exact_and_eligible": true,
+      "negative_control_rejected": true
+    }
+  },
+  "metrics_status": {
+    "Brier": "NOT_CALCULABLE",
+    "log_loss": "NOT_CALCULABLE",
+    "calibration": "NOT_CALCULABLE",
+    "CLV": "NOT_CALCULABLE_NO_COMPARABLE_CLOSE",
+    "ROI_yield": "NOT_CALCULABLE_FROM_TECHNICAL_PUBLIC_LEDGER",
+    "pre_xi_post_xi_lift": "NOT_CALCULABLE",
+    "full_pipeline_p50_p95": "NOT_CALCULABLE"
+  },
+  "next_priority": [
+    "Join authoritative outcomes to completed immutable ledger entries without modifying pre-match snapshots.",
+    "Instrument PRE-XI shortlist, POST-XI dual lanes, origin labels and block-level latency timestamps.",
+    "Restore fresh GoldBet standard acquisition or record bounded retry/backoff and last-known-good staleness explicitly.",
+    "Build MCI development dataset only after comparable TRUE OPEN multi-market series exist; freeze before temporal holdout."
+  ]
+}
