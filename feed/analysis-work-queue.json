@@ -1,6 +1,6 @@
 {
   "schema_version": "radar-analysis-work-queue-v1",
-  "updated_at": "2026-08-26",
+  "updated_at": "2026-08-26T21:34:07+00:00",
   "items": [
     {
       "id": "cross-market-movement-mci",
@@ -21,6 +21,51 @@
         "freeze",
         "holdout/OOS",
         "promotion decision"
+      ]
+    },
+    {
+      "id": "outcome-ledger-join",
+      "priority": "CRITICAL",
+      "status": "QUEUED_DATA_REPAIR",
+      "summary": "Join authoritative outcomes to every completed immutable player-context ledger entry without mutating pre-match evidence.",
+      "operational_constraint": "Outcome joins may add post-match fields only; never rebuild missing pre-match prices, probabilities, gates or decisions.",
+      "next_steps": [
+        "resolve provider fixture IDs",
+        "join final score and player outcomes",
+        "record source and fetched_at",
+        "validate 23/23 completion",
+        "unlock Brier/log-loss/calibration where predictions exist"
+      ]
+    },
+    {
+      "id": "pre-post-xi-discovery-latency",
+      "priority": "CRITICAL",
+      "status": "QUEUED_IMPLEMENTATION",
+      "spec": "RADAR_PRE_XI_POST_XI_DISCOVERY_AND_SPEED_RULE.md",
+      "summary": "Persist PRE-XI shortlist, run mandatory POST-XI revalidation plus full rediscovery, label candidate origin and measure block latency.",
+      "operational_constraint": "Same-sample anti-hindsight ablation; process targets are not SLA and cannot be claimed without P50/P95 measurements.",
+      "next_steps": [
+        "define machine schema",
+        "capture PRE_XI baseline",
+        "capture XI timestamp/fingerprint",
+        "run dual lanes",
+        "record candidate-origin labels",
+        "record block and total latency",
+        "compare revalidation-only vs full rediscovery OOS"
+      ]
+    },
+    {
+      "id": "goldbet-429-reliability",
+      "priority": "HIGH",
+      "status": "QUEUED_RELIABILITY_FIX",
+      "summary": "Recover GoldBet standard acquisition after all offset calls returned HTTP 429 and prevent preserved observations from appearing fresh.",
+      "operational_constraint": "Respect source limits; use bounded backoff and retain last-known-good with true generated_at/staleness.",
+      "next_steps": [
+        "instrument retry-after",
+        "bounded exponential backoff",
+        "reduce non-decisive scans",
+        "record failure rate and recovery latency",
+        "verify current standard rows > 0"
       ]
     }
   ]
