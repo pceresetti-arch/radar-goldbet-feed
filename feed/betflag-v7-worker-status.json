@@ -1,0 +1,133 @@
+{
+  "generated_at": "2026-08-26T20:04:17.582707+00:00",
+  "worker": "radar-betflag-v7",
+  "base_url": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "health_status": 200,
+  "health": {
+    "ok": true,
+    "service": "radar-goldbet",
+    "version": "7.0-betflag-operational",
+    "player_props_forwarding": true,
+    "public_fast_path": true,
+    "exact_player_price_proof": true,
+    "cache_ttl_seconds": {
+      "direct_goldbet": 8,
+      "betflag_scan": 12,
+      "betflag_exact": 0
+    },
+    "freshness_policy_seconds": {
+      "betflag_exact_price": 45
+    },
+    "provenance_contract": {
+      "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+      "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+    },
+    "endpoints": [
+      "/health",
+      "/live/goldbet",
+      "/live/player-props",
+      "/live/player-price",
+      "/live/fixture",
+      "/sports",
+      "/bookmakers",
+      "/leagues",
+      "/odds",
+      "/history"
+    ],
+    "protected_endpoints": [
+      "/sports",
+      "/bookmakers",
+      "/leagues",
+      "/odds",
+      "/history"
+    ],
+    "odds_params": [
+      "sport",
+      "market",
+      "league",
+      "bookmakers",
+      "event_id",
+      "state",
+      "limit",
+      "offset",
+      "content",
+      "player",
+      "q"
+    ]
+  },
+  "player_price_status": 200,
+  "player_price": {
+    "generated_at": "2026-08-26T20:04:14.967Z",
+    "served_at": "2026-08-26T20:04:17.536Z",
+    "source_class": "BETFLAG_AAMS_DIRECT",
+    "source": "sportservice.betflag.it direct AAMS player service",
+    "betflag_direct": true,
+    "goldbet_direct": false,
+    "upstream_elapsed_ms": 2569,
+    "target": {
+      "tab": 2484,
+      "slot": 22884,
+      "market": "Marc"
+    },
+    "returned": 1,
+    "price_gate_eligible": true,
+    "certificate": {
+      "proof_id": "bf-589f705d0ed11958b17c",
+      "sha256": "589f705d0ed11958b17c3fa415f6b75abf4fd299d2bac9176753554c935ebd48",
+      "exact_identity_match": true,
+      "source_healthy": true,
+      "freshness": {
+        "age_seconds": 2.6,
+        "max_age_seconds": 45,
+        "fresh": true
+      },
+      "price_gate_eligible": true,
+      "canonical": {
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source_host": "sportservice.betflag.it",
+        "fetched_at": "2026-08-26T20:04:14.967Z",
+        "match": "Monaco - Gornik Zabrze",
+        "match_market_id": "36351.18516",
+        "match_event_id": 16030651,
+        "player": "Mika Biereth",
+        "requested_market": "Marc",
+        "market": "Marc",
+        "line": null,
+        "selection": "Si",
+        "odd": 2.1,
+        "selection_id": 3738715959,
+        "market_id": -2117614283,
+        "odds_id": -563401195
+      }
+    },
+    "quote": {
+      "event_id": 16031423,
+      "player_event": "(ASM*-GOZ) Mika Biereth",
+      "match_code": "ASM*-GOZ",
+      "player": "Mika Biereth",
+      "start_time": "27-08-2026 18:45",
+      "league": "Conference League",
+      "tournament_id": 5548529,
+      "category_id": 14260,
+      "authority_id": 2474,
+      "match_market_id": "36351.18516",
+      "match": "Monaco - Gornik Zabrze",
+      "match_event_id": 16030651,
+      "match_start": "27-08-2026 18:45",
+      "requested_market": "Marc",
+      "market": "Marc",
+      "line": null,
+      "selection": "Si",
+      "odd": 2.1,
+      "selection_id": 3738715959,
+      "selection_type": 1,
+      "market_type": 4490,
+      "market_id": -2117614283,
+      "odds_id": -563401195,
+      "fetched_at": "2026-08-26T20:04:14.967Z"
+    },
+    "note": "Certified fresh BetFlag/AAMS operational player price."
+  },
+  "live_verified": true,
+  "exact_price_verified": true
+}
