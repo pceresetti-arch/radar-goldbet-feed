@@ -1,5 +1,16 @@
 # Radar Unico — contratto operativo mercati e BET
 
+## Aggiornamento fonte player — 26/08/2026
+
+Per i player props, questa sezione prevale sulle formulazioni legacy presenti più avanti:
+
+- BetFlag/AAMS diretto è la fonte operativa primaria.
+- Il feed periodico è solo storico/discovery.
+- Il prezzo finale deve provenire da una prova exact fresca e univoca del Worker v7 /live/player-price, con source health, timestamp e proof/fingerprint.
+- Una prova valida usa la classe BETFLAG_AAMS_DIRECT_CERTIFIED ed entra direttamente nel confronto current_price >= FINAL_GATE.
+- GoldBet diretto della stessa selezione resta fonte separata di cross-check/calibrazione.
+- Non applicare il precedente PROXY GATE alle nuove decisioni direct; non riclassificare gli esempi legacy SHARED_AAMS o PROXY_BETFLAG_GOLDBET.
+
 ## Obiettivo
 Il feed player-props automatico entra nel flusso standard del Radar Unico e non viene trattato come sorgente separata.
 
