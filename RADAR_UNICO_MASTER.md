@@ -1,5 +1,21 @@
 # Radar Unico Value Bet Calcio — MASTER SOURCE OF TRUTH
 
+## 0A. Aggiornamento vincolante — 26/08/2026
+
+Questa sezione prevale sulle formulazioni legacy ancora presenti più avanti nel documento.
+
+- Per i player props, la fonte operativa primaria è BetFlag/AAMS diretto (BETFLAG_AAMS_DIRECT) tramite sportservice.betflag.it.
+- Il fast path autorevole è il Worker dedicato https://radar-betflag-v7.p-ceresetti.workers.dev, versione health 7.0-betflag-operational, endpoint exact /live/player-price.
+- Una decisione player richiede prova exact fresca e univoca per partita + giocatore + mercato + selezione/linea, con timestamp e proof/fingerprint; quando valida, la classe è BETFLAG_AAMS_DIRECT_CERTIFIED.
+- GoldBet diretto della stessa selezione resta separato come GOLDBET_DIRECT e viene usato come cross-check/calibrazione. BetFlag/AAMS diretto non deve mai essere chiamato “GoldBet diretto”.
+- Gli esempi storici già documentati come SHARED_AAMS o PROXY_BETFLAG_GOLDBET restano immutati; non vengono riclassificati ex post.
+- feed/player-props-current*.json è storico/discovery, non prezzo finale corrente.
+- La pipeline prospettica conserva shortlist PRE-XI e, dopo XI ufficiale, esegue sia revalidation sia full rediscovery, con etichette PRE_XI_IDENTIFIED, POST_XI_DISCOVERY, PRE_XI_PROMOTED_POST_XI, PRE_XI_INVALIDATED_POST_XI.
+- Il Market Confirmation Model resta RESEARCH_SHADOW_MODE e non modifica il FINAL GATE senza miglioramento OOS robusto.
+- I target di latenza 45–90 s / ~2 min / ~3 min sono target di processo, non SLA; vanno dichiarati raggiunti solo con misure reali P50/P95 e failure rate.
+
+Contratti correnti da leggere subito dopo il MASTER: BETFLAG_REALTIME_CONTRACT.md, RADAR_PRE_XI_POST_XI_DISCOVERY_AND_SPEED_RULE.md, RADAR_MARKET_CONFIRMATION_MODEL.md, quindi gli altri contratti specialistici.
+
 Versione iniziale consolidata: 2026-08-25
 
 ## 0. Scopo di questo file
