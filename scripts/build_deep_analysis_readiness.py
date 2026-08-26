@@ -45,7 +45,6 @@ tactical=load('lineups-tactical-current.json',{'matches':[]})
 movement=load('odds-movement-state.json',{'records':{}})
 props=load('player-props-current.json',{'rows':[]})
 context=load('player-matchup-context-current.json',{'matches':[]})
-proxy_policy=load('shared-goldbet-proxy-policy.json',{})
 
 TAC={str(m.get('match_market_id')):m for m in tactical.get('matches') or []}
 CTX={str(m.get('match_market_id')):m for m in context.get('matches') or []}
@@ -63,15 +62,11 @@ for r in MOV:
 
 props_age=age_minutes(props.get('generated_at')); movement_age=age_minutes(movement.get('generated_at'))
 lineup_age=age_minutes(lineups.get('generated_at')); tactical_age=age_minutes(tactical.get('generated_at')); context_age=age_minutes(context.get('generated_at'))
-proxy_policy_age=age_minutes(proxy_policy.get('generated_at'))
 lineup_feed_fresh=lineup_age is not None and lineup_age<=15
 tactical_feed_fresh=tactical_age is not None and tactical_age<=20
 movement_feed_fresh=movement_age is not None and movement_age<=15
 props_feed_fresh=props_age is not None and props_age<=20
 context_feed_fresh=context_age is not None and context_age<=30
-proxy_policy_fresh=proxy_policy_age is not None and proxy_policy_age<=float(proxy_policy.get('stale_after_minutes') or 45)
-proxy_verdict=str(proxy_policy.get('verdict') or '')
-proxy_player_gate_allowed=bool(proxy_policy.get('proxy_player_gate_allowed')) and proxy_verdict in ('STRONG_EXACT_MATCH','STRONG_NEAR_MATCH') and proxy_policy_fresh
 lineup_generated=dt(lineups.get('generated_at')); tactical_source_lineup=dt(tactical.get('source_lineup_generated_at'))
 tactical_synced=bool(lineup_generated and tactical_source_lineup and tactical_source_lineup>=lineup_generated)
 
@@ -100,8 +95,6 @@ for m in lineups.get('matches') or []:
     context_matches_current_xi=bool(current_fp and context_fp and current_fp==context_fp)
     player_context_ready=context_available and context_feed_fresh and context_matches_current_xi
     player_market_bet_ready=props_ready and player_context_ready
-    player_proxy_price_ready=props_ready and proxy_player_gate_allowed
-    player_operational_proxy_ready=player_market_bet_ready and player_proxy_price_ready
     standard_ready=lineup_ready and tactical_ready and odds_ready and true_open_ready
 
     reasons=[]; warnings=[]
@@ -116,12 +109,10 @@ for m in lineups.get('matches') or []:
     if not props_available:warnings.append('PLAYER_PROPS_NOT_OFFERED_OR_NOT_MAPPED')
     elif not props_feed_fresh:warnings.append('PLAYER_PROPS_STALE')
     if props_ready and not player_context_ready:warnings.append('PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT')
-    if props_ready and not proxy_player_gate_allowed:warnings.append('PLAYER_PROXY_PRICE_NOT_CERTIFIED_OR_STALE')
 
     if standard_ready:
         state='READY_DEEP_ANALYSIS'; reasons=[]
-        if player_operational_proxy_ready:analysis_scope='FULL_WITH_PLAYER_CONTEXT_AND_CERTIFIED_PROXY_PRICE_PATH'
-        elif player_market_bet_ready:analysis_scope='FULL_WITH_PLAYER_CONTEXT_DIRECT_PRICE_OR_PROXY_PENDING'
+        if player_market_bet_ready:analysis_scope='FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED'
         elif props_ready:analysis_scope='STANDARD_READY_PLAYER_PROPS_CONTEXT_PENDING'
         else:analysis_scope='STANDARD_COMPLETE_PLAYER_PROPS_OPTIONAL_MISSING'
     else:
@@ -141,7 +132,7 @@ for m in lineups.get('matches') or []:
         'tactical_status':tactical_status,'tactical_confidence':t.get('positioning_confidence'),'tactical_feed_fresh':tactical_feed_fresh,'tactical_synced_to_current_lineup':tactical_synced,'tactical_ready':tactical_ready,
         'goldbet_1x2_selection_count':len(odds_1x2),'goldbet_over_selection_count':len(odds_over),'goldbet_odds_ready':odds_ready,'true_open_1x2_count':len(true_1x2),'true_open_over_count':len(true_over),'true_open_ready':true_open_ready,
         'player_prop_rows':len(pr),'player_props_available':props_available,'player_props_ready':props_ready,'player_context_available':context_available,'player_context_fresh':context_feed_fresh,'player_context_matches_current_xi':context_matches_current_xi,'player_market_bet_ready':player_market_bet_ready,
-        'player_proxy_policy_verdict':proxy_verdict,'player_proxy_policy_age_minutes':proxy_policy_age,'player_proxy_price_ready':player_proxy_price_ready,'player_operational_proxy_ready':player_operational_proxy_ready,'player_proxy_gate_formula':proxy_policy.get('strong_proxy_gate_formula'),
+        'player_price_source_class':'BETFLAG_AAMS_DIRECT','player_exact_price_endpoint':'https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price','player_exact_price_required_at_decision_time':True,
         'strong_drop_count':len(drops),'strong_drops':drops[:20]
     })
 
@@ -151,15 +142,15 @@ for x in out:counts[x['readiness']]+=1
 ready=[x for x in out if x['readiness']=='READY_DEEP_ANALYSIS']
 payload={
     'generated_at':NOW.isoformat(),
-    'contract':'READY standard requires fresh official FotMob standard XI + tactical layer synchronized to that XI + current GoldBet 1X2/Over + certified TRUE OPEN. Player BET additionally requires fresh player context matched to XI. If direct GoldBet player price is absent, a fresh strong GOLDBET_ALIGNED_PROXY policy may provide the operational price path subject to PROXY_GATE.',
-    'input_freshness_minutes':{'lineups':lineup_age,'tactical':tactical_age,'odds_movement':movement_age,'player_props':props_age,'player_context':context_age,'shared_goldbet_proxy_policy':proxy_policy_age},
-    'freshness_limits_minutes':{'lineups':15,'tactical':20,'odds_movement':15,'player_props':20,'player_context':30,'shared_goldbet_proxy_policy':float(proxy_policy.get('stale_after_minutes') or 45)},
-    'proxy_policy':{'verdict':proxy_verdict,'fresh':proxy_policy_fresh,'proxy_player_gate_allowed':proxy_player_gate_allowed,'formula':proxy_policy.get('strong_proxy_gate_formula'),'source_class':proxy_policy.get('source_class')},
+    'contract':'READY standard requires fresh official FotMob standard XI + tactical layer synchronized to that XI + current GoldBet 1X2/Over + certified TRUE OPEN. Player BET additionally requires fresh player context matched to XI and a fresh unique exact BetFlag/AAMS direct proof from the dedicated v7 Worker at decision time.',
+    'input_freshness_minutes':{'lineups':lineup_age,'tactical':tactical_age,'odds_movement':movement_age,'player_props_discovery':props_age,'player_context':context_age},
+    'freshness_limits_minutes':{'lineups':15,'tactical':20,'odds_movement':15,'player_props_discovery':20,'player_context':30,'betflag_exact_price_seconds':45},
+    'player_price_path':{'source_class':'BETFLAG_AAMS_DIRECT','certified_class':'BETFLAG_AAMS_DIRECT_CERTIFIED','worker':'https://radar-betflag-v7.p-ceresetti.workers.dev','endpoint':'/live/player-price','exact_proof_required_at_decision_time':True},
     'match_count':len(out),'readiness_counts':dict(counts),'ready_count':len(ready),'ready_matches':ready,'matches':out
 }
 ROOT.mkdir(exist_ok=True)
 (ROOT/'deep-analysis-readiness.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
 summary={k:v for k,v in payload.items() if k!='matches'}
-summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','player_market_bet_ready','player_proxy_price_ready','player_operational_proxy_ready','strong_drop_count')} for m in ready]
+summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','player_market_bet_ready','player_price_source_class','player_exact_price_required_at_decision_time','strong_drop_count')} for m in ready]
 (ROOT/'deep-analysis-readiness-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(summary,ensure_ascii=False,indent=2))
