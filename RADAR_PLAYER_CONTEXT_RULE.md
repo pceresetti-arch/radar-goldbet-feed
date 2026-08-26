@@ -1,5 +1,15 @@
 # Radar Unico — Official XI & Player Context Gate
 
+## Price-source update — 2026-08-26
+
+For player markets, this section supersedes legacy wording below that requires a GoldBet price for the final gate.
+
+- Operational primary source: direct BetFlag/AAMS.
+- A player recommendation requires a fresh, unique exact proof for fixture + player + market + selection/line from the dedicated v7 Worker, with source health and proof fingerprint.
+- A valid decision-time proof is classified BETFLAG_AAMS_DIRECT_CERTIFIED and is compared directly with the model FINAL GATE.
+- Direct GoldBet on the identical selection remains a separate cross-check/calibration source and must never be inferred from BetFlag.
+- Historical SHARED_AAMS / proxy records remain unchanged.
+
 ## Purpose
 Increase pre-bet precision by ensuring player markets are evaluated on the actual official XI, current tactical role, realistic minutes risk and opponent concession structure.
 
