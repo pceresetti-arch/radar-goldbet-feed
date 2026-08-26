@@ -1,5 +1,9 @@
 # Radar Unico — contratto movimenti quota
 
+## Aggiornamento provenienza player — 26/08/2026
+
+Per i nuovi snapshot player, il movimento BetFlag/AAMS diretto resta una serie separata e non deve essere chiamato movimento GoldBet. Ogni punto deve conservare BETFLAG_AAMS_DIRECT, identità esatta, timestamp e freshness. Una prova exact decision-time valida può essere BETFLAG_AAMS_DIRECT_CERTIFIED. GoldBet diretto sulla stessa selezione, quando osservato, resta una serie GOLDBET_DIRECT distinta per cross-check e drift. Le etichette proxy legacy non vanno riscritte.
+
 ## Obiettivo
 Ricostruire in modo verificabile la traiettoria di prezzo di ciascuna selezione dal primo prezzo osservato fino ai checkpoint pre-kickoff.
 
