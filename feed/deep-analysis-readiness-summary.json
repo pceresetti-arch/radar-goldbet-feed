@@ -1,28 +1,27 @@
 {
-  "generated_at": "2026-08-26T19:18:17.272826+00:00",
-  "contract": "READY standard requires fresh official FotMob standard XI + tactical layer synchronized to that XI + current GoldBet 1X2/Over + certified TRUE OPEN. Player BET additionally requires fresh player context matched to XI. If direct GoldBet player price is absent, a fresh strong GOLDBET_ALIGNED_PROXY policy may provide the operational price path subject to PROXY_GATE.",
+  "generated_at": "2026-08-26T21:39:50.111959+00:00",
+  "contract": "READY standard requires fresh official FotMob standard XI + tactical layer synchronized to that XI + current GoldBet 1X2/Over + certified TRUE OPEN. Player BET additionally requires fresh player context matched to XI and a fresh unique exact BetFlag/AAMS direct proof from the dedicated v7 Worker at decision time.",
   "input_freshness_minutes": {
-    "lineups": 292.0,
-    "tactical": 291.4,
-    "odds_movement": 141.2,
-    "player_props": 0.4,
-    "player_context": 291.3,
-    "shared_goldbet_proxy_policy": 86.9
+    "lineups": 433.5,
+    "tactical": 432.9,
+    "odds_movement": 282.8,
+    "player_props_discovery": 142.0,
+    "player_context": 432.9
   },
   "freshness_limits_minutes": {
     "lineups": 15,
     "tactical": 20,
     "odds_movement": 15,
-    "player_props": 20,
+    "player_props_discovery": 20,
     "player_context": 30,
-    "shared_goldbet_proxy_policy": 45.0
+    "betflag_exact_price_seconds": 45
   },
-  "proxy_policy": {
-    "verdict": "UNPROVEN",
-    "fresh": false,
-    "proxy_player_gate_allowed": false,
-    "formula": "max(final_gate * 1.03, final_gate + 0.05)",
-    "source_class": "GOLDBET_ALIGNED_PROXY"
+  "player_price_path": {
+    "source_class": "BETFLAG_AAMS_DIRECT",
+    "certified_class": "BETFLAG_AAMS_DIRECT_CERTIFIED",
+    "worker": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+    "endpoint": "/live/player-price",
+    "exact_proof_required_at_decision_time": true
   },
   "match_count": 64,
   "readiness_counts": {
