@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-project-state-v1",
-  "as_of": "2026-08-25",
+  "schema_version": "radar-project-state-v2",
+  "as_of": "2026-08-26",
   "source_of_truth": "RADAR_UNICO_MASTER.md",
-  "objective": "Autonomously detect matches, wait for reliable fresh inputs, execute deep analysis, and notify the complete operational evaluation rather than a simple ready alert.",
+  "objective": "Autonomously detect matches, wait for reliable fresh inputs, execute deep analysis, certify the exact operational player price, and notify the complete evaluation rather than a simple ready alert.",
   "competition_perimeter": [
     "Allsvenskan",
     "Superettan",
@@ -25,7 +25,7 @@
     "UEFA Conference League"
   ],
   "readiness": {
-    "machine_state": "READY_DEEP_ANALYSIS",
+    "machine_state": "READY_DEEP_ANALYSIS_WITH_BETFLAG_ON_DEMAND_FALLBACK",
     "standard_requires": [
       "fresh official FotMob standard XI",
       "tactical layer synchronized to XI fingerprint",
@@ -34,7 +34,8 @@
     ],
     "player_props_block_standard_ready": false,
     "player_bet_requires_player_market_bet_ready": true,
-    "player_props_operational_primary": "BetFlag/AAMS"
+    "player_props_operational_primary": "BetFlag/AAMS direct",
+    "player_price_exact_proof_required": true
   },
   "official_xi": {
     "lineup_type": "standard",
@@ -47,7 +48,7 @@
   },
   "market_policy": {
     "operational_bookmaker_standard": "GoldBet",
-    "operational_source_player_props": "BetFlag/AAMS shared player service",
+    "operational_source_player_props": "BetFlag/AAMS direct player service",
     "mms_primary_markets": ["1X2 FT", "OVER FT"],
     "strong_drop_absolute_decimal": 0.2,
     "strong_drop_requires_true_open": true,
@@ -57,16 +58,42 @@
     "player_props_policy": {
       "enabled": true,
       "role": "PRIMARY_OPERATIONAL_SOURCE",
-      "activation": "use directly for every player-prop scan; do not wait for direct GoldBet player prices",
-      "user_validation": "On 2026-08-25 the user confirmed the checked BetFlag/AAMS player-prop prices matched GoldBet exactly on the Saudi fixtures.",
+      "activation": "use BetFlag/AAMS directly for every player-prop scan and exact price proof; do not wait for direct GoldBet player prices",
+      "user_validation": "On 2026-08-25 the user confirmed checked BetFlag/AAMS player-prop prices matched GoldBet on Saudi fixtures.",
       "rules": [
-        "Use BetFlag/AAMS directly to scan and price all available player props: scorers, first-half/second-half scorers, first scorer, scorer-or-substitute/Plus, goals or assists, assists, shots, shots on target and other available player markets.",
-        "Keep the actual source explicitly labelled BetFlag/AAMS and never relabel it as GoldBet direct.",
-        "When recent calibration shows BetFlag/AAMS and GoldBet are substantially aligned, apply FINAL GATE directly to the BetFlag/AAMS price with no automatic proxy penalty.",
-        "If calibration becomes stale or material drift is detected, apply a prudential buffer and flag the source-risk explicitly.",
-        "If a fresh direct GoldBet player price is also available, use it as a cross-check; only a material same-selection divergence changes the operational acceptance price.",
-        "Continue exact fixture, player, market, line and selection identity checks before classifying a BET."
+        "Use BetFlag/AAMS directly to scan available player props: scorers, first-half/second-half scorers, first scorer, scorer-or-substitute/Plus, goals or assists, assists, shots, shots on target and other available player markets.",
+        "Keep the actual source explicitly labelled BetFlag/AAMS direct and never relabel it as GoldBet direct.",
+        "For a final BET decision, require a unique exact fixture + player + market + selection/line price proof generated at decision time.",
+        "Periodic GitHub player-prop snapshots are historical/discovery data and must not be treated as the current operational price solely because the file exists.",
+        "When recent calibration shows BetFlag/AAMS and GoldBet are substantially aligned, apply FINAL GATE directly to a certified BetFlag/AAMS price with no automatic proxy penalty.",
+        "If calibration becomes stale or material drift is detected, apply a prudential buffer and flag source risk explicitly.",
+        "If a fresh direct GoldBet player price is also available, use it as a cross-check; only a material same-selection divergence changes the operational acceptance price."
       ]
+    }
+  },
+  "realtime_player_pricing": {
+    "contract": "BETFLAG_REALTIME_CONTRACT.md",
+    "primary_source_class": "BETFLAG_AAMS_DIRECT",
+    "primary_host": "sportservice.betflag.it",
+    "cloudflare_worker_target_version": "7.0-betflag-operational",
+    "cloudflare_exact_endpoint": "/live/player-price",
+    "cloudflare_deployment_state": "BLOCKED_MISSING_CLOUDFLARE_CREDENTIALS",
+    "cloudflare_required_github_secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"],
+    "operational_fallback_state": "READY_AND_PROVEN",
+    "operational_fallback_workflow": ".github/workflows/betflag-price-proof-on-demand.yml",
+    "request_file": "betflag-price-proof-request.json",
+    "latest_proof": "feed/betflag-price-proof-latest.json",
+    "proof_archive": "feed/price-proofs/",
+    "first_positive_proof": {
+      "match": "Monaco - Gornik Zabrze",
+      "player": "Mika Biereth",
+      "market": "Marc",
+      "odd": 2.1,
+      "fetched_at": "2026-08-26T19:14:33.572932+00:00",
+      "proof_id": "bf-438d74e62ec538a80181",
+      "source_healthy": true,
+      "exact_matches": 1,
+      "price_gate_eligible": true
     }
   },
   "player_context": {
@@ -97,7 +124,8 @@
   },
   "price_certification": {
     "goldbet_standard": "DIRECT_CERTIFIED_WHEN_FRESH_AND_MAPPED",
-    "player_props": "BETFLAG_AAMS_PRIMARY_OPERATIONAL_USER_VALIDATED_AGAINST_GOLDBET_2026_08_25; SOURCE_LABEL_REQUIRED; GOLDBET_DIRECT_USED_AS_CALIBRATION_CROSSCHECK_WHEN_AVAILABLE"
+    "player_props": "BETFLAG_AAMS_DIRECT_EXACT_PROOF_REQUIRED; SOURCE_LABEL_REQUIRED; GOLDBET_DIRECT_USED_AS_CALIBRATION_CROSSCHECK_WHEN_AVAILABLE",
+    "periodic_player_feed_role": "HISTORICAL_DISCOVERY_NOT_FINAL_PRICE"
   },
   "prospective_validation": {
     "ledger": "feed/player-context-validation-ledger.json",
@@ -114,13 +142,16 @@
     "tactical": "feed/lineups-tactical-current.json",
     "standard_odds_movement": "feed/odds-movement-current.json",
     "true_open_index": "feed/diretta-goldbet-true-open-index.json",
-    "player_props": "feed/player-props-current.json",
+    "player_props_periodic": "feed/player-props-current.json",
+    "betflag_exact_price_proof": "feed/betflag-price-proof-latest.json",
+    "cloudflare_deploy_status": "feed/cloudflare-deploy-status.json",
     "player_matchup_context": "feed/player-matchup-context-current.json",
     "player_heatmap_context": "feed/player-heatmap-context-current.json",
     "player_context_oos_ledger": "feed/player-context-validation-ledger.json",
     "mms_signals": "feed/radar-mms-primary-signals.json"
   },
   "priority_roadmap": [
+    "configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID GitHub secrets, then deploy and live-verify Worker v7",
     "continuous BetFlag/AAMS vs GoldBet player-prop calibration and drift monitoring",
     "calibrated minutes/substitution model",
     "automatic ablation/OOS testing",
