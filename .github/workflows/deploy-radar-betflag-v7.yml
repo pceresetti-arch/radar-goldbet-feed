@@ -1,0 +1,138 @@
+name: Deploy clean BetFlag v7 fast path
+
+on:
+  push:
+    paths:
+      - '.github/workflows/deploy-radar-betflag-v7.yml'
+      - 'wrangler.v7.jsonc'
+      - 'worker/src/**'
+      - 'radar-betflag-v7-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-radar-betflag-v7
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+
+      - name: Deploy clean v7 Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx --yes wrangler@4 deploy --config wrangler.v7.jsonc
+
+      - name: Verify v7 health and direct BetFlag price
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p feed
+          python - <<'PY'
+          import json, pathlib, time, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          base='https://radar-betflag-v7.p-ceresetti.workers.dev'
+
+          def get(path, params=None):
+              url=base+path
+              if params:
+                  url += '?' + urllib.parse.urlencode(params)
+              sep='&' if '?' in url else '?'
+              url += sep + 'cb=' + str(int(time.time()*1000))
+              req=urllib.request.Request(url,headers={
+                  'Accept':'application/json',
+                  'User-Agent':'RadarBetFlagV7Verify/1.0',
+                  'Cache-Control':'no-cache, no-store, max-age=0',
+                  'Pragma':'no-cache'
+              })
+              started=time.perf_counter()
+              try:
+                  with urllib.request.urlopen(req,timeout=45) as r:
+                      raw=r.read().decode('utf-8','replace'); status=r.status
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace'); status=e.code
+              try: body=json.loads(raw)
+              except Exception: body={'raw':raw[:3000]}
+              return status, body, round((time.perf_counter()-started)*1000), url
+
+          health_result=None
+          for attempt in range(1,9):
+              hs,hb,hms,hu=get('/health')
+              ok=(
+                  hs==200 and isinstance(hb,dict) and
+                  hb.get('version')=='7.0-betflag-operational' and
+                  hb.get('public_fast_path') is True and
+                  hb.get('exact_player_price_proof') is True and
+                  '/live/player-price' in (hb.get('endpoints') or [])
+              )
+              health_result={'attempt':attempt,'status':hs,'body':hb,'ms':hms,'url':hu,'verified':ok}
+              print(json.dumps(health_result,ensure_ascii=False))
+              if ok: break
+              time.sleep(5)
+
+          price_result=None
+          if health_result and health_result.get('verified'):
+              ps,pb,pms,pu=get('/live/player-price',{
+                  'q':'Monaco Gornik',
+                  'player':'Mika Biereth',
+                  'market':'Marcatore',
+                  'selection':'Si'
+              })
+              price_ok=(
+                  ps==200 and isinstance(pb,dict) and
+                  pb.get('source_class')=='BETFLAG_AAMS_DIRECT' and
+                  pb.get('price_gate_eligible') is True and
+                  isinstance(pb.get('quote'),dict) and
+                  pb['quote'].get('odd') is not None
+              )
+              price_result={'status':ps,'body':pb,'ms':pms,'url':pu,'verified':price_ok}
+              print(json.dumps(price_result,ensure_ascii=False))
+
+          out={
+              'generated_at':datetime.now(timezone.utc).isoformat(),
+              'worker':'radar-betflag-v7',
+              'base_url':base,
+              'health':health_result,
+              'betflag_price_test':price_result,
+              'live_verified':bool(health_result and health_result.get('verified')),
+              'betflag_exact_verified':bool(price_result and price_result.get('verified'))
+          }
+          pathlib.Path('feed/radar-betflag-v7-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          if not out['live_verified']:
+              raise SystemExit('clean v7 Worker health did not verify')
+          if not out['betflag_exact_verified']:
+              raise SystemExit('clean v7 Worker BetFlag exact-price path did not verify')
+          PY
+
+      - name: Commit v7 status
+        if: always()
+        shell: bash
+        run: |
+          set -e
+          [ -f feed/radar-betflag-v7-status.json ] || exit 0
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/radar-betflag-v7-status.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record clean BetFlag v7 Worker status'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
