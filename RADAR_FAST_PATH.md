@@ -1,5 +1,19 @@
 # Radar Unico — Fast Path operativo
 
+## Aggiornamento vincolante v7 — 26/08/2026
+
+Per i player props questa sezione prevale sulle sezioni legacy proxy presenti più avanti.
+
+- Fonte operativa primaria: BETFLAG_AAMS_DIRECT.
+- Worker autorevole: https://radar-betflag-v7.p-ceresetti.workers.dev, health 7.0-betflag-operational.
+- Endpoint exact: /live/player-price.
+- Un prezzo player è ammesso al FINAL GATE solo con match exact e univoco di fixture, giocatore, mercato, selezione/linea, source health, timestamp/freshness e proof/fingerprint.
+- Con prova valida usare BETFLAG_AAMS_DIRECT_CERTIFIED; non applicare il vecchio PROXY_GATE.
+- GoldBet diretto sulla stessa selezione resta GOLDBET_DIRECT, separato e usato come cross-check/calibrazione.
+- Il vecchio hostname combinato radar-goldbet non è il fast path BetFlag.
+- GitHub Actions on-demand è fallback/audit; i feed periodici sono storico/discovery.
+- Le descrizioni SHARED_AAMS / GOLDBET_ALIGNED_PROXY restano valide solo per gli snapshot storici prodotti sotto quel contratto e non vanno riscritte ex post.
+
 ## Obiettivo
 Ridurre al minimo il tempo tra disponibilità di formazione/quote e decisione Radar, senza confondere una quota GoldBet diretta con una quota proxy ad alta correlazione.
 
