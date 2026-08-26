@@ -1,0 +1,97 @@
+name: Deploy dedicated BetFlag v7 Worker
+
+on:
+  push:
+    paths:
+      - 'betflag-v7-deploy-trigger.json'
+      - 'worker/src/index.mjs'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Deploy dedicated BetFlag v7 Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4'
+          command: deploy --name radar-betflag-v7
+
+      - name: Verify dedicated BetFlag v7 live path
+        run: |
+          python - <<'PY'
+          import json, pathlib, time, urllib.parse, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          base='https://radar-betflag-v7.p-ceresetti.workers.dev'
+          def get(path, params=None, timeout=60):
+              url=base+path
+              if params:
+                  url += '?' + urllib.parse.urlencode(params)
+              req=urllib.request.Request(url,headers={'Accept':'application/json','Cache-Control':'no-cache','User-Agent':'RadarBetFlagV7Verify/1.0'})
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as r:
+                      raw=r.read().decode('utf-8','replace')
+                      try: body=json.loads(raw)
+                      except Exception: body={'raw':raw[:2000]}
+                      return r.status, body
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  try: body=json.loads(raw)
+                  except Exception: body={'raw':raw[:2000]}
+                  return e.code, body
+
+          hs=0; health={}
+          for i in range(10):
+              hs, health = get('/health', {'v':str(time.time_ns())})
+              if hs == 200 and isinstance(health,dict) and health.get('version') == '7.0-betflag-operational' and health.get('exact_player_price_proof') is True:
+                  break
+              time.sleep(4)
+
+          ps, price = get('/live/player-price', {
+              'q':'Monaco Gornik',
+              'player':'Mika Biereth',
+              'market':'Marcatore',
+              'selection':'Si'
+          }, timeout=90)
+
+          out={
+              'generated_at':datetime.now(timezone.utc).isoformat(),
+              'worker':'radar-betflag-v7',
+              'base_url':base,
+              'health_status':hs,
+              'health':health,
+              'player_price_status':ps,
+              'player_price':price,
+              'live_verified':hs == 200 and isinstance(health,dict) and health.get('version') == '7.0-betflag-operational' and health.get('exact_player_price_proof') is True,
+              'exact_price_verified':ps == 200 and isinstance(price,dict) and price.get('price_gate_eligible') is True
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-v7-worker-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          if not out['live_verified']:
+              raise SystemExit('Dedicated BetFlag v7 health verification failed')
+          PY
+
+      - name: Commit live status
+        if: always()
+        run: |
+          set -e
+          [ -f feed/betflag-v7-worker-status.json ] || exit 0
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-v7-worker-status.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record dedicated BetFlag v7 Worker status'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
