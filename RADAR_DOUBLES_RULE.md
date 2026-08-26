@@ -1,5 +1,9 @@
 # Radar Unico — Doppie Value e Doppie Speculative
 
+## Aggiornamento provenienza prezzi player — 26/08/2026
+
+Per ogni gamba player, BetFlag/AAMS diretto è la fonte operativa primaria. La gamba è ammissibile solo con prova exact fresca, univoca e fingerprintata al momento della decisione (BETFLAG_AAMS_DIRECT_CERTIFIED), oltre a player_market_bet_ready=true e al gate singolo. GoldBet diretto della stessa selezione resta cross-check separato. Non usare il vecchio caveat “non GoldBet-certified” per degradare automaticamente una prova BetFlag direct valida; aumentare il buffer combinato solo per incertezza di modello, correlazione, freshness o data confidence documentate.
+
 ## Obiettivo
 Il Radar può proporre, oltre alle singole, accumulatori da esattamente due selezioni quando la combinazione aumenta l'efficienza rischio/rendimento senza introdurre gambe negative soltanto per alzare la quota.
 
