@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 5
 
-      - name: Force selected Worker version to 100 percent
+      - name: Diagnose and force selected Worker version to 100 percent
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -25,70 +25,97 @@ jobs:
           import json, os, pathlib, time, urllib.request, urllib.error
           from datetime import datetime, timezone
 
-          req = json.loads(pathlib.Path('cloudflare-force-deploy-trigger.json').read_text())
-          version_id = req['version_id']
+          trigger = json.loads(pathlib.Path('cloudflare-force-deploy-trigger.json').read_text())
+          requested_version = trigger.get('version_id')
           account = os.environ['CLOUDFLARE_ACCOUNT_ID']
           token = os.environ['CLOUDFLARE_API_TOKEN']
           script = 'radar-goldbet'
-          api = f'https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/{script}/deployments'
-          body = json.dumps({
+          headers = {
+              'Authorization': f'Bearer {token}',
+              'Content-Type': 'application/json',
+              'User-Agent': 'RadarCloudflareReconcile/2.0'
+          }
+
+          def cf(method, path, data=None):
+              url = 'https://api.cloudflare.com/client/v4' + path
+              req = urllib.request.Request(url, data=(json.dumps(data).encode() if data is not None else None), method=method, headers=headers)
+              try:
+                  with urllib.request.urlopen(req, timeout=45) as r:
+                      raw = r.read().decode('utf-8','replace')
+                      return r.status, json.loads(raw)
+              except urllib.error.HTTPError as e:
+                  raw = e.read().decode('utf-8','replace')
+                  try: body = json.loads(raw)
+                  except Exception: body = {'raw': raw[:3000]}
+                  return e.code, body
+
+          dep_path = f'/accounts/{account}/workers/scripts/{script}/deployments'
+          ver_path = f'/accounts/{account}/workers/scripts/{script}/versions'
+          deps_status, deps_body = cf('GET', dep_path)
+          vers_status, vers_body = cf('GET', ver_path)
+
+          versions = vers_body.get('result') if isinstance(vers_body,dict) else []
+          if not isinstance(versions,list): versions=[]
+          version_ids = [v.get('id') for v in versions if isinstance(v,dict) and v.get('id')]
+          selected_version = requested_version if requested_version in version_ids else (version_ids[0] if version_ids else requested_version)
+
+          deploy_status, deploy_body = cf('POST', dep_path + '?force=true', {
               'strategy':'percentage',
-              'versions':[{'version_id':version_id,'percentage':100}],
-              'annotations':{
-                  'workers/message':'Force Radar v7 to 100% traffic',
-                  'workers/triggered_by':'github-actions-reconcile'
-              }
-          }).encode()
-          http_req = urllib.request.Request(api, data=body, method='POST', headers={
-              'Authorization':f'Bearer {token}',
-              'Content-Type':'application/json',
-              'User-Agent':'RadarCloudflareReconcile/1.0'
+              'versions':[{'version_id':selected_version,'percentage':100}]
           })
-          try:
-              with urllib.request.urlopen(http_req, timeout=45) as r:
-                  deploy_body = json.loads(r.read().decode())
-                  deploy_status = r.status
-          except urllib.error.HTTPError as e:
-              deploy_body = json.loads(e.read().decode('utf-8','replace'))
-              deploy_status = e.code
 
           base='https://radar-goldbet.p-ceresetti.workers.dev'
-          health=[]
-          final_body=None
-          for i in range(1,9):
-              url=f'{base}/health?reconcile={int(time.time()*1000)}-{i}'
-              hreq=urllib.request.Request(url, headers={'Accept':'application/json','Cache-Control':'no-cache','User-Agent':'RadarCloudflareReconcile/1.0'})
+          def health(version_override=None):
+              url=f'{base}/health?reconcile={int(time.time()*1000)}'
+              h={'Accept':'application/json','Cache-Control':'no-cache','User-Agent':'RadarCloudflareReconcile/2.0'}
+              if version_override:
+                  h['Cloudflare-Workers-Version-Overrides'] = f'{script}="{version_override}"'
+              req=urllib.request.Request(url,headers=h)
               try:
-                  with urllib.request.urlopen(hreq,timeout=30) as r:
+                  with urllib.request.urlopen(req,timeout=30) as r:
                       raw=r.read().decode('utf-8','replace')
-                      try: hb=json.loads(raw)
-                      except Exception: hb={'raw':raw[:1000]}
-                      hs=r.status
+                      try: body=json.loads(raw)
+                      except Exception: body={'raw':raw[:1000]}
+                      return r.status, body
               except urllib.error.HTTPError as e:
                   raw=e.read().decode('utf-8','replace')
-                  try: hb=json.loads(raw)
-                  except Exception: hb={'raw':raw[:1000]}
-                  hs=e.code
-              final_body=hb
-              health.append({'attempt':i,'status':hs,'body':hb})
-              if hs == 200 and isinstance(hb,dict) and hb.get('version') == '7.0-betflag-operational' and hb.get('exact_player_price_proof') is True:
+                  try: body=json.loads(raw)
+                  except Exception: body={'raw':raw[:1000]}
+                  return e.code, body
+
+          override_status, override_body = health(selected_version)
+          attempts=[]
+          final_status=None
+          final_body=None
+          for i in range(1,9):
+              final_status, final_body = health()
+              attempts.append({'attempt':i,'status':final_status,'body':final_body})
+              if final_status == 200 and isinstance(final_body,dict) and final_body.get('version') == '7.0-betflag-operational' and final_body.get('exact_player_price_proof') is True:
                   break
               time.sleep(4)
 
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
-              'requested_version_id':version_id,
+              'requested_version_id':requested_version,
+              'selected_version_id':selected_version,
+              'versions_http_status':vers_status,
+              'recent_version_ids':version_ids[:10],
+              'deployments_http_status':deps_status,
+              'recent_deployments':(deps_body.get('result') if isinstance(deps_body,dict) else None),
               'deployment_http_status':deploy_status,
               'deployment_success':bool(deploy_body.get('success')) if isinstance(deploy_body,dict) else False,
               'deployment_result':deploy_body.get('result') if isinstance(deploy_body,dict) else None,
-              'health_attempts':health,
-              'live_verified':isinstance(final_body,dict) and final_body.get('version') == '7.0-betflag-operational' and final_body.get('exact_player_price_proof') is True
+              'deployment_errors':deploy_body.get('errors') if isinstance(deploy_body,dict) else None,
+              'version_override_status':override_status,
+              'version_override_body':override_body,
+              'health_attempts':attempts,
+              'live_verified':final_status == 200 and isinstance(final_body,dict) and final_body.get('version') == '7.0-betflag-operational' and final_body.get('exact_player_price_proof') is True
           }
           pathlib.Path('feed').mkdir(exist_ok=True)
           pathlib.Path('feed/cloudflare-force-deploy-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps(out,ensure_ascii=False,indent=2))
-          if not out['deployment_success'] or not out['live_verified']:
-              raise SystemExit('Forced Cloudflare version deployment did not verify v7 live')
+          if not out['live_verified']:
+              raise SystemExit('Cloudflare reconcile still not serving Radar v7')
           PY
 
       - name: Commit reconcile status
