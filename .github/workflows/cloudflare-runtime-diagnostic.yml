@@ -30,7 +30,7 @@ jobs:
           npx --yes wrangler@4 deployments status --name radar-goldbet --json > feed/cloudflare-deployment-current.json
           npx --yes wrangler@4 versions list --name radar-goldbet --json > feed/cloudflare-versions-current.json
           python - <<'PY'
-          import json, pathlib, urllib.request, urllib.error, subprocess
+          import json, pathlib, urllib.request, urllib.error, subprocess, time
           from datetime import datetime, timezone
 
           deployments=json.loads(pathlib.Path('feed/cloudflare-deployment-current.json').read_text(encoding='utf-8'))
@@ -38,33 +38,48 @@ jobs:
           active_versions=deployments.get('versions') if isinstance(deployments,dict) else []
           active_id=(active_versions or [{}])[0].get('version_id')
           if active_id:
-              subprocess.run([
-                  'npx','--yes','wrangler@4','versions','view',active_id,
-                  '--name','radar-goldbet','--json'
-              ], check=True, stdout=open('feed/cloudflare-version-active.json','w',encoding='utf-8'))
+              with open('feed/cloudflare-version-active.json','w',encoding='utf-8') as fh:
+                  subprocess.run([
+                      'npx','--yes','wrangler@4','versions','view',active_id,
+                      '--name','radar-goldbet','--json'
+                  ], check=True, stdout=fh)
           else:
               pathlib.Path('feed/cloudflare-version-active.json').write_text('{}',encoding='utf-8')
           version_view=json.loads(pathlib.Path('feed/cloudflare-version-active.json').read_text(encoding='utf-8'))
 
-          def probe(headers=None):
-              h={'Accept':'application/json','User-Agent':'RadarCloudflareDiagnostic/3.0'}
+          def probe(url, headers=None):
+              h={
+                  'Accept':'application/json',
+                  'User-Agent':'RadarCloudflareDiagnostic/4.0',
+                  'Cache-Control':'no-cache, no-store, max-age=0',
+                  'Pragma':'no-cache'
+              }
               if headers: h.update(headers)
-              req=urllib.request.Request('https://radar-goldbet.p-ceresetti.workers.dev/health',headers=h)
+              req=urllib.request.Request(url,headers=h)
               try:
                   with urllib.request.urlopen(req,timeout=30) as r:
-                      text=r.read().decode('utf-8','replace'); status=r.status
+                      text=r.read().decode('utf-8','replace'); status=r.status; hdrs=dict(r.headers.items())
               except urllib.error.HTTPError as e:
-                  text=e.read().decode('utf-8','replace'); status=e.code
+                  text=e.read().decode('utf-8','replace'); status=e.code; hdrs=dict(e.headers.items())
               try: body=json.loads(text)
               except Exception: body={'raw':text[:2000]}
-              return status, body
+              return {'status':status,'body':body,'headers':hdrs,'url':url}
 
-          normal_status, normal_body=probe()
-          override_status, override_body=(None,None)
+          nonce=str(int(time.time()*1000))
+          base='https://radar-goldbet.p-ceresetti.workers.dev/health'
+          normal=probe(base+'?cb='+nonce)
+          override=None
+          preview=None
           if active_id:
-              override_status, override_body=probe({
+              override=probe(base+'?cb='+nonce+'-override',{
                   'Cloudflare-Workers-Version-Overrides':f'radar-goldbet="{active_id}"'
               })
+              prefix=active_id.split('-')[0]
+              preview_url=f'https://{prefix}-radar-goldbet.p-ceresetti.workers.dev/health?cb={nonce}-preview'
+              try:
+                  preview=probe(preview_url)
+              except Exception as exc:
+                  preview={'error':repr(exc),'url':preview_url}
 
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
@@ -72,10 +87,9 @@ jobs:
               'active_version_id':active_id,
               'active_version_view':version_view,
               'recent_versions':versions,
-              'public_health_status':normal_status,
-              'public_health_body':normal_body,
-              'override_health_status':override_status,
-              'override_health_body':override_body
+              'cache_busted_public_probe':normal,
+              'version_override_probe':override,
+              'version_preview_probe':preview
           }
           pathlib.Path('feed/cloudflare-runtime-diagnostic.json').write_text(
               json.dumps(out,ensure_ascii=False,indent=2), encoding='utf-8'
