@@ -1,0 +1,91 @@
+name: Repair Radar V3 source priority and player readiness
+
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-radar-v3-contract.yml'
+      - 'radar-v3-contract-repair-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+
+      - name: Patch MASTER and readiness contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('RADAR_UNICO_MASTER.md')
+          s=p.read_text(encoding='utf-8')
+
+          old='''## 9. GoldBet, BetFlag/AAMS e certificazione prezzi\nGoldBet resta il riferimento operativo primario.\n'''
+          new='''## 9. GoldBet, BetFlag/AAMS e certificazione prezzi\nLe priorità di fonte sono specifiche per famiglia di mercato e NON intercambiabili:\n- **PLAYER PROPS:** fonte operativa primaria = `BETFLAG_AAMS_DIRECT` tramite il Worker dedicato `radar-betflag-v7` e prova exact `/live/player-price`. Non attendere GoldBet per decidere un player prop.\n- **MERCATI STANDARD / MMS / TRUE OPEN:** GoldBet diretto resta il riferimento primario quando fresco e correttamente mappato.\n- **GOLDBET PLAYER:** solo cross-check/calibrazione opzionale e separata; un guasto GoldBet non blocca la corsia player BetFlag/AAMS.\n\nLe sezioni legacy su `SHARED_AAMS` / `GOLDBET_ALIGNED_PROXY` restano documentazione storica e non prevalgono sulla regola corrente exact BetFlag/AAMS del 26/08/2026.\n'''
+          if old not in s:
+              raise SystemExit('MASTER section 9 anchor not found')
+          s=s.replace(old,new,1)
+
+          old2='''Con prezzo GoldBet diretto:\n`BET solo se quota GoldBet corrente >= FINAL GATE`.\n\nCon player price proxy certificato:\n`BET (PROXY BETFLAG→GOLDBET) solo se proxy_price >= PROXY_GATE`, dove il PROXY GATE è derivato dal FINAL GATE secondo la policy corrente.\n\nSotto il rispettivo gate = NO BET.\n'''
+          new2='''Per **mercati standard** con prezzo GoldBet diretto:\n`BET solo se quota GoldBet corrente >= FINAL GATE`.\n\nPer **player props** la regola corrente è:\n`BET solo se prezzo exact BETFLAG_AAMS_DIRECT_CERTIFIED corrente >= FINAL GATE`, con identità univoca fixture+player+market+selection/line, fonte sana, freshness valida e `price_gate_eligible=true`.\nSe la prova exact manca o non è univoca: `ATTESA/NO BET`. Un eventuale GoldBet player resta solo cross-check separato.\n\nLe vecchie regole `PROXY BETFLAG→GOLDBET` sono conservate solo per storico/retro-compatibilità e non governano nuove decisioni quando il percorso exact v7 è operativo.\n\nSotto il rispettivo gate = NO BET.\n'''
+          if old2 not in s:
+              raise SystemExit('MASTER final gate anchor not found')
+          s=s.replace(old2,new2,1)
+
+          ready_anchor='''I player props NON bloccano la readiness standard se non sono offerti o non sono mappati.\n'''
+          ready_add='''I player props NON bloccano la readiness standard se non sono offerti o non sono mappati.\n\n### READY PLAYER LANE — indipendente da GoldBet standard\nLa corsia player può procedere anche se GoldBet standard/MMS è indisponibile, purché siano pronti XI ufficiale, layer tattico e player context coerente con lo stesso `xi_fingerprint`. Il prezzo finale viene poi richiesto on-demand a BetFlag/AAMS exact v7. Un errore GoldBet/ODSS/OddsPapi non deve trasformare una corsia player pronta in `WAIT_GOLDBET_ODDS`.\n'''
+          if ready_anchor not in s:
+              raise SystemExit('MASTER readiness anchor not found')
+          s=s.replace(ready_anchor,ready_add,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('scripts/build_deep_analysis_readiness.py')
+          s=p.read_text(encoding='utf-8')
+          anchor="""    player_market_bet_ready=props_ready and player_context_ready\n    standard_ready=lineup_ready and tactical_ready and odds_ready and true_open_ready\n"""
+          repl="""    player_market_bet_ready=props_ready and player_context_ready\n    # Player analysis is deliberately independent from GoldBet standard/MMS health.\n    # Exact BetFlag/AAMS price is requested on-demand at decision time.\n    player_lane_ready=lineup_ready and tactical_ready and player_context_ready\n    standard_ready=lineup_ready and tactical_ready and odds_ready and true_open_ready\n"""
+          if anchor not in s:
+              raise SystemExit('readiness player anchor not found')
+          s=s.replace(anchor,repl,1)
+
+          anchor2="""        'player_prop_rows':len(pr),'player_props_available':props_available,'player_props_ready':props_ready,'player_context_available':context_available,'player_context_fresh':context_feed_fresh,'player_context_matches_current_xi':context_matches_current_xi,'player_market_bet_ready':player_market_bet_ready,\n"""
+          repl2="""        'player_prop_rows':len(pr),'player_props_available':props_available,'player_props_ready':props_ready,'player_context_available':context_available,'player_context_fresh':context_feed_fresh,'player_context_matches_current_xi':context_matches_current_xi,'player_market_bet_ready':player_market_bet_ready,'player_lane_ready':player_lane_ready,\n"""
+          if anchor2 not in s:
+              raise SystemExit('readiness output anchor not found')
+          s=s.replace(anchor2,repl2,1)
+
+          anchor3="""    'match_count':len(out),'readiness_counts':dict(counts),'ready_count':len(ready),'ready_matches':ready,'matches':out\n"""
+          repl3="""    'match_count':len(out),'readiness_counts':dict(counts),'ready_count':len(ready),'ready_matches':ready,\n    'player_lane_ready_count':sum(1 for x in out if x.get('player_lane_ready')),\n    'player_lane_ready_matches':[x for x in out if x.get('player_lane_ready')],\n    'matches':out\n"""
+          if anchor3 not in s:
+              raise SystemExit('readiness payload anchor not found')
+          s=s.replace(anchor3,repl3,1)
+
+          anchor4="""summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','player_market_bet_ready','player_price_source_class','player_exact_price_required_at_decision_time','strong_drop_count')} for m in ready]\n"""
+          repl4="""summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','player_market_bet_ready','player_lane_ready','player_price_source_class','player_exact_price_required_at_decision_time','strong_drop_count')} for m in ready]\nsummary['player_lane_ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','player_lane_ready','player_market_bet_ready','player_price_source_class','player_exact_price_required_at_decision_time')} for m in out if m.get('player_lane_ready')]\n"""
+          if anchor4 not in s:
+              raise SystemExit('readiness summary anchor not found')
+          s=s.replace(anchor4,repl4,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit repair
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add RADAR_UNICO_MASTER.md scripts/build_deep_analysis_readiness.py
+          git diff --cached --quiet && exit 0
+          git commit -m 'Separate BetFlag player lane from GoldBet standard readiness'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
