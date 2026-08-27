@@ -1,0 +1,69 @@
+name: Refresh GoldBet standard safe
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'goldbet-standard-safe-trigger.json'
+      - 'scripts/refresh_goldbet_standard_safe.py'
+      - '.github/workflows/refresh-goldbet-standard-safe.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-goldbet-standard-safe
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Fetch GoldBet standard safely
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+          GOLDBET_PAGE_DELAY: '2.5'
+          GOLDBET_MAX_RETRIES: '5'
+          GOLDBET_MAX_PAGES: '12'
+          GOLDBET_HORIZON_HOURS: '72'
+        run: python scripts/refresh_goldbet_standard_safe.py
+
+      - name: Persist safe current and health
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/goldbet-standard-safe-health.json
+          if [ -f feed/goldbet-standard-safe-current.json ]; then
+            git add feed/goldbet-standard-safe-current.json
+          fi
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh safe GoldBet standard snapshot'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to persist safe GoldBet standard snapshot' >&2
+          exit 1
+
+      - name: Enforce fresh acquisition
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          p=pathlib.Path('feed/goldbet-standard-safe-health.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('acquisition_fresh') is not True:
+              print('GoldBet current standard acquisition is not fresh:', d.get('status'), d.get('errors'))
+              sys.exit(1)
+          print('GoldBet current standard acquisition verified fresh:', d.get('operational_rows'), 'rows')
+          PY
