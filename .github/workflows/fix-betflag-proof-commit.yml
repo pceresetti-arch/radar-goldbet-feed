@@ -1,0 +1,33 @@
+name: Fix BetFlag proof commit step
+
+on:
+  push:
+    paths:
+      - 'proof-fix-request.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Patch commit ordering
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/betflag-price-proof-on-demand.yml')
+          s=p.read_text()
+          old="""          # Pull before staging the shared latest file; runs are serialized above.\n          git pull --rebase origin main\n          git add feed/betflag-price-proof-latest.json feed/price-proofs\n          git diff --cached --quiet && exit 0\n          git commit -m 'Record certified BetFlag price proof'\n          git push origin main\n"""
+          new="""          # Exact-proof runs are serialized: commit generated files first, then\n          # rebase that clean local commit onto any unrelated upstream changes.\n          git add feed/betflag-price-proof-latest.json feed/price-proofs\n          git diff --cached --quiet && exit 0\n          git commit -m 'Record certified BetFlag price proof'\n          git pull --rebase origin main\n          git push origin main\n"""
+          if old not in s:
+              raise SystemExit('target block not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add .github/workflows/betflag-price-proof-on-demand.yml
+          git commit -m 'Fix exact proof atomic commit ordering'
+          git push origin main
