@@ -1,0 +1,44 @@
+name: Track BetFlag standard TRUE OPEN
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'betflag-standard-open-trigger.json'
+      - 'scripts/betflag_standard_open_tracker.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-standard-open-tracker
+  cancel-in-progress: true
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 5
+      - name: Capture BetFlag 1X2 and totals movement
+        run: python scripts/betflag_standard_open_tracker.py
+      - name: Persist BetFlag standard movement
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-standard-current.json feed/betflag-standard-movement.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Track BetFlag standard odds movement'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
