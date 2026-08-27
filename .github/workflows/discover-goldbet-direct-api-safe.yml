@@ -1,0 +1,104 @@
+name: Discover GoldBet direct API safe
+
+on:
+  push:
+    paths:
+      - 'goldbet-direct-api-trigger.json'
+      - '.github/workflows/discover-goldbet-direct-api-safe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: discover-goldbet-direct-api-safe
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Install Selenium
+        run: python -m pip install -q selenium
+      - name: Capture direct GoldBet API calls
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, time
+          from datetime import datetime, timezone
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          for arg in ('--headless=new','--no-sandbox','--disable-dev-shm-usage','--window-size=1440,1800','--lang=it-IT','--disable-blink-features=AutomationControlled'):
+              opts.add_argument(arg)
+          opts.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36')
+          opts.set_capability('goog:loggingPrefs', {'performance':'ALL','browser':'ALL'})
+          d=None
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'target':'https://www.goldbet.it/scommesse/sport/','requests':[],'responses':[]}
+          try:
+              d=webdriver.Chrome(options=opts)
+              d.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source':"Object.defineProperty(navigator,'webdriver',{get:()=>undefined});"})
+              d.get(out['target']); time.sleep(12)
+              out['final_url']=d.current_url; out['title']=d.title
+              body=d.find_element('tag name','body').text if d.find_elements('tag name','body') else ''
+              out['body_has_1x2']='1X2' in body
+              out['body_has_over_under']='U/O' in body
+              out['body_prefix']=body[:12000]
+              logs=d.get_log('performance')
+              reqs={}
+              interesting=('api/sport','aams','overview','detailsevent','program','event','market','odds','quote','scommess','prematch')
+              for entry in logs:
+                  try:
+                      msg=json.loads(entry['message'])['message']; method=msg.get('method')
+                      p=msg.get('params') or {}
+                      if method=='Network.requestWillBeSent':
+                          req=p.get('request') or {}; u=req.get('url',''); lu=u.lower()
+                          if not any(x in lu for x in interesting): continue
+                          rid=p.get('requestId');
+                          headers={k:v for k,v in (req.get('headers') or {}).items() if k.lower() not in ('cookie','authorization','x-api-key')}
+                          item={'request_id':rid,'method':req.get('method'),'url':u,'resource_type':p.get('type'),'headers':headers,'postData':(req.get('postData') or '')[:5000]}
+                          reqs[rid]=item; out['requests'].append(item)
+                      elif method=='Network.responseReceived':
+                          resp=p.get('response') or {}; u=resp.get('url',''); lu=u.lower()
+                          if not any(x in lu for x in interesting): continue
+                          out['responses'].append({'request_id':p.get('requestId'),'url':u,'status':resp.get('status'),'mimeType':resp.get('mimeType')})
+                  except Exception:
+                      pass
+              # dedupe by method/url/postData
+              seen=set(); ded=[]
+              for r in out['requests']:
+                  key=(r.get('method'),r.get('url'),r.get('postData'))
+                  if key in seen: continue
+                  seen.add(key); ded.append(r)
+              out['requests']=ded
+              out['request_count']=len(ded); out['response_count']=len(out['responses'])
+          except Exception as e:
+              out['error']=type(e).__name__+': '+str(e)[:1000]
+          finally:
+              if d:
+                  try:d.quit()
+                  except:pass
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/goldbet-direct-api-discovery.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps({'generated_at':out.get('generated_at'),'final_url':out.get('final_url'),'body_has_1x2':out.get('body_has_1x2'),'body_has_over_under':out.get('body_has_over_under'),'request_count':out.get('request_count'),'response_count':out.get('response_count'),'error':out.get('error'),'urls':[r.get('url') for r in out.get('requests',[])[:30]]},ensure_ascii=False,indent=2))
+          PY
+      - name: Persist discovery safely
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/goldbet-direct-api-discovery.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Discover fresh direct GoldBet API calls'
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
