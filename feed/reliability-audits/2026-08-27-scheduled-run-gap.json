@@ -1,0 +1,101 @@
+{
+  "schema_version": "radar-reliability-observation-v1",
+  "generated_at": "2026-08-27T06:39:06.512Z",
+  "evaluation_as_of": "2026-08-27T06:36:48Z",
+  "finding_id": "GITHUB_SCHEDULE_RUN_GAP_2026_08_27",
+  "severity": "HIGH",
+  "status": "OPEN_CAUSE_NOT_ESTABLISHED",
+  "scope": "Public technical workflow delivery and feed freshness; excludes personal financial records.",
+  "repository_head_before_observation": "81fc6e2e5964698debba34a0035f43dfce7eb1de",
+  "observations": {
+    "last_visible_scheduled_run": {
+      "id": 32996444289,
+      "name": "Certify shared AAMS prices vs GoldBet",
+      "created_at": "2026-08-26T17:51:13Z",
+      "conclusion": "success",
+      "url": "https://github.com/pceresetti-arch/radar-goldbet-feed/actions/runs/32996444289"
+    },
+    "no_new_scheduled_run_visible_for_seconds": 45935,
+    "last_visible_any_run": {
+      "id": 33016394969,
+      "name": "Build Radar deep-analysis readiness",
+      "created_at": "2026-08-26T21:39:42Z",
+      "conclusion": "success",
+      "event": "push",
+      "url": "https://github.com/pceresetti-arch/radar-goldbet-feed/actions/runs/33016394969"
+    },
+    "no_new_run_visible_for_seconds": 32226,
+    "configured_schedules": [
+      {
+        "path": ".github/workflows/refresh-current-lineups.yml",
+        "blob_sha": "c5a5a1aa2bb8099b04944d5a623447217bdc9a1d",
+        "cron": "*/5 * * * *"
+      },
+      {
+        "path": ".github/workflows/refresh-current-player-props.yml",
+        "blob_sha": "65d64344d132618646f8dd2ec0b09d89eb0e07ad",
+        "cron": "*/5 * * * *"
+      },
+      {
+        "path": ".github/workflows/track-odds-movement.yml",
+        "blob_sha": "08d3ca4519138dbe61b8293ccd50f2b28bc963f2",
+        "cron": "*/5 * * * *"
+      },
+      {
+        "path": ".github/workflows/build-deep-analysis-readiness.yml",
+        "blob_sha": "23260a4b9138db1282551d3198296e24ac50f51f",
+        "cron": "*/5 * * * *"
+      },
+      {
+        "path": ".github/workflows/refresh-diretta-goldbet-true-open.yml",
+        "blob_sha": "2dd18037392caa0e9306b449b28db4404435737a",
+        "cron": "7-57/10 * * * *"
+      }
+    ],
+    "snapshots": [
+      {
+        "path": "feed/deep-analysis-readiness-summary.json",
+        "blob_sha": "dc40f0d2c38dcc63e02e2d8496e3a2a488a9d084",
+        "timestamp_field": "generated_at",
+        "source_timestamp": "2026-08-26T21:39:50.111959+00:00",
+        "age_minutes_at_evaluation": 536.9648166666667,
+        "current_price_eligible": false
+      },
+      {
+        "path": "feed/odds-movement-current.json",
+        "blob_sha": "ba399d7d29b7c7e4808d37770a96e73c20b47875",
+        "timestamp_field": "generated_at",
+        "source_timestamp": "2026-08-26T16:57:04.413954+00:00",
+        "age_minutes_at_evaluation": 819.72645,
+        "current_price_eligible": false
+      },
+      {
+        "path": "feed/player-props-refresh-health.json",
+        "blob_sha": "56649e490098cb8dc5f51c638183a61015f53a1c",
+        "timestamp_field": "attempted_at",
+        "source_timestamp": "2026-08-26T19:17:51.806505+00:00",
+        "age_minutes_at_evaluation": 678.9365666666666,
+        "current_price_eligible": false
+      }
+    ]
+  },
+  "interpretation": "The observed gap affects workflow execution visibility, not merely successful feed publication. Upstream GoldBet HTTP 429 does not by itself explain absence of new workflow run records. The cause of schedule delivery failure or inactivity is not established.",
+  "limitations": [
+    "Public run listing evidence only; omitted or deleted runs cannot be excluded.",
+    "Workflow enabled/disabled state could not be queried: the connector rejected the workflows metadata endpoint as unsupported.",
+    "No new live BetFlag Worker health or exact-price request was performed in this check; this finding makes no claim about current Worker availability.",
+    "No full-pipeline latency percentiles, source timeout rates or lost prospective decisions are inferred from this gap.",
+    "Existing generated_at and original pre-match evidence remain unchanged."
+  ],
+  "evidence_urls": [
+    "https://api.github.com/repos/pceresetti-arch/radar-goldbet-feed/actions/runs?event=schedule&per_page=5",
+    "https://api.github.com/repos/pceresetti-arch/radar-goldbet-feed/actions/runs?per_page=15"
+  ],
+  "next_checks": [
+    "Verify enabled state and repository Actions scheduling settings when access allows.",
+    "Check new scheduled-run creation separately from source acquisition success.",
+    "Retain last-known-good timestamps; require new fresh evidence before operational pricing or prospective decisions."
+  ],
+  "operational_changes": [],
+  "promotions": []
+}
