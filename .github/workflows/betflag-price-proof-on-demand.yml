@@ -9,24 +9,27 @@ on:
 permissions:
   contents: write
 
+# Exact-price runs write a shared latest proof. Serialize them instead of
+# cancelling or racing on feed/betflag-price-proof-latest.json.
 concurrency:
   group: betflag-price-proof-on-demand
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 5
+          fetch-depth: 10
 
       - name: Fetch exact BetFlag quote and certify
         shell: bash
         run: |
           python - <<'PY'
           import json, pathlib, re, urllib.request, hashlib, unicodedata
+          from difflib import SequenceMatcher
           from datetime import datetime, timezone
 
           BASE='https://sportservice.betflag.it/api/sport/pregame'
@@ -58,90 +61,198 @@ jobs:
             'goal e assist':(2484,13824,'Gol e Assist'),
             'u/o parate giocatore':(2487,13509,'U/O Parate Giocatore')
           }
+          # Distinct player endpoints used only to locate a player event when the
+          # requested global market is capped/truncated.
+          LOCATOR_ENDPOINTS=[]
+          for v in TARGETS.values():
+            if v not in LOCATOR_ENDPOINTS: LOCATOR_ENDPOINTS.append(v)
+
           HEADERS={
             'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'',
             'X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/',
-            'User-Agent':'Mozilla/5.0 RadarBetFlagPriceProof/7.0'
+            'User-Agent':'Mozilla/5.0 RadarBetFlagPriceProof/8.0'
           }
 
           def norm(v):
             s=unicodedata.normalize('NFD',str(v or ''))
             s=''.join(c for c in s if unicodedata.category(c)!='Mn').lower().replace('°','')
+            s=re.sub(r'[^a-z0-9]+',' ',s)
             return ' '.join(s.split()).strip()
 
           def get(url):
             req=urllib.request.Request(url,headers=HEADERS)
             with urllib.request.urlopen(req,timeout=25) as r:
-              return r.status,json.loads(r.read().decode('utf-8','replace'))
+              raw=r.read().decode('utf-8','replace')
+              return r.status,(json.loads(raw) if raw else {})
 
           def parse_player(name):
             m=re.match(r'^\(([^)]+)\)\s*(.*)$',str(name or '').strip())
             return (m.group(1).strip(),m.group(2).strip()) if m else ('',str(name or '').strip())
 
-          def market_rows(event):
-            out=[]; mm=event.get('mmkW')
-            markets=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
-            for market in markets:
+          def iter_markets(event):
+            mm=event.get('mmkW') if isinstance(event,dict) else None
+            if isinstance(mm,dict): return list(mm.values())
+            if isinstance(mm,list): return mm
+            return []
+
+          def market_rows(event, only_market=None):
+            out=[]
+            for market in iter_markets(event):
               if not isinstance(market,dict): continue
-              spd=market.get('spd'); spreads=spd.items() if isinstance(spd,dict) else enumerate(spd or []) if isinstance(spd,list) else []
+              if only_market and norm(market.get('mn'))!=norm(only_market): continue
+              spd=market.get('spd')
+              spreads=spd.items() if isinstance(spd,dict) else enumerate(spd or []) if isinstance(spd,list) else []
               for spread_key,spread in spreads:
                 if not isinstance(spread,dict): continue
                 for q in spread.get('asl') or []:
                   if isinstance(q,dict) and q.get('ov') is not None:
-                    out.append({'market':market.get('mn'),'line':None if str(spread_key)=='0.0' else spread_key,'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),'selection_type':q.get('sti'),'market_type':q.get('mti'),'market_id':q.get('mi'),'odds_id':q.get('oi')})
+                    out.append({
+                      'market':str(market.get('mn') or '').strip(),
+                      'line':None if str(spread_key) in ('0','0.0') else spread_key,
+                      'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),
+                      'selection_type':q.get('sti'),'market_type':q.get('mti'),
+                      'market_id':q.get('mi'),'odds_id':q.get('oi')
+                    })
             return out
 
-          req_path=pathlib.Path('betflag-price-proof-request.json')
-          request=json.loads(req_path.read_text(encoding='utf-8'))
+          def walk_objects(x):
+            if isinstance(x,dict):
+              yield x
+              for v in x.values(): yield from walk_objects(v)
+            elif isinstance(x,list):
+              for v in x: yield from walk_objects(v)
+
+          request=json.loads(pathlib.Path('betflag-price-proof-request.json').read_text(encoding='utf-8'))
           market_key=norm(request.get('market'))
           target=TARGETS.get(market_key)
-          if not target:
-            raise SystemExit('Unsupported market: '+str(request.get('market')))
+          if not target: raise SystemExit('Unsupported market: '+str(request.get('market')))
 
           fetched_at=datetime.now(timezone.utc).isoformat()
+          player_want=norm(request.get('player'))
+          match_id=norm(request.get('match_market_id'))
+          q_terms=norm(request.get('q')).split()
+          sel=norm(request.get('selection'))
+          line=norm(request.get('line'))
+
           standard_url=f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0'
           market_url=f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{target[0]}/{target[1]}/0?channelId=0'
           standard_status,standard=get(standard_url)
           market_status,data=get(market_url)
 
           match_map={}
-          def walk_standard(x):
-            if isinstance(x,dict):
-              if x.get('mi') is not None and x.get('en') and not norm(x.get('sn')).startswith('giocatori') and not str(x.get('en')).startswith('('):
-                if x.get('si') in (1,'1') or norm(x.get('sn'))=='calcio':
-                  match_map[str(x.get('mi'))]={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','mi','tai')}
-              for v in x.values(): walk_standard(v)
-            elif isinstance(x,list):
-              for v in x: walk_standard(v)
-          walk_standard(standard)
+          for x in walk_objects(standard):
+            if x.get('mi') is None or not x.get('en'): continue
+            if norm(x.get('sn')).startswith('giocatori') or str(x.get('en')).startswith('('): continue
+            if x.get('si') in (1,'1') or norm(x.get('sn'))=='calcio':
+              match_map[str(x.get('mi'))]={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','mi','tai')}
 
-          rows=[]
-          def walk_player(x):
-            if isinstance(x,dict):
-              if 'ei' in x and 'en' in x and norm(x.get('sn')).startswith('giocatori'):
-                code,player=parse_player(x.get('en')); match=match_map.get(str(x.get('mi')))
-                base={'event_id':x.get('ei'),'player_event':x.get('en'),'match_code':code,'player':player,'league':x.get('td'),'match_market_id':x.get('mi'),'match':match.get('en') if match else None,'match_event_id':match.get('ei') if match else None,'match_start':match.get('ed') if match else x.get('ed'),'requested_market':target[2]}
-                for q in market_rows(x): rows.append({**base,**q,'fetched_at':fetched_at})
-              for v in x.values(): walk_player(v)
-            elif isinstance(x,list):
-              for v in x: walk_player(v)
-          walk_player(data)
+          def player_events(payload):
+            out=[]
+            for x in walk_objects(payload):
+              if 'ei' not in x or 'en' not in x or not norm(x.get('sn')).startswith('giocatori'): continue
+              code,player=parse_player(x.get('en'))
+              match=match_map.get(str(x.get('mi')))
+              out.append({
+                'raw':x,'event_id':x.get('ei'),'player_event':x.get('en'),'match_code':code,'player':player,
+                'league':x.get('td'),'match_market_id':x.get('mi'),'match':match.get('en') if match else None,
+                'match_event_id':match.get('ei') if match else None,'match_start':match.get('ed') if match else x.get('ed'),
+                'ti':x.get('ti'),'tai':x.get('tai')
+              })
+            return out
 
-          player_want=norm(request.get('player')); match_id=norm(request.get('match_market_id')); q_terms=norm(request.get('q')).split(); sel=norm(request.get('selection')); line=norm(request.get('line'))
-          exact=[]
-          for row in rows:
-            if norm(row.get('player'))!=player_want: continue
-            if match_id and norm(row.get('match_market_id'))!=match_id: continue
+          def event_matches_match(ev):
+            if match_id and norm(ev.get('match_market_id'))!=match_id: return False
             if q_terms:
-              hay=' '.join(norm(row.get(k)) for k in ('match','match_code','league'))
-              if not all(t in hay for t in q_terms): continue
-            if sel and norm(row.get('selection'))!=sel: continue
-            if line and norm(row.get('line'))!=line: continue
-            exact.append(row)
+              hay=' '.join(norm(ev.get(k)) for k in ('match','match_code','league'))
+              if not all(t in hay for t in q_terms): return False
+            return True
 
-          if not sel and len(exact)>1:
-            yes=[r for r in exact if norm(r.get('selection'))=='si']
-            if len(yes)==1: exact=yes
+          def choose_player_event(events):
+            scoped=[e for e in events if event_matches_match(e)]
+            exact=[e for e in scoped if norm(e.get('player'))==player_want]
+            if exact: return exact[0],'exact_name',scoped
+            # Safe alias fallback: same requested match + one unique player whose
+            # surname token matches, or a single very-high similarity candidate.
+            want_tokens=player_want.split(); surname=want_tokens[-1] if want_tokens else ''
+            surname_hits=[e for e in scoped if surname and surname in norm(e.get('player')).split()]
+            if len(surname_hits)==1: return surname_hits[0],'unique_surname_same_match',scoped
+            scored=[]
+            for e in scoped:
+              s=SequenceMatcher(None,player_want,norm(e.get('player'))).ratio()
+              if s>=0.88: scored.append((s,e))
+            scored.sort(key=lambda z:z[0],reverse=True)
+            if len(scored)==1 or (len(scored)>1 and scored[0][0]-scored[1][0]>=0.08):
+              return scored[0][1],'high_similarity_same_match',scoped
+            return None,None,scoped
+
+          def row_from_event(ev,q):
+            return {
+              'event_id':ev.get('event_id'),'player_event':ev.get('player_event'),'match_code':ev.get('match_code'),
+              'player':ev.get('player'),'league':ev.get('league'),'match_market_id':ev.get('match_market_id'),
+              'match':ev.get('match'),'match_event_id':ev.get('match_event_id'),'match_start':ev.get('match_start'),
+              'requested_market':target[2],**q,'fetched_at':fetched_at
+            }
+
+          def filter_quotes(ev,quotes):
+            out=[]
+            for q in quotes:
+              if norm(q.get('market'))!=norm(target[2]): continue
+              if sel and norm(q.get('selection'))!=sel: continue
+              if line and norm(q.get('line'))!=line: continue
+              out.append(row_from_event(ev,q))
+            if not sel and len(out)>1:
+              yes=[r for r in out if norm(r.get('selection'))=='si']
+              if len(yes)==1: out=yes
+            return out
+
+          initial_events=player_events(data)
+          chosen,resolution_strategy,scoped=choose_player_event(initial_events)
+          exact=[]
+          if chosen:
+            exact=filter_quotes(chosen,market_rows(chosen['raw'],target[2]))
+
+          locator_calls=[]
+          detail_status=None
+          detail_url=None
+          # If the requested market feed is capped or omitted this player, locate
+          # the player event through another player-market endpoint, then ask the
+          # authoritative event-detail API for ALL markets on that player event.
+          if len(exact)!=1:
+            locator_event=chosen
+            locator_strategy=resolution_strategy
+            if not locator_event:
+              seen={(target[0],target[1])}
+              for tab,slot,label in LOCATOR_ENDPOINTS:
+                if (tab,slot) in seen: continue
+                seen.add((tab,slot))
+                try:
+                  st,payload=get(f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0')
+                  evs=player_events(payload)
+                  cand,strategy,_=choose_player_event(evs)
+                  locator_calls.append({'tab':tab,'slot':slot,'market':label,'status':st,'events':len(evs),'found':bool(cand)})
+                  if cand:
+                    locator_event,locator_strategy=cand,'locator_'+str(strategy)
+                    break
+                except Exception as e:
+                  locator_calls.append({'tab':tab,'slot':slot,'market':label,'error':repr(e),'found':False})
+            if locator_event and locator_event.get('tai') is not None and locator_event.get('ti') is not None and locator_event.get('event_id') is not None:
+              detail_url=f"{BASE}/getDetailsEventAams/{locator_event.get('tai')}/{locator_event.get('ti')}/{locator_event.get('match_market_id')}/{locator_event.get('event_id')}/0/0?channelId=0"
+              try:
+                detail_status,detail=get(detail_url)
+                detail_quotes=[]
+                for obj in walk_objects(detail):
+                  if obj.get('mmkW') is not None:
+                    detail_quotes.extend(market_rows(obj,target[2]))
+                # de-duplicate identical selection IDs emitted by nested traversal
+                dedup={}
+                for q in detail_quotes:
+                  key=(q.get('selection_id'),norm(q.get('market')),norm(q.get('line')),norm(q.get('selection')))
+                  dedup[key]=q
+                exact=filter_quotes(locator_event,list(dedup.values()))
+                chosen=locator_event
+                resolution_strategy=locator_strategy+'_detail'
+              except Exception as e:
+                locator_calls.append({'detail_error':repr(e)})
 
           quote=exact[0] if len(exact)==1 else None
           canonical={
@@ -153,14 +264,19 @@ jobs:
             'selection_id':quote.get('selection_id') if quote else None,'market_id':quote.get('market_id') if quote else None,'odds_id':quote.get('odds_id') if quote else None
           }
           digest=hashlib.sha256(json.dumps(canonical,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-          source_healthy=standard_status==200 and market_status==200
+          source_healthy=(standard_status==200 and market_status==200 and (detail_status in (None,200)))
           result={
-            'schema_version':'betflag-price-proof-v1','requested_at':request.get('requested_at'),'fetched_at':fetched_at,
+            'schema_version':'betflag-price-proof-v2','requested_at':request.get('requested_at'),'fetched_at':fetched_at,
             'source_class':'BETFLAG_AAMS_DIRECT','source':'sportservice.betflag.it direct AAMS player service','betflag_direct':True,
-            'standard_status':standard_status,'market_status':market_status,'source_healthy':source_healthy,
-            'request':request,'target':{'tab':target[0],'slot':target[1],'market':target[2]},'source_rows':len(rows),'exact_matches':len(exact),
-            'price_gate_eligible':bool(source_healthy and quote is not None),'proof_id':'bf-'+digest[:20],'sha256':digest,
-            'quote':quote,'candidates':exact[:25] if len(exact)!=1 else []
+            'standard_status':standard_status,'market_status':market_status,'detail_status':detail_status,'source_healthy':source_healthy,
+            'fetch_strategy':'global_market_then_cross_market_player_locator_then_event_detail',
+            'resolution_strategy':resolution_strategy,
+            'request':request,'target':{'tab':target[0],'slot':target[1],'market':target[2]},
+            'source_rows':len(initial_events),'requested_match_players':[e.get('player') for e in scoped[:100]],
+            'locator_calls':locator_calls,'detail_url_used':detail_url,
+            'exact_matches':len(exact),'price_gate_eligible':bool(source_healthy and quote is not None),
+            'proof_id':'bf-'+digest[:20],'sha256':digest,'quote':quote,
+            'candidates':exact[:25] if len(exact)!=1 else []
           }
           feed=pathlib.Path('feed'); feed.mkdir(exist_ok=True)
           latest=feed/'betflag-price-proof-latest.json'; latest.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -176,12 +292,9 @@ jobs:
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          # Pull before staging the shared latest file; runs are serialized above.
+          git pull --rebase origin main
           git add feed/betflag-price-proof-latest.json feed/price-proofs
           git diff --cached --quiet && exit 0
           git commit -m 'Record certified BetFlag price proof'
-          for attempt in 1 2 3 4; do
-            if git pull --rebase origin main && git push origin main; then exit 0; fi
-            git rebase --abort 2>/dev/null || true
-            sleep $((attempt * 2))
-          done
-          exit 1
+          git push origin main
