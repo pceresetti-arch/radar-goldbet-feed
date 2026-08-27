@@ -76,6 +76,9 @@ Stato macchina principale: `READY_DEEP_ANALYSIS` da:
 
 I player props NON bloccano la readiness standard se non sono offerti o non sono mappati.
 
+### READY PLAYER LANE — indipendente da GoldBet standard
+La corsia player può procedere anche se GoldBet standard/MMS è indisponibile, purché siano pronti XI ufficiale, layer tattico e player context coerente con lo stesso `xi_fingerprint`. Il prezzo finale viene poi richiesto on-demand a BetFlag/AAMS exact v7. Un errore GoldBet/ODSS/OddsPapi non deve trasformare una corsia player pronta in `WAIT_GOLDBET_ODDS`.
+
 ## 4. Definizione rigorosa di formazione ufficiale
 Una formazione FotMob può sbloccare il Radar solo se:
 - `lineupType = standard`;
@@ -180,7 +183,12 @@ Il Radar deve partire dal mercato/prezzo disponibile e scandagliare sistematicam
 Mai inventare un mercato o una quota mancante.
 
 ## 9. GoldBet, BetFlag/AAMS e certificazione prezzi
-GoldBet resta il riferimento operativo primario.
+Le priorità di fonte sono specifiche per famiglia di mercato e NON intercambiabili:
+- **PLAYER PROPS:** fonte operativa primaria = `BETFLAG_AAMS_DIRECT` tramite il Worker dedicato `radar-betflag-v7` e prova exact `/live/player-price`. Non attendere GoldBet per decidere un player prop.
+- **MERCATI STANDARD / MMS / TRUE OPEN:** GoldBet diretto resta il riferimento primario quando fresco e correttamente mappato.
+- **GOLDBET PLAYER:** solo cross-check/calibrazione opzionale e separata; un guasto GoldBet non blocca la corsia player BetFlag/AAMS.
+
+Le sezioni legacy su `SHARED_AAMS` / `GOLDBET_ALIGNED_PROXY` restano documentazione storica e non prevalgono sulla regola corrente exact BetFlag/AAMS del 26/08/2026.
 
 ### Standard markets — `GOLDBET_DIRECT_STANDARD`
 Le quote standard GoldBet provengono dal bridge diretto e sono trattate come GoldBet reali quando il feed è fresco e correttamente mappato. Queste quote possono passare direttamente il FINAL PRICE GATE.
@@ -247,11 +255,14 @@ Per ogni candidata:
 3. fissare un unico FINAL GATE del modello;
 4. confrontare con il prezzo operativo ammesso.
 
-Con prezzo GoldBet diretto:
+Per **mercati standard** con prezzo GoldBet diretto:
 `BET solo se quota GoldBet corrente >= FINAL GATE`.
 
-Con player price proxy certificato:
-`BET (PROXY BETFLAG→GOLDBET) solo se proxy_price >= PROXY_GATE`, dove il PROXY GATE è derivato dal FINAL GATE secondo la policy corrente.
+Per **player props** la regola corrente è:
+`BET solo se prezzo exact BETFLAG_AAMS_DIRECT_CERTIFIED corrente >= FINAL GATE`, con identità univoca fixture+player+market+selection/line, fonte sana, freshness valida e `price_gate_eligible=true`.
+Se la prova exact manca o non è univoca: `ATTESA/NO BET`. Un eventuale GoldBet player resta solo cross-check separato.
+
+Le vecchie regole `PROXY BETFLAG→GOLDBET` sono conservate solo per storico/retro-compatibilità e non governano nuove decisioni quando il percorso exact v7 è operativo.
 
 Sotto il rispettivo gate = NO BET.
 

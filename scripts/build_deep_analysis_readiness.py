@@ -95,6 +95,9 @@ for m in lineups.get('matches') or []:
     context_matches_current_xi=bool(current_fp and context_fp and current_fp==context_fp)
     player_context_ready=context_available and context_feed_fresh and context_matches_current_xi
     player_market_bet_ready=props_ready and player_context_ready
+    # Player analysis is deliberately independent from GoldBet standard/MMS health.
+    # Exact BetFlag/AAMS price is requested on-demand at decision time.
+    player_lane_ready=lineup_ready and tactical_ready and player_context_ready
     standard_ready=lineup_ready and tactical_ready and odds_ready and true_open_ready
 
     reasons=[]; warnings=[]
@@ -131,7 +134,7 @@ for m in lineups.get('matches') or []:
         'lineup_status':m.get('status'),'lineup_type':line.get('lineup_type'),'official_standard_xi':official_standard,'lineup_ready':lineup_ready,'xi_fingerprint':current_fp,'xi_changed_after_confirmation':bool(m.get('xi_changed_after_confirmation')),
         'tactical_status':tactical_status,'tactical_confidence':t.get('positioning_confidence'),'tactical_feed_fresh':tactical_feed_fresh,'tactical_synced_to_current_lineup':tactical_synced,'tactical_ready':tactical_ready,
         'goldbet_1x2_selection_count':len(odds_1x2),'goldbet_over_selection_count':len(odds_over),'goldbet_odds_ready':odds_ready,'true_open_1x2_count':len(true_1x2),'true_open_over_count':len(true_over),'true_open_ready':true_open_ready,
-        'player_prop_rows':len(pr),'player_props_available':props_available,'player_props_ready':props_ready,'player_context_available':context_available,'player_context_fresh':context_feed_fresh,'player_context_matches_current_xi':context_matches_current_xi,'player_market_bet_ready':player_market_bet_ready,
+        'player_prop_rows':len(pr),'player_props_available':props_available,'player_props_ready':props_ready,'player_context_available':context_available,'player_context_fresh':context_feed_fresh,'player_context_matches_current_xi':context_matches_current_xi,'player_market_bet_ready':player_market_bet_ready,'player_lane_ready':player_lane_ready,
         'player_price_source_class':'BETFLAG_AAMS_DIRECT','player_exact_price_endpoint':'https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price','player_exact_price_required_at_decision_time':True,
         'strong_drop_count':len(drops),'strong_drops':drops[:20]
     })
@@ -146,11 +149,15 @@ payload={
     'input_freshness_minutes':{'lineups':lineup_age,'tactical':tactical_age,'odds_movement':movement_age,'player_props_discovery':props_age,'player_context':context_age},
     'freshness_limits_minutes':{'lineups':15,'tactical':20,'odds_movement':15,'player_props_discovery':20,'player_context':30,'betflag_exact_price_seconds':45},
     'player_price_path':{'source_class':'BETFLAG_AAMS_DIRECT','certified_class':'BETFLAG_AAMS_DIRECT_CERTIFIED','worker':'https://radar-betflag-v7.p-ceresetti.workers.dev','endpoint':'/live/player-price','exact_proof_required_at_decision_time':True},
-    'match_count':len(out),'readiness_counts':dict(counts),'ready_count':len(ready),'ready_matches':ready,'matches':out
+    'match_count':len(out),'readiness_counts':dict(counts),'ready_count':len(ready),'ready_matches':ready,
+    'player_lane_ready_count':sum(1 for x in out if x.get('player_lane_ready')),
+    'player_lane_ready_matches':[x for x in out if x.get('player_lane_ready')],
+    'matches':out
 }
 ROOT.mkdir(exist_ok=True)
 (ROOT/'deep-analysis-readiness.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
 summary={k:v for k,v in payload.items() if k!='matches'}
-summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','player_market_bet_ready','player_price_source_class','player_exact_price_required_at_decision_time','strong_drop_count')} for m in ready]
+summary['ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','readiness','analysis_scope','player_market_bet_ready','player_lane_ready','player_price_source_class','player_exact_price_required_at_decision_time','strong_drop_count')} for m in ready]
+summary['player_lane_ready_matches']=[{k:m.get(k) for k in ('match_market_id','match','league','start_time','minutes_to_start','player_lane_ready','player_market_bet_ready','player_price_source_class','player_exact_price_required_at_decision_time')} for m in out if m.get('player_lane_ready')]
 (ROOT/'deep-analysis-readiness-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(summary,ensure_ascii=False,indent=2))
