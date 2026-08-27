@@ -154,3 +154,26 @@ Archiviare, quando disponibili:
 - decisione finale e motivazioni.
 
 Il Backtest deve misurare separatamente performance PRE-XI vs POST-XI discovery, valore incrementale della rediscovery, tempo medio/P50/P95 della pipeline e quota di analisi incomplete dovute a timeout/failure.
+
+## 12. AUTO-DEEP-ANALYSIS POST-XI — REGOLA ASSOLUTA
+Questa sezione è vincolante e prevale su qualunque output rapido o shortlist parziale.
+
+Appena viene rilevato un XI ufficiale completo e verificato, il Radar deve avviare **automaticamente e nello stesso ciclo** l'analisi approfondita completa della partita. Non è richiesto alcun ulteriore messaggio, conferma o promemoria dell'utente.
+
+Prima di emettere una classificazione `BET` devono essere completati, quando materialmente applicabili e disponibili, tutti i blocchi seguenti:
+- formazione-vs-formazione e matchup tattico reale;
+- ruolo effettivo, posizione, struttura offensiva/difensiva e cambi di modulo;
+- minuti attesi e rischio sostituzione;
+- scorer allocation individuale: xG/npxG, share xG squadra, tiri, SOT, big chances, tocchi area, posizione media, rigorista/piazzati e concorrenza dei compagni;
+- qualità e stile dell'avversario, zone concesse, casa/trasferta, pressing, transizioni e League Scoring Environment;
+- team xG e distribuzione P(0/1/2/3+ gol);
+- modulo primo tempo separato con P(≥1 gol 1T), xG 1T e mercati 1T valutati autonomamente;
+- scansione completa dei mercati realmente offerti, non solo delle candidate PRE-XI;
+- movimento quota sulla **stessa fonte/bookmaker, stessa fixture, stesso mercato e stessa selezione**, ricostruendo `TRUE OPEN reale → snapshot intermedi → T-40/T-30 se disponibili → current`, con timestamp e variazioni; se il TRUE OPEN reale non è certificabile deve essere scritto esplicitamente e non sostituito con una quota successiva chiamata OPEN;
+- controllo incrociato del movimento sugli altri bookmaker, separato dal movimento della fonte principale, quando disponibile;
+- prezzo exact finale BetFlag/AAMS diretto e fresco tramite Worker v7 (o fallback certificato), con match univoco e proof/fingerprint;
+- ricalcolo finale di P Radar, fair odds e FINAL GATE dopo XI e dopo scorer-allocation check.
+
+**Divieto:** non promuovere una candidata da WATCH/shortlist a `BET` basandosi soltanto su XI + quota current, oppure su una analisi parziale. Se uno dei blocchi materialmente decisivi non è ancora completato, lo stato deve restare `ATTESA / ANALISI INCOMPLETA`.
+
+L'utente non deve dover chiedere "hai fatto l'analisi approfondita?", "hai controllato i movimenti?" o "hai fatto formazione contro formazione?": questi controlli fanno parte del flusso automatico standard del Radar.
