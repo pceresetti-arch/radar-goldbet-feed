@@ -1,0 +1,61 @@
+name: BetFlag market pagination probe
+
+on:
+  push:
+    paths:
+      - 'betflag-pagination-probe-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe BetFlag market pagination and match scoping
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, urllib.request, pathlib, re
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          AGG=1334500001
+          HEADERS={'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/','User-Agent':'Mozilla/5.0 RadarPaginationProbe/1.0'}
+          req=json.loads(pathlib.Path('betflag-pagination-probe-request.json').read_text())
+          player=(req.get('player') or '').lower(); match_id=str(req.get('match_market_id') or '')
+          tab=int(req.get('tab',2484)); slot=int(req.get('slot',22884))
+          def get(url):
+            r=urllib.request.urlopen(urllib.request.Request(url,headers=HEADERS),timeout=20)
+            return r.status,r.read().decode('utf-8','replace')
+          tests=[]
+          # Probe likely pagination/offset positions and common query params.
+          for a in [0,1,2,3,4,5,10,20,50,100,200,500,1000]:
+            tests.append((f'last={a}',f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/{a}?channelId=0'))
+          for p in [0,1,2,3,4,5,10]:
+            tests.append((f'page={p}',f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0&page={p}'))
+          for o in [0,100,500,1000,1500,2000]:
+            tests.append((f'offset={o}',f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0&offset={o}'))
+          out=[]
+          for label,url in tests:
+            try:
+              status,text=get(url)
+              low=text.lower()
+              out.append({'label':label,'status':status,'bytes':len(text),'player_found':player in low,'match_id_found':match_id in text,'player_context':text[max(0,low.find(player)-250):low.find(player)+500] if player and player in low else None})
+            except Exception as e:
+              out.append({'label':label,'error':repr(e)})
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-pagination-probe.json').write_text(json.dumps({'request':req,'tests':out},ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'request':req,'tests':out},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit probe result
+        shell: bash
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-pagination-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag player market pagination'
+          git pull --rebase origin main || true
+          git push origin main
