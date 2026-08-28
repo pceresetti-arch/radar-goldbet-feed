@@ -2,7 +2,8 @@ const COMPLETE = 'COMPLETED';
 
 export const T30_STATUS = Object.freeze({
   PREPARING: 'PREPARING',
-  CRITICAL_FINISH_WINDOW: 'CRITICAL_FINISH_WINDOW',
+  XI_TRIGGERED_ANALYSIS: 'XI_TRIGGERED_ANALYSIS',
+  FINAL_PRICE_WINDOW: 'FINAL_PRICE_WINDOW',
   T30_READY: 'T30_READY',
   T30_DEADLINE_MISSED: 'T30_DEADLINE_MISSED'
 });
@@ -32,12 +33,14 @@ function pushMissing(list, code, detail = null) {
 }
 
 /**
- * Hard operational gate: by T-30 the fixture must already be decision-ready.
- * This is deliberately stricter than the normal Data Gate.
+ * Final operational gate.
+ * XI publication is the main analysis trigger. T-30 is only the final price refresh/deadline.
+ * T-40 is retained as optional historical telemetry and never blocks readiness.
  */
 export function evaluateT30Readiness(state, options = {}) {
   const now = options.now || new Date().toISOString();
   const currentQuoteMaxAgeSeconds = options.currentQuoteMaxAgeSeconds ?? 180;
+  const finalPriceWindowMinutes = options.finalPriceWindowMinutes ?? 35;
   const requiredAnalysisModules = options.requiredAnalysisModules || [
     'match_model',
     'lineup_model',
@@ -55,7 +58,8 @@ export function evaluateT30Readiness(state, options = {}) {
   const minutes = minutesToKickoff(state?.kickoff_at, now);
   if (minutes === null) pushMissing(missing, 'INVALID_KICKOFF_OR_NOW');
 
-  if (state?.xi?.status !== 'OFFICIAL') {
+  const xiOfficial = state?.xi?.status === 'OFFICIAL' && Boolean(state?.xi?.fingerprint);
+  if (!xiOfficial) {
     pushMissing(missing, 'XI_NOT_OFFICIAL', state?.xi?.status || 'MISSING');
   }
 
@@ -85,10 +89,10 @@ export function evaluateT30Readiness(state, options = {}) {
     } else if (!freshEnough(series.current_fetched_at, now, currentQuoteMaxAgeSeconds)) {
       pushMissing(missing, 'CURRENT_PRICE_STALE', key);
     }
-    if (!series.t40 || !Number.isFinite(Number(series.t40.price))) {
-      pushMissing(missing, 'T40_SNAPSHOT_MISSING', key);
-    }
-    if (!series.t30 || !Number.isFinite(Number(series.t30.price))) {
+
+    // T-40 is intentionally NOT required. It is useful historical telemetry only.
+    // At the final T-30 check, preserve the fresh current quote as the T-30 snapshot.
+    if (minutes !== null && minutes <= 30 && (!series.t30 || !Number.isFinite(Number(series.t30.price)))) {
       pushMissing(missing, 'T30_SNAPSHOT_MISSING', key);
     }
   }
@@ -97,19 +101,19 @@ export function evaluateT30Readiness(state, options = {}) {
   let status = T30_STATUS.PREPARING;
   if (ready) status = T30_STATUS.T30_READY;
   else if (minutes !== null && minutes <= 30) status = T30_STATUS.T30_DEADLINE_MISSED;
-  else if (minutes !== null && minutes <= 45) status = T30_STATUS.CRITICAL_FINISH_WINDOW;
+  else if (xiOfficial && minutes !== null && minutes <= finalPriceWindowMinutes) status = T30_STATUS.FINAL_PRICE_WINDOW;
+  else if (xiOfficial) status = T30_STATUS.XI_TRIGGERED_ANALYSIS;
 
   const nextActions = [...new Set(missing.map((m) => {
     switch (m.code) {
-      case 'XI_NOT_OFFICIAL': return 'REFRESH_XI';
+      case 'XI_NOT_OFFICIAL': return 'POLL_XI_SOURCES';
       case 'DATA_GATE_NOT_PASS': return 'RETRY_BLOCKED_DATA_ONLY';
-      case 'ANALYSIS_MODULE_INCOMPLETE': return `RUN_MODULE:${m.detail}`;
+      case 'ANALYSIS_MODULE_INCOMPLETE': return `RUN_POST_XI_MODULE:${m.detail}`;
       case 'STANDARD_SERIES_MISSING': return `START_STANDARD_SERIES:${m.detail}`;
       case 'TRUE_OPEN_NOT_CERTIFIED': return `CERTIFY_TRUE_OPEN:${m.detail}`;
       case 'CURRENT_PRICE_MISSING':
-      case 'CURRENT_PRICE_STALE': return `REFRESH_CURRENT_PRICE:${m.detail}`;
-      case 'T40_SNAPSHOT_MISSING': return `RECOVER_OR_MARK_T40:${m.detail}`;
-      case 'T30_SNAPSHOT_MISSING': return `CAPTURE_T30:${m.detail}`;
+      case 'CURRENT_PRICE_STALE': return `REFRESH_FINAL_PRICE:${m.detail}`;
+      case 'T30_SNAPSHOT_MISSING': return `CAPTURE_T30_FROM_FRESH_CURRENT:${m.detail}`;
       default: return 'FIX_TIME_METADATA';
     }
   }))];
