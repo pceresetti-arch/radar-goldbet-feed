@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  data-gate:
+  core:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -25,3 +25,5 @@ jobs:
           node-version: '22'
       - name: Run V2 data-gate tests
         run: node v2/test/data-gate.test.mjs
+      - name: Run V2 quote-source policy tests
+        run: node v2/test/quote-source-policy.test.mjs
