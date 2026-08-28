@@ -1,0 +1,62 @@
+name: Compact BetFlag live index
+
+on:
+  push:
+    paths:
+      - 'radar-betflag-v7-live-summary-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build compact upcoming player-prop summary
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+          src=json.loads(pathlib.Path('feed/radar-betflag-v7-live-response.json').read_text())
+          calls=src.get('calls') or []
+          body=(calls[0].get('body') if calls and isinstance(calls[0],dict) else {}) or {}
+          now=datetime.now(timezone.utc)
+          rome=ZoneInfo('Europe/Rome')
+          keep=[]
+          for f in body.get('fixtures') or []:
+              st=f.get('start_time')
+              dt=None
+              if st:
+                  try:
+                      dt=datetime.fromisoformat(str(st).replace('Z','+00:00'))
+                      if dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
+                  except Exception: dt=None
+              if dt and dt <= now: continue
+              players=[]
+              for p in f.get('players') or []:
+                  markets=[]
+                  for m in p.get('markets') or []:
+                      qs=[]
+                      for q in m.get('quotes') or []:
+                          odd=q.get('odd')
+                          if odd is None: continue
+                          qs.append({'line':q.get('line'),'selection':q.get('selection'),'odd':odd})
+                      if qs: markets.append({'market':m.get('market'),'quotes':qs})
+                  if markets: players.append({'player':p.get('player'),'markets':markets})
+              keep.append({'match_market_id':f.get('match_market_id'),'match_event_id':f.get('match_event_id'),'match':f.get('match'),'start_time':st,'start_rome':dt.astimezone(rome).isoformat() if dt else None,'league':f.get('league'),'players':players})
+          out={'generated_at':src.get('generated_at'),'request_id':src.get('request_id'),'health_contract_ok':src.get('health_contract_ok'),'index_generated_at':body.get('generated_at'),'source_healthy':body.get('source_healthy'),'freshness':body.get('freshness'),'coverage_complete':body.get('coverage_complete'),'coverage':body.get('coverage'),'upcoming_fixture_count':len(keep),'fixtures':keep}
+          p=pathlib.Path('feed/radar-betflag-v7-live-upcoming.json'); p.write_text(json.dumps(out,ensure_ascii=False,separators=(',',':')))
+          print('upcoming',len(keep),'bytes',p.stat().st_size)
+          PY
+      - name: Commit compact summary
+        run: |
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/radar-betflag-v7-live-upcoming.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Compact live BetFlag upcoming player index'
+          git pull --rebase origin main
+          git push origin HEAD:main
