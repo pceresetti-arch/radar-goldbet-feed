@@ -3,6 +3,7 @@ const COMPLETE = 'COMPLETED';
 export const T30_STATUS = Object.freeze({
   PREPARING: 'PREPARING',
   XI_TRIGGERED_ANALYSIS: 'XI_TRIGGERED_ANALYSIS',
+  AWAITING_FINAL_PRICE_CHECK: 'AWAITING_FINAL_PRICE_CHECK',
   FINAL_PRICE_WINDOW: 'FINAL_PRICE_WINDOW',
   T30_READY: 'T30_READY',
   T30_DEADLINE_MISSED: 'T30_DEADLINE_MISSED'
@@ -33,9 +34,9 @@ function pushMissing(list, code, detail = null) {
 }
 
 /**
- * Final operational gate.
- * XI publication is the main analysis trigger. T-30 is only the final price refresh/deadline.
- * T-40 is retained as optional historical telemetry and never blocks readiness.
+ * XI publication is the main analysis trigger.
+ * T-30 is only the final price refresh/certification deadline.
+ * T-40 is optional historical telemetry and never blocks readiness.
  */
 export function evaluateT30Readiness(state, options = {}) {
   const now = options.now || new Date().toISOString();
@@ -59,9 +60,7 @@ export function evaluateT30Readiness(state, options = {}) {
   if (minutes === null) pushMissing(missing, 'INVALID_KICKOFF_OR_NOW');
 
   const xiOfficial = state?.xi?.status === 'OFFICIAL' && Boolean(state?.xi?.fingerprint);
-  if (!xiOfficial) {
-    pushMissing(missing, 'XI_NOT_OFFICIAL', state?.xi?.status || 'MISSING');
-  }
+  if (!xiOfficial) pushMissing(missing, 'XI_NOT_OFFICIAL', state?.xi?.status || 'MISSING');
 
   if (state?.data_gate?.status !== 'DATA_GATE_PASS') {
     pushMissing(missing, 'DATA_GATE_NOT_PASS', state?.data_gate?.status || 'NOT_EVALUATED');
@@ -69,9 +68,7 @@ export function evaluateT30Readiness(state, options = {}) {
 
   const modules = state?.modules || {};
   for (const name of requiredAnalysisModules) {
-    if (modules?.[name]?.status !== COMPLETE) {
-      pushMissing(missing, 'ANALYSIS_MODULE_INCOMPLETE', name);
-    }
+    if (modules?.[name]?.status !== COMPLETE) pushMissing(missing, 'ANALYSIS_MODULE_INCOMPLETE', name);
   }
 
   const seriesByKey = new Map((state?.standard_odds_series || []).map((s) => [s.market_key, s]));
@@ -90,18 +87,24 @@ export function evaluateT30Readiness(state, options = {}) {
       pushMissing(missing, 'CURRENT_PRICE_STALE', key);
     }
 
-    // T-40 is intentionally NOT required. It is useful historical telemetry only.
-    // At the final T-30 check, preserve the fresh current quote as the T-30 snapshot.
+    // T-40 is intentionally NOT required.
+    // At/inside T-30 the fresh current quote must be frozen as the final operational T-30 snapshot.
     if (minutes !== null && minutes <= 30 && (!series.t30 || !Number.isFinite(Number(series.t30.price)))) {
       pushMissing(missing, 'T30_SNAPSHOT_MISSING', key);
     }
   }
 
-  const ready = missing.length === 0;
+  const analysisComplete = missing.length === 0 || (
+    minutes !== null && minutes > 30 &&
+    missing.every((m) => m.code === 'T30_SNAPSHOT_MISSING')
+  );
+  const finalReady = missing.length === 0 && minutes !== null && minutes <= 30;
+
   let status = T30_STATUS.PREPARING;
-  if (ready) status = T30_STATUS.T30_READY;
+  if (finalReady) status = T30_STATUS.T30_READY;
   else if (minutes !== null && minutes <= 30) status = T30_STATUS.T30_DEADLINE_MISSED;
-  else if (xiOfficial && minutes !== null && minutes <= finalPriceWindowMinutes) status = T30_STATUS.FINAL_PRICE_WINDOW;
+  else if (analysisComplete && minutes !== null && minutes > finalPriceWindowMinutes) status = T30_STATUS.AWAITING_FINAL_PRICE_CHECK;
+  else if (analysisComplete && minutes !== null && minutes <= finalPriceWindowMinutes) status = T30_STATUS.FINAL_PRICE_WINDOW;
   else if (xiOfficial) status = T30_STATUS.XI_TRIGGERED_ANALYSIS;
 
   const nextActions = [...new Set(missing.map((m) => {
@@ -117,13 +120,15 @@ export function evaluateT30Readiness(state, options = {}) {
       default: return 'FIX_TIME_METADATA';
     }
   }))];
+  if (analysisComplete && minutes !== null && minutes > 30) nextActions.push('WAIT_FOR_T30_FINAL_PRICE_CHECK');
 
   return {
     status,
-    ready,
+    ready: finalReady,
+    analysis_complete: analysisComplete,
     minutes_to_kickoff: minutes === null ? null : Math.round(minutes * 10) / 10,
     deadline_minutes: 30,
     missing,
-    next_actions: nextActions
+    next_actions: [...new Set(nextActions)]
   };
 }
