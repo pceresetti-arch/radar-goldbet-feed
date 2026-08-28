@@ -42,7 +42,7 @@ jobs:
           def now(): return datetime.now(timezone.utc).isoformat()
           def get_json(url, timeout=35):
               started=time.monotonic(); status=None; body=None; error=None
-              headers={'Accept':'application/json','User-Agent':'RadarBetFlagV7LiveBridge/1.0'}
+              headers={'Accept':'application/json','User-Agent':'RadarBetFlagV7LiveBridge/1.1'}
               try:
                   r=urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=timeout)
                   status=r.status; raw=r.read(20_000_000).decode('utf-8','replace')
@@ -69,9 +69,27 @@ jobs:
                   raise SystemExit('too many discovery queries; max 40')
               for params in queries:
                   params={k:v for k,v in (params or {}).items() if v is not None and str(v)!=''}
-                  params.setdefault('limit', req.get('limit', 500))
-                  url=BASE+'/live/player-props?'+urllib.parse.urlencode(params, doseq=True)
-                  calls.append(get_json(url))
+                  params.setdefault('full','1')
+                  try: page_limit=int(params.get('limit',req.get('limit',500)))
+                  except Exception: page_limit=500
+                  page_limit=max(1,min(1000,page_limit))
+                  params['limit']=page_limit
+                  try: offset=max(0,int(params.get('offset',0)))
+                  except Exception: offset=0
+                  pages=0
+                  while True:
+                      page=dict(params); page['offset']=offset
+                      url=BASE+'/live/player-props?'+urllib.parse.urlencode(page,doseq=True)
+                      call=get_json(url); calls.append(call); pages+=1
+                      body=call.get('body') if isinstance(call.get('body'),dict) else {}
+                      returned=int(body.get('returned') or 0)
+                      pagination=body.get('pagination') if isinstance(body.get('pagination'),dict) else {}
+                      next_offset=pagination.get('next_offset')
+                      if call.get('http_status')!=200 or returned < page_limit or next_offset is None:
+                          break
+                      if pages>=12:
+                          raise SystemExit('discovery pagination safety limit reached (12 pages)')
+                      offset=int(next_offset)
           else:
               params={k:v for k,v in (req.get('params') or {}).items() if v is not None and str(v)!=''}
               if not params:
@@ -82,7 +100,7 @@ jobs:
           generated=now()
           health_body=health.get('body') if isinstance(health.get('body'),dict) else {}
           payload={
-              'schema_version':'radar-betflag-v7-live-bridge-v1',
+              'schema_version':'radar-betflag-v7-live-bridge-v1.1',
               'bridge_mode':'ON_DEMAND_WORKER_LIVE_NO_CACHE',
               'requested_at':req.get('requested_at'),
               'request_id':req.get('request_id'),
@@ -92,6 +110,7 @@ jobs:
               'health':health,
               'health_contract_ok':bool(health.get('http_status')==200 and health_body.get('ok') is True and health_body.get('version')=='7.0-betflag-operational'),
               'calls':calls,
+              'discovery_contract':{'full_markets_default':True,'automatic_pagination':True,'max_pages_per_query':12},
               'no_cache_fallback':True,
               'github_sha':os.environ.get('GITHUB_SHA')
           }
