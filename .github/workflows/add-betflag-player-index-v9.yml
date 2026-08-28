@@ -1,0 +1,41 @@
+name: Add BetFlag indexed discovery
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-betflag-player-index-v9.yml'
+      - 'scripts/add_betflag_player_index_v9.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: add-betflag-player-index-v9
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Apply indexed discovery patch
+        run: python scripts/add_betflag_player_index_v9.py
+
+      - name: Commit Worker patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add worker/src/index.mjs
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add BetFlag indexed player discovery endpoint'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
