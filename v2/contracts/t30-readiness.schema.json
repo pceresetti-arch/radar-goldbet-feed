@@ -1,19 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "radar-v2-t30-readiness",
-  "title": "Radar V2 T-30 readiness result",
+  "title": "Radar V2 XI-event and T-30 readiness result",
   "type": "object",
-  "required": ["status", "ready", "minutes_to_kickoff", "deadline_minutes", "missing", "next_actions"],
+  "required": ["status", "ready", "analysis_complete", "minutes_to_kickoff", "deadline_minutes", "missing", "next_actions"],
   "properties": {
     "status": {
       "enum": [
         "PREPARING",
-        "CRITICAL_FINISH_WINDOW",
+        "XI_TRIGGERED_ANALYSIS",
+        "AWAITING_FINAL_PRICE_CHECK",
+        "FINAL_PRICE_WINDOW",
         "T30_READY",
         "T30_DEADLINE_MISSED"
       ]
     },
     "ready": { "type": "boolean" },
+    "analysis_complete": { "type": "boolean" },
     "minutes_to_kickoff": { "type": ["number", "null"] },
     "deadline_minutes": { "const": 30 },
     "missing": {
@@ -40,6 +43,7 @@
       "then": {
         "properties": {
           "status": { "const": "T30_READY" },
+          "analysis_complete": { "const": true },
           "missing": { "maxItems": 0 }
         }
       }
