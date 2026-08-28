@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T10:29:39.003612+00:00",
+  "generated_at": "2026-08-28T10:36:33.852284+00:00",
   "worker": "radar-betflag-v7",
   "base_url": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "health": {
@@ -57,64 +57,49 @@
         "q"
       ]
     },
-    "ms": 64,
-    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health?cb=1787912977492",
+    "ms": 170,
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health?cb=1787913391123",
     "verified": true
   },
-  "betflag_price_test": {
-    "status": 404,
+  "betflag_discovery_probe": {
+    "status": 200,
     "body": {
-      "generated_at": "2026-08-28T10:29:37.578Z",
-      "served_at": "2026-08-28T10:29:38.969Z",
+      "generated_at": "2026-08-28T10:36:31.395Z",
+      "served_at": "2026-08-28T10:36:33.618Z",
+      "cache": "MISS",
       "source_class": "BETFLAG_AAMS_DIRECT",
       "source": "sportservice.betflag.it direct AAMS player service",
       "betflag_direct": true,
       "goldbet_direct": false,
-      "upstream_elapsed_ms": 1391,
-      "target": {
-        "tab": 2484,
-        "slot": 22884,
-        "market": "Marc"
+      "source_healthy": true,
+      "freshness": {
+        "age_seconds": 2.2,
+        "max_age_seconds": 45,
+        "fresh": true
       },
+      "scan_price_gate_capable": true,
+      "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
+      "mode": "core",
+      "upstream_elapsed_ms": 2223,
+      "total_source_rows": 4083,
       "returned": 0,
-      "price_gate_eligible": false,
-      "certificate": {
-        "proof_id": "bf-60e8ed54c86f9be5a0ce",
-        "sha256": "60e8ed54c86f9be5a0cee4f00e5316cd57dfae58740cfb3862d5f3faf5b84204",
-        "exact_identity_match": false,
-        "source_healthy": true,
-        "freshness": {
-          "age_seconds": 1.4,
-          "max_age_seconds": 45,
-          "fresh": true
-        },
-        "price_gate_eligible": false,
-        "canonical": {
-          "source_class": "BETFLAG_AAMS_DIRECT",
-          "source_host": "sportservice.betflag.it",
-          "fetched_at": "2026-08-28T10:29:37.578Z",
-          "match": null,
-          "match_market_id": null,
-          "match_event_id": null,
-          "player": null,
-          "requested_market": null,
-          "market": null,
-          "line": null,
-          "selection": null,
-          "odd": null,
-          "selection_id": null,
-          "market_id": null,
-          "odds_id": null
-        }
-      },
-      "quote": null,
-      "candidates": [],
-      "note": "No unique fresh exact quote; do not classify BET from this response."
+      "rows": []
     },
-    "ms": 1447,
-    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?q=Monaco+Gornik&player=Mika+Biereth&market=Marcatore&selection=Si&cb=1787912977556",
+    "ms": 2471,
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?q=zzzraderprobe&limit=1&cb=1787913391293",
+    "verified": true
+  },
+  "betflag_exact_route_probe": {
+    "status": 400,
+    "body": {
+      "error": "Specify match_market_id or q with at least 3 characters"
+    },
+    "ms": 88,
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?player=ZZZ_RADAR_PROBE_NO_PLAYER&market=Marc&selection=Si&cb=1787913393764",
     "verified": false
   },
   "live_verified": true,
-  "betflag_exact_verified": false
+  "betflag_discovery_verified": true,
+  "betflag_exact_route_verified": false,
+  "note": "Exact positive player-price certification is performed on-demand only for a real decision candidate; deploy verification never depends on a stale hard-coded fixture."
 }
