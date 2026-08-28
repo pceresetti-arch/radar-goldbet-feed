@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v1.4",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-28T17:09:00Z",
-  "request_id": "radar-alu-wsg-verinac-marc-20260828T1909CEST",
-  "generated_at": "2026-08-28T17:09:36.935290+00:00",
+  "requested_at": "2026-08-28T17:12:00Z",
+  "request_id": "radar-alu-wsg-weixelbraun-marc-20260828T1912CEST",
+  "generated_at": "2026-08-28T17:11:56.919355+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "mode": "player_price",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-28T17:09:36.326422+00:00",
-    "elapsed_ms": 198,
+    "fetched_at": "2026-08-28T17:11:55.126336+00:00",
+    "elapsed_ms": 121,
     "error": null,
     "body": {
       "ok": true,
@@ -69,58 +69,82 @@
   "health_contract_ok": true,
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?match_market_id=36351.2691&player=Antonio+Verinac&market=Marc&selection=Si",
-      "http_status": 404,
-      "fetched_at": "2026-08-28T17:09:36.935267+00:00",
-      "elapsed_ms": 609,
-      "error": "HTTPError 404",
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?match_market_id=36351.2691&player=Dominik+Weixelbraun&market=Marc&selection=Si",
+      "http_status": 200,
+      "fetched_at": "2026-08-28T17:11:56.919328+00:00",
+      "elapsed_ms": 1793,
+      "error": null,
       "body": {
-        "generated_at": "2026-08-28T17:09:36.395Z",
-        "served_at": "2026-08-28T17:09:36.916Z",
+        "generated_at": "2026-08-28T17:11:55.196Z",
+        "served_at": "2026-08-28T17:11:56.837Z",
         "source_class": "BETFLAG_AAMS_DIRECT",
         "source": "sportservice.betflag.it direct AAMS player service",
         "betflag_direct": true,
         "goldbet_direct": false,
-        "upstream_elapsed_ms": 521,
+        "upstream_elapsed_ms": 1641,
         "target": {
           "tab": 2484,
           "slot": 22884,
           "market": "Marc"
         },
-        "returned": 0,
-        "price_gate_eligible": false,
+        "returned": 1,
+        "price_gate_eligible": true,
         "certificate": {
-          "proof_id": "bf-f004e674fb342792109d",
-          "sha256": "f004e674fb342792109dbc076674d1ad3edc26ab61e020c52f8851fd266533bd",
-          "exact_identity_match": false,
-          "source_healthy": false,
+          "proof_id": "bf-7500ab6ee8d8e18c224f",
+          "sha256": "7500ab6ee8d8e18c224ff1a72ee6505f193cc62bb4aafc74ec9997ebb154c3ab",
+          "exact_identity_match": true,
+          "source_healthy": true,
           "freshness": {
-            "age_seconds": 0.5,
+            "age_seconds": 1.6,
             "max_age_seconds": 45,
             "fresh": true
           },
-          "price_gate_eligible": false,
+          "price_gate_eligible": true,
           "canonical": {
             "source_class": "BETFLAG_AAMS_DIRECT",
             "source_host": "sportservice.betflag.it",
-            "fetched_at": "2026-08-28T17:09:36.395Z",
+            "fetched_at": "2026-08-28T17:11:55.196Z",
             "match": null,
-            "match_market_id": null,
+            "match_market_id": "36351.2691",
             "match_event_id": null,
-            "player": null,
-            "requested_market": null,
-            "market": null,
+            "player": "Dominik Weixelbraun",
+            "requested_market": "Marc",
+            "market": "Marc",
             "line": null,
-            "selection": null,
-            "odd": null,
-            "selection_id": null,
-            "market_id": null,
-            "odds_id": null
+            "selection": "Si",
+            "odd": 3.3,
+            "selection_id": 3742842475,
+            "market_id": -2116285247,
+            "odds_id": -1943696438
           }
         },
-        "quote": null,
-        "candidates": [],
-        "note": "No unique fresh exact quote; do not classify BET from this response."
+        "quote": {
+          "event_id": 16036811,
+          "player_event": "(AUL*-WST) Dominik Weixelbraun",
+          "match_code": "AUL*-WST",
+          "player": "Dominik Weixelbraun",
+          "start_time": "28-08-2026 19:30",
+          "league": "Austria Bundesliga",
+          "tournament_id": 3567002,
+          "category_id": 14260,
+          "authority_id": 5,
+          "match_market_id": "36351.2691",
+          "match": null,
+          "match_event_id": null,
+          "match_start": "28-08-2026 19:30",
+          "requested_market": "Marc",
+          "market": "Marc",
+          "line": null,
+          "selection": "Si",
+          "odd": 3.3,
+          "selection_id": 3742842475,
+          "selection_type": 1,
+          "market_type": 4490,
+          "market_id": -2116285247,
+          "odds_id": -1943696438,
+          "fetched_at": "2026-08-28T17:11:55.196Z"
+        },
+        "note": "Certified fresh BetFlag/AAMS operational player price."
       }
     }
   ],
@@ -134,5 +158,5 @@
     "max_pages_per_query": 20
   },
   "no_cache_fallback": true,
-  "github_sha": "843c4a7f4bc42f33a8889afcfa8c776f228b02d4"
+  "github_sha": "e203a6d5e6ff3bece1e86f12eab9e2ef6e78a9b9"
 }
