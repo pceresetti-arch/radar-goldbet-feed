@@ -15,7 +15,7 @@ def get_json(path, params=None, timeout=35):
     started = time.monotonic()
     status = None; body = None; error = None
     try:
-        req = urllib.request.Request(url, headers={'Accept':'application/json','User-Agent':'RadarBetFlagRegression/1.0'})
+        req = urllib.request.Request(url, headers={'Accept':'application/json','User-Agent':'RadarBetFlagRegression/2.0'})
         with urllib.request.urlopen(req, timeout=timeout) as r:
             status = r.status
             raw = r.read(20_000_000).decode('utf-8','replace')
@@ -42,6 +42,9 @@ def main():
     checks['static_offset_slice'] = 'filtered.slice(offset, offset + limit)' in worker_src
     checks['static_pagination_metadata'] = 'next_offset' in worker_src and 'has_more' in worker_src
     checks['static_noncore_targets'] = all(x in worker_src for x in ['U/O Tiri In Porta Giocatore','U/O Tiri Totali Giocatore','Assist','Gol e Assist'])
+    checks['static_index_endpoint'] = "endpoint === 'live/player-index'" in worker_src and 'buildCompactPlayerIndex' in worker_src
+    checks['static_index_coverage'] = 'coverage_complete' in worker_src and 'missing_targets' in worker_src and 'unmapped_rows' in worker_src
+    checks['bridge_prefers_index'] = "mode=str(req.get('mode') or 'player_index')" in bridge_src and "mode=='player_index'" in bridge_src
     checks['bridge_forces_full'] = "params.setdefault('full','1')" in bridge_src
     checks['bridge_paginates'] = "while True:" in bridge_src and "page['offset']=offset" in bridge_src
     checks['bridge_min_page_500'] = 'max(500,min(1000,page_limit))' in bridge_src
@@ -51,6 +54,20 @@ def main():
     checks['health_200'] = health.get('status') == 200
     checks['health_version'] = hb.get('version') == '7.0-betflag-operational'
     checks['health_exact_enabled'] = hb.get('exact_player_price_proof') is True
+    checks['health_index_advertised'] = '/live/player-index' in (hb.get('endpoints') or [])
+
+    index_call = get_json('/live/player-index', timeout=45)
+    ib = index_call.get('body') if isinstance(index_call.get('body'), dict) else {}
+    coverage = ib.get('coverage') if isinstance(ib.get('coverage'), dict) else {}
+    fixtures = ib.get('fixtures') if isinstance(ib.get('fixtures'), list) else []
+    checks['index_200'] = index_call.get('status') == 200
+    checks['index_source_healthy'] = ib.get('source_healthy') is True
+    checks['index_fresh'] = isinstance(ib.get('freshness'), dict) and ib['freshness'].get('fresh') is True
+    checks['index_version'] = ib.get('index_version') == 'player-index-v1'
+    checks['index_coverage_complete'] = ib.get('coverage_complete') is True and ib.get('ready_for_discovery') is True
+    checks['index_all_targets'] = coverage.get('targets_expected') == coverage.get('targets_ok') and coverage.get('targets_expected', 0) > 0
+    checks['index_no_unmapped_rows'] = coverage.get('unmapped_rows') == 0
+    checks['index_nonempty'] = len(fixtures) > 0 and coverage.get('source_rows', 0) > 0
 
     page1 = get_json('/live/player-props', {'q':'Marc','full':'1','limit':100,'offset':0})
     b1 = page1.get('body') if isinstance(page1.get('body'), dict) else {}
@@ -114,21 +131,28 @@ def main():
 
     ready = all(checks.values())
     payload = {
-        'schema_version':'betflag-discovery-regression-v1',
+        'schema_version':'betflag-discovery-regression-v2-indexed',
         'generated_at': now(),
         'worker_base': BASE,
         'ready': ready,
         'status': 'READY' if ready else 'PIPELINE_DEGRADED',
         'contract': {
+            'preferred_discovery': '/live/player-index',
+            'single_call_index_required': True,
+            'coverage_complete_required': True,
             'full_markets_default': True,
             'player_search_required': True,
             'pagination_required': True,
             'dynamic_exact_price_required': True,
             'fixture_hardcoding': False
         },
+        'performance': {
+            'index_elapsed_ms': index_call.get('elapsed_ms'),
+            'legacy_discovery_elapsed_ms': page1.get('elapsed_ms')
+        },
         'checks': checks,
         'sample_dynamic_exact': sample,
-        'rule': 'PRE-MATCH must not claim complete player-prop coverage when ready=false.'
+        'rule': 'PRE-MATCH must use player-index first and must not claim complete player-prop coverage when ready=false or coverage_complete=false.'
     }
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
