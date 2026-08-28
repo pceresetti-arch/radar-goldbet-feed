@@ -1,0 +1,147 @@
+name: Radar runtime gateway
+
+on:
+  push:
+    paths:
+      - 'radar-runtime-request.json'
+      - 'scripts/refresh_current_lineups.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-runtime-gateway
+  cancel-in-progress: false
+
+jobs:
+  runtime-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 10
+
+      - name: Install HTTP client
+        run: pip install -q curl_cffi
+
+      - name: Refresh current lineups
+        continue-on-error: true
+        run: python scripts/refresh_current_lineups.py
+
+      - name: Build unified live runtime feed
+        shell: bash
+        env:
+          WORKER_BASE: https://radar-betflag-v7.p-ceresetti.workers.dev
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib, urllib.request, urllib.parse, urllib.error, time, os
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+
+          BASE=os.environ['WORKER_BASE'].rstrip('/')
+          ROME=ZoneInfo('Europe/Rome')
+          req=json.loads(pathlib.Path('radar-runtime-request.json').read_text(encoding='utf-8'))
+
+          def now(): return datetime.now(timezone.utc).isoformat()
+          def get_json(url, timeout=35):
+              started=time.monotonic(); status=None; body=None; error=None
+              headers={'Accept':'application/json','User-Agent':'RadarRuntimeGateway/2.0'}
+              try:
+                  r=urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=timeout)
+                  status=r.status; raw=r.read(30_000_000).decode('utf-8','replace')
+                  try: body=json.loads(raw)
+                  except Exception: body={'raw':raw}
+              except urllib.error.HTTPError as e:
+                  status=e.code; raw=e.read(30_000_000).decode('utf-8','replace')
+                  try: body=json.loads(raw)
+                  except Exception: body={'raw':raw}
+                  error=f'HTTPError {e.code}'
+              except Exception as e:
+                  error=f'{type(e).__name__}: {e}'
+              return {'url':url,'http_status':status,'fetched_at':now(),'elapsed_ms':round((time.monotonic()-started)*1000),'error':error,'body':body}
+
+          health=get_json(BASE+'/health')
+          today=datetime.now(ROME).strftime('%d-%m-%Y')
+          player_index=get_json(BASE+'/live/player-index?'+urllib.parse.urlencode({'date':today}))
+
+          price_results=[]
+          queries=req.get('player_price_queries') or []
+          if not isinstance(queries,list): queries=[]
+          for q in queries[:40]:
+              if not isinstance(q,dict) or not q: continue
+              params={k:v for k,v in q.items() if v is not None and str(v)!=''}
+              url=BASE+'/live/player-price?'+urllib.parse.urlencode(params,doseq=True)
+              price_results.append({'params':params,'response':get_json(url)})
+
+          lineup_summary={}
+          lp=pathlib.Path('feed/lineups-current-summary.json')
+          if lp.exists():
+              try: lineup_summary=json.loads(lp.read_text(encoding='utf-8'))
+              except Exception as e: lineup_summary={'error':f'{type(e).__name__}: {e}'}
+
+          hb=health.get('body') if isinstance(health.get('body'),dict) else {}
+          ib=player_index.get('body') if isinstance(player_index.get('body'),dict) else {}
+          payload={
+              'schema_version':'radar-runtime-gateway-v2.0',
+              'request_id':req.get('request_id'),
+              'requested_at':req.get('requested_at'),
+              'generated_at':now(),
+              'rome_time':datetime.now(ROME).isoformat(),
+              'worker_base':BASE,
+              'worker_health':health,
+              'worker_health_ok':bool(health.get('http_status')==200 and hb.get('ok') is True),
+              'player_index':player_index,
+              'player_index_healthy':bool(player_index.get('http_status')==200 and ib.get('source_healthy') is True),
+              'player_price_results':price_results,
+              'lineups':lineup_summary,
+              'lineup_feed_fresh':False,
+              'runtime_contract':{
+                  'direct_worker_primary':True,
+                  'github_bridge_fallback':True,
+                  'lineup_refresh_on_every_gateway_request':True,
+                  'exact_price_supported':True,
+                  'timezone':'Europe/Rome'
+              }
+          }
+          try:
+              g=lineup_summary.get('generated_at')
+              if g:
+                  dt=datetime.fromisoformat(str(g).replace('Z','+00:00')).astimezone(timezone.utc)
+                  payload['lineup_feed_age_seconds']=round((datetime.now(timezone.utc)-dt).total_seconds(),1)
+                  payload['lineup_feed_fresh']=payload['lineup_feed_age_seconds'] <= 420
+          except Exception:
+              pass
+
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/radar-runtime-current.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+              'request_id':payload['request_id'],
+              'worker_health_ok':payload['worker_health_ok'],
+              'player_index_healthy':payload['player_index_healthy'],
+              'lineup_feed_fresh':payload['lineup_feed_fresh'],
+              'lineup_target_count':lineup_summary.get('target_count'),
+              'lineup_status_counts':lineup_summary.get('status_counts')
+          },ensure_ascii=False,indent=2))
+          PY
+
+      - name: Commit unified runtime feeds
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/radar-runtime-current.json feed/lineups-current.json feed/lineups-current-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh unified Radar runtime feed'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt*2))
+          done
+          exit 1
