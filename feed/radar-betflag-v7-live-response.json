@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v1.4",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-28T17:13:00Z",
-  "request_id": "radar-alu-wsg-weixelbraun-1t-20260828T1913CEST",
-  "generated_at": "2026-08-28T17:13:50.126669+00:00",
+  "requested_at": "2026-08-28T17:23:05Z",
+  "request_id": "radar-prematch-20260828T1923CEST-index",
+  "generated_at": "2026-08-28T17:23:44.190052+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "mode": "player_price",
+  "mode": "player_index",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-28T17:13:47.218404+00:00",
-    "elapsed_ms": 517,
+    "fetched_at": "2026-08-28T17:23:43.546179+00:00",
+    "elapsed_ms": 498,
     "error": null,
     "body": {
       "ok": true,
@@ -69,82 +69,81 @@
   "health_contract_ok": true,
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?match_market_id=36351.2691&player=Dominik+Weixelbraun&market=Marcatore+1T&selection=Si",
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-index?date=28-08-2026",
       "http_status": 200,
-      "fetched_at": "2026-08-28T17:13:50.126641+00:00",
-      "elapsed_ms": 2908,
+      "fetched_at": "2026-08-28T17:23:44.190026+00:00",
+      "elapsed_ms": 639,
       "error": null,
       "body": {
-        "generated_at": "2026-08-28T17:13:47.585Z",
-        "served_at": "2026-08-28T17:13:50.016Z",
+        "generated_at": "2026-08-28T17:23:43.767Z",
         "source_class": "BETFLAG_AAMS_DIRECT",
         "source": "sportservice.betflag.it direct AAMS player service",
-        "betflag_direct": true,
-        "goldbet_direct": false,
-        "upstream_elapsed_ms": 2431,
-        "target": {
-          "tab": 2484,
-          "slot": 13820,
-          "market": "Marcatore 1T"
+        "source_healthy": false,
+        "index_version": "player-index-v2",
+        "coverage_static": false,
+        "coverage_scope": {
+          "type": "date",
+          "date": "28-08-2026"
         },
-        "returned": 1,
-        "price_gate_eligible": true,
-        "certificate": {
-          "proof_id": "bf-47cf2c2bce5983494de1",
-          "sha256": "47cf2c2bce5983494de12b6178187900817588fce0ea549aadc3007987ff038c",
-          "exact_identity_match": true,
-          "source_healthy": true,
-          "freshness": {
-            "age_seconds": 2.4,
-            "max_age_seconds": 45,
-            "fresh": true
+        "exact_price_endpoint": "/live/player-price",
+        "coverage": {
+          "targets_expected": 17,
+          "targets_called": 17,
+          "targets_ok": 0,
+          "missing_targets": [
+            "Marcatore Plus",
+            "Marcatore o Sostituto",
+            "Marc",
+            "1° Marcatore",
+            "1° Marcatore o Sostituto",
+            "Marcatore 1T",
+            "Marcatore 2T",
+            "Doppietta",
+            "Tripletta",
+            "U/O Tiri in porta Plus",
+            "U/O Tiri Totali Plus",
+            "Assist o Sostituto",
+            "U/O Tiri In Porta Giocatore",
+            "U/O Tiri Totali Giocatore",
+            "Assist",
+            "Gol e Assist",
+            "U/O Parate Giocatore"
+          ],
+          "source_rows": 0,
+          "scoped_source_rows": 0,
+          "indexed_rows": 0,
+          "unmapped_rows": 0,
+          "mapping_counts": {
+            "standard_match": 0,
+            "match_code_fallback": 0,
+            "fixture_id_fallback": 0,
+            "composite_identity_fallback": 0,
+            "missing_stable_identity": 0,
+            "missing_player": 0
           },
-          "price_gate_eligible": true,
-          "canonical": {
-            "source_class": "BETFLAG_AAMS_DIRECT",
-            "source_host": "sportservice.betflag.it",
-            "fetched_at": "2026-08-28T17:13:47.585Z",
-            "match": null,
-            "match_market_id": "36351.2691",
-            "match_event_id": null,
-            "player": "Dominik Weixelbraun",
-            "requested_market": "Marcatore 1T",
-            "market": "Marcatore 1T",
-            "line": null,
-            "selection": "Si",
-            "odd": 5.75,
-            "selection_id": 3742842103,
-            "market_id": -2116285398,
-            "odds_id": 1405847322
-          }
+          "fixtures": 0,
+          "exact_fixtures": 0,
+          "fallback_fixtures": 0,
+          "player_fixtures": 0,
+          "markets_present": []
         },
-        "quote": {
-          "event_id": 16036811,
-          "player_event": "(AUL*-WST) Dominik Weixelbraun",
-          "match_code": "AUL*-WST",
-          "player": "Dominik Weixelbraun",
-          "start_time": "28-08-2026 19:30",
-          "league": "Austria Bundesliga",
-          "tournament_id": 3567002,
-          "category_id": 14260,
-          "authority_id": 5,
-          "match_market_id": "36351.2691",
-          "match": null,
-          "match_event_id": null,
-          "match_start": "28-08-2026 19:30",
-          "requested_market": "Marcatore 1T",
-          "market": "Marcatore 1T",
-          "line": null,
-          "selection": "Si",
-          "odd": 5.75,
-          "selection_id": 3742842103,
-          "selection_type": 1,
-          "market_type": 4491,
-          "market_id": -2116285398,
-          "odds_id": 1405847322,
-          "fetched_at": "2026-08-28T17:13:47.585Z"
+        "fixtures": [],
+        "served_at": "2026-08-28T17:23:44.152Z",
+        "cache": "MISS:MISS",
+        "freshness": {
+          "age_seconds": 0.4,
+          "max_age_seconds": 45,
+          "fresh": true
         },
-        "note": "Certified fresh BetFlag/AAMS operational player price."
+        "coverage_complete": false,
+        "ready_for_discovery": false,
+        "discovery_contract": {
+          "single_call_index": true,
+          "max_index_cache_seconds": 20,
+          "exact_price_no_cache": true,
+          "fallback_mapping_allowed": true,
+          "no_quote_rows_dropped": true
+        }
       }
     }
   ],
@@ -158,5 +157,5 @@
     "max_pages_per_query": 20
   },
   "no_cache_fallback": true,
-  "github_sha": "65a2db50bbfec3bb65d871b3798353df86b5c001"
+  "github_sha": "9c53ccae863218e124e39af5ddcd93aab1ff7323"
 }
