@@ -1,0 +1,268 @@
+{
+  "schema_version": "radar-runtime-gateway-v2.0",
+  "request_id": "recovery-test-20260828T1605Z",
+  "requested_at": "2026-08-28T16:05:00Z",
+  "generated_at": "2026-08-28T16:08:09.196754+00:00",
+  "rome_time": "2026-08-28T18:08:09.196758+02:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "worker_health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-28T16:08:08.613393+00:00",
+    "elapsed_ms": 127,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/player-index",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "worker_health_ok": true,
+  "player_index": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-index?date=28-08-2026",
+    "http_status": 200,
+    "fetched_at": "2026-08-28T16:08:09.196573+00:00",
+    "elapsed_ms": 583,
+    "error": null,
+    "body": {
+      "generated_at": "2026-08-28T16:08:08.792Z",
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source": "sportservice.betflag.it direct AAMS player service",
+      "source_healthy": false,
+      "index_version": "player-index-v2",
+      "coverage_static": false,
+      "coverage_scope": {
+        "type": "date",
+        "date": "28-08-2026"
+      },
+      "exact_price_endpoint": "/live/player-price",
+      "coverage": {
+        "targets_expected": 17,
+        "targets_called": 17,
+        "targets_ok": 0,
+        "missing_targets": [
+          "Marcatore Plus",
+          "Marcatore o Sostituto",
+          "Marc",
+          "1° Marcatore",
+          "1° Marcatore o Sostituto",
+          "Marcatore 1T",
+          "Marcatore 2T",
+          "Doppietta",
+          "Tripletta",
+          "U/O Tiri in porta Plus",
+          "U/O Tiri Totali Plus",
+          "Assist o Sostituto",
+          "U/O Tiri In Porta Giocatore",
+          "U/O Tiri Totali Giocatore",
+          "Assist",
+          "Gol e Assist",
+          "U/O Parate Giocatore"
+        ],
+        "source_rows": 0,
+        "scoped_source_rows": 0,
+        "indexed_rows": 0,
+        "unmapped_rows": 0,
+        "mapping_counts": {
+          "standard_match": 0,
+          "match_code_fallback": 0,
+          "fixture_id_fallback": 0,
+          "composite_identity_fallback": 0,
+          "missing_stable_identity": 0,
+          "missing_player": 0
+        },
+        "fixtures": 0,
+        "exact_fixtures": 0,
+        "fallback_fixtures": 0,
+        "player_fixtures": 0,
+        "markets_present": []
+      },
+      "fixtures": [],
+      "served_at": "2026-08-28T16:08:09.159Z",
+      "cache": "MISS:MISS",
+      "freshness": {
+        "age_seconds": 0.4,
+        "max_age_seconds": 45,
+        "fresh": true
+      },
+      "coverage_complete": false,
+      "ready_for_discovery": false,
+      "discovery_contract": {
+        "single_call_index": true,
+        "max_index_cache_seconds": 20,
+        "exact_price_no_cache": true,
+        "fallback_mapping_allowed": true,
+        "no_quote_rows_dropped": true
+      }
+    }
+  },
+  "player_index_healthy": false,
+  "player_price_results": [],
+  "lineups": {
+    "generated_at": "2026-08-28T00:58:01.815282+00:00",
+    "window": "T-120 to T+15 minutes",
+    "source_strategy": "FotMob autonomous primary; only lineupType=standard unlocks official XI; lastStarting11 retained as historical reference only",
+    "target_count": 9,
+    "status_counts": {
+      "SOURCE_CONFIRMED": 3,
+      "NOT_AVAILABLE": 6
+    },
+    "schedule_stats": [
+      {
+        "date": "2026-08-28",
+        "status": 200,
+        "matches": 201
+      }
+    ],
+    "source_errors": {},
+    "matches": [
+      {
+        "match": "Alebrijes de Oaxaca FC - CD Tapatio",
+        "start_time": "28-08-2026 03:00",
+        "league": "Liga Premier Serie B",
+        "minutes_to_start": 2.0,
+        "status": "SOURCE_CONFIRMED",
+        "match_market_id": "36351.3809",
+        "confirmed_at": "2026-08-28T00:58:01.815282+00:00",
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Cancun FC - Club Atletico La Paz",
+        "start_time": "28-08-2026 03:00",
+        "league": "Liga Premier Serie B",
+        "minutes_to_start": 2.0,
+        "status": "SOURCE_CONFIRMED",
+        "match_market_id": "36351.3814",
+        "confirmed_at": "2026-08-28T00:58:01.815282+00:00",
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Champions FC Academy - Tauro FC II",
+        "start_time": "28-08-2026 03:00",
+        "league": "Liga Nacional De Ascenso",
+        "minutes_to_start": 2.0,
+        "status": "NOT_AVAILABLE",
+        "match_market_id": "36353.60791",
+        "confirmed_at": null,
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "SD Atletico Nacional - CD Universitario II",
+        "start_time": "28-08-2026 03:00",
+        "league": "Liga Nacional De Ascenso",
+        "minutes_to_start": 2.0,
+        "status": "NOT_AVAILABLE",
+        "match_market_id": "36355.11159",
+        "confirmed_at": null,
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Sporting SM B - San Martin FC",
+        "start_time": "28-08-2026 03:00",
+        "league": "Liga Nacional De Ascenso",
+        "minutes_to_start": 2.0,
+        "status": "NOT_AVAILABLE",
+        "match_market_id": "36355.17127",
+        "confirmed_at": null,
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Veraguas United FC - San Francisco FC B",
+        "start_time": "28-08-2026 03:00",
+        "league": "Liga Nacional De Ascenso",
+        "minutes_to_start": 2.0,
+        "status": "NOT_AVAILABLE",
+        "match_market_id": "36355.11142",
+        "confirmed_at": null,
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Internacional de Bogota. - Deportivo Pasto",
+        "start_time": "28-08-2026 03:15",
+        "league": "Primera A",
+        "minutes_to_start": 17.0,
+        "status": "SOURCE_CONFIRMED",
+        "match_market_id": "36352.21751",
+        "confirmed_at": "2026-08-28T00:58:01.815282+00:00",
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Deportivo Mixco - Alianza Panama",
+        "start_time": "28-08-2026 04:30",
+        "league": "Copa Centroamericana",
+        "minutes_to_start": 92.0,
+        "status": "NOT_AVAILABLE",
+        "match_market_id": "36354.61018",
+        "confirmed_at": null,
+        "xi_changed_after_confirmation": false
+      },
+      {
+        "match": "Olimpia - Dep. Saprissa",
+        "start_time": "28-08-2026 04:30",
+        "league": "Copa Centroamericana",
+        "minutes_to_start": 92.0,
+        "status": "NOT_AVAILABLE",
+        "match_market_id": "36354.61016",
+        "confirmed_at": null,
+        "xi_changed_after_confirmation": false
+      }
+    ]
+  },
+  "lineup_feed_fresh": false,
+  "runtime_contract": {
+    "direct_worker_primary": true,
+    "github_bridge_fallback": true,
+    "lineup_refresh_on_every_gateway_request": true,
+    "exact_price_supported": true,
+    "timezone": "Europe/Rome"
+  },
+  "lineup_feed_age_seconds": 54607.4
+}
