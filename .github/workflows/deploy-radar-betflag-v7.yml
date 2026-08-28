@@ -71,7 +71,7 @@ jobs:
               raise SystemExit('workers.dev subdomain did not enable')
           PY
 
-      - name: Verify v7 health and direct BetFlag price
+      - name: Verify v7 health and live BetFlag paths
         shell: bash
         run: |
           set -euo pipefail
@@ -90,7 +90,7 @@ jobs:
               url += sep + 'cb=' + str(int(time.time()*1000))
               req=urllib.request.Request(url,headers={
                   'Accept':'application/json',
-                  'User-Agent':'RadarBetFlagV7Verify/2.0',
+                  'User-Agent':'RadarBetFlagV7Verify/3.0',
                   'Cache-Control':'no-cache, no-store, max-age=0',
                   'Pragma':'no-cache'
               })
@@ -109,9 +109,11 @@ jobs:
               hs,hb,hms,hu=get('/health')
               ok=(
                   hs==200 and isinstance(hb,dict) and
+                  hb.get('ok') is True and
                   hb.get('version')=='7.0-betflag-operational' and
                   hb.get('public_fast_path') is True and
                   hb.get('exact_player_price_proof') is True and
+                  '/live/player-props' in (hb.get('endpoints') or []) and
                   '/live/player-price' in (hb.get('endpoints') or [])
               )
               health_result={'attempt':attempt,'status':hs,'body':hb,'ms':hms,'url':hu,'verified':ok}
@@ -119,39 +121,62 @@ jobs:
               if ok: break
               time.sleep(5)
 
-          price_result=None
+          discovery_result=None
+          price_path_result=None
           if health_result and health_result.get('verified'):
+              # A deliberately non-matching query forces a fresh BetFlag/AAMS scan
+              # without depending on yesterday's fixtures or a hard-coded player.
+              ds,db,dms,du=get('/live/player-props',{'q':'zzzraderprobe','limit':1})
+              dfresh=(db.get('freshness') or {}) if isinstance(db,dict) else {}
+              discovery_ok=(
+                  ds==200 and isinstance(db,dict) and
+                  db.get('source_class')=='BETFLAG_AAMS_DIRECT' and
+                  db.get('source_healthy') is True and
+                  dfresh.get('fresh') is True
+              )
+              discovery_result={'status':ds,'body':db,'ms':dms,'url':du,'verified':discovery_ok}
+              print(json.dumps(discovery_result,ensure_ascii=False))
+
+              # Probe the exact-price route with an intentionally impossible identity.
+              # 404/0 rows is correct here; the check validates that the live direct
+              # source was reached and that the gate remains closed without an exact quote.
               ps,pb,pms,pu=get('/live/player-price',{
-                  'q':'Monaco Gornik',
-                  'player':'Mika Biereth',
-                  'market':'Marcatore',
+                  'player':'ZZZ_RADAR_PROBE_NO_PLAYER',
+                  'market':'Marc',
                   'selection':'Si'
               })
-              price_ok=(
-                  ps==200 and isinstance(pb,dict) and
+              pfresh=(pb.get('freshness') or {}) if isinstance(pb,dict) else {}
+              price_path_ok=(
+                  ps in (200,404) and isinstance(pb,dict) and
                   pb.get('source_class')=='BETFLAG_AAMS_DIRECT' and
-                  pb.get('price_gate_eligible') is True and
-                  isinstance(pb.get('quote'),dict) and
-                  pb['quote'].get('odd') is not None
+                  pb.get('source_healthy') is True and
+                  pfresh.get('fresh') is True and
+                  pb.get('price_gate_eligible') is False and
+                  int(pb.get('returned') or 0)==0
               )
-              price_result={'status':ps,'body':pb,'ms':pms,'url':pu,'verified':price_ok}
-              print(json.dumps(price_result,ensure_ascii=False))
+              price_path_result={'status':ps,'body':pb,'ms':pms,'url':pu,'verified':price_path_ok}
+              print(json.dumps(price_path_result,ensure_ascii=False))
 
           out={
               'generated_at':datetime.now(timezone.utc).isoformat(),
               'worker':'radar-betflag-v7',
               'base_url':base,
               'health':health_result,
-              'betflag_price_test':price_result,
+              'betflag_discovery_probe':discovery_result,
+              'betflag_exact_route_probe':price_path_result,
               'live_verified':bool(health_result and health_result.get('verified')),
-              'betflag_exact_verified':bool(price_result and price_result.get('verified'))
+              'betflag_discovery_verified':bool(discovery_result and discovery_result.get('verified')),
+              'betflag_exact_route_verified':bool(price_path_result and price_path_result.get('verified')),
+              'note':'Exact positive player-price certification is performed on-demand only for a real decision candidate; deploy verification never depends on a stale hard-coded fixture.'
           }
           pathlib.Path('feed/radar-betflag-v7-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps(out,ensure_ascii=False,indent=2))
           if not out['live_verified']:
               raise SystemExit('clean v7 Worker health did not verify')
-          if not out['betflag_exact_verified']:
-              raise SystemExit('clean v7 Worker BetFlag exact-price path did not verify')
+          if not out['betflag_discovery_verified']:
+              raise SystemExit('clean v7 Worker live BetFlag discovery did not verify')
+          if not out['betflag_exact_route_verified']:
+              raise SystemExit('clean v7 Worker exact-price route did not verify')
           PY
 
       - name: Commit v7 status
