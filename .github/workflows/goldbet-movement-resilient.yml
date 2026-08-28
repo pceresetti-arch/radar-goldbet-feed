@@ -1,0 +1,52 @@
+name: GoldBet movement resilient
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'radar-movement-request.json'
+      - 'goldbet-movement-resilient-trigger.json'
+      - 'scripts/goldbet_movement_resilient.py'
+      - 'feed/diretta-goldbet-true-open-index.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goldbet-movement-resilient
+  cancel-in-progress: false
+
+jobs:
+  capture-and-query:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 10
+
+      - name: Capture GoldBet movement and build compact request proof
+        env:
+          BRIDGE_TOKEN: ${{ secrets.BRIDGE_TOKEN }}
+        run: python scripts/goldbet_movement_resilient.py
+
+      - name: Commit movement state and compact feeds
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/goldbet-movement-resilient-state.json feed/goldbet-movement-resilient-current.json feed/radar-movement-current.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh resilient GoldBet movement proof'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt*2))
+          done
+          exit 1
