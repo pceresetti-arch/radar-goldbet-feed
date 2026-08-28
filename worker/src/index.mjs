@@ -372,6 +372,7 @@ function filterBetflagRows(rows, url, { exactPlayer = false, exactMarket = false
   const selection = normalized(url.searchParams.get('selection'));
   const line = normalized(url.searchParams.get('line'));
   const limit = clampInt(url.searchParams.get('limit'), 300, 1, 1000);
+  const offset = clampInt(url.searchParams.get('offset'), 0, 0, 100000);
   const filtered = [];
   for (const row of rows || []) {
     if (matchMarketId && normalized(row.match_market_id) !== matchMarketId) continue;
@@ -387,14 +388,13 @@ function filterBetflagRows(rows, url, { exactPlayer = false, exactMarket = false
     if (selection && normalized(row.selection) !== selection) continue;
     if (line && normalized(row.line) !== line) continue;
     if (q) {
-      const haystack = [row.match, row.match_code, row.league].map(normalized).join(' ');
+      const haystack = [row.match, row.match_code, row.league, row.player, row.requested_market, row.market, row.selection].map(normalized).join(' ');
       const terms = q.split(/\s+/).filter(Boolean);
       if (!terms.every((term) => haystack.includes(term))) continue;
     }
     filtered.push(row);
-    if (filtered.length >= limit) break;
   }
-  return filtered;
+  return filtered.slice(offset, offset + limit);
 }
 
 function validatePublicQuery(url) {
@@ -455,9 +455,11 @@ async function certificateFor(row, payload, exactCount) {
 async function publicPlayerProps(request, url, ctx) {
   const error = validatePublicQuery(url);
   if (error) return json({ error }, 400);
-  const mode = url.searchParams.get('full') === '1' ? 'full' : 'core';
+  const mode = url.searchParams.get('full') === '0' ? 'core' : 'full';
   const { payload, cache } = await getCachedBetflagAggregate(request, mode, ctx);
   const rows = filterBetflagRows(payload.rows, url);
+  const limit = clampInt(url.searchParams.get('limit'), 300, 1, 1000);
+  const offset = clampInt(url.searchParams.get('offset'), 0, 0, 100000);
   const freshness = sourceFreshness(payload.generated_at);
   return json({
     generated_at: payload.generated_at,
@@ -475,6 +477,12 @@ async function publicPlayerProps(request, url, ctx) {
     upstream_elapsed_ms: payload.elapsed_ms,
     total_source_rows: payload.row_count,
     returned: rows.length,
+    pagination: {
+      limit,
+      offset,
+      has_more: rows.length === limit,
+      next_offset: rows.length === limit ? offset + rows.length : null
+    },
     rows
   }, 200, { 'Cache-Control': 'no-store' });
 }
