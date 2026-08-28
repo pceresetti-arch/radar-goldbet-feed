@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v1",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-28T12:29:00Z",
-  "request_id": "radar-prematch-exact-kane-20260828T122900Z",
-  "generated_at": "2026-08-28T12:28:26.040530+00:00",
+  "requested_at": "2026-08-28T13:24:00Z",
+  "request_id": "radar-prematch-fullscan-20260828T1324Z",
+  "generated_at": "2026-08-28T13:25:01.362853+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "mode": "player_price",
+  "mode": "player_props",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-28T12:28:23.811439+00:00",
-    "elapsed_ms": 155,
+    "fetched_at": "2026-08-28T13:25:01.232821+00:00",
+    "elapsed_ms": 120,
     "error": null,
     "body": {
       "ok": true,
@@ -68,85 +68,16 @@
   "health_contract_ok": true,
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?q=Bayern&player=Harry+Kane&market=Marc&selection=Si",
-      "http_status": 200,
-      "fetched_at": "2026-08-28T12:28:26.040502+00:00",
-      "elapsed_ms": 2229,
-      "error": null,
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T13:25:01.362827+00:00",
+      "elapsed_ms": 130,
+      "error": "HTTPError 400",
       "body": {
-        "generated_at": "2026-08-28T12:28:23.901Z",
-        "served_at": "2026-08-28T12:28:25.997Z",
-        "source_class": "BETFLAG_AAMS_DIRECT",
-        "source": "sportservice.betflag.it direct AAMS player service",
-        "betflag_direct": true,
-        "goldbet_direct": false,
-        "upstream_elapsed_ms": 2096,
-        "target": {
-          "tab": 2484,
-          "slot": 22884,
-          "market": "Marc"
-        },
-        "returned": 1,
-        "price_gate_eligible": true,
-        "certificate": {
-          "proof_id": "bf-8b69f452d713c1ef5d3c",
-          "sha256": "8b69f452d713c1ef5d3c6092f881e773efc402b668a47fd6490db9f8b49baba3",
-          "exact_identity_match": true,
-          "source_healthy": true,
-          "freshness": {
-            "age_seconds": 2.1,
-            "max_age_seconds": 45,
-            "fresh": true
-          },
-          "price_gate_eligible": true,
-          "canonical": {
-            "source_class": "BETFLAG_AAMS_DIRECT",
-            "source_host": "sportservice.betflag.it",
-            "fetched_at": "2026-08-28T12:28:23.901Z",
-            "match": "Bayern Monaco - Stoccarda",
-            "match_market_id": "36351.3026",
-            "match_event_id": 15819410,
-            "player": "Harry Kane",
-            "requested_market": "Marc",
-            "market": "Marc",
-            "line": null,
-            "selection": "Si",
-            "odd": 1.5,
-            "selection_id": 3734340311,
-            "market_id": -2119053627,
-            "odds_id": 1927835336
-          }
-        },
-        "quote": {
-          "event_id": 16023090,
-          "player_event": "(BYM*-STO) Harry Kane",
-          "match_code": "BYM*-STO",
-          "player": "Harry Kane",
-          "start_time": "28-08-2026 20:30",
-          "league": "Germania Bundesliga ",
-          "tournament_id": 29903,
-          "category_id": 14260,
-          "authority_id": 4,
-          "match_market_id": "36351.3026",
-          "match": "Bayern Monaco - Stoccarda",
-          "match_event_id": 15819410,
-          "match_start": "28-08-2026 20:30",
-          "requested_market": "Marc",
-          "market": "Marc",
-          "line": null,
-          "selection": "Si",
-          "odd": 1.5,
-          "selection_id": 3734340311,
-          "selection_type": 1,
-          "market_type": 4490,
-          "market_id": -2119053627,
-          "odds_id": 1927835336,
-          "fetched_at": "2026-08-28T12:28:23.901Z"
-        },
-        "note": "Certified fresh BetFlag/AAMS operational player price."
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
       }
     }
   ],
   "no_cache_fallback": true,
-  "github_sha": "0ef9542091f77d7d5dbca5d8681ef7643f02a874"
+  "github_sha": "ed791dc23480eb3b2b1fdd0304a29c30fbd13e31"
 }
