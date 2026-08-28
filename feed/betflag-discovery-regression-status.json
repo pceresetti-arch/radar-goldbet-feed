@@ -1,15 +1,22 @@
 {
-  "schema_version": "betflag-discovery-regression-v1",
-  "generated_at": "2026-08-28T14:58:24.702685+00:00",
+  "schema_version": "betflag-discovery-regression-v2-indexed",
+  "generated_at": "2026-08-28T14:59:28.510715+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "ready": true,
-  "status": "READY",
+  "ready": false,
+  "status": "PIPELINE_DEGRADED",
   "contract": {
+    "preferred_discovery": "/live/player-index",
+    "single_call_index_required": true,
+    "coverage_complete_required": true,
     "full_markets_default": true,
     "player_search_required": true,
     "pagination_required": true,
     "dynamic_exact_price_required": true,
     "fixture_hardcoding": false
+  },
+  "performance": {
+    "index_elapsed_ms": 3928,
+    "legacy_discovery_elapsed_ms": 581
   },
   "checks": {
     "static_default_full": true,
@@ -17,12 +24,24 @@
     "static_offset_slice": true,
     "static_pagination_metadata": true,
     "static_noncore_targets": true,
+    "static_index_endpoint": true,
+    "static_index_coverage": true,
+    "bridge_prefers_index": true,
     "bridge_forces_full": true,
     "bridge_paginates": true,
     "bridge_min_page_500": true,
     "health_200": true,
     "health_version": true,
     "health_exact_enabled": true,
+    "health_index_advertised": true,
+    "index_200": true,
+    "index_source_healthy": true,
+    "index_fresh": true,
+    "index_version": true,
+    "index_coverage_complete": false,
+    "index_all_targets": true,
+    "index_no_unmapped_rows": false,
+    "index_nonempty": true,
     "discovery_200": true,
     "discovery_source_healthy": true,
     "discovery_fresh": true,
@@ -45,7 +64,7 @@
     "market": "Marcatore Plus",
     "selection": "Si",
     "odd": 9,
-    "proof_id": "bf-748e77ebbf3cde78ea6d"
+    "proof_id": "bf-d8cd97e834797faf0b71"
   },
-  "rule": "PRE-MATCH must not claim complete player-prop coverage when ready=false."
+  "rule": "PRE-MATCH must use player-index first and must not claim complete player-prop coverage when ready=false or coverage_complete=false."
 }
