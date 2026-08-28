@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v1",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-28T11:48:00Z",
-  "request_id": "diagnose-exact-kane-20260828T114800Z",
-  "generated_at": "2026-08-28T11:48:30.959941+00:00",
+  "requested_at": "2026-08-28T12:25:20Z",
+  "request_id": "radar-prematch-full-20260828T122520Z",
+  "generated_at": "2026-08-28T12:26:10.532245+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "mode": "player_price",
+  "mode": "player_props",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-28T11:48:28.703914+00:00",
-    "elapsed_ms": 94,
+    "fetched_at": "2026-08-28T12:26:10.082656+00:00",
+    "elapsed_ms": 86,
     "error": null,
     "body": {
       "ok": true,
@@ -68,85 +68,96 @@
   "health_contract_ok": true,
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?q=Bayern&player=Harry+Kane&market=Marc&selection=Si",
-      "http_status": 200,
-      "fetched_at": "2026-08-28T11:48:30.959911+00:00",
-      "elapsed_ms": 2256,
-      "error": null,
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=0",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.146191+00:00",
+      "elapsed_ms": 63,
+      "error": "HTTPError 400",
       "body": {
-        "generated_at": "2026-08-28T11:48:28.764Z",
-        "served_at": "2026-08-28T11:48:30.903Z",
-        "source_class": "BETFLAG_AAMS_DIRECT",
-        "source": "sportservice.betflag.it direct AAMS player service",
-        "betflag_direct": true,
-        "goldbet_direct": false,
-        "upstream_elapsed_ms": 2139,
-        "target": {
-          "tab": 2484,
-          "slot": 22884,
-          "market": "Marc"
-        },
-        "returned": 1,
-        "price_gate_eligible": true,
-        "certificate": {
-          "proof_id": "bf-8fa071c5a9fe643b4d81",
-          "sha256": "8fa071c5a9fe643b4d815faf0143dd71853a5c3e4660c1f3d64e966b4fcfba56",
-          "exact_identity_match": true,
-          "source_healthy": true,
-          "freshness": {
-            "age_seconds": 2.1,
-            "max_age_seconds": 45,
-            "fresh": true
-          },
-          "price_gate_eligible": true,
-          "canonical": {
-            "source_class": "BETFLAG_AAMS_DIRECT",
-            "source_host": "sportservice.betflag.it",
-            "fetched_at": "2026-08-28T11:48:28.764Z",
-            "match": "Bayern Monaco - Stoccarda",
-            "match_market_id": "36351.3026",
-            "match_event_id": 15819410,
-            "player": "Harry Kane",
-            "requested_market": "Marc",
-            "market": "Marc",
-            "line": null,
-            "selection": "Si",
-            "odd": 1.5,
-            "selection_id": 3734340311,
-            "market_id": -2119053627,
-            "odds_id": 1927835336
-          }
-        },
-        "quote": {
-          "event_id": 16023090,
-          "player_event": "(BYM*-STO) Harry Kane",
-          "match_code": "BYM*-STO",
-          "player": "Harry Kane",
-          "start_time": "28-08-2026 20:30",
-          "league": "Germania Bundesliga ",
-          "tournament_id": 29903,
-          "category_id": 14260,
-          "authority_id": 4,
-          "match_market_id": "36351.3026",
-          "match": "Bayern Monaco - Stoccarda",
-          "match_event_id": 15819410,
-          "match_start": "28-08-2026 20:30",
-          "requested_market": "Marc",
-          "market": "Marc",
-          "line": null,
-          "selection": "Si",
-          "odd": 1.5,
-          "selection_id": 3734340311,
-          "selection_type": 1,
-          "market_type": 4490,
-          "market_id": -2119053627,
-          "odds_id": 1927835336,
-          "fetched_at": "2026-08-28T11:48:28.764Z"
-        },
-        "note": "Certified fresh BetFlag/AAMS operational player price."
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=500",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.184183+00:00",
+      "elapsed_ms": 38,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=1000",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.249647+00:00",
+      "elapsed_ms": 65,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=1500",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.296665+00:00",
+      "elapsed_ms": 47,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=2000",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.347604+00:00",
+      "elapsed_ms": 51,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=2500",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.399021+00:00",
+      "elapsed_ms": 51,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=3000",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.435089+00:00",
+      "elapsed_ms": 36,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=3500",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.485607+00:00",
+      "elapsed_ms": 50,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?limit=500&offset=4000",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T12:26:10.532222+00:00",
+      "elapsed_ms": 47,
+      "error": "HTTPError 400",
+      "body": {
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
       }
     }
   ],
   "no_cache_fallback": true,
-  "github_sha": "48bac365660bbd69926e144e37cd72bbf5241970"
+  "github_sha": "1473a17c595ede9efbb3fd308b636601a856bb31"
 }
