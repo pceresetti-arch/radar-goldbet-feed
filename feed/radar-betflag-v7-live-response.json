@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v1.4",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-28T16:43:00Z",
-  "request_id": "radar-verinac-price-20260828T1643Z",
-  "generated_at": "2026-08-28T16:43:40.337436+00:00",
+  "requested_at": "2026-08-28T16:45:00Z",
+  "request_id": "radar-austria-props-20260828T1645Z",
+  "generated_at": "2026-08-28T16:46:15.550431+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "mode": "player_price",
+  "mode": "player_props",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-28T16:43:39.821969+00:00",
-    "elapsed_ms": 53,
+    "fetched_at": "2026-08-28T16:46:14.829212+00:00",
+    "elapsed_ms": 60,
     "error": null,
     "body": {
       "ok": true,
@@ -69,58 +69,143 @@
   "health_contract_ok": true,
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?match_market_id=36351.2691&player=Antonio+Verinac&market=Marc&selection=Si",
-      "http_status": 404,
-      "fetched_at": "2026-08-28T16:43:40.337414+00:00",
-      "elapsed_ms": 515,
-      "error": "HTTPError 404",
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?player=Antonio+Verinac&match_market_id=36351.2691&full=1&limit=1000&offset=0",
+      "http_status": 200,
+      "fetched_at": "2026-08-28T16:46:15.390215+00:00",
+      "elapsed_ms": 561,
+      "error": null,
       "body": {
-        "generated_at": "2026-08-28T16:43:39.863Z",
-        "served_at": "2026-08-28T16:43:40.330Z",
+        "generated_at": "2026-08-28T16:46:14.864Z",
+        "served_at": "2026-08-28T16:46:15.380Z",
+        "cache": "MISS",
         "source_class": "BETFLAG_AAMS_DIRECT",
         "source": "sportservice.betflag.it direct AAMS player service",
         "betflag_direct": true,
         "goldbet_direct": false,
-        "upstream_elapsed_ms": 467,
-        "target": {
-          "tab": 2484,
-          "slot": 22884,
-          "market": "Marc"
+        "source_healthy": false,
+        "freshness": {
+          "age_seconds": 0.5,
+          "max_age_seconds": 45,
+          "fresh": true
         },
+        "scan_price_gate_capable": false,
+        "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
+        "mode": "full",
+        "upstream_elapsed_ms": 516,
+        "total_source_rows": 0,
         "returned": 0,
-        "price_gate_eligible": false,
-        "certificate": {
-          "proof_id": "bf-8fbe3965912b78918ff7",
-          "sha256": "8fbe3965912b78918ff7b3dd6da6950d655608ac6c78bd2203226654fc32bb63",
-          "exact_identity_match": false,
-          "source_healthy": false,
-          "freshness": {
-            "age_seconds": 0.5,
-            "max_age_seconds": 45,
-            "fresh": true
-          },
-          "price_gate_eligible": false,
-          "canonical": {
-            "source_class": "BETFLAG_AAMS_DIRECT",
-            "source_host": "sportservice.betflag.it",
-            "fetched_at": "2026-08-28T16:43:39.863Z",
-            "match": null,
-            "match_market_id": null,
-            "match_event_id": null,
-            "player": null,
-            "requested_market": null,
-            "market": null,
-            "line": null,
-            "selection": null,
-            "odd": null,
-            "selection_id": null,
-            "market_id": null,
-            "odds_id": null
-          }
+        "pagination": {
+          "limit": 1000,
+          "offset": 0,
+          "has_more": false,
+          "next_offset": null
         },
-        "quote": null,
-        "candidates": [],
-        "note": "No unique fresh exact quote; do not classify BET from this response."
+        "rows": []
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?player=Lukas+Hinterseer&match_market_id=36351.2691&full=1&limit=1000&offset=0",
+      "http_status": 200,
+      "fetched_at": "2026-08-28T16:46:15.466534+00:00",
+      "elapsed_ms": 76,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-28T16:46:14.864Z",
+        "served_at": "2026-08-28T16:46:15.442Z",
+        "cache": "HIT",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "source_healthy": false,
+        "freshness": {
+          "age_seconds": 0.6,
+          "max_age_seconds": 45,
+          "fresh": true
+        },
+        "scan_price_gate_capable": false,
+        "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
+        "mode": "full",
+        "upstream_elapsed_ms": 516,
+        "total_source_rows": 0,
+        "returned": 0,
+        "pagination": {
+          "limit": 1000,
+          "offset": 0,
+          "has_more": false,
+          "next_offset": null
+        },
+        "rows": []
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?player=Nikolai+Baden+Frederiksen&match_market_id=36351.2691&full=1&limit=1000&offset=0",
+      "http_status": 200,
+      "fetched_at": "2026-08-28T16:46:15.522002+00:00",
+      "elapsed_ms": 55,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-28T16:46:14.864Z",
+        "served_at": "2026-08-28T16:46:15.517Z",
+        "cache": "HIT",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "source_healthy": false,
+        "freshness": {
+          "age_seconds": 0.7,
+          "max_age_seconds": 45,
+          "fresh": true
+        },
+        "scan_price_gate_capable": false,
+        "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
+        "mode": "full",
+        "upstream_elapsed_ms": 516,
+        "total_source_rows": 0,
+        "returned": 0,
+        "pagination": {
+          "limit": 1000,
+          "offset": 0,
+          "has_more": false,
+          "next_offset": null
+        },
+        "rows": []
+      }
+    },
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?player=Ademola+Ola-Adebomi&match_market_id=36351.2691&full=1&limit=1000&offset=0",
+      "http_status": 200,
+      "fetched_at": "2026-08-28T16:46:15.550375+00:00",
+      "elapsed_ms": 28,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-28T16:46:14.864Z",
+        "served_at": "2026-08-28T16:46:15.547Z",
+        "cache": "HIT",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "source_healthy": false,
+        "freshness": {
+          "age_seconds": 0.7,
+          "max_age_seconds": 45,
+          "fresh": true
+        },
+        "scan_price_gate_capable": false,
+        "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
+        "mode": "full",
+        "upstream_elapsed_ms": 516,
+        "total_source_rows": 0,
+        "returned": 0,
+        "pagination": {
+          "limit": 1000,
+          "offset": 0,
+          "has_more": false,
+          "next_offset": null
+        },
+        "rows": []
       }
     }
   ],
@@ -134,5 +219,5 @@
     "max_pages_per_query": 20
   },
   "no_cache_fallback": true,
-  "github_sha": "c3d6e709d388b3e293c1a0672383d41e0f940686"
+  "github_sha": "f77a9315f7f13903ecaa68f6b1c061de391b3f72"
 }
