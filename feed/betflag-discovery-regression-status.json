@@ -1,0 +1,51 @@
+{
+  "schema_version": "betflag-discovery-regression-v1",
+  "generated_at": "2026-08-28T14:53:30.010969+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "ready": true,
+  "status": "READY",
+  "contract": {
+    "full_markets_default": true,
+    "player_search_required": true,
+    "pagination_required": true,
+    "dynamic_exact_price_required": true,
+    "fixture_hardcoding": false
+  },
+  "checks": {
+    "static_default_full": true,
+    "static_player_search": true,
+    "static_offset_slice": true,
+    "static_pagination_metadata": true,
+    "static_noncore_targets": true,
+    "bridge_forces_full": true,
+    "bridge_paginates": true,
+    "bridge_min_page_500": true,
+    "health_200": true,
+    "health_version": true,
+    "health_exact_enabled": true,
+    "discovery_200": true,
+    "discovery_source_healthy": true,
+    "discovery_fresh": true,
+    "discovery_mode_full": true,
+    "discovery_nonempty": true,
+    "pagination_runtime": true,
+    "dynamic_candidate_found": true,
+    "player_lookup_runtime": true,
+    "exact_200": true,
+    "exact_unique": true,
+    "exact_source_healthy": true,
+    "exact_fresh": true,
+    "exact_fingerprint": true,
+    "exact_price_gate_eligible": true
+  },
+  "sample_dynamic_exact": {
+    "match": "Horsens - Viborg",
+    "match_market_id": "36351.2126",
+    "player": "Abdoulaye Gouba",
+    "market": "Marcatore Plus",
+    "selection": "Si",
+    "odd": 9,
+    "proof_id": "bf-e69dcb0fc715d5842681"
+  },
+  "rule": "PRE-MATCH must not claim complete player-prop coverage when ready=false."
+}
