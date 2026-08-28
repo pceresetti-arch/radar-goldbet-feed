@@ -7,7 +7,8 @@ on:
   push:
     paths:
       - 'refresh-current-lineups-trigger.json'
-      - 'scripts/refresh_current_lineups.py'
+      - 'radar-runtime-request.json'
+      - 'scripts/refresh_current_lineups_resilient.py'
 
 permissions:
   contents: write
@@ -26,8 +27,8 @@ jobs:
           ref: main
       - name: Install browser-like client
         run: pip install -q curl_cffi
-      - name: Build autonomous lineup feed
-        run: python scripts/refresh_current_lineups.py
+      - name: Build resilient autonomous lineup feed
+        run: python scripts/refresh_current_lineups_resilient.py
       - name: Commit lineup feed safely
         shell: bash
         run: |
@@ -36,7 +37,7 @@ jobs:
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
           git add feed/lineups-current.json feed/lineups-current-summary.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh current autonomous lineups'
+          git commit -m 'Refresh resilient current lineups'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
