@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "radar-v2-t30-readiness",
+  "title": "Radar V2 T-30 readiness result",
+  "type": "object",
+  "required": ["status", "ready", "minutes_to_kickoff", "deadline_minutes", "missing", "next_actions"],
+  "properties": {
+    "status": {
+      "enum": [
+        "PREPARING",
+        "CRITICAL_FINISH_WINDOW",
+        "T30_READY",
+        "T30_DEADLINE_MISSED"
+      ]
+    },
+    "ready": { "type": "boolean" },
+    "minutes_to_kickoff": { "type": ["number", "null"] },
+    "deadline_minutes": { "const": 30 },
+    "missing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code"],
+        "properties": {
+          "code": { "type": "string", "minLength": 1 },
+          "detail": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "ready": { "const": true } } },
+      "then": {
+        "properties": {
+          "status": { "const": "T30_READY" },
+          "missing": { "maxItems": 0 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}
