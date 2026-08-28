@@ -23,39 +23,52 @@ jobs:
           src=json.loads(pathlib.Path('feed/radar-betflag-v7-live-response.json').read_text())
           calls=src.get('calls') or []
           body=(calls[0].get('body') if calls and isinstance(calls[0],dict) else {}) or {}
-          now=datetime.now(timezone.utc)
-          rome=ZoneInfo('Europe/Rome')
-          keep=[]
+          rome=ZoneInfo('Europe/Rome'); now_rome=datetime.now(rome)
+          fixtures=[]; shortlist=[]
           for f in body.get('fixtures') or []:
-              st=f.get('start_time')
-              dt=None
+              st=f.get('start_time'); dt=None
               if st:
-                  try:
-                      dt=datetime.fromisoformat(str(st).replace('Z','+00:00'))
-                      if dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
-                  except Exception: dt=None
-              if dt and dt <= now: continue
-              players=[]
+                  s=str(st).strip()
+                  for parser in ('iso','dmy'):
+                      try:
+                          if parser=='iso':
+                              dt=datetime.fromisoformat(s.replace('Z','+00:00'))
+                              if dt.tzinfo is None: dt=dt.replace(tzinfo=rome)
+                              dt=dt.astimezone(rome)
+                          else:
+                              dt=datetime.strptime(s,'%d-%m-%Y %H:%M').replace(tzinfo=rome)
+                          break
+                      except Exception: dt=None
+              if not dt or dt <= now_rome: continue
+              allrows=[]; markets_present=set()
               for p in f.get('players') or []:
-                  markets=[]
                   for m in p.get('markets') or []:
-                      qs=[]
+                      mk=m.get('market'); markets_present.add(str(mk))
                       for q in m.get('quotes') or []:
-                          odd=q.get('odd')
-                          if odd is None: continue
-                          qs.append({'line':q.get('line'),'selection':q.get('selection'),'odd':odd})
-                      if qs: markets.append({'market':m.get('market'),'quotes':qs})
-                  if markets: players.append({'player':p.get('player'),'markets':markets})
-              keep.append({'match_market_id':f.get('match_market_id'),'match_event_id':f.get('match_event_id'),'match':f.get('match'),'start_time':st,'start_rome':dt.astimezone(rome).isoformat() if dt else None,'league':f.get('league'),'players':players})
-          out={'generated_at':src.get('generated_at'),'request_id':src.get('request_id'),'health_contract_ok':src.get('health_contract_ok'),'index_generated_at':body.get('generated_at'),'source_healthy':body.get('source_healthy'),'freshness':body.get('freshness'),'coverage_complete':body.get('coverage_complete'),'coverage':body.get('coverage'),'upcoming_fixture_count':len(keep),'fixtures':keep}
-          p=pathlib.Path('feed/radar-betflag-v7-live-upcoming.json'); p.write_text(json.dumps(out,ensure_ascii=False,separators=(',',':')))
-          print('upcoming',len(keep),'bytes',p.stat().st_size)
+                          if q.get('odd') is None: continue
+                          allrows.append({'player':p.get('player'),'market':mk,'line':q.get('line'),'selection':q.get('selection'),'odd':q.get('odd')})
+              # retain the most market-relevant/short-priced rows per family for fast human/model review
+              priority=['Marc','Marcatore o Sostituto','Marcatore Plus','Marcatore 1T','Marcatore 2T','1° Marcatore','Gol e Assist','Assist','U/O Tiri Totali Giocatore','U/O Tiri In Porta Giocatore','U/O Tiri Totali Plus','U/O Tiri in porta Plus']
+              top={}
+              for mk in priority:
+                  rows=[r for r in allrows if r['market']==mk]
+                  def k(r):
+                      try: return float(r['odd'])
+                      except: return 99999
+                  rows.sort(key=k)
+                  if rows: top[mk]=rows[:8]
+              rec={'match_market_id':f.get('match_market_id'),'match_event_id':f.get('match_event_id'),'match':f.get('match'),'start_rome':dt.isoformat(),'league':f.get('league'),'markets_present':sorted(markets_present),'top_quotes':top,'quote_rows':len(allrows)}
+              fixtures.append(rec)
+          fixtures.sort(key=lambda x:x['start_rome'])
+          out={'generated_at':src.get('generated_at'),'request_id':src.get('request_id'),'health_contract_ok':src.get('health_contract_ok'),'index_generated_at':body.get('generated_at'),'source_healthy':body.get('source_healthy'),'freshness':body.get('freshness'),'coverage_complete':body.get('coverage_complete'),'coverage':body.get('coverage'),'asof_rome':now_rome.isoformat(),'upcoming_fixture_count':len(fixtures),'fixtures':fixtures}
+          p=pathlib.Path('feed/radar-betflag-v7-live-upcoming-summary.json'); p.write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps(out,ensure_ascii=False,indent=2))
           PY
       - name: Commit compact summary
         run: |
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/radar-betflag-v7-live-upcoming.json
+          git add feed/radar-betflag-v7-live-upcoming-summary.json
           git diff --cached --quiet && exit 0
           git commit -m 'Compact live BetFlag upcoming player index'
           git pull --rebase origin main
