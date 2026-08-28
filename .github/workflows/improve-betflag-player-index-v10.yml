@@ -1,0 +1,39 @@
+name: Improve BetFlag player index v10
+
+on:
+  push:
+    paths:
+      - '.github/workflows/improve-betflag-player-index-v10.yml'
+      - 'scripts/improve_betflag_player_index_v10.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: improve-betflag-player-index-v10
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+      - name: Apply v10 index patch
+        run: python scripts/improve_betflag_player_index_v10.py
+      - name: Commit Worker patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add worker/src/index.mjs
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m 'Improve BetFlag indexed discovery mapping and cache'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
