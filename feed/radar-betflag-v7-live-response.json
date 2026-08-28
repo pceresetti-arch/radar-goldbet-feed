@@ -1,0 +1,72 @@
+{
+  "schema_version": "radar-betflag-v7-live-bridge-v1",
+  "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
+  "requested_at": "2026-08-28T10:26:00Z",
+  "request_id": "repair-health-20260828T102600Z",
+  "generated_at": "2026-08-28T10:33:32.940682+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "mode": "health",
+  "health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-28T10:33:32.940658+00:00",
+    "elapsed_ms": 170,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "health_contract_ok": true,
+  "calls": [],
+  "no_cache_fallback": true,
+  "github_sha": "483b575a8af6f4e8d0f632cd273ccdd20a1c24ce"
+}
