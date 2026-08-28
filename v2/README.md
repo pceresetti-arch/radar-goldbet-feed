@@ -16,6 +16,8 @@ La raccolta dati e l'analisi sono due fasi separate. L'Analysis Engine non parte
 - Se BetFlag/AAMS non restituisce un mercato, il Radar deve distinguere tra mercato realmente non quotato e acquisizione fallita; non può assumere che il mercato non esista.
 - Eventuali fonti alternative sono fallback espliciti e devono essere etichettati come tali; nessuna sostituzione silenziosa.
 
+Contratto macchina: `contracts/quote-source-policy.json`.
+
 ## Stati obbligatori di ogni mercato
 
 - `QUOTED_RECOVERED`: mercato trovato, prezzo valido, fonte e timestamp presenti.
@@ -40,6 +42,7 @@ Quindi la velocità non deriva dal saltare mercati: deriva dal parallelizzare ac
 - `src/data-gate.mjs`: logica eseguibile del gate.
 - `src/quote-source-policy.mjs`: seleziona BetFlag/AAMS come quota operativa primaria e tratta GoldBet come cross-check non bloccante.
 - `contracts/market-acquisition.schema.json`: contratto macchina per evidenza mercato.
+- `contracts/quote-source-policy.json`: gerarchia fonti quote V2.
 - `test/data-gate.test.mjs`: test dei casi trovato / non quotato confermato / acquisizione fallita.
 - `test/quote-source-policy.test.mjs`: test della gerarchia fonti e della non-dipendenza da GoldBet.
 
