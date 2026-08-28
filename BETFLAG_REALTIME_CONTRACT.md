@@ -51,7 +51,35 @@ Historical proofs: `feed/price-proofs/`.
 
 This path is operational even when Cloudflare deployment credentials are unavailable. It directly calls BetFlag/AAMS, produces a source timestamp, exact identity check, quote identifiers and SHA-256 fingerprint, and commits the proof to the repository.
 
-If the canonical Worker health check fails, times out, or cannot be reached by the current execution environment, trigger/use this fallback immediately. Do not downgrade to historical discovery snapshots and do not consult the legacy combined Worker as a substitute for player prices.
+If the canonical Worker health check fails, times out, DNS resolution fails, TLS/routing fails, or the current execution environment cannot reach the Worker, trigger/use this fallback immediately. Do not downgrade to historical discovery snapshots and do not consult the legacy combined Worker as a substitute for player prices.
+
+### 3. Transport failure state machine — V2 mandatory
+
+Caller connectivity and BetFlag source health are separate states and MUST NOT be conflated.
+
+Required states:
+
+- `PLAYER_FAST_PATH_OK`: Worker reachable and health/version contract valid.
+- `TRANSPORT_PRIMARY_FAILED`: caller cannot reach the Worker because of DNS/network/TLS/routing/timeout; this does **not** prove BetFlag or the Worker is down.
+- `BETFLAG_UPSTREAM_FAILED`: Worker/fallback reached but direct BetFlag/AAMS source reports unhealthy/fails.
+- `PLAYER_EXACT_FALLBACK_OK`: Worker transport failed but GitHub Actions on-demand direct proof returned a fresh unique healthy exact quote.
+- `PLAYER_LANE_UNREACHABLE`: fast path and direct on-demand fallback both failed or could not produce proof.
+
+A `TRANSPORT_PRIMARY_FAILED` event must never degrade the entire Radar run. Calendar, XI, tactical modelling, PRE-XI shortlist and POST-XI rediscovery logic continue independently. Only the unavailable player-price/discovery block is marked incomplete.
+
+The Radar must not convert a caller-side DNS/network failure into `market_not_quoted`, `source_unhealthy`, or global `PIPELINE_DEGRADED` without independent source evidence.
+
+### 4. Discovery behaviour when fast path is unreachable
+
+`/live/player-props` remains the preferred live discovery path.
+
+If the Worker cannot be reached by the caller:
+
+1. keep PRE-XI/XI/context/model lanes active;
+2. use any fresh direct BetFlag/AAMS discovery artifact produced by an operational direct-AAMS workflow when available;
+3. historical `player-props-current*` files may be used only as discovery hints / market-history context, never as current price proof;
+4. exact final price must still be certified through `/live/player-price` or `betflag-price-proof-on-demand.yml`;
+5. never infer `mercato non quotato` from a transport or acquisition failure.
 
 ## Historical five-minute feed
 
@@ -86,7 +114,7 @@ If no unique fresh proof is available, classification is `ATTESA` or `NO BET`, n
 Allowed labels:
 
 - `BETFLAG_AAMS_DIRECT` — direct BetFlag/AAMS player service;
-- `GOLDBET_DIRECT_ODSS` — direct GoldBet filter through the ODSS bridge when fresh and mapped.
+- `GOLDBET_DIRECT_ODSS` — direct GoldBet source when fresh/mapped; player props used as cross-check when available.
 
 Forbidden behaviour:
 
@@ -95,11 +123,13 @@ Forbidden behaviour:
 - using an old GitHub snapshot as if it were live;
 - generating a BET from a non-unique player/market match;
 - treating `feed/cloudflare-deploy-status.json` as BetFlag player-fast-path health;
-- treating one DNS/network failure from the caller as evidence that the canonical Worker is down when the canonical status/fallback can still verify the source.
+- treating one DNS/network failure from the caller as evidence that the canonical Worker is down when the canonical status/fallback can still verify the source;
+- treating `not found` as `not quoted` without positive market-availability verification;
+- stopping the full PRE-MATCH Radar because only the player transport lane is unavailable.
 
 ## Deployment state
 
-Dedicated BetFlag v7 deployment status is recorded in `feed/betflag-v7-worker-status.json` and is authoritative for player-price fast-path health.
+Dedicated BetFlag v7 deployment status is recorded in `feed/betflag-v7-worker-status.json` and is authoritative for player-price fast-path health when fresh.
 
 `feed/cloudflare-deploy-status.json` belongs to the legacy/combined `radar-goldbet` Worker and is not authoritative for player props.
 
