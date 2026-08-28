@@ -4,7 +4,7 @@ import { evaluateT30Readiness, T30_STATUS } from '../src/t30-readiness.mjs';
 const now = '2026-08-29T18:00:00Z';
 const base = {
   kickoff_at: '2026-08-29T18:40:00Z',
-  xi: { status: 'OFFICIAL' },
+  xi: { status: 'OFFICIAL', fingerprint: 'xi-a' },
   data_gate: { status: 'DATA_GATE_PASS' },
   modules: {
     match_model: { status: 'COMPLETED' },
@@ -23,46 +23,57 @@ const base = {
       opening_quality: 'TRUE_OPEN_CERTIFIED',
       true_open_price: 2.1,
       current_price: 1.92,
-      current_fetched_at: '2026-08-29T17:59:00Z',
-      t40: { price: 1.96 },
-      t30: { price: 1.92 }
+      current_fetched_at: '2026-08-29T17:59:00Z'
     },
     {
       market_key: 'OU25_OVER',
       opening_quality: 'TRUE_OPEN_CERTIFIED',
       true_open_price: 1.98,
       current_price: 1.8,
-      current_fetched_at: '2026-08-29T17:59:30Z',
-      t40: { price: 1.84 },
-      t30: { price: 1.8 }
+      current_fetched_at: '2026-08-29T17:59:30Z'
     }
   ]
 };
 
 const req = { now, requiredStandardSeries: ['1X2_HOME', 'OU25_OVER'] };
 let r = evaluateT30Readiness(base, req);
-assert.equal(r.ready, true);
-assert.equal(r.status, T30_STATUS.T30_READY);
+assert.equal(r.analysis_complete, true);
+assert.equal(r.ready, false);
+assert.equal(r.status, T30_STATUS.AWAITING_FINAL_PRICE_CHECK);
+assert(!r.missing.some((x) => x.code === 'T40_SNAPSHOT_MISSING'));
 
 const missingOpen = structuredClone(base);
 missingOpen.standard_odds_series[1].opening_quality = 'OPEN_RADAR_PROXY';
 r = evaluateT30Readiness(missingOpen, req);
+assert.equal(r.analysis_complete, false);
 assert.equal(r.ready, false);
-assert.equal(r.status, T30_STATUS.CRITICAL_FINISH_WINDOW);
 assert(r.missing.some((x) => x.code === 'TRUE_OPEN_NOT_CERTIFIED' && x.detail === 'OU25_OVER'));
 
-const staleAtDeadline = structuredClone(base);
-staleAtDeadline.kickoff_at = '2026-08-29T18:29:00Z';
+const atDeadline = structuredClone(base);
+atDeadline.kickoff_at = '2026-08-29T18:30:00Z';
+atDeadline.standard_odds_series[0].t30 = { price: 1.92 };
+atDeadline.standard_odds_series[1].t30 = { price: 1.8 };
+r = evaluateT30Readiness(atDeadline, req);
+assert.equal(r.ready, true);
+assert.equal(r.status, T30_STATUS.T30_READY);
+
+const staleAtDeadline = structuredClone(atDeadline);
 staleAtDeadline.standard_odds_series[0].current_fetched_at = '2026-08-29T17:50:00Z';
 r = evaluateT30Readiness(staleAtDeadline, req);
 assert.equal(r.ready, false);
 assert.equal(r.status, T30_STATUS.T30_DEADLINE_MISSED);
-assert(r.next_actions.includes('REFRESH_CURRENT_PRICE:1X2_HOME'));
+assert(r.next_actions.includes('REFRESH_FINAL_PRICE:1X2_HOME'));
+
+const missingT30 = structuredClone(base);
+missingT30.kickoff_at = '2026-08-29T18:29:00Z';
+r = evaluateT30Readiness(missingT30, req);
+assert.equal(r.ready, false);
+assert(r.next_actions.includes('CAPTURE_T30_FROM_FRESH_CURRENT:1X2_HOME'));
 
 const incompleteModule = structuredClone(base);
 incompleteModule.modules.player_model.status = 'FAILED';
 r = evaluateT30Readiness(incompleteModule, req);
-assert.equal(r.ready, false);
-assert(r.next_actions.includes('RUN_MODULE:player_model'));
+assert.equal(r.analysis_complete, false);
+assert(r.next_actions.includes('RUN_POST_XI_MODULE:player_model'));
 
 console.log('t30-readiness tests passed');
