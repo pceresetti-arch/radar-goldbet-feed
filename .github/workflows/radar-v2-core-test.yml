@@ -1,0 +1,27 @@
+name: Radar V2 core tests
+
+on:
+  push:
+    branches: [radar-v2-core]
+    paths:
+      - 'v2/**'
+      - '.github/workflows/radar-v2-core-test.yml'
+  pull_request:
+    paths:
+      - 'v2/**'
+      - '.github/workflows/radar-v2-core-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  data-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run V2 data-gate tests
+        run: node v2/test/data-gate.test.mjs
