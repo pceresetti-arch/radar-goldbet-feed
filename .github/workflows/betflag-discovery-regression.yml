@@ -1,0 +1,60 @@
+name: BetFlag discovery regression gate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'
+  push:
+    paths:
+      - 'worker/src/index.mjs'
+      - '.github/workflows/radar-betflag-v7-live-bridge.yml'
+      - 'scripts/betflag_discovery_regression.py'
+      - '.github/workflows/betflag-discovery-regression.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-discovery-regression
+  cancel-in-progress: true
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Run fixture-agnostic discovery regression
+        run: python scripts/betflag_discovery_regression.py
+
+      - name: Commit readiness status
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-discovery-regression-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update BetFlag discovery regression status'
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then break; fi
+              sleep $((attempt*2))
+            done
+          fi
+
+      - name: Enforce readiness gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('feed/betflag-discovery-regression-status.json',encoding='utf-8'))
+          if p.get('ready') is not True:
+              failed=[k for k,v in (p.get('checks') or {}).items() if v is not True]
+              raise SystemExit('PIPELINE_DEGRADED: '+', '.join(failed))
+          print('BETFLAG_DISCOVERY_READY')
+          PY
