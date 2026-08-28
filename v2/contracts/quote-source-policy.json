@@ -1,0 +1,12 @@
+{
+  "schema_version": "radar-v2-quote-source-policy-v1",
+  "operational_primary": "BETFLAG_AAMS_DIRECT",
+  "goldbet_role": "CROSSCHECK_NON_BLOCKING",
+  "rules": [
+    "Use BetFlag/AAMS direct as the operational quote source whenever a fresh verified quote is available.",
+    "Do not block analysis waiting for GoldBet when BetFlag/AAMS is available.",
+    "Do not classify a missing BetFlag/AAMS market as not quoted without market-discovery evidence.",
+    "Treat GoldBet acquisition failure as diagnostic only unless GoldBet was explicitly requested by the user.",
+    "Alternative operational sources must be labelled explicitly and never silently relabelled."
+  ]
+}
