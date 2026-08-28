@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v1.4",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-28T17:23:05Z",
-  "request_id": "radar-prematch-20260828T1923CEST-index",
-  "generated_at": "2026-08-28T17:23:44.190052+00:00",
+  "requested_at": "2026-08-28T17:24:10Z",
+  "request_id": "radar-prematch-20260828T1923CEST-props-fallback",
+  "generated_at": "2026-08-28T17:24:12.397470+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "mode": "player_index",
+  "mode": "player_props",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-28T17:23:43.546179+00:00",
-    "elapsed_ms": 498,
+    "fetched_at": "2026-08-28T17:24:12.312948+00:00",
+    "elapsed_ms": 117,
     "error": null,
     "body": {
       "ok": true,
@@ -69,81 +69,13 @@
   "health_contract_ok": true,
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-index?date=28-08-2026",
-      "http_status": 200,
-      "fetched_at": "2026-08-28T17:23:44.190026+00:00",
-      "elapsed_ms": 639,
-      "error": null,
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?full=1&limit=1000&offset=0",
+      "http_status": 400,
+      "fetched_at": "2026-08-28T17:24:12.397440+00:00",
+      "elapsed_ms": 84,
+      "error": "HTTPError 400",
       "body": {
-        "generated_at": "2026-08-28T17:23:43.767Z",
-        "source_class": "BETFLAG_AAMS_DIRECT",
-        "source": "sportservice.betflag.it direct AAMS player service",
-        "source_healthy": false,
-        "index_version": "player-index-v2",
-        "coverage_static": false,
-        "coverage_scope": {
-          "type": "date",
-          "date": "28-08-2026"
-        },
-        "exact_price_endpoint": "/live/player-price",
-        "coverage": {
-          "targets_expected": 17,
-          "targets_called": 17,
-          "targets_ok": 0,
-          "missing_targets": [
-            "Marcatore Plus",
-            "Marcatore o Sostituto",
-            "Marc",
-            "1° Marcatore",
-            "1° Marcatore o Sostituto",
-            "Marcatore 1T",
-            "Marcatore 2T",
-            "Doppietta",
-            "Tripletta",
-            "U/O Tiri in porta Plus",
-            "U/O Tiri Totali Plus",
-            "Assist o Sostituto",
-            "U/O Tiri In Porta Giocatore",
-            "U/O Tiri Totali Giocatore",
-            "Assist",
-            "Gol e Assist",
-            "U/O Parate Giocatore"
-          ],
-          "source_rows": 0,
-          "scoped_source_rows": 0,
-          "indexed_rows": 0,
-          "unmapped_rows": 0,
-          "mapping_counts": {
-            "standard_match": 0,
-            "match_code_fallback": 0,
-            "fixture_id_fallback": 0,
-            "composite_identity_fallback": 0,
-            "missing_stable_identity": 0,
-            "missing_player": 0
-          },
-          "fixtures": 0,
-          "exact_fixtures": 0,
-          "fallback_fixtures": 0,
-          "player_fixtures": 0,
-          "markets_present": []
-        },
-        "fixtures": [],
-        "served_at": "2026-08-28T17:23:44.152Z",
-        "cache": "MISS:MISS",
-        "freshness": {
-          "age_seconds": 0.4,
-          "max_age_seconds": 45,
-          "fresh": true
-        },
-        "coverage_complete": false,
-        "ready_for_discovery": false,
-        "discovery_contract": {
-          "single_call_index": true,
-          "max_index_cache_seconds": 20,
-          "exact_price_no_cache": true,
-          "fallback_mapping_allowed": true,
-          "no_quote_rows_dropped": true
-        }
+        "error": "Specify event_id, match_market_id, player, or q with at least 3 characters"
       }
     }
   ],
@@ -157,5 +89,5 @@
     "max_pages_per_query": 20
   },
   "no_cache_fallback": true,
-  "github_sha": "9c53ccae863218e124e39af5ddcd93aab1ff7323"
+  "github_sha": "0c724bf50d253ce770580768e61c7a6f9d20946f"
 }
