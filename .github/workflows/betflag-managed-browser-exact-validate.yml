@@ -1,0 +1,110 @@
+name: BetFlag managed browser exact validate
+
+on:
+  push:
+    paths:
+      - 'betflag-managed-browser-exact-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract exact BetFlag Liverpool player prices
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,requests,re,concurrent.futures
+          from datetime import datetime,timezone
+
+          END='https://api.anakin.io/v1/url-scraper/scrape'
+          urls={
+            'Marc':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0?channelId=0',
+            'Gol e Assist':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/13824/0?channelId=0'
+          }
+          def fetch(item):
+            market,url=item
+            p={'url':url,'country':'it','useBrowser':True,'formats':['markdown','html']}
+            r=requests.post(END,json=p,headers={'Content-Type':'application/json','Accept':'application/json'},timeout=105)
+            try:j=r.json()
+            except:j={'raw':r.text}
+            return market,url,r.status_code,j
+
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'source_class':'BETFLAG_AAMS_DIRECT_VIA_MANAGED_ITALIAN_BROWSER','markets':[]}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
+            rows=list(ex.map(fetch,urls.items()))
+
+          def walk(x,path=''):
+            if isinstance(x,dict):
+              for k,v in x.items(): yield from walk(v,path+'/'+str(k))
+            elif isinstance(x,list):
+              for i,v in enumerate(x): yield from walk(v,path+'/'+str(i))
+            elif isinstance(x,str): yield path,x
+
+          for market,url,status,j in rows:
+            strings=list(walk(j))
+            joined='\n'.join(s for _,s in strings)
+            low=joined.lower()
+            hits=[]
+            for needle in ('isak','gakpo','liverpool','nottingham','forest'):
+              pos=0
+              while True:
+                i=low.find(needle,pos)
+                if i<0:break
+                hits.append({'needle':needle,'index':i,'context':joined[max(0,i-900):i+1600]})
+                pos=i+len(needle)
+                if sum(1 for h in hits if h['needle']==needle)>=12: break
+            # Parse embedded JSON candidates, including escaped content from markdown/html/raw fields.
+            candidates=[]
+            def inspect(obj,path='root'):
+              if isinstance(obj,dict):
+                txt=json.dumps(obj,ensure_ascii=False,default=str)
+                l=txt.lower()
+                if ('isak' in l or 'gakpo' in l) and ('liverpool' in l or 'nottingham' in l or 'forest' in l):
+                  candidates.append({'path':path,'object':obj})
+                for k,v in obj.items(): inspect(v,path+'/'+str(k))
+              elif isinstance(obj,list):
+                for i,v in enumerate(obj): inspect(v,path+'/'+str(i))
+              elif isinstance(obj,str):
+                s=obj.strip()
+                if len(s)>2 and s[0] in '[{':
+                  try: inspect(json.loads(s),path+'/parsed-json')
+                  except: pass
+            inspect(j)
+            # Deduplicate/trim candidate objects, preserving structures likely containing price fields.
+            compact=[];seen=set()
+            for c in candidates:
+              text=json.dumps(c['object'],ensure_ascii=False,default=str)
+              key=text[:1000]
+              if key in seen:continue
+              seen.add(key)
+              compact.append({'path':c['path'],'object_preview':text[:12000]})
+              if len(compact)>=30:break
+            out['markets'].append({
+              'market':market,'url':url,'transport_status':status,
+              'top_level_keys':list(j.keys()) if isinstance(j,dict) else None,
+              'mentions':{'isak':'isak' in low,'gakpo':'gakpo' in low,'liverpool':'liverpool' in low,'nottingham':'nottingham' in low,'forest':'forest' in low},
+              'hits':hits[:40],'candidate_objects':compact,
+              'response_meta':{k:j.get(k) for k in ('cached','status','url','trial') if isinstance(j,dict) and k in j}
+            })
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-managed-browser-exact-validate.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{'market':m['market'],'status':m['transport_status'],'mentions':m['mentions'],'hits':len(m['hits']),'candidates':len(m['candidate_objects'])} for m in out['markets']],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-managed-browser-exact-validate.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Validate exact BetFlag player prices via managed browser'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
