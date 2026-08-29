@@ -1,0 +1,51 @@
+name: BetFlag alternate official hosts probe
+
+on:
+  push:
+    paths:
+      - 'betflag-alt-host-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe official BetFlag alternate hosts
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests,json,pathlib
+          from datetime import datetime,timezone
+          hosts=['https://appapi.betflag.it','https://odds.betflag.it','https://m.betflag.it','https://app.betflag.it','https://lol-mobile-proxy.betflag.it','https://sportservice.betflag.it']
+          AGG=1334500001
+          paths=['/','/health','/swagger','/swagger/index.html','/api','/api/sport/pregame/getProgram?channelId=0',f'/api/sport/pregame/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0',f'/api/sport/pregame/getOverviewEventsAams/0/-1/0/{AGG}/2484/22884/0?channelId=0',f'/api/sport/pregame/getOverviewEventsAams/0/-1/0/{AGG}/2484/13824/0?channelId=0']
+          H={'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'results':[]}
+          for host in hosts:
+            s=requests.Session();s.headers.update(H)
+            for p in paths:
+              u=host+p
+              try:
+                r=s.get(u,timeout=15,allow_redirects=True)
+                out['results'].append({'host':host,'path':p,'status':r.status_code,'final_url':r.url,'content_type':r.headers.get('content-type'),'server':r.headers.get('server'),'location':r.headers.get('location'),'bytes':len(r.content),'preview':r.text[:1000]})
+              except Exception as e: out['results'].append({'host':host,'path':p,'error':repr(e)})
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-alt-host-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps([{k:x.get(k) for k in ('host','path','status','final_url','bytes','error')} for x in out['results']],indent=2))
+          PY
+      - name: Commit probe
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-alt-host-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe alternate official BetFlag API hosts'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
