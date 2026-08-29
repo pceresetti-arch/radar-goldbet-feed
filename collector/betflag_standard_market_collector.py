@@ -31,7 +31,7 @@ def family(name):
  return None
 
 def main():
- now=datetime.now(timezone.utc).isoformat(); rows=[]; markets_seen={}; status=None
+ now=datetime.now(timezone.utc).isoformat(); rows=[]; markets_seen={}; all_market_names={}; status=None
  try:
   status,data=get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
   for ev in walk(data):
@@ -39,7 +39,8 @@ def main():
    mm=ev.get('mmkW') or {}; mks=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
    for mk in mks:
     if not isinstance(mk,dict): continue
-    mn=mk.get('mn'); fam=family(mn)
+    mn=mk.get('mn'); all_market_names[str(mn)]=all_market_names.get(str(mn),0)+1
+    fam=family(mn)
     if not fam: continue
     markets_seen[str(mn)]=markets_seen.get(str(mn),0)+1
     spd=mk.get('spd') or {}; spreads=spd.items() if isinstance(spd,dict) else enumerate(spd if isinstance(spd,list) else [])
@@ -52,9 +53,9 @@ def main():
  except Exception as e:
   error=repr(e)
  else: error=None
- out={'schema_version':'betflag-standard-markets-v1','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':status==200,'priority':['1X2','OVER_UNDER'],'secondary':['GOAL_NO_GOAL','TEAM_TOTAL','HANDICAP','DOUBLE_CHANCE'],'status':status,'markets_seen':markets_seen,'rows':rows}
+ out={'schema_version':'betflag-standard-markets-v1','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':status==200,'priority':['1X2','OVER_UNDER'],'secondary':['GOAL_NO_GOAL','TEAM_TOTAL','HANDICAP','DOUBLE_CHANCE'],'status':status,'markets_seen':markets_seen,'all_market_names_seen':dict(sorted(all_market_names.items(), key=lambda kv:(-kv[1],kv[0]))),'rows':rows}
  if error: out['error']=error
  p=pathlib.Path('feed'); p.mkdir(exist_ok=True)
  (p/'betflag-standard-current.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
- print(json.dumps({'source_healthy':out['source_healthy'],'rows':len(rows),'families':{f:sum(1 for r in rows if r['family']==f) for f in sorted(set(r['family'] for r in rows))}},ensure_ascii=False))
+ print(json.dumps({'source_healthy':out['source_healthy'],'rows':len(rows),'families':{f:sum(1 for r in rows if r['family']==f) for f in sorted(set(r['family'] for r in rows))},'all_market_names_seen':out['all_market_names_seen']},ensure_ascii=False))
 if __name__=='__main__': main()
