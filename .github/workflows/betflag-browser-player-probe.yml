@@ -1,0 +1,80 @@
+name: BetFlag browser player probe
+
+on:
+  push:
+    paths:
+      - 'betflag-browser-player-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1 || true
+          npm install playwright@latest --no-save
+          npx playwright install --with-deps chromium
+      - name: Fetch BetFlag player markets through real browser context
+        shell: bash
+        run: |
+          node <<'JS'
+          const fs=require('fs');
+          const { chromium }=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true,args:['--disable-blink-features=AutomationControlled']});
+            const context=await browser.newContext({
+              locale:'it-IT', timezoneId:'Europe/Rome',
+              userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+              viewport:{width:1440,height:900}
+            });
+            const page=await context.newPage();
+            const out={generated_at:new Date().toISOString(),page:{},calls:[]};
+            try {
+              let nav=await page.goto('https://www.betflag.it/sport',{waitUntil:'domcontentloaded',timeout:60000});
+              out.page={url:page.url(),status:nav?nav.status():null,title:await page.title(),html_snippet:(await page.content()).slice(0,1200)};
+              await page.waitForTimeout(3500);
+            } catch(e){ out.page.error=String(e); }
+            const endpoints={
+              program:'https://sportservice.betflag.it/api/sport/pregame/getProgram?channelId=0',
+              standard:'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/1/0/1334500001/0/0/0?channelId=0',
+              scorer:'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0?channelId=0',
+              goal_assist:'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/13824/0?channelId=0'
+            };
+            for (const [name,url] of Object.entries(endpoints)) {
+              try {
+                const res=await page.evaluate(async ({url})=>{
+                  const r=await fetch(url,{method:'GET',credentials:'include',headers:{
+                    'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0'
+                  }});
+                  const text=await r.text();
+                  return {status:r.status,contentType:r.headers.get('content-type'),url:r.url,text:text.slice(0,1500000)};
+                },{url});
+                let body=null; try{body=JSON.parse(res.text)}catch{body={raw:res.text.slice(0,3000)}}
+                const rawLower=res.text.toLowerCase();
+                out.calls.push({name,url,status:res.status,content_type:res.contentType,bytes:res.text.length,mentions_isak:rawLower.includes('isak'),mentions_gakpo:rawLower.includes('gakpo'),body});
+              } catch(e){ out.calls.push({name,url,error:String(e)}); }
+            }
+            await browser.close();
+            fs.mkdirSync('feed',{recursive:true});
+            fs.writeFileSync('feed/betflag-browser-player-probe.json',JSON.stringify(out,null,2));
+            console.log(JSON.stringify({page:out.page,calls:out.calls.map(x=>({name:x.name,status:x.status,bytes:x.bytes,mentions_isak:x.mentions_isak,mentions_gakpo:x.mentions_gakpo,error:x.error}))},null,2));
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+      - name: Commit browser probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-browser-player-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag player markets via browser'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
