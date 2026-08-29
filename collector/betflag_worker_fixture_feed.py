@@ -26,7 +26,7 @@ def get_json(path, timeout=75):
     req=urllib.request.Request(url,headers={
         'Accept':'application/json',
         'Cache-Control':'no-cache',
-        'User-Agent':'RadarBetFlagWorkerFixtureFeed/1.1'
+        'User-Agent':'RadarBetFlagWorkerFixtureFeed/1.2'
     })
     with urllib.request.urlopen(req,timeout=timeout) as r:
         return r.status,json.loads(r.read().decode())
@@ -45,11 +45,28 @@ def scoped_rows(body):
     return int(coverage.get('scoped_source_rows') or coverage.get('scoped_rows') or coverage.get('source_rows') or 0)
 
 
-def usable(status, body):
+def usable_partial(status, body):
     return bool(status == 200 and fresh(body) and fixture_count(body) > 0 and scoped_rows(body) > 0)
 
 
-def fetch_index(path, label, attempts=4):
+def unavailable_doc(label, history):
+    now=datetime.now(timezone.utc).isoformat()
+    return {
+        'generated_at':now,
+        'source_class':'BETFLAG_AAMS_DIRECT',
+        'source_healthy':False,
+        'freshness':{'age_seconds':0,'max_age_seconds':45,'fresh':False},
+        'coverage':{
+            'fixtures':0,
+            'scoped_source_rows':0,
+            'missing_targets':[f'{label.upper()}_INDEX_UNAVAILABLE']
+        },
+        'fixtures':[],
+        'acquisition_history':history
+    }
+
+
+def fetch_index(path, label, attempts=4, allow_unavailable=False):
     history=[]
     best=None
     for attempt in range(1, attempts+1):
@@ -68,29 +85,41 @@ def fetch_index(path, label, attempts=4):
             candidate=(status,body)
             if best is None or scoped_rows(body) > scoped_rows(best[1]):
                 best=candidate
-            if status == 200 and body.get('source_healthy') and fresh(body) and fixture_count(body) > 0:
-                return status,body,history,False
+            # Healthy acquisition is valid even with zero fixtures/rows: that means
+            # no currently available prematch market, not an acquisition failure.
+            if status == 200 and body.get('source_healthy') and fresh(body):
+                return status,body,history,False,False
         except Exception as exc:
             history.append({'attempt':attempt,'error':f'{type(exc).__name__}: {exc}'})
         if attempt < attempts:
-            time.sleep(0.35*attempt)
+            time.sleep(0.45*attempt)
 
-    if best is not None and usable(best[0],best[1]):
-        # Keep the Radar alive on transient partial target loss. Coverage remains explicit
-        # and FINAL GATE exact is still mandatory for any candidate selection.
-        return best[0],best[1],history,True
+    if best is not None and usable_partial(best[0],best[1]):
+        # Keep discovery alive on partial target loss. Missing coverage remains explicit;
+        # any final player BET still requires a fresh unique exact-price certificate.
+        return best[0],best[1],history,True,False
+
+    if allow_unavailable:
+        return 200,unavailable_doc(label,history),history,True,True
+
     raise SystemExit(f'Worker {label} index unavailable after {attempts} attempts: {json.dumps(history,ensure_ascii=False)}')
 
 
 def main():
     today=datetime.now(ZoneInfo('Europe/Rome')).strftime('%d-%m-%Y')
     qs=urllib.parse.urlencode({'date':today})
-    ss,standard,standard_attempts,standard_degraded=fetch_index('/live/standard-index?'+qs,'standard')
-    ps,players,player_attempts,player_degraded=fetch_index('/live/player-index?'+qs,'player')
+    ss,standard,standard_attempts,standard_degraded,standard_unavailable=fetch_index(
+        '/live/standard-index?'+qs,'standard',attempts=4,allow_unavailable=False
+    )
+    ps,players,player_attempts,player_degraded,player_unavailable=fetch_index(
+        '/live/player-index?'+qs,'player',attempts=4,allow_unavailable=True
+    )
 
+    standard_healthy=bool(standard.get('source_healthy') and fresh(standard))
+    player_healthy=bool(players.get('source_healthy') and fresh(players))
     coverage_complete=bool(
-        standard.get('source_healthy') and players.get('source_healthy') and
-        not standard_degraded and not player_degraded
+        standard_healthy and player_healthy and
+        not standard_degraded and not player_degraded and not player_unavailable
     )
     standard_missing=list((standard.get('coverage') or {}).get('missing_targets') or [])
     player_missing=list((players.get('coverage') or {}).get('missing_targets') or [])
@@ -146,13 +175,14 @@ def main():
         if not f.get('match'): continue
         player_quote_count=sum(len(m.get('quotes') or []) for pl in f.get('players') or [] for m in pl.get('markets') or [])
         doc={
-            'schema_version':'betflag-worker-fixture-feed-v2',
+            'schema_version':'betflag-worker-fixture-feed-v3',
             'generated_at':generated,
             'source_class':'BETFLAG_AAMS_DIRECT',
             'source':'radar-betflag-v7 Worker -> sportservice.betflag.it AAMS',
-            'source_healthy':True,
+            'source_healthy':standard_healthy,
+            'player_discovery_healthy':player_healthy,
             'coverage_complete':coverage_complete,
-            'coverage_warning':None if coverage_complete else 'PARTIAL TARGET COVERAGE — discovery usable; FINAL GATE exact mandatory',
+            'coverage_warning':None if coverage_complete else 'PARTIAL TARGET COVERAGE — discovery usable where present; FINAL GATE exact mandatory',
             'standard_missing_targets':standard_missing,
             'player_missing_targets':player_missing,
             'freshness':{
@@ -188,17 +218,34 @@ def main():
         })
 
     index.sort(key=lambda x:(str(x.get('match_start') or ''),str(x.get('match') or '')))
+    full_scan_ready=sum(1 for x in index if x['complete_for_full_scan'])
+    full_market_ready=sum(1 for x in index if x['complete_for_full_scan'] and x['market_coverage_complete'])
+    if not index and standard_healthy:
+        feed_status='NO_PREMATCH_FIXTURES_AVAILABLE'
+    elif coverage_complete and full_scan_ready>0:
+        feed_status='READY_FULL_SCAN'
+    elif index:
+        feed_status='READY_DEGRADED_OR_STANDARD_ONLY'
+    else:
+        feed_status='ACQUISITION_FAILED'
+    operationally_usable=bool(standard_healthy and (len(index)>=0))
+
     output={
-        'schema_version':'betflag-worker-fixtures-index-v2',
+        'schema_version':'betflag-worker-fixtures-index-v3',
         'generated_at':generated,
         'date':today,
         'source_class':'BETFLAG_AAMS_DIRECT',
         'source':'radar-betflag-v7 Worker -> sportservice.betflag.it AAMS',
-        'source_healthy':True,
+        'source_healthy':standard_healthy,
+        'player_discovery_healthy':player_healthy,
+        'operationally_usable':operationally_usable,
+        'feed_status':feed_status,
         'coverage_complete':coverage_complete,
-        'coverage_warning':None if coverage_complete else 'PARTIAL TARGET COVERAGE — feed retained; exact FINAL GATE required',
+        'coverage_warning':None if coverage_complete else 'PARTIAL TARGET COVERAGE — exact FINAL GATE required for player candidates',
         'standard_degraded':standard_degraded,
         'player_degraded':player_degraded,
+        'standard_unavailable':standard_unavailable,
+        'player_unavailable':player_unavailable,
         'standard_missing_targets':standard_missing,
         'player_missing_targets':player_missing,
         'standard_attempts':standard_attempts,
@@ -208,17 +255,20 @@ def main():
         'standard_freshness':standard.get('freshness'),
         'player_freshness':players.get('freshness'),
         'fixture_count':len(index),
-        'full_scan_ready_count':sum(1 for x in index if x['complete_for_full_scan']),
-        'full_market_coverage_ready_count':sum(1 for x in index if x['complete_for_full_scan'] and x['market_coverage_complete']),
+        'full_scan_ready_count':full_scan_ready,
+        'full_market_coverage_ready_count':full_market_ready,
         'fixtures':index
     }
     INDEX.write_text(json.dumps(output,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     print(json.dumps({
-        'source_healthy':True,
+        'source_healthy':standard_healthy,
+        'player_discovery_healthy':player_healthy,
+        'operationally_usable':operationally_usable,
+        'feed_status':feed_status,
         'coverage_complete':coverage_complete,
         'fixture_count':len(index),
-        'full_scan_ready_count':output['full_scan_ready_count'],
-        'full_market_coverage_ready_count':output['full_market_coverage_ready_count'],
+        'full_scan_ready_count':full_scan_ready,
+        'full_market_coverage_ready_count':full_market_ready,
         'player_missing_targets':player_missing,
         'date':today
     },ensure_ascii=False))
