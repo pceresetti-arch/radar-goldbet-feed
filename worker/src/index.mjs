@@ -956,17 +956,33 @@ async function publicPlayerPrice(url) {
   const error = validateExactPriceQuery(url);
   if (error) return json({ error }, 400);
   const target = resolvePlayerTarget(url.searchParams.get('market'));
-  const payload = await fetchBetflagTargets([target]);
-  let rows = filterBetflagRows(payload.rows, url, { exactPlayer: true, exactMarket: true });
   const requestedSelection = String(url.searchParams.get('selection') || '').trim();
   const requestedLine = String(url.searchParams.get('line') || '').trim();
-  if (!requestedSelection && rows.length > 1) {
-    const yesRows = rows.filter((row) => normalized(row.selection) === 'si');
-    if (yesRows.length === 1) rows = yesRows;
+  const attempts = [];
+  let payload = null;
+  let rows = [];
+
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    payload = await fetchBetflagTargets([target]);
+    rows = filterBetflagRows(payload.rows, url, { exactPlayer: true, exactMarket: true });
+    if (!requestedSelection && rows.length > 1) {
+      const yesRows = rows.filter((row) => normalized(row.selection) === 'si');
+      if (yesRows.length === 1) rows = yesRows;
+    }
+    if (!requestedLine && rows.length > 1 && rows.some((row) => row.line != null)) {
+      // Keep ambiguity explicit for line-based markets: caller must supply line.
+    }
+    attempts.push({
+      attempt,
+      source_healthy: Boolean(payload.source_healthy),
+      source_rows: payload.row_count,
+      exact_rows: rows.length,
+      upstream_elapsed_ms: payload.elapsed_ms
+    });
+    if (payload.source_healthy && rows.length === 1) break;
+    if (attempt < 3) await new Promise((resolve) => setTimeout(resolve, 180 * attempt));
   }
-  if (!requestedLine && rows.length > 1 && rows.some((row) => row.line != null)) {
-    // Keep ambiguity explicit for line-based markets: caller must supply line.
-  }
+
   const row = rows.length === 1 ? rows[0] : null;
   const certificate = await certificateFor(row, payload, rows.length);
   return json({
@@ -977,6 +993,7 @@ async function publicPlayerPrice(url) {
     betflag_direct: true,
     goldbet_direct: false,
     upstream_elapsed_ms: payload.elapsed_ms,
+    acquisition_attempts: attempts,
     target: { tab: target[0], slot: target[1], market: target[2] },
     returned: rows.length,
     price_gate_eligible: certificate.price_gate_eligible,
@@ -985,7 +1002,7 @@ async function publicPlayerPrice(url) {
     candidates: rows.length === 1 ? undefined : rows.slice(0, 25),
     note: certificate.price_gate_eligible
       ? 'Certified fresh BetFlag/AAMS operational player price.'
-      : 'No unique fresh exact quote; do not classify BET from this response.'
+      : 'No unique fresh exact quote after direct retries; do not classify BET from this response.'
   }, row ? 200 : 404, { 'Cache-Control': 'no-store' });
 }
 
