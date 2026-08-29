@@ -10,40 +10,57 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe odds endpoint matrix
+      - name: Sweep GoldBet openings on today's fixtures
         shell: bash
         run: |
           python - <<'PY'
-          import requests,json,itertools
-          event='fHs9cG8L'  # Napoli-Como, 30 Aug 2026
+          import requests,json,re,unicodedata
           H={'x-fsign':'SW9D1eZo','User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36','Referer':'https://www.flashscore.com/','Origin':'https://www.flashscore.com','Accept':'*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8'}
-          hosts=['https://global.ds.lsapp.eu/odds/pq_graphql','https://2.ds.lsapp.eu/pq_graphql']
-          hashes=['ope','oce']
-          geos=[('IT',None),('IT','IT'),('GB',None),('PT','PT13')]
-          for host,hsh,(geo,sub) in itertools.product(hosts,hashes,geos):
-              q={'_hash':hsh,'eventId':event,'projectId':'2','geoIpCode':geo}
-              if sub: q['geoIpSubdivisionCode']=sub
-              try:
-                  r=requests.get(host,params=q,headers=H,timeout=20)
-                  print('\nTRY',host,hsh,geo,sub,'HTTP',r.status_code,'BYTES',len(r.content))
-                  print('URL',r.url)
-                  print('PREFIX',r.text[:220].replace('\n',' '))
-                  if r.ok:
-                      try:
-                          js=r.json(); fo=(js.get('data') or {}).get('findOddsByEventId') or {}
-                          print('ROWS',len(fo.get('odds') or []),'SETTINGS',bool(fo.get('settings')))
-                          if fo.get('odds'):
-                              bmap={}
-                              for x in (fo.get('settings') or {}).get('bookmakers',[]):
-                                  b=(x or {}).get('bookmaker') or {}
-                                  if b.get('id') is not None:bmap[str(b['id'])]=b.get('name')
-                              print('BOOKMAKERS',sorted(bmap.values()))
-                              gold=[]
-                              for item in fo.get('odds') or []:
-                                  bn=bmap.get(str(item.get('bookmakerId','')),'')
-                                  if 'gold' in (bn or '').lower():
-                                      gold.append({'bookmaker':bn,'type':item.get('bettingType'),'scope':item.get('bettingScope'),'odds':item.get('odds')})
-                              print('GOLDBET',json.dumps(gold,ensure_ascii=False)[:5000])
-                      except Exception as e: print('JSONERR',repr(e))
-              except Exception as e: print('ERR',repr(e))
+          targets=[('Chelsea','Brighton'),('Leeds','Brentford'),('Sunderland','Fulham'),('Napoli','Como'),('Cagliari','Inter'),('Lazio','Genoa')]
+          def norm(s):
+              s=unicodedata.normalize('NFKD',s or '')
+              s=''.join(c for c in s if not unicodedata.combining(c))
+              return re.sub(r'[^a-z0-9]+',' ',s.lower()).strip()
+          def parse(raw):
+              out=[]
+              for sec in raw.split('~'):
+                  d={}
+                  for p in sec.split(chr(0xAC)):
+                      if chr(0xF7) in p:
+                          k,v=p.split(chr(0xF7),1); d[k]=v
+                  if d.get('AA') and d.get('AE') and d.get('AF'):
+                      out.append({'id':d['AA'],'home':d['AE'],'away':d['AF'],'ts':d.get('AD')})
+              return out
+          s=requests.Session(); fr=s.get('https://www.flashscore.com/x/feed/f_1_0_3_en_1',headers=H,timeout=20); fr.raise_for_status(); matches=parse(fr.text)
+          summary=[]
+          for h,a in targets:
+              nh,na=norm(h),norm(a); m=None
+              for x in matches:
+                  xh,xa=norm(x['home']),norm(x['away'])
+                  if (nh in xh or xh in nh) and (na in xa or xa in na): m=x; break
+              row={'match':f'{h}-{a}','found':bool(m)}
+              if not m: summary.append(row); continue
+              q={'_hash':'oce','eventId':m['id'],'projectId':'2','geoIpCode':'IT','geoIpSubdivisionCode':'IT'}
+              r=s.get('https://global.ds.lsapp.eu/odds/pq_graphql',params=q,headers=H,timeout=20)
+              row['http']=r.status_code; row['event_id']=m['id']
+              if not r.ok: summary.append(row); continue
+              fo=(r.json().get('data') or {}).get('findOddsByEventId') or {}
+              bmap={}
+              for y in (fo.get('settings') or {}).get('bookmakers',[]):
+                  b=(y or {}).get('bookmaker') or {}
+                  if b.get('id') is not None:bmap[str(b['id'])]=b.get('name')
+              row['goldbet_present']='GoldBet' in bmap.values(); row['bookmaker_count']=len(bmap)
+              gb=[]
+              for item in fo.get('odds') or []:
+                  if bmap.get(str(item.get('bookmakerId','')))!='GoldBet': continue
+                  typ=item.get('bettingType'); scope=item.get('bettingScope'); odds=item.get('odds') or []
+                  if typ=='HOME_DRAW_AWAY' and scope=='FULL_TIME':
+                      gb.append({'market':'1X2','items':[{'value':o.get('value'),'opening':o.get('opening'),'participant':o.get('eventParticipantId')} for o in odds]})
+                  if typ=='OVER_UNDER' and scope=='FULL_TIME':
+                      sel=[{'selection':o.get('selection'),'line':(o.get('handicap') or {}).get('value'),'value':o.get('value'),'opening':o.get('opening')} for o in odds if (o.get('handicap') or {}).get('value')=='2.5']
+                      if sel: gb.append({'market':'O/U 2.5','items':sel})
+                  if typ=='BOTH_TEAMS_TO_SCORE' and scope=='FULL_TIME':
+                      gb.append({'market':'GG/NG','items':[{'value':o.get('value'),'opening':o.get('opening'),'btts':o.get('bothTeamsToScore')} for o in odds]})
+              row['goldbet']=gb; summary.append(row)
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
           PY
