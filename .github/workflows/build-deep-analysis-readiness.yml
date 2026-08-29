@@ -7,11 +7,8 @@ on:
     workflows:
       - 'Refresh current lineups'
       - 'Enrich current lineups tactical'
-      - 'Track Radar odds movement'
-      - 'Refresh current player props'
-      - 'Refresh Diretta GoldBet TRUE OPEN'
       - 'Build player matchup context'
-      - 'Certify shared AAMS prices vs GoldBet'
+      - 'Radar BetFlag v7 live bridge'
     types: [completed]
   workflow_dispatch:
   push:
@@ -22,9 +19,6 @@ on:
 permissions:
   contents: write
 
-# Do not cancel a running readiness build when several upstream feeds finish
-# almost simultaneously. cancel-in-progress=true could starve this workflow
-# during the exact pre-match window when many sources refresh together.
 concurrency:
   group: radar-deep-analysis-readiness
   cancel-in-progress: false
@@ -38,7 +32,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: main
-      - name: Build machine-readable readiness gate
+      - name: Build machine-readable BetFlag-only readiness gate
         run: python scripts/build_deep_analysis_readiness.py
       - name: Persist readiness safely
         shell: bash
