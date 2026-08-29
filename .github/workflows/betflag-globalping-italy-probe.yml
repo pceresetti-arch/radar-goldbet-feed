@@ -1,0 +1,83 @@
+name: BetFlag Globalping Italy probe
+
+on:
+  push:
+    paths:
+      - 'betflag-globalping-italy-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+      - name: Request BetFlag from Italian Globalping probes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests,json,time,pathlib
+          from datetime import datetime,timezone
+          API='https://api.globalping.io/v1/measurements'
+          H={'User-Agent':'radar-betflag-recovery/1.0','Accept':'application/json','Content-Type':'application/json'}
+          req_headers={
+            'Accept':'application/json,text/plain,*/*',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
+          }
+          tests={
+            'program':('/api/sport/pregame/getProgram','channelId=0'),
+            'standard':('/api/sport/pregame/getOverviewEventsAams/0/1/0/1334500001/0/0/0','channelId=0'),
+            'scorer':('/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0','channelId=0'),
+            'goal_assist':('/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/13824/0','channelId=0')
+          }
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'tests':[]}
+          for name,(path,query) in tests.items():
+            payload={
+              'target':'sportservice.betflag.it','type':'http','limit':3,
+              'locations':[{'country':'IT'}],
+              'measurementOptions':{
+                'protocol':'HTTPS','port':443,
+                'request':{'method':'GET','path':path,'query':query,'headers':req_headers}
+              }
+            }
+            try:
+              r=requests.post(API,headers=H,json=payload,timeout=20)
+              item={'name':name,'create_status':r.status_code,'create_body':r.text[:2000]}
+              if r.status_code==202:
+                mid=r.json()['id']; item['measurement_id']=mid
+                for _ in range(16):
+                  time.sleep(.65)
+                  g=requests.get(API+'/'+mid,headers={'User-Agent':H['User-Agent'],'Accept':'application/json'},timeout=20)
+                  data=g.json()
+                  if data.get('status')!='in-progress': break
+                item['measurement_status']=data.get('status'); item['probes_count']=data.get('probesCount'); item['results']=[]
+                for x in data.get('results',[]):
+                  p=x.get('probe') or {}; rr=x.get('result') or {}; body=rr.get('rawBody')
+                  item['results'].append({
+                    'probe':{k:p.get(k) for k in ('country','city','network','asn','latitude','longitude','tags')},
+                    'status':rr.get('status'),'statusCode':rr.get('statusCode'),'statusCodeName':rr.get('statusCodeName'),
+                    'resolvedAddress':rr.get('resolvedAddress'),'truncated':rr.get('truncated'),
+                    'rawHeaders':rr.get('rawHeaders'),'rawBody':body,
+                    'mentions_isak':'isak' in str(body).lower(),'mentions_gakpo':'gakpo' in str(body).lower()
+                  })
+              out['tests'].append(item)
+            except Exception as e:out['tests'].append({'name':name,'error':repr(e)})
+          pathlib.Path('feed').mkdir(exist_ok=True);pathlib.Path('feed/betflag-globalping-italy-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps([{ 'name':t.get('name'),'create_status':t.get('create_status'),'measurement_status':t.get('measurement_status'),'results':[{'probe':r.get('probe'),'statusCode':r.get('statusCode'),'truncated':r.get('truncated'),'mentions_isak':r.get('mentions_isak'),'mentions_gakpo':r.get('mentions_gakpo'),'body_prefix':str(r.get('rawBody'))[:300]} for r in t.get('results',[])]} for t in out['tests']],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-globalping-italy-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag through Italian Globalping probes'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
