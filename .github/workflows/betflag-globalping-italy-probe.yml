@@ -25,7 +25,7 @@ jobs:
           H={'User-Agent':'radar-betflag-recovery/1.0','Accept':'application/json','Content-Type':'application/json'}
           req_headers={
             'Accept':'application/json,text/plain,*/*',
-            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'x-api-version':'1.0','X-Brand':'3','X-IdCanale':'0',
             'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
           }
           tests={
@@ -49,6 +49,7 @@ jobs:
               item={'name':name,'create_status':r.status_code,'create_body':r.text[:2000]}
               if r.status_code==202:
                 mid=r.json()['id']; item['measurement_id']=mid
+                data={}
                 for _ in range(16):
                   time.sleep(.65)
                   g=requests.get(API+'/'+mid,headers={'User-Agent':H['User-Agent'],'Accept':'application/json'},timeout=20)
