@@ -1,0 +1,56 @@
+name: BetFlag reader relay probe
+
+on:
+  push:
+    paths:
+      - 'betflag-reader-relay-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe read-through relays
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests,json,pathlib,urllib.parse
+          from datetime import datetime,timezone
+          targets={
+            'program':'https://sportservice.betflag.it/api/sport/pregame/getProgram?channelId=0',
+            'scorer':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0?channelId=0',
+            'goal_assist':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/13824/0?channelId=0'
+          }
+          relays=[
+            ('jina_https',lambda u:'https://r.jina.ai/'+u),
+            ('jina_http',lambda u:'https://r.jina.ai/http://'+u.split('://',1)[1]),
+          ]
+          H={'User-Agent':'Mozilla/5.0','Accept':'text/plain,application/json,*/*'}
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'results':[]}
+          for rn,fn in relays:
+            for name,t in targets.items():
+              u=fn(t)
+              try:
+                r=requests.get(u,headers=H,timeout=40)
+                txt=r.text
+                out['results'].append({'relay':rn,'name':name,'url':u,'status':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(r.content),'mentions_isak':'isak' in txt.lower(),'mentions_gakpo':'gakpo' in txt.lower(),'preview':txt[:5000]})
+              except Exception as e:out['results'].append({'relay':rn,'name':name,'url':u,'error':repr(e)})
+          pathlib.Path('feed').mkdir(exist_ok=True);pathlib.Path('feed/betflag-reader-relay-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps([{k:x.get(k) for k in ('relay','name','status','bytes','mentions_isak','mentions_gakpo','error')} for x in out['results']],indent=2))
+          PY
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-reader-relay-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag via read-through relay'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
