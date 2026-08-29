@@ -70,12 +70,33 @@ jobs:
           if quote:
               ms=(movement.get('quotes') or {}).get(quote_id(quote))
               if ms:
+                  true_open=ms.get('true_open_odd')
+                  captured_open=ms.get('captured_open_odd')
+                  if true_open is not None:
+                      reference_type='TRUE_OPEN_BETFLAG_SOURCE_CERTIFIED'
+                      reference_odd=true_open
+                      reference_at=ms.get('true_open_at')
+                  elif captured_open is not None:
+                      reference_type='OPEN_CAPTURED_AT_FIRST_BETFLAG_AVAILABILITY'
+                      reference_odd=captured_open
+                      reference_at=ms.get('captured_open_at')
+                  else:
+                      reference_type='TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO'
+                      reference_odd=None
+                      reference_at=None
+                  current=ms.get('current_odd')
                   move={
-                    'open_status':ms.get('open_status'),
-                    'true_open_odd':ms.get('true_open_odd'),'true_open_at':ms.get('true_open_at'),
+                    'movement_status':ms.get('movement_status') or reference_type,
+                    'open_reference_type':reference_type,
+                    'open_reference_odd':reference_odd,'open_reference_at':reference_at,
+                    'true_open_odd':true_open,'true_open_at':ms.get('true_open_at'),
                     'true_open_source_field':ms.get('true_open_source_field'),
+                    'captured_open_odd':captured_open,'captured_open_at':ms.get('captured_open_at'),
+                    'captured_open_basis':ms.get('captured_open_basis'),
+                    'previous_healthy_scan_at':ms.get('previous_healthy_scan_at'),
                     'first_seen_odd':ms.get('first_seen_odd'),'first_seen_at':ms.get('first_seen_at'),
-                    'current_odd':ms.get('current_odd'),'current_at':ms.get('current_at'),
+                    'current_odd':current,'current_at':ms.get('current_at'),
+                    'movement_from_open_reference':round(float(current)-float(reference_odd),4) if current is not None and reference_odd is not None else None,
                     'change_count':ms.get('change_count'),
                     'checkpoints':ms.get('checkpoints') or {},
                     'recent_changes':(ms.get('changes') or [])[-20:]
@@ -84,7 +105,7 @@ jobs:
           canonical={'player':quote.get('player') if quote else None,'match':quote.get('match') if quote else None,'market':quote.get('market') if quote else req.get('market'),'odd':quote.get('odd') if quote else None,'fetched_at':fetched}
           digest=hashlib.sha256(json.dumps(canonical,sort_keys=True).encode()).hexdigest()
           result={
-            'schema_version':'betflag-residential-price-proof-v2',
+            'schema_version':'betflag-residential-price-proof-v3',
             'requested_at':req.get('requested_at'),'fetched_at':fetched,
             'source_class':'BETFLAG_AAMS_DIRECT','source':'sportservice.betflag.it via residential self-hosted runner',
             'betflag_direct':True,'source_healthy':bool(feed.get('source_healthy')),
@@ -92,7 +113,7 @@ jobs:
             'price_gate_eligible':bool(quote and feed.get('source_healthy')),
             'proof_id':'bfr-'+digest[:20],'sha256':digest,'quote':quote,
             'movement':move,
-            'true_open_policy':'TRUE OPEN is immutable and only certified by explicit BetFlag source evidence; first captured price remains separately labelled otherwise.',
+            'true_open_policy':'TRUE OPEN is immutable and only source-certified by explicit BetFlag evidence. If the market appears after an earlier healthy scan, the first BetFlag availability price is frozen separately as CAPTURED OPEN and used as the operational movement reference without mislabelling it TRUE OPEN.',
             'candidates':cand[:25] if len(cand)!=1 else []
           }
           p=pathlib.Path('feed'); (p/'betflag-price-proof-latest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
