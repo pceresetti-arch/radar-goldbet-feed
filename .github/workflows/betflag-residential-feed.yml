@@ -77,6 +77,8 @@ jobs:
           if (Test-Path '.git\rebase-apply') { Remove-Item '.git\rebase-apply' -Recurse -Force }
 
           git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-hot-feed.json
+          if (Test-Path 'feed\betflag-fixtures-index.json') { git add feed/betflag-fixtures-index.json }
+          if (Test-Path 'feed\betflag-fixtures') { git add feed/betflag-fixtures }
           if (Test-Path 'feed\betflag-open-close-watch.json') { git add feed/betflag-open-close-watch.json }
           if (-not (git diff --cached --quiet)) {
             git commit -m "Refresh residential BetFlag production feeds"
