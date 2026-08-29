@@ -1,9 +1,9 @@
-import json, pathlib, re, unicodedata, urllib.request
+import json, pathlib, re, unicodedata
 from datetime import datetime, timezone
+from betflag_session_transport import BetFlagTransport
 
 BASE='https://sportservice.betflag.it/api/sport/pregame'
 AGG=1334500001
-H={'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/','User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36'}
 
 def norm(v):
  s=unicodedata.normalize('NFD',str(v or '')); s=''.join(c for c in s if unicodedata.category(c)!='Mn').lower()
@@ -15,10 +15,6 @@ def walk(x):
   for v in x.values(): yield from walk(v)
  elif isinstance(x,list):
   for v in x: yield from walk(v)
-
-def get(url):
- req=urllib.request.Request(url,headers=H)
- with urllib.request.urlopen(req,timeout=12) as r: return r.status,json.loads(r.read().decode())
 
 def family(name):
  n=norm(name)
@@ -54,7 +50,6 @@ def slots_from_lmtw(data):
  def canonical_rank(x):
   n=norm(x.get('slot_name'))
   if x['family']=='OVER_UNDER':
-   # BetFlag PRINCIPALI exact U/O is the football-goals total (currently slot 13618).
    if x.get('market_scope')=='CORE_GOALS_TOTAL' and n=='u o': return 0
    if x.get('market_scope')=='CORE_GOALS_TOTAL': return 1
    return 9
@@ -63,7 +58,6 @@ def slots_from_lmtw(data):
  out=[]; seen_fam=set()
  for x in candidates:
   if x['family'] in seen_fam: continue
-  # Do not allow corners/cards/shots to masquerade as the core match-goals total.
   if x['family']=='OVER_UNDER' and x.get('market_scope')!='CORE_GOALS_TOTAL': continue
   seen_fam.add(x['family']); out.append(x)
   if len(out)>=6: break
@@ -95,12 +89,13 @@ def extract(data, slot, rows, markets_seen, all_market_names, dedupe):
 
 def main():
  now=datetime.now(timezone.utc).isoformat(); rows=[]; markets_seen={}; all_market_names={}; status=None; errors=[]; slot_results=[]; dedupe=set()
+ client=BetFlagTransport(timeout=30)
  try:
-  status,base=get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
+  status,base=client.get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
   slots=slots_from_lmtw(base)
   for slot in slots:
    try:
-    st,data=get(f"{BASE}/getOverviewEventsAams/0/1/0/{AGG}/{slot['tab_id']}/{slot['slot_id']}/0?channelId=0")
+    st,data=client.get(f"{BASE}/getOverviewEventsAams/0/1/0/{AGG}/{slot['tab_id']}/{slot['slot_id']}/0?channelId=0")
     before=len(rows)
     if st==200: extract(data,slot,rows,markets_seen,all_market_names,dedupe)
     slot_results.append({**slot,'status':st,'rows':len(rows)-before})
@@ -108,10 +103,12 @@ def main():
     errors.append({'slot':slot,'error':repr(e)}); slot_results.append({**slot,'status':None,'rows':0,'error':repr(e)})
  except Exception as e:
   base=None; slots=[]; errors.append({'stage':'base','error':repr(e)})
+ finally:
+  transport=client.diagnostics(); client.close()
  families={f:sum(1 for r in rows if r['family']==f) for f in sorted(set(r['family'] for r in rows))}
- out={'schema_version':'betflag-standard-markets-v4','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':status==200 and len(rows)>0,'priority':['1X2','OVER_UNDER'],'secondary':['GOAL_NO_GOAL','TEAM_TOTAL','HANDICAP','DOUBLE_CHANCE'],'status':status,'slot_catalog':slots,'slot_results':slot_results,'markets_seen':markets_seen,'all_market_names_seen':dict(sorted(all_market_names.items(),key=lambda kv:(-kv[1],kv[0]))),'families':families,'rows':rows}
+ out={'schema_version':'betflag-standard-markets-v5','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source':'sportservice.betflag.it via resilient residential transport','source_healthy':status==200 and len(rows)>0,'priority':['1X2','OVER_UNDER'],'secondary':['GOAL_NO_GOAL','TEAM_TOTAL','HANDICAP','DOUBLE_CHANCE'],'status':status,'transport':transport,'slot_catalog':slots,'slot_results':slot_results,'markets_seen':markets_seen,'all_market_names_seen':dict(sorted(all_market_names.items(),key=lambda kv:(-kv[1],kv[0]))),'families':families,'rows':rows}
  if errors: out['errors']=errors
  p=pathlib.Path('feed'); p.mkdir(exist_ok=True)
  (p/'betflag-standard-current.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
- print(json.dumps({'source_healthy':out['source_healthy'],'slots':len(slots),'rows':len(rows),'families':families,'slot_results':slot_results},ensure_ascii=False))
+ print(json.dumps({'source_healthy':out['source_healthy'],'slots':len(slots),'rows':len(rows),'families':families,'slot_results':slot_results,'transport':transport},ensure_ascii=False))
 if __name__=='__main__': main()
