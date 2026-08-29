@@ -1,224 +1,23 @@
-name: Refresh current player props
+name: Refresh current player props [LEGACY MANUAL]
 
+# Radar V2 authoritative player path:
+#   discovery -> BetFlag V7 /live/player-props
+#   exact price -> BetFlag V7 /live/player-price
+# player-props-current* remains cache/history only and must never gate a live run.
+# Automatic legacy collection is retired to prevent duplicate polling, stale
+# cache confusion, GitHub write collisions and failure-notification spam.
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
-  push:
-    paths:
-      - 'refresh-current-player-props-trigger.json'
 
 permissions:
-  contents: write
-
-concurrency:
-  group: refresh-current-player-props
-  cancel-in-progress: true
+  contents: read
 
 jobs:
-  refresh:
+  legacy_notice:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 30
-      - name: Fetch normalize and index current player markets
-        shell: bash
+      - name: Legacy player cache collector retired
         run: |
-          python - <<'PY'
-          import json, pathlib, re, urllib.request, urllib.error, hashlib, collections, shutil, time, random
-          from concurrent.futures import ThreadPoolExecutor, as_completed
-          from datetime import datetime, timezone
-          from zoneinfo import ZoneInfo
-
-          BASE='https://sportservice.betflag.it/api/sport/pregame'
-          BASE_HEADERS={
-            'Accept':'application/json,text/plain,*/*',
-            'Accept-Language':'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
-            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
-            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'
-          }
-          USER_AGENTS=[
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'
-          ]
-          AGG_TOURNAMENT=1334500001
-          TARGETS=[
-            (2484,13825,'Marcatore Plus'),(2484,19405,'Marcatore o Sostituto'),(2484,22884,'Marc'),
-            (2484,13819,'1° Marcatore'),(2484,19403,'1° Marcatore o Sostituto'),(2484,13820,'Marcatore 1T'),
-            (2484,13826,'Marcatore 2T'),(2484,13821,'Doppietta'),(2484,13822,'Tripletta'),
-            (2484,13816,'U/O Tiri in porta Plus'),(2484,13817,'U/O Tiri Totali Plus'),
-            (2484,19401,'Assist o Sostituto'),(2484,13495,'U/O Tiri In Porta Giocatore'),
-            (2484,13496,'U/O Tiri Totali Giocatore'),(2484,13823,'Assist'),(2484,13824,'Gol e Assist'),
-            (2487,13509,'U/O Parate Giocatore')
-          ]
-
-          def request_json(url,cap=16000000,timeout=22,attempts=4):
-            last=None
-            for attempt in range(attempts):
-              headers={**BASE_HEADERS,'User-Agent':USER_AGENTS[attempt % len(USER_AGENTS)]}
-              try:
-                req=urllib.request.Request(url,headers=headers)
-                with urllib.request.urlopen(req,timeout=timeout) as r:
-                  return r.status,json.loads(r.read(cap).decode('utf-8','replace'))
-              except Exception as e:
-                last=e
-                if attempt+1<attempts:
-                  time.sleep((1.2*(2**attempt))+random.random())
-            raise last
-
-          def fetch_player(target):
-            tab,slot,label=target
-            url=f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG_TOURNAMENT}/{tab}/{slot}/0?channelId=0'
-            try:
-              status,data=request_json(url,14000000)
-              return target,status,data,url,None
-            except Exception as e:
-              return target,None,{},url,type(e).__name__+': '+str(e)[:220]
-
-          def parse_player_event_name(name):
-            s=str(name or '').strip(); m=re.match(r'^\(([^)]+)\)\s*(.*)$',s)
-            return (m.group(1).strip(),m.group(2).strip()) if m else ('',s)
-
-          def market_rows(event):
-            rows=[]; mm=event.get('mmkW')
-            markets=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
-            for market in markets:
-              if not isinstance(market,dict): continue
-              mn=str(market.get('mn') or '').strip(); spd=market.get('spd')
-              spreads=spd.items() if isinstance(spd,dict) else enumerate(spd or []) if isinstance(spd,list) else []
-              for spread_key, spread in spreads:
-                if not isinstance(spread,dict): continue
-                for q in spread.get('asl') or []:
-                  if not isinstance(q,dict): continue
-                  rows.append({'market':mn,'line':None if str(spread_key)=='0.0' else spread_key,'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),'selection_type':q.get('sti'),'market_type':q.get('mti'),'market_id':q.get('mi'),'odds_id':q.get('oi')})
-            return rows
-
-          started=datetime.now(timezone.utc); now=started.isoformat(); match_map={}
-          standard_url=f'{BASE}/getOverviewEventsAams/0/1/0/{AGG_TOURNAMENT}/0/0/0?channelId=0'
-          standard_status=None; standard_error=None
-          try:
-            standard_status,standard=request_json(standard_url)
-            def walk_standard(x):
-              if isinstance(x,dict):
-                if x.get('mi') is not None and x.get('en') and not str(x.get('sn','')).lower().startswith('giocatori') and not str(x.get('en','')).startswith('('):
-                  if x.get('si') in (1,'1') or str(x.get('sn','')).lower()=='calcio':
-                    match_map[str(x.get('mi'))]={k:x.get(k) for k in ('ei','en','ed','ti','td','cd','mi','tai')}
-                for v in x.values(): walk_standard(v)
-              elif isinstance(x,list):
-                for v in x: walk_standard(v)
-            walk_standard(standard)
-          except Exception as e:
-            standard_error=type(e).__name__+': '+str(e)[:220]
-
-          results=[]
-          with ThreadPoolExecutor(max_workers=8) as pool:
-            futures=[pool.submit(fetch_player,t) for t in TARGETS]
-            for future in as_completed(futures): results.append(future.result())
-          results.sort(key=lambda item: TARGETS.index(item[0]))
-
-          all_rows=[]; calls=[]; event_keys=set()
-          for target,status,data,url,error in results:
-            tab,slot,label=target; count_before=len(all_rows); seen_events=[0]
-            def walk(x):
-              if isinstance(x,dict):
-                if 'ei' in x and 'en' in x and str(x.get('sn','')).lower().startswith('giocatori'):
-                  seen_events[0]+=1; code,player=parse_player_event_name(x.get('en')); match=match_map.get(str(x.get('mi')))
-                  base={'event_id':x.get('ei'),'player_event':x.get('en'),'match_code':code,'player':player,'start_time':x.get('ed'),'league':x.get('td'),'tournament_id':x.get('ti'),'category_id':x.get('ci'),'authority_id':x.get('tai'),'match_market_id':x.get('mi'),'match':match.get('en') if match else None,'match_event_id':match.get('ei') if match else None,'match_start':match.get('ed') if match else x.get('ed'),'source_sport':x.get('sn'),'source_category':x.get('cd'),'market_count_hint':x.get('nmK'),'requested_tab':tab,'requested_slot':slot,'requested_market':label}
-                  for o in market_rows(x):
-                    if o.get('odd') is None: continue
-                    row={**base,**o,'fetched_at':now}; key=(row['event_id'],row['market'],str(row['line']),row['selection'],row['odd'],row['odds_id'])
-                    if key not in event_keys: event_keys.add(key); all_rows.append(row)
-                for v in x.values(): walk(v)
-              elif isinstance(x,list):
-                for v in x: walk(v)
-            walk(data)
-            calls.append({'tab':tab,'slot':slot,'label':label,'status':status,'error':error,'events_seen':seen_events[0],'rows_added':len(all_rows)-count_before})
-
-          all_rows.sort(key=lambda r:(str(r.get('match_start')),str(r.get('league')),str(r.get('match') or r.get('match_code')),str(r.get('player')),str(r.get('market')),str(r.get('line')),str(r.get('selection'))))
-          by_match={}
-          for r in all_rows:
-            key=str(r.get('match_market_id') or r.get('match') or r.get('match_code'))
-            m=by_match.setdefault(key,{'match':r.get('match'),'match_code':r.get('match_code'),'match_event_id':r.get('match_event_id'),'match_market_id':r.get('match_market_id'),'start_time':r.get('match_start'),'league':r.get('league'),'tournament_id':r.get('tournament_id'),'authority_id':r.get('authority_id'),'players':{}})
-            m['players'].setdefault(r.get('player'),[]).append({k:r.get(k) for k in ('market','line','selection','odd','event_id','selection_id','market_type','market_id','odds_id','requested_market')})
-
-          payload_for_hash=[{k:v for k,v in r.items() if k!='fetched_at'} for r in all_rows]
-          digest=hashlib.sha256(json.dumps(payload_for_hash,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-          market_counts=dict(collections.Counter(str(r.get('market')) for r in all_rows)); league_counts=dict(collections.Counter(str(r.get('league')) for r in all_rows))
-          joined=sum(1 for r in all_rows if r.get('match')); elapsed_ms=round((datetime.now(timezone.utc)-started).total_seconds()*1000)
-          successful_calls=sum(1 for c in calls if c.get('status')==200)
-          meta={'generated_at':now,'source':'shared AAMS player service','source_class':'SHARED_AAMS','goldbet_direct':False,'price_gate_eligible':False,'scope':'Eventi Oggi-Domani','goldbet_alignment':'calibrated cross-brand proxy only when feed/shared-goldbet-proxy-policy.json authorizes it; never relabel proxy as GoldBet direct','fetch_strategy':'8-way concurrent player-market fetch with retry/backoff','elapsed_ms':elapsed_ms,'row_count':len(all_rows),'match_count':len(by_match),'joined_rows':joined,'join_rate':round(joined/max(1,len(all_rows)),4),'standard_match_map_count':len(match_map),'standard_status':standard_status,'standard_error':standard_error,'successful_market_calls':successful_calls,'content_sha256':digest,'markets':market_counts,'leagues':league_counts,'calls':calls}
-          full={**meta,'rows':all_rows}; indexed={**meta,'matches':list(by_match.values())}; summary={**meta,'match_samples':[{k:m.get(k) for k in ('match','match_code','match_event_id','match_market_id','start_time','league')} for m in list(by_match.values())[:50]]}
-
-          feed=pathlib.Path('feed'); feed.mkdir(exist_ok=True)
-          (feed/'player-props-refresh-health.json').write_text(json.dumps({'attempted_at':now,'status':'SUCCESS' if all_rows and successful_calls else 'SOURCE_FAILURE_OR_EMPTY','row_count':len(all_rows),'successful_market_calls':successful_calls,'standard_status':standard_status,'standard_error':standard_error,'calls':calls},ensure_ascii=False,indent=2),encoding='utf-8')
-          (feed/'player-props-current.json').write_text(json.dumps(full,ensure_ascii=False,indent=2),encoding='utf-8')
-          (feed/'player-props-current-by-match.json').write_text(json.dumps(indexed,ensure_ascii=False,indent=2),encoding='utf-8')
-          (feed/'player-props-current-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
-
-          hot_dir=feed/'hot'/'player-props'
-          if hot_dir.exists(): shutil.rmtree(hot_dir)
-          hot_dir.mkdir(parents=True,exist_ok=True); rome=ZoneInfo('Europe/Rome'); now_rome=datetime.now(rome); hot_count=0
-          for key,m in by_match.items():
-            try:
-              kickoff=datetime.strptime(str(m.get('start_time')),'%d-%m-%Y %H:%M').replace(tzinfo=rome); minutes=(kickoff-now_rome).total_seconds()/60
-            except Exception: continue
-            if -15 <= minutes <= 120:
-              payload={'generated_at':now,'source_class':'SHARED_AAMS','goldbet_direct':False,'price_gate_eligible':False,'minutes_to_kickoff':round(minutes,1),**m}
-              safe=str(m.get('match_market_id') or key).replace('/','_'); (hot_dir/f'{safe}.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); hot_count+=1
-          (feed/'hot'/'player-props-index.json').write_text(json.dumps({'generated_at':now,'hot_window_minutes':[-15,120],'count':hot_count,'source_class':'SHARED_AAMS','goldbet_direct':False,'price_gate_eligible':False},ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps({**summary,'hot_match_count':hot_count},ensure_ascii=False,indent=2)[:50000])
-          PY
-
-      - name: Preserve last-known-good feed on source failure
-        shell: bash
-        run: |
-          set -e
-          python - <<'PY'
-          import json, pathlib, subprocess
-          health_path=pathlib.Path('feed/player-props-refresh-health.json')
-          try: health=json.loads(health_path.read_text(encoding='utf-8'))
-          except Exception: health={}
-          if health.get('status')=='SUCCESS' and int(health.get('row_count') or 0)>0:
-            print('Current player feed is healthy; no recovery needed.')
-            raise SystemExit(0)
-          paths=['feed/player-props-current.json','feed/player-props-current-by-match.json','feed/player-props-current-summary.json','feed/hot/player-props-index.json']
-          commits=subprocess.check_output(['git','log','--format=%H','-30','--','feed/player-props-current-summary.json'],text=True).splitlines()
-          good=None
-          for sha in commits:
-            try:
-              raw=subprocess.check_output(['git','show',f'{sha}:feed/player-props-current-summary.json'],text=True,stderr=subprocess.DEVNULL)
-              d=json.loads(raw)
-              if int(d.get('row_count') or 0)>0 and int(d.get('match_count') or 0)>0:
-                good=sha; break
-            except Exception: pass
-          if not good:
-            print('No last-known-good player-props snapshot found in fetched history.')
-            raise SystemExit(0)
-          print('Recovering last-known-good player feed from',good)
-          for p in paths[:3]:
-            subprocess.run(['git','checkout',good,'--',p],check=False)
-          subprocess.run(['git','rm','-r','--ignore-unmatch','feed/hot/player-props'],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-          subprocess.run(['git','checkout',good,'--','feed/hot/player-props','feed/hot/player-props-index.json'],check=False)
-          health['status']='SOURCE_FAILURE_LAST_KNOWN_GOOD_PRESERVED'; health['recovered_from_commit']=good
-          health_path.write_text(json.dumps(health,ensure_ascii=False,indent=2),encoding='utf-8')
-          PY
-
-      - name: Commit current feed safely
-        shell: bash
-        run: |
-          set -e
-          git config user.name 'radar-goldbet-bot'
-          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/player-props-current.json feed/player-props-current-by-match.json feed/player-props-current-summary.json feed/player-props-refresh-health.json feed/hot/player-props-index.json feed/hot/player-props
-          git diff --cached --quiet && exit 0
-          git commit -m 'Refresh current player props feed'
-          for attempt in 1 2 3 4; do
-            if git pull --rebase origin main && git push origin main; then exit 0; fi
-            git rebase --abort 2>/dev/null || true
-            sleep $((attempt * 2))
-          done
-          echo 'Unable to persist player-props feed after retries' >&2
-          exit 1
+          echo "Automatic player-props cache refresh is retired in Radar V2."
+          echo "Primary live discovery: BetFlag V7 /live/player-props."
+          echo "Exact candidate certification: BetFlag V7 /live/player-price."
