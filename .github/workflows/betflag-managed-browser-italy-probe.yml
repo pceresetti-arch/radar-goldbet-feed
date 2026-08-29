@@ -1,0 +1,56 @@
+name: BetFlag managed browser Italy probe
+
+on:
+  push:
+    paths:
+      - 'betflag-managed-browser-italy-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe BetFlag with managed Italian browser
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,requests,concurrent.futures
+          from datetime import datetime,timezone
+          endpoint='https://api.anakin.io/v1/url-scraper/scrape'
+          targets={
+            'site':'https://www.betflag.it/sport',
+            'scorer':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0?channelId=0',
+            'goal_assist':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/13824/0?channelId=0'
+          }
+          def one(item):
+            name,url=item
+            payload={'url':url,'country':'it','useBrowser':True,'formats':['markdown','html']}
+            try:
+              r=requests.post(endpoint,json=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'radar-betflag-recovery/1.1'},timeout=105)
+              txt=r.text
+              return {'name':name,'url':url,'status':r.status_code,'content_type':r.headers.get('content-type'),'credits':r.headers.get('x-trial-credits-remaining'),'bytes':len(r.content),'mentions_isak':'isak' in txt.lower(),'mentions_gakpo':'gakpo' in txt.lower(),'mentions_access_denied':'access denied' in txt.lower(),'preview':txt[:18000]}
+            except Exception as e:return {'name':name,'url':url,'error':repr(e)}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+            results=list(ex.map(one,targets.items()))
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'source':'BETFLAG_ONLY_TRANSPORT_PROBE','results':results}
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-managed-browser-italy-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{k:x.get(k) for k in ('name','status','credits','bytes','mentions_isak','mentions_gakpo','mentions_access_denied','error')} for x in results],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-managed-browser-italy-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag via managed Italian browser'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
