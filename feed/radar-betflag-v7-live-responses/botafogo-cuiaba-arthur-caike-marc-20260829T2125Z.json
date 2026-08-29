@@ -1,0 +1,162 @@
+{
+  "schema_version": "radar-betflag-v7-live-bridge-v3",
+  "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
+  "requested_at": "2026-08-29T21:25:00Z",
+  "request_id": "botafogo-cuiaba-arthur-caike-marc-20260829T2125Z",
+  "generated_at": "2026-08-29T21:25:29.728428+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "mode": "player_price",
+  "health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-29T21:25:27.982543+00:00",
+    "elapsed_ms": 118,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/standard-index",
+        "/live/player-index",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "calls": [
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?event_id=16052971&player=Arthur+Caike&market=Marc&selection=Si",
+      "http_status": 200,
+      "fetched_at": "2026-08-29T21:25:29.728396+00:00",
+      "elapsed_ms": 1746,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-29T21:25:28.030Z",
+        "served_at": "2026-08-29T21:25:29.690Z",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "upstream_elapsed_ms": 1660,
+        "acquisition_attempts": [
+          {
+            "attempt": 1,
+            "source_healthy": true,
+            "source_rows": 993,
+            "exact_rows": 1,
+            "upstream_elapsed_ms": 1660
+          }
+        ],
+        "target": {
+          "tab": 2484,
+          "slot": 22884,
+          "market": "Marc"
+        },
+        "returned": 1,
+        "price_gate_eligible": true,
+        "certificate": {
+          "proof_id": "bf-84b66795e8af9ef01b5e",
+          "sha256": "84b66795e8af9ef01b5eaaaab1c93bac51b5f604df814f2864bb2eac3cba5ffe",
+          "exact_identity_match": true,
+          "source_healthy": true,
+          "freshness": {
+            "age_seconds": 1.7,
+            "max_age_seconds": 45,
+            "fresh": true
+          },
+          "price_gate_eligible": true,
+          "canonical": {
+            "source_class": "BETFLAG_AAMS_DIRECT",
+            "source_host": "sportservice.betflag.it",
+            "fetched_at": "2026-08-29T21:25:28.030Z",
+            "match": "Botafogo SP - Cuiaba MT",
+            "match_market_id": "36351.1228",
+            "match_event_id": 16052971,
+            "player": "Arthur Caike",
+            "requested_market": "Marc",
+            "market": "Marc",
+            "line": null,
+            "selection": "Si",
+            "odd": 3.65,
+            "selection_id": 3757422495,
+            "market_id": -2111583936,
+            "odds_id": -1977330950
+          }
+        },
+        "quote": {
+          "event_id": 16055342,
+          "player_event": "(BOT*-CUI) Arthur Caike",
+          "match_code": "BOT*-CUI",
+          "player": "Arthur Caike",
+          "start_time": "29-08-2026 23:30",
+          "league": "Brasile Serie B",
+          "tournament_id": 10818106,
+          "category_id": 14260,
+          "authority_id": 257,
+          "match_market_id": "36351.1228",
+          "match": "Botafogo SP - Cuiaba MT",
+          "match_event_id": 16052971,
+          "match_start": "29-08-2026 23:30",
+          "requested_market": "Marc",
+          "market": "Marc",
+          "line": null,
+          "selection": "Si",
+          "odd": 3.65,
+          "selection_id": 3757422495,
+          "selection_type": 1,
+          "market_type": 4490,
+          "market_id": -2111583936,
+          "odds_id": -1977330950,
+          "fetched_at": "2026-08-29T21:25:28.030Z"
+        },
+        "note": "Certified fresh BetFlag/AAMS operational player price."
+      }
+    }
+  ],
+  "no_cache_fallback": true,
+  "github_sha": "99ced5d39da10e87da95c4a431b8050c6a8b778b"
+}
