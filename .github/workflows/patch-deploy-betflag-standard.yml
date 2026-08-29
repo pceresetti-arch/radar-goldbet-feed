@@ -1,9 +1,6 @@
-name: Patch and deploy BetFlag standard Worker
+name: Patch and deploy BetFlag standard Worker (legacy manual)
 
 on:
-  push:
-    paths:
-      - 'betflag-standard-worker-trigger.json'
   workflow_dispatch:
 
 permissions:
@@ -23,7 +20,9 @@ jobs:
           fetch-depth: 10
 
       - name: Patch Worker standard BetFlag endpoint
-        run: python scripts/patch_betflag_standard_worker.py
+        run: |
+          python scripts/patch_betflag_standard_worker.py
+          python scripts/patch_betflag_exact_event_identity.py
 
       - name: Syntax check Worker
         run: node --check worker/src/index.mjs
@@ -79,7 +78,7 @@ jobs:
           git add worker/src/index.mjs
           git diff --cached --check
           git diff --cached --quiet && exit 0
-          git commit -m 'Add direct BetFlag standard index endpoint'
+          git commit -m 'Apply BetFlag Worker patches'
           for attempt in 1 2 3 4; do
             git fetch origin main
             if git rebase origin/main && git push origin HEAD:main; then exit 0; fi
