@@ -8,6 +8,7 @@ on:
       - 'scripts/patch_betflag_standard_worker.py'
       - 'scripts/patch_betflag_exact_event_identity.py'
       - 'scripts/patch_betflag_exact_full_fallback.py'
+      - 'scripts/patch_betflag_cache_health.py'
 
 permissions:
   contents: write
@@ -30,6 +31,7 @@ jobs:
           python scripts/patch_betflag_standard_worker.py
           python scripts/patch_betflag_exact_event_identity.py
           python scripts/patch_betflag_exact_full_fallback.py
+          python scripts/patch_betflag_cache_health.py
           node --check worker/src/index.mjs
 
       - name: Deploy clean v7 Worker
@@ -55,7 +57,7 @@ jobs:
           date=datetime.now(ZoneInfo('Europe/Rome')).strftime('%d-%m-%Y')
           last=None
           def get(path):
-              req=urllib.request.Request(base+path,headers={'Accept':'application/json','Cache-Control':'no-cache','User-Agent':'RadarDeployVerify/2.0'})
+              req=urllib.request.Request(base+path,headers={'Accept':'application/json','Cache-Control':'no-cache','User-Agent':'RadarDeployVerify/3.0'})
               with urllib.request.urlopen(req,timeout=60) as r:
                   return r.status,json.loads(r.read().decode())
           for _ in range(8):
@@ -63,19 +65,25 @@ jobs:
                   hs,h=get('/health?cb='+str(int(time.time()*1000)))
                   ss,s=get('/live/standard-index?'+urllib.parse.urlencode({'date':date,'cb':int(time.time()*1000)}))
                   ps,p=get('/live/player-index?'+urllib.parse.urlencode({'date':date,'cb':int(time.time()*1000)}))
+                  sf=(s.get('coverage') or {}).get('fixtures',0)
+                  pf=(p.get('coverage') or {}).get('fixtures',0)
+                  slots=(s.get('coverage') or {}).get('slot_results') or []
+                  standard_transport_ok=bool(s.get('source_healthy') and slots and all(x.get('ok') for x in slots))
+                  player_transport_ok=bool(p.get('source_healthy'))
                   last={
                     'health':{'status':hs,'version':h.get('version'),'endpoints':h.get('endpoints')},
-                    'standard':{'status':ss,'source_healthy':s.get('source_healthy'),'fixtures':(s.get('coverage') or {}).get('fixtures'),'freshness':s.get('freshness')},
-                    'player':{'status':ps,'source_healthy':p.get('source_healthy'),'fixtures':(p.get('coverage') or {}).get('fixtures'),'freshness':p.get('freshness')}
+                    'standard':{'status':ss,'source_healthy':s.get('source_healthy'),'fixtures':sf,'freshness':s.get('freshness'),'transport_ok':standard_transport_ok},
+                    'player':{'status':ps,'source_healthy':p.get('source_healthy'),'fixtures':pf,'freshness':p.get('freshness'),'transport_ok':player_transport_ok}
                   }
                   print(json.dumps(last,ensure_ascii=False,indent=2))
-                  if hs==200 and ss==200 and ps==200 and h.get('ok') is True and s.get('source_healthy') and (s.get('coverage') or {}).get('fixtures',0)>0 and p.get('source_healthy'):
+                  # Empty markets are allowed when acquisition itself is healthy.
+                  if hs==200 and ss==200 and ps==200 and h.get('ok') is True and standard_transport_ok and player_transport_ok:
                       raise SystemExit(0)
               except Exception as exc:
                   last={'error':repr(exc)}
               time.sleep(5)
           print(json.dumps(last,ensure_ascii=False,indent=2))
-          raise SystemExit('BetFlag v7 standard/player verification failed')
+          raise SystemExit('BetFlag v7 standard/player transport verification failed')
           PY
 
       - name: Commit deployed Worker source
@@ -87,7 +95,7 @@ jobs:
           git add worker/src/index.mjs
           git diff --cached --check
           git diff --cached --quiet && exit 0
-          git commit -m 'Harden BetFlag exact player gate'
+          git commit -m 'Harden BetFlag cache and health semantics'
           for attempt in 1 2 3 4; do
             git fetch origin main
             if git rebase origin/main && git push origin HEAD:main; then exit 0; fi
