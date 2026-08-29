@@ -1,0 +1,153 @@
+{
+  "schema_version": "radar-betflag-v7-live-bridge-v3",
+  "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
+  "requested_at": "2026-08-29T19:08:00Z",
+  "request_id": "lookman-exact-eventid-postdeploy-20260829T1908Z",
+  "generated_at": "2026-08-29T19:07:03.461435+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "mode": "player_price",
+  "health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-29T19:07:01.275248+00:00",
+    "elapsed_ms": 101,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/standard-index",
+        "/live/player-index",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "calls": [
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?event_id=16038591&player=Ademola+Lookman&market=Marc&selection=Si",
+      "http_status": 200,
+      "fetched_at": "2026-08-29T19:07:03.461403+00:00",
+      "elapsed_ms": 2186,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-29T19:07:01.310Z",
+        "served_at": "2026-08-29T19:07:03.422Z",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "upstream_elapsed_ms": 2112,
+        "target": {
+          "tab": 2484,
+          "slot": 22884,
+          "market": "Marc"
+        },
+        "returned": 1,
+        "price_gate_eligible": true,
+        "certificate": {
+          "proof_id": "bf-e471ad756be16efa4240",
+          "sha256": "e471ad756be16efa4240d861dfe6f0b46ffe7c545a83d88411c3489d51671ceb",
+          "exact_identity_match": true,
+          "source_healthy": true,
+          "freshness": {
+            "age_seconds": 2.1,
+            "max_age_seconds": 45,
+            "fresh": true
+          },
+          "price_gate_eligible": true,
+          "canonical": {
+            "source_class": "BETFLAG_AAMS_DIRECT",
+            "source_host": "sportservice.betflag.it",
+            "fetched_at": "2026-08-29T19:07:01.310Z",
+            "match": "Siviglia - Atletico Madrid",
+            "match_market_id": "36351.2888",
+            "match_event_id": 16038591,
+            "player": "Ademola Lookman",
+            "requested_market": "Marc",
+            "market": "Marc",
+            "line": null,
+            "selection": "Si",
+            "odd": 3,
+            "selection_id": 3745014554,
+            "market_id": -2115585292,
+            "odds_id": -1640665068
+          }
+        },
+        "quote": {
+          "event_id": 16039221,
+          "player_event": "(SIV-ATM*) Ademola Lookman",
+          "match_code": "SIV-ATM*",
+          "player": "Ademola Lookman",
+          "start_time": "29-08-2026 21:30",
+          "league": "Spagna Liga ",
+          "tournament_id": 30102,
+          "category_id": 14260,
+          "authority_id": 79,
+          "match_market_id": "36351.2888",
+          "match": "Siviglia - Atletico Madrid",
+          "match_event_id": 16038591,
+          "match_start": "29-08-2026 21:30",
+          "requested_market": "Marc",
+          "market": "Marc",
+          "line": null,
+          "selection": "Si",
+          "odd": 3,
+          "selection_id": 3745014554,
+          "selection_type": 1,
+          "market_type": 4490,
+          "market_id": -2115585292,
+          "odds_id": -1640665068,
+          "fetched_at": "2026-08-29T19:07:01.310Z"
+        },
+        "note": "Certified fresh BetFlag/AAMS operational player price."
+      }
+    }
+  ],
+  "no_cache_fallback": true,
+  "github_sha": "28792fec0a3efdb78665541b1ce087a2a11f1c5f"
+}
