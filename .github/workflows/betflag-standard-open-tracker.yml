@@ -25,9 +25,14 @@ jobs:
         with:
           ref: main
           fetch-depth: 5
+
       - name: Capture BetFlag 1X2 and totals movement
+        id: capture
+        continue-on-error: true
         run: python scripts/betflag_standard_open_tracker.py
+
       - name: Persist BetFlag standard movement
+        if: steps.capture.outcome == 'success'
         shell: bash
         run: |
           set -e
@@ -41,4 +46,13 @@ jobs:
             git rebase --abort 2>/dev/null || true
             sleep $((attempt * 2))
           done
-          exit 1
+          echo 'Unable to persist BetFlag standard movement; keeping last known good snapshot.' >&2
+          exit 0
+
+      - name: Record degraded source without failing workflow
+        if: steps.capture.outcome != 'success'
+        shell: bash
+        run: |
+          echo 'WARNING: BetFlag standard TRUE OPEN source unavailable or rejected this cycle.'
+          echo 'Last known good snapshot is preserved. Workflow intentionally remains successful to avoid notification spam.'
+          exit 0
