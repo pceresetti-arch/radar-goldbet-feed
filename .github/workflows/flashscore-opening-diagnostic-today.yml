@@ -6,105 +6,73 @@ on:
       - '.github/workflows/flashscore-opening-diagnostic-today.yml'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Probe today's Flashscore opening odds
+      - name: Probe today's Flashscore/Diretta opening odds
         shell: bash
         run: |
           python - <<'PY'
-          import json,re,time,unicodedata
-          from pathlib import Path
-          import requests
+          import json,re,unicodedata,requests
 
-          targets=[
-            ('Chelsea','Brighton'),('Leeds','Brentford'),('Sunderland','Fulham'),('Manchester United','Ipswich'),
-            ('Napoli','Como'),('Cagliari','Inter'),('Lazio','Genoa')
-          ]
-          H={'x-fsign':'SW9D1eZo','User-Agent':'Mozilla/5.0','Referer':'https://www.flashscore.com/','Accept':'*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8','Cache-Control':'no-cache'}
-          def n(s):
-            s=unicodedata.normalize('NFKD',s or '')
-            s=''.join(c for c in s if not unicodedata.combining(c))
-            s=re.sub(r'[^a-z0-9]+',' ',s.lower()).strip()
-            aliases={'manchester united':'man utd','brighton and hove albion':'brighton','internazionale':'inter','inter milan':'inter'}
-            return aliases.get(s,s)
-          def parse(raw):
-            out=[]
-            for sec in raw.split('~'):
-              d={}
-              for p in sec.split(chr(0xAC)):
-                if chr(0xF7) in p:
-                  k,v=p.split(chr(0xF7),1); d[k]=v
-              if d.get('AA') and d.get('AE') and d.get('AF'):
-                out.append({'event_id':d['AA'],'home':d['AE'],'away':d['AF'],'ts':d.get('AD'),'status':d.get('AB')})
-            return out
-          S=requests.Session(); result={'generated_at_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'target_date':'2026-08-30','geo':'IT','feed_attempts':[],'targets':[]}
-          matches=[]
-          for u in ['https://local-global.flashscore.ninja/2/x/feed/f_1_1_3_en_1','https://www.flashscore.com/x/feed/f_1_1_3_en_1','https://local-global.flashscore.ninja/2/x/feed/f_1_1_3_it_1']:
-            try:
-              r=S.get(u,headers=H,timeout=25); result['feed_attempts'].append({'url':u,'status':r.status_code,'bytes':len(r.content),'prefix':r.text[:100]})
-              if r.ok:
-                z=parse(r.text)
-                if z: matches=z; result['feed_url_used']=u; result['feed_match_count']=len(z); break
-            except Exception as e: result['feed_attempts'].append({'url':u,'error':repr(e)})
-          for h,a in targets:
-            e={'home':h,'away':a,'match_found':False,'event_id':None,'odds_attempts':[]}
-            nh,na=n(h),n(a); m=None
-            for x in matches:
-              xh,xa=n(x['home']),n(x['away'])
-              if ((nh in xh or xh in nh) and (na in xa or xa in na)):
-                m=x; break
-            if not m:
-              e['near']=[x for x in matches if nh.split()[0] in n(x['home']) or na.split()[0] in n(x['away'])][:8]; result['targets'].append(e); continue
-            e.update({'match_found':True,'event_id':m['event_id'],'feed_home':m['home'],'feed_away':m['away'],'start_ts':m.get('ts')})
-            fo=None
-            for host in ['https://global.ds.lsapp.eu/odds/pq_graphql','https://2.ds.lsapp.eu/pq_graphql']:
-              for hh in ['ope','oce']:
-                try:
-                  q={'_hash':hh,'eventId':m['event_id'],'projectId':'2','geoIpCode':'IT'}
-                  rr=S.get(host,params=q,headers=H,timeout=25); e['odds_attempts'].append({'url':rr.url,'status':rr.status_code,'bytes':len(rr.content),'prefix':rr.text[:100]})
-                  if rr.ok:
-                    js=rr.json(); cand=(js.get('data') or {}).get('findOddsByEventId') or {}
-                    if cand.get('odds'): fo=cand; break
-                except Exception as ex: e['odds_attempts'].append({'host':host,'hash':hh,'error':repr(ex)})
-              if fo: break
-            if not fo: result['targets'].append(e); continue
-            bmap={}
-            for y in (fo.get('settings') or {}).get('bookmakers',[]):
-              b=(y or {}).get('bookmaker') or {}
-              if b.get('id') is not None: bmap[str(b['id'])]=b.get('name')
-            e['bookmakers']=sorted([{'id':k,'name':v} for k,v in bmap.items()],key=lambda z:(z['name'] or '').lower())
-            e['goldbet_bookmakers']=[x for x in e['bookmakers'] if 'gold' in (x['name'] or '').lower()]
-            gold=[]; all_open=[]
-            for item in fo.get('odds',[]):
-              bid=str(item.get('bookmakerId','')); bn=bmap.get(bid,'')
-              outs=[{'value':o.get('value'),'opening':o.get('opening'),'active':o.get('active'),'change':o.get('change'),'handicap':o.get('handicap')} for o in (item.get('odds') or [])]
-              row={'bookmaker_id':bid,'bookmaker_name':bn,'bettingType':item.get('bettingType'),'bettingScope':item.get('bettingScope'),'odds':outs}
-              if any(o.get('opening') is not None for o in outs): all_open.append(row)
-              if 'gold' in (bn or '').lower(): gold.append(row)
-            e['goldbet_rows']=gold
-            e['goldbet_opening_available']=any(any(o.get('opening') is not None for o in r['odds']) for r in gold)
-            e['sample_rows_with_opening']=all_open[:15]
-            result['targets'].append(e)
-          result['summary']={
-            'targets_found':sum(x.get('match_found',False) for x in result['targets']),
-            'targets_with_odds_payload':sum(bool(x.get('bookmakers')) for x in result['targets']),
-            'targets_with_goldbet':sum(bool(x.get('goldbet_bookmakers')) for x in result['targets']),
-            'targets_with_goldbet_opening':sum(bool(x.get('goldbet_opening_available')) for x in result['targets'])
-          }
-          p=Path('feed/flashscore-opening-diagnostic-2026-08-30.json'); p.parent.mkdir(exist_ok=True); p.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8'); print(json.dumps(result['summary'],indent=2))
+          targets=[('Chelsea','Brighton'),('Leeds','Brentford'),('Sunderland','Fulham'),('Manchester United','Ipswich'),('Napoli','Como'),('Cagliari','Inter'),('Lazio','Genoa')]
+          H={'x-fsign':'SW9D1eZo','User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36','Referer':'https://www.flashscore.com/','Origin':'https://www.flashscore.com','Accept':'*/*','Accept-Language':'it-IT,it;q=0.9,en;q=0.8'}
+
+          def norm(s):
+              s=unicodedata.normalize('NFKD',s or '')
+              s=''.join(c for c in s if not unicodedata.combining(c))
+              s=re.sub(r'[^a-z0-9]+',' ',s.lower()).strip()
+              aliases={'manchester united':'man utd','brighton and hove albion':'brighton','internazionale':'inter','inter milan':'inter'}
+              return aliases.get(s,s)
+
+          def parse_feed(raw):
+              out=[]
+              for sec in raw.split('~'):
+                  d={}
+                  for p in sec.split(chr(0xAC)):
+                      if chr(0xF7) in p:
+                          k,v=p.split(chr(0xF7),1); d[k]=v
+                  if d.get('AA') and d.get('AE') and d.get('AF'):
+                      out.append({'event_id':d['AA'],'home':d['AE'],'away':d['AF'],'ts':d.get('AD'),'status':d.get('AB')})
+              return out
+
+          s=requests.Session()
+          feed_url='https://www.flashscore.com/x/feed/f_1_0_3_en_1'
+          r=s.get(feed_url,headers=H,timeout=20)
+          print('FEED',r.status_code,len(r.content),r.text[:80])
+          r.raise_for_status()
+          matches=parse_feed(r.text)
+          print('MATCH_COUNT',len(matches))
+
+          for home,away in targets:
+              nh,na=norm(home),norm(away); found=None
+              for m in matches:
+                  mh,ma=norm(m['home']),norm(m['away'])
+                  if (nh in mh or mh in nh) and (na in ma or ma in na):
+                      found=m; break
+              print('\nTARGET',home,'vs',away,'FOUND',bool(found),found)
+              if not found: continue
+
+              params={'_hash':'oce','eventId':found['event_id'],'projectId':'2','geoIpCode':'IT'}
+              rr=s.get('https://global.ds.lsapp.eu/odds/pq_graphql',params=params,headers=H,timeout=20)
+              print('ODDS_HTTP',rr.status_code,'BYTES',len(rr.content),'PREFIX',rr.text[:180])
+              if not rr.ok: continue
+              try: js=rr.json()
+              except Exception as e:
+                  print('JSON_ERROR',repr(e)); continue
+              fo=(js.get('data') or {}).get('findOddsByEventId') or {}
+              print('ODDS_ROWS',len(fo.get('odds') or []))
+              bmap={}
+              for x in (fo.get('settings') or {}).get('bookmakers',[]):
+                  b=(x or {}).get('bookmaker') or {}
+                  if b.get('id') is not None: bmap[str(b['id'])]=b.get('name')
+              print('BOOKMAKERS',sorted(bmap.values()))
+              gold=[]
+              for item in fo.get('odds') or []:
+                  bn=bmap.get(str(item.get('bookmakerId','')),'')
+                  if 'gold' not in (bn or '').lower(): continue
+                  outs=[{'value':o.get('value'),'opening':o.get('opening'),'active':o.get('active'),'change':o.get('change'),'handicap':o.get('handicap')} for o in (item.get('odds') or [])]
+                  gold.append({'bookmaker':bn,'type':item.get('bettingType'),'scope':item.get('bettingScope'),'odds':outs})
+              print('GOLDBET_ROWS',json.dumps(gold,ensure_ascii=False))
           PY
-      - name: Commit diagnostic
-        shell: bash
-        run: |
-          git config user.name radar-bot
-          git config user.email radar-bot@users.noreply.github.com
-          git add feed/flashscore-opening-diagnostic-2026-08-30.json
-          git diff --cached --quiet || (git commit -m 'Record Flashscore opening odds diagnostic for 30 Aug' && git push)
