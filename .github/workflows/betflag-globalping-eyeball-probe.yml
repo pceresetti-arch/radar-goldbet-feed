@@ -1,0 +1,63 @@
+name: BetFlag Italian eyeball probe
+
+on:
+  push:
+    paths:
+      - 'betflag-globalping-eyeball-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe scorer from Italian eyeball networks
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests,json,time,pathlib
+          from datetime import datetime,timezone
+          API='https://api.globalping.io/v1/measurements'; UA='radar-betflag-recovery/1.0'
+          payload={
+            'target':'sportservice.betflag.it','type':'http','limit':20,
+            'locations':[{'country':'IT','tags':['eyeball-network']}],
+            'measurementOptions':{
+              'protocol':'HTTPS','port':443,
+              'request':{
+                'method':'GET',
+                'path':'/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0',
+                'query':'channelId=0',
+                'headers':{'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Brand':'3','X-IdCanale':'0','X-Auth-Token':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/'}
+              }
+            }
+          }
+          h={'User-Agent':UA,'Accept':'application/json','Content-Type':'application/json'}
+          r=requests.post(API,headers=h,json=payload,timeout=20)
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'create_status':r.status_code,'create_body':r.text[:2000]}
+          if r.status_code==202:
+            mid=r.json()['id'];out['measurement_id']=mid;data={}
+            for _ in range(20):
+              time.sleep(.65);data=requests.get(API+'/'+mid,headers={'User-Agent':UA,'Accept':'application/json'},timeout=20).json()
+              if data.get('status')!='in-progress':break
+            out['status']=data.get('status');out['probes_count']=data.get('probesCount');out['results']=[]
+            for x in data.get('results',[]):
+              p=x.get('probe') or {}; rr=x.get('result') or {}; b=rr.get('rawBody') or ''
+              out['results'].append({'probe':{k:p.get(k) for k in ('country','city','network','asn','tags')},'statusCode':rr.get('statusCode'),'statusCodeName':rr.get('statusCodeName'),'resolvedAddress':rr.get('resolvedAddress'),'truncated':rr.get('truncated'),'mentions_isak':'isak' in b.lower(),'mentions_gakpo':'gakpo' in b.lower(),'body_prefix':b[:700]})
+          pathlib.Path('feed').mkdir(exist_ok=True);pathlib.Path('feed/betflag-globalping-eyeball-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-globalping-eyeball-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag from Italian eyeball networks'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
