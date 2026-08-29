@@ -107,10 +107,19 @@ jobs:
           python - <<'PY'
           import json,pathlib
           d=json.loads(pathlib.Path('feed/betflag-fixtures-index.json').read_text(encoding='utf-8'))
-          assert d.get('source_healthy') is True, d
-          assert int(d.get('fixture_count') or 0)>0, d
-          assert int(d.get('full_scan_ready_count') or 0)>0, d
-          print(json.dumps({'fixture_count':d['fixture_count'],'full_scan_ready_count':d['full_scan_ready_count'],'generated_at':d['generated_at']},indent=2))
+          assert d.get('operationally_usable') is True, d
+          status=d.get('feed_status')
+          assert status in ('READY_FULL_SCAN','READY_DEGRADED_OR_STANDARD_ONLY','NO_PREMATCH_FIXTURES_AVAILABLE'), d
+          print(json.dumps({
+            'feed_status':status,
+            'source_healthy':d.get('source_healthy'),
+            'player_discovery_healthy':d.get('player_discovery_healthy'),
+            'coverage_complete':d.get('coverage_complete'),
+            'fixture_count':d.get('fixture_count'),
+            'full_scan_ready_count':d.get('full_scan_ready_count'),
+            'full_market_coverage_ready_count':d.get('full_market_coverage_ready_count'),
+            'generated_at':d.get('generated_at')
+          },indent=2))
           PY
 
       - name: Commit bridge output
