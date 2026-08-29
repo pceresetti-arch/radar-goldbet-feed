@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-08-29T09:22:21.112081+00:00",
+  "generated_at": "2026-08-29T12:22:19.439878+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "29-08-2026",
   "ready": true,
@@ -18,9 +18,9 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 6884,
-    "index_warm_elapsed_ms": 95,
-    "fallback_discovery_elapsed_ms": 113,
+    "index_first_elapsed_ms": 10743,
+    "index_warm_elapsed_ms": 307,
+    "fallback_discovery_elapsed_ms": 186,
     "index_first_cache": "MISS:MISS",
     "index_warm_cache": "HIT"
   },
@@ -29,21 +29,21 @@
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 6936,
-    "scoped_source_rows": 6936,
-    "indexed_rows": 6936,
+    "source_rows": 12902,
+    "scoped_source_rows": 12902,
+    "indexed_rows": 12902,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 6936,
-      "match_code_fallback": 0,
+      "standard_match": 12800,
+      "match_code_fallback": 102,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
       "missing_stable_identity": 0,
       "missing_player": 0
     },
-    "fixtures": 21,
-    "exact_fixtures": 21,
-    "fallback_fixtures": 0,
+    "fixtures": 24,
+    "exact_fixtures": 24,
+    "fallback_fixtures": 1,
     "player_fixtures": 1000,
     "markets_present": [
       "1° Marcatore",
@@ -113,14 +113,14 @@
     "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": "Shimizu S-Pulse - Kashiwa Reysol",
-    "match_market_id": "36351.2365",
-    "player": "Capixaba",
+    "match": "Elfsborg - Degerfors",
+    "match_market_id": "36351.557",
+    "player": "Ahmad Faqa",
     "market": "1° Marcatore",
     "selection": "Si",
-    "odd": 15,
-    "scan_odd": 15,
-    "proof_id": "bf-be6f526921c66c539be5"
+    "odd": 51,
+    "scan_odd": 51,
+    "proof_id": "bf-94634828f66c29b762c6"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
