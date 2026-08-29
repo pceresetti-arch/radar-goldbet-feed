@@ -26,28 +26,74 @@ def get_json(path, timeout=75):
     req=urllib.request.Request(url,headers={
         'Accept':'application/json',
         'Cache-Control':'no-cache',
-        'User-Agent':'RadarBetFlagWorkerFixtureFeed/1.0'
+        'User-Agent':'RadarBetFlagWorkerFixtureFeed/1.1'
     })
     with urllib.request.urlopen(req,timeout=timeout) as r:
         return r.status,json.loads(r.read().decode())
 
 
-def freshness_ok(body):
-    f=body.get('freshness') or {}
-    return bool(body.get('source_healthy') and f.get('fresh'))
+def fresh(body):
+    return bool((body.get('freshness') or {}).get('fresh'))
+
+
+def fixture_count(body):
+    return int((body.get('coverage') or {}).get('fixtures') or len(body.get('fixtures') or []) or 0)
+
+
+def scoped_rows(body):
+    coverage=body.get('coverage') or {}
+    return int(coverage.get('scoped_source_rows') or coverage.get('scoped_rows') or coverage.get('source_rows') or 0)
+
+
+def usable(status, body):
+    return bool(status == 200 and fresh(body) and fixture_count(body) > 0 and scoped_rows(body) > 0)
+
+
+def fetch_index(path, label, attempts=4):
+    history=[]
+    best=None
+    for attempt in range(1, attempts+1):
+        try:
+            status,body=get_json(path)
+            rec={
+                'attempt':attempt,
+                'http_status':status,
+                'source_healthy':bool(body.get('source_healthy')),
+                'fresh':fresh(body),
+                'fixtures':fixture_count(body),
+                'scoped_rows':scoped_rows(body),
+                'missing_targets':list((body.get('coverage') or {}).get('missing_targets') or []),
+            }
+            history.append(rec)
+            candidate=(status,body)
+            if best is None or scoped_rows(body) > scoped_rows(best[1]):
+                best=candidate
+            if status == 200 and body.get('source_healthy') and fresh(body) and fixture_count(body) > 0:
+                return status,body,history,False
+        except Exception as exc:
+            history.append({'attempt':attempt,'error':f'{type(exc).__name__}: {exc}'})
+        if attempt < attempts:
+            time.sleep(0.35*attempt)
+
+    if best is not None and usable(best[0],best[1]):
+        # Keep the Radar alive on transient partial target loss. Coverage remains explicit
+        # and FINAL GATE exact is still mandatory for any candidate selection.
+        return best[0],best[1],history,True
+    raise SystemExit(f'Worker {label} index unavailable after {attempts} attempts: {json.dumps(history,ensure_ascii=False)}')
 
 
 def main():
     today=datetime.now(ZoneInfo('Europe/Rome')).strftime('%d-%m-%Y')
     qs=urllib.parse.urlencode({'date':today})
-    ss,standard=get_json('/live/standard-index?'+qs)
-    ps,players=get_json('/live/player-index?'+qs)
-    if ss!=200 or ps!=200:
-        raise SystemExit(f'Worker HTTP failure standard={ss} player={ps}')
-    if not freshness_ok(standard):
-        raise SystemExit('Worker standard index is not healthy/fresh')
-    if not freshness_ok(players):
-        raise SystemExit('Worker player index is not healthy/fresh')
+    ss,standard,standard_attempts,standard_degraded=fetch_index('/live/standard-index?'+qs,'standard')
+    ps,players,player_attempts,player_degraded=fetch_index('/live/player-index?'+qs,'player')
+
+    coverage_complete=bool(
+        standard.get('source_healthy') and players.get('source_healthy') and
+        not standard_degraded and not player_degraded
+    )
+    standard_missing=list((standard.get('coverage') or {}).get('missing_targets') or [])
+    player_missing=list((players.get('coverage') or {}).get('missing_targets') or [])
 
     merged={}
     for f in standard.get('fixtures') or []:
@@ -100,11 +146,15 @@ def main():
         if not f.get('match'): continue
         player_quote_count=sum(len(m.get('quotes') or []) for pl in f.get('players') or [] for m in pl.get('markets') or [])
         doc={
-            'schema_version':'betflag-worker-fixture-feed-v1',
+            'schema_version':'betflag-worker-fixture-feed-v2',
             'generated_at':generated,
             'source_class':'BETFLAG_AAMS_DIRECT',
             'source':'radar-betflag-v7 Worker -> sportservice.betflag.it AAMS',
             'source_healthy':True,
+            'coverage_complete':coverage_complete,
+            'coverage_warning':None if coverage_complete else 'PARTIAL TARGET COVERAGE — discovery usable; FINAL GATE exact mandatory',
+            'standard_missing_targets':standard_missing,
+            'player_missing_targets':player_missing,
             'freshness':{
                 'standard':standard.get('freshness'),
                 'player':players.get('freshness')
@@ -128,31 +178,50 @@ def main():
             'match_start':f.get('match_start'),
             'league':f.get('league'),
             'match_market_id':f.get('match_market_id'),
+            'match_event_id':f.get('match_event_id'),
             'file':'feed/betflag-fixtures/'+filename,
             'standard_count':len(doc['standard']),
             'player_count':len(doc['players']),
             'player_quote_count':player_quote_count,
-            'complete_for_full_scan':bool(doc['standard'] and doc['players'])
+            'complete_for_full_scan':bool(doc['standard'] and doc['players']),
+            'market_coverage_complete':coverage_complete,
         })
 
     index.sort(key=lambda x:(str(x.get('match_start') or ''),str(x.get('match') or '')))
     output={
-        'schema_version':'betflag-worker-fixtures-index-v1',
+        'schema_version':'betflag-worker-fixtures-index-v2',
         'generated_at':generated,
         'date':today,
         'source_class':'BETFLAG_AAMS_DIRECT',
         'source':'radar-betflag-v7 Worker -> sportservice.betflag.it AAMS',
         'source_healthy':True,
+        'coverage_complete':coverage_complete,
+        'coverage_warning':None if coverage_complete else 'PARTIAL TARGET COVERAGE — feed retained; exact FINAL GATE required',
+        'standard_degraded':standard_degraded,
+        'player_degraded':player_degraded,
+        'standard_missing_targets':standard_missing,
+        'player_missing_targets':player_missing,
+        'standard_attempts':standard_attempts,
+        'player_attempts':player_attempts,
         'standard_source_generated_at':standard.get('generated_at'),
         'player_source_generated_at':players.get('generated_at'),
         'standard_freshness':standard.get('freshness'),
         'player_freshness':players.get('freshness'),
         'fixture_count':len(index),
         'full_scan_ready_count':sum(1 for x in index if x['complete_for_full_scan']),
+        'full_market_coverage_ready_count':sum(1 for x in index if x['complete_for_full_scan'] and x['market_coverage_complete']),
         'fixtures':index
     }
     INDEX.write_text(json.dumps(output,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-    print(json.dumps({'source_healthy':True,'fixture_count':len(index),'full_scan_ready_count':output['full_scan_ready_count'],'date':today},ensure_ascii=False))
+    print(json.dumps({
+        'source_healthy':True,
+        'coverage_complete':coverage_complete,
+        'fixture_count':len(index),
+        'full_scan_ready_count':output['full_scan_ready_count'],
+        'full_market_coverage_ready_count':output['full_market_coverage_ready_count'],
+        'player_missing_targets':player_missing,
+        'date':today
+    },ensure_ascii=False))
 
 if __name__=='__main__':
     main()
