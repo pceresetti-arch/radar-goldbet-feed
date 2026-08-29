@@ -609,6 +609,7 @@ function sourceFreshness(generatedAt) {
 
 function filterBetflagRows(rows, url, { exactPlayer = false, exactMarket = false } = {}) {
   const matchMarketId = normalized(url.searchParams.get('match_market_id'));
+  const eventId = normalized(url.searchParams.get('event_id'));
   const q = normalized(url.searchParams.get('q'));
   const player = normalized(url.searchParams.get('player'));
   const market = canonicalMarket(url.searchParams.get('market'));
@@ -620,6 +621,7 @@ function filterBetflagRows(rows, url, { exactPlayer = false, exactMarket = false
   const filtered = [];
   for (const row of rows || []) {
     if (matchMarketId && normalized(row.match_market_id) !== matchMarketId) continue;
+    if (eventId && normalized(row.match_event_id || row.event_id) !== eventId) continue;
     if (player) {
       const rp = normalized(row.player);
       if (exactPlayer ? rp !== player : !rp.includes(player)) continue;
@@ -657,9 +659,10 @@ function validateExactPriceQuery(url) {
   const market = String(url.searchParams.get('market') || '').trim();
   const q = String(url.searchParams.get('q') || '').trim();
   const matchMarketId = String(url.searchParams.get('match_market_id') || '').trim();
+  const eventId = String(url.searchParams.get('event_id') || '').trim();
   if (!player) return 'player is required';
   if (!market) return 'market is required';
-  if (!matchMarketId && q.length < 3) return 'Specify match_market_id or q with at least 3 characters';
+  if (!matchMarketId && !eventId && q.length < 3) return 'Specify event_id, match_market_id, or q with at least 3 characters';
   if (!resolvePlayerTarget(market)) return `Unsupported player market: ${market}`;
   return null;
 }
