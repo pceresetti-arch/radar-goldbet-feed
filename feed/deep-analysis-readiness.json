@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-29T21:34:27.536761+00:00",
+  "generated_at": "2026-08-29T21:35:09.591341+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 8.9,
-    "tactical": 8.5,
-    "betflag_fixture_feed": 16.9,
-    "betflag_standard_source": 17.1,
-    "betflag_player_source": 17.0,
-    "player_context": 8.4
+    "lineups": 9.6,
+    "tactical": 9.2,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.5,
+    "betflag_player_source": 0.4,
+    "player_context": 0.4
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -35,7 +35,7 @@
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
   "match_count": 8,
   "readiness_counts": {
-    "STALE_BETFLAG_STANDARD_CURRENT": 5,
+    "WAIT_BETFLAG_FIXTURE_MAPPING": 5,
     "WAIT_OFFICIAL_STANDARD_XI": 3
   },
   "ready_count": 0,
@@ -51,13 +51,13 @@
       "start_time": "29-08-2026 23:25",
       "start_utc": "2026-08-29T21:25:00+00:00",
       "minutes_to_start": -0.6,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
+      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -73,10 +73,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/jaguares-de-cordoba-america-de-cali.json",
-      "betflag_standard_count": 31,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -103,13 +103,13 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "minutes_to_start": 4.4,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
+      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -124,14 +124,14 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/atletico-mineiro-mg-ec-vitoria-ba.json",
-      "betflag_standard_count": 35,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
-      "player_count": 47,
-      "player_quote_count": 831,
-      "player_props_available": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
       "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
@@ -154,13 +154,13 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "minutes_to_start": 4.4,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
+      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -175,14 +175,14 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/botafogo-sp-cuiaba-mt.json",
-      "betflag_standard_count": 31,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
-      "player_count": 58,
-      "player_quote_count": 290,
-      "player_props_available": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
       "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
@@ -209,10 +209,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -227,10 +227,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/cd-platense-municipal-zacatecoluca-fundacion-formado-un-atleta.json",
-      "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -257,13 +257,13 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "minutes_to_start": 4.4,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
+      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -278,10 +278,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/cd-recoleta-club-olimpia.json",
-      "betflag_standard_count": 32,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -312,10 +312,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -330,10 +330,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/defensores-de-cambaceres-deportivo-paraguayo.json",
-      "betflag_standard_count": 25,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -360,13 +360,13 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "minutes_to_start": 4.4,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
+      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -382,14 +382,14 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/deportes-limache-cd-everton-vina-del-mar.json",
-      "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
-      "player_count": 52,
-      "player_quote_count": 312,
-      "player_props_available": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
       "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
@@ -416,10 +416,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -434,10 +434,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/union-espanola-rangers-de-talca.json",
-      "betflag_standard_count": 29,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
