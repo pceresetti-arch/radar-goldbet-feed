@@ -1,16 +1,16 @@
 {
   "schema_version": "radar-betflag-v7-live-bridge-v2",
   "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
-  "requested_at": "2026-08-29T18:18:00Z",
-  "request_id": "betflag-mapping-integrity-20260829T1818Z",
-  "generated_at": "2026-08-29T18:22:10.147356+00:00",
+  "requested_at": "2026-08-29T18:38:30Z",
+  "request_id": "kolo-muani-final-gate-20260829T1838Z",
+  "generated_at": "2026-08-29T18:41:14.009197+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "mode": "player_props",
+  "mode": "player_price",
   "health": {
     "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
     "http_status": 200,
-    "fetched_at": "2026-08-29T18:22:09.898532+00:00",
-    "elapsed_ms": 112,
+    "fetched_at": "2026-08-29T18:41:13.481697+00:00",
+    "elapsed_ms": 84,
     "error": null,
     "body": {
       "ok": true,
@@ -69,76 +69,61 @@
   },
   "calls": [
     {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?player=Aleksey+Batrakov&full=1&limit=100",
-      "http_status": 200,
-      "fetched_at": "2026-08-29T18:22:10.087752+00:00",
-      "elapsed_ms": 189,
-      "error": null,
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?match_market_id=36351.2146&player=Randal+Kolo+Muani&market=Marc&selection=Si",
+      "http_status": 404,
+      "fetched_at": "2026-08-29T18:41:14.009177+00:00",
+      "elapsed_ms": 527,
+      "error": "HTTPError 404",
       "body": {
-        "generated_at": "2026-08-29T18:22:09.951Z",
-        "served_at": "2026-08-29T18:22:10.077Z",
-        "cache": "MISS",
+        "generated_at": "2026-08-29T18:41:13.520Z",
+        "served_at": "2026-08-29T18:41:14.002Z",
         "source_class": "BETFLAG_AAMS_DIRECT",
         "source": "sportservice.betflag.it direct AAMS player service",
         "betflag_direct": true,
         "goldbet_direct": false,
-        "source_healthy": false,
-        "freshness": {
-          "age_seconds": 0.1,
-          "max_age_seconds": 45,
-          "fresh": true
+        "upstream_elapsed_ms": 482,
+        "target": {
+          "tab": 2484,
+          "slot": 22884,
+          "market": "Marc"
         },
-        "scan_price_gate_capable": false,
-        "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
-        "mode": "full",
-        "upstream_elapsed_ms": 126,
-        "total_source_rows": 0,
         "returned": 0,
-        "pagination": {
-          "limit": 100,
-          "offset": 0,
-          "has_more": false,
-          "next_offset": null
+        "price_gate_eligible": false,
+        "certificate": {
+          "proof_id": "bf-b81832032a4440c0488e",
+          "sha256": "b81832032a4440c0488e3d139bc6eabccdcac7dde57b87fabb19978aff11f817",
+          "exact_identity_match": false,
+          "source_healthy": false,
+          "freshness": {
+            "age_seconds": 0.5,
+            "max_age_seconds": 45,
+            "fresh": true
+          },
+          "price_gate_eligible": false,
+          "canonical": {
+            "source_class": "BETFLAG_AAMS_DIRECT",
+            "source_host": "sportservice.betflag.it",
+            "fetched_at": "2026-08-29T18:41:13.520Z",
+            "match": null,
+            "match_market_id": null,
+            "match_event_id": null,
+            "player": null,
+            "requested_market": null,
+            "market": null,
+            "line": null,
+            "selection": null,
+            "odd": null,
+            "selection_id": null,
+            "market_id": null,
+            "odds_id": null
+          }
         },
-        "rows": []
-      }
-    },
-    {
-      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?player=Abdulkerim+Bardakci&full=1&limit=100",
-      "http_status": 200,
-      "fetched_at": "2026-08-29T18:22:10.147314+00:00",
-      "elapsed_ms": 60,
-      "error": null,
-      "body": {
-        "generated_at": "2026-08-29T18:22:09.951Z",
-        "served_at": "2026-08-29T18:22:10.142Z",
-        "cache": "HIT",
-        "source_class": "BETFLAG_AAMS_DIRECT",
-        "source": "sportservice.betflag.it direct AAMS player service",
-        "betflag_direct": true,
-        "goldbet_direct": false,
-        "source_healthy": false,
-        "freshness": {
-          "age_seconds": 0.2,
-          "max_age_seconds": 45,
-          "fresh": true
-        },
-        "scan_price_gate_capable": false,
-        "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
-        "mode": "full",
-        "upstream_elapsed_ms": 126,
-        "total_source_rows": 0,
-        "returned": 0,
-        "pagination": {
-          "limit": 100,
-          "offset": 0,
-          "has_more": false,
-          "next_offset": null
-        },
-        "rows": []
+        "quote": null,
+        "candidates": [],
+        "note": "No unique fresh exact quote; do not classify BET from this response."
       }
     }
   ],
   "no_cache_fallback": true,
-  "github_sha": "b7724a0e08ff5e3a223af7bc57746004787e6c6c"
+  "github_sha": "131b3597e463e4e7f3b84e4867a47ad96dda4c7d"
 }
