@@ -7,16 +7,16 @@ import time
 from datetime import datetime, timezone
 
 BASE_SCRIPT = pathlib.Path('scripts/refresh_current_lineups_resilient.py')
+URGENT_SCRIPT = pathlib.Path('scripts/refresh_urgent_lineups.py')
 LINEUPS = pathlib.Path('feed/lineups-current.json')
 WATCHDOG = pathlib.Path('feed/lineup-watchdog-current.json')
 POSTXI = pathlib.Path('feed/post-xi-refresh-request.json')
 
-# GitHub cron is the coarse 5-minute heartbeat. Inside the last 80 minutes,
-# this watchdog creates a short burst of checks so an official XI published
-# just after a cron tick is normally detected within tens of seconds rather
-# than waiting for the next 5-minute run.
+# One complete target-discovery pass per workflow. If official XI is still
+# missing close to kickoff, subsequent checks are lightweight direct probes of
+# only the imminent fixtures, using FotMob plus Sofascore fallback/cross-check.
 MAX_ATTEMPTS = 6
-POLL_INTERVAL_SECONDS = 40
+POLL_INTERVAL_SECONDS = 35
 URGENT_FROM_MIN = 0.0
 URGENT_TO_MIN = 80.0
 POST_XI_ACTIONABLE_FROM_MIN = 0.0
@@ -50,7 +50,8 @@ def is_official(m):
 
 
 def fingerprint(m):
-    return ((m or {}).get('lineup') or {}).get('xi_fingerprint')
+    ln = ((m or {}).get('lineup') or {})
+    return ln.get('xi_name_fingerprint') or ln.get('xi_fingerprint')
 
 
 def match_map(payload):
@@ -138,8 +139,8 @@ def detect_events(before, after):
     return events
 
 
-def run_base():
-    cp = subprocess.run([sys.executable, str(BASE_SCRIPT)], check=False)
+def run_script(path):
+    cp = subprocess.run([sys.executable, str(path)], check=False)
     if cp.returncode != 0:
         raise SystemExit(cp.returncode)
     return load_json(LINEUPS, {})
@@ -151,42 +152,65 @@ reference = initial
 attempt_records = []
 all_events = []
 actionable_events = []
-final_payload = initial
 
-for attempt in range(1, MAX_ATTEMPTS + 1):
-    started = now_iso()
-    final_payload = run_base()
-    events = detect_events(reference, final_payload)
-    actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
-    missing = urgent_missing(final_payload)
-    attempt_records.append({
-        'attempt': attempt,
-        'started_at': started,
-        'finished_at': now_iso(),
-        'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
-        'urgent_unconfirmed_count': len(missing),
-        'events': events,
-        'actionable_events': actionable_now,
-    })
-    all_events.extend(events)
-    actionable_events.extend(actionable_now)
+# Attempt 1: one complete canonical discovery pass.
+started = now_iso()
+final_payload = run_script(BASE_SCRIPT)
+missing = urgent_missing(final_payload)
 
-    # Commit immediately when a genuinely pre-kickoff official XI transition
-    # appears. Late discoveries remain in the audit trail but never trigger a
-    # betting POST-XI refresh.
-    if actionable_now:
-        break
-    if not missing or attempt >= MAX_ATTEMPTS:
-        break
+# If anything imminent is still unresolved, immediately run the lightweight
+# dual-source probe before waiting. This can promote a Sofascore-confirmed XI
+# even when FotMob has not published its standard lineup yet.
+if missing:
+    final_payload = run_script(URGENT_SCRIPT)
 
-    reference = final_payload
-    time.sleep(POLL_INTERVAL_SECONDS)
+events = detect_events(reference, final_payload)
+actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
+missing = urgent_missing(final_payload)
+attempt_records.append({
+    'attempt': 1,
+    'mode': 'FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK' if missing or events else 'FULL_DISCOVERY',
+    'started_at': started,
+    'finished_at': now_iso(),
+    'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
+    'urgent_unconfirmed_count': len(missing),
+    'events': events,
+    'actionable_events': actionable_now,
+})
+all_events.extend(events)
+actionable_events.extend(actionable_now)
+reference = final_payload
+
+# Attempts 2..N: no global rediscovery. Probe only imminent fixture IDs.
+if not actionable_now and missing:
+    for attempt in range(2, MAX_ATTEMPTS + 1):
+        time.sleep(POLL_INTERVAL_SECONDS)
+        started = now_iso()
+        final_payload = run_script(URGENT_SCRIPT)
+        events = detect_events(reference, final_payload)
+        actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
+        missing = urgent_missing(final_payload)
+        attempt_records.append({
+            'attempt': attempt,
+            'mode': 'URGENT_DIRECT_DUAL_SOURCE',
+            'started_at': started,
+            'finished_at': now_iso(),
+            'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
+            'urgent_unconfirmed_count': len(missing),
+            'events': events,
+            'actionable_events': actionable_now,
+        })
+        all_events.extend(events)
+        actionable_events.extend(actionable_now)
+        reference = final_payload
+        if actionable_now or not missing:
+            break
 
 remaining = urgent_missing(final_payload)
 watchdog = {
-    'schema': 'radar-lineup-watchdog-v2',
+    'schema': 'radar-lineup-watchdog-v3',
     'generated_at': now_iso(),
-    'source_strategy': 'FotMob standard 11v11 official XI through resilient canonical fixture matcher; burst polling near kickoff',
+    'source_strategy': 'One canonical full discovery; then targeted FotMob + Sofascore confirmed XI probes for imminent unresolved fixtures',
     'official_definition': 'SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11',
     'poll_policy': {
         'base_schedule': 'GitHub cron every 5 minutes',
@@ -194,6 +218,9 @@ watchdog = {
         'post_xi_actionable_window_minutes': [POST_XI_ACTIONABLE_FROM_MIN, POST_XI_ACTIONABLE_TO_MIN],
         'max_attempts_per_run': MAX_ATTEMPTS,
         'interval_seconds': POLL_INTERVAL_SECONDS,
+        'full_discovery_attempts_per_run': 1,
+        'subsequent_attempt_mode': 'targeted imminent fixtures only',
+        'secondary_source': 'Sofascore confirmed=true',
         'stop_immediately_on_actionable_official_transition': True,
         'started_matches_are_audit_only': True,
     },
@@ -208,7 +235,7 @@ watchdog = {
 WATCHDOG.write_text(json.dumps(watchdog, ensure_ascii=False, indent=2), encoding='utf-8')
 
 postxi = {
-    'schema': 'radar-post-xi-refresh-request-v2',
+    'schema': 'radar-post-xi-refresh-request-v3',
     'generated_at': watchdog['generated_at'],
     'required': bool(actionable_events),
     'reason': (
