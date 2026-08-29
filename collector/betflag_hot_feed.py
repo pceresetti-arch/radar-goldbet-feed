@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 FEED=pathlib.Path('feed')
 OUT=FEED/'betflag-residential-hot-feed.json'
+STATUS=FEED/'betflag-live-status.json'
 FIXTURE_DIR=FEED/'betflag-residential-fixtures'
 FIXTURE_INDEX=FEED/'betflag-residential-fixtures-index.json'
 
@@ -59,8 +60,6 @@ def main():
     index=[]
     for k,f in fixtures.items():
         mids=sorted({str(r.get('match_market_id')) for r in f['standard']+f['player_props'] if r.get('match_market_id') is not None})
-        # A fixture document is gate-eligible only when standard and player rows
-        # resolve to one BetFlag match-market identity (or one side is absent).
         identity_consistent=len(mids)<=1
         fixture={
             'schema_version':'betflag-residential-fixture-v2',
@@ -94,6 +93,7 @@ def main():
         })
 
     index.sort(key=lambda x:((x.get('match_start') or ''),(x.get('match') or '')))
+    gate_eligible=sum(1 for x in index if x['price_gate_fixture_eligible'])
     FIXTURE_INDEX.write_text(json.dumps({
         'schema_version':'betflag-residential-fixtures-index-v2',
         'generated_at':generated_at,
@@ -102,12 +102,31 @@ def main():
         'source_class':'BETFLAG_AAMS_DIRECT',
         'source_healthy':source_healthy,
         'fixture_count':len(index),
-        'gate_eligible_fixture_count':sum(1 for x in index if x['price_gate_fixture_eligible']),
+        'gate_eligible_fixture_count':gate_eligible,
         'fixtures':index,
     },ensure_ascii=False,separators=(',',':')),encoding='utf-8')
 
     out={'schema_version':'betflag-residential-hot-feed-v2','generated_at':generated_at,'player_source_generated_at':player.get('generated_at'),'standard_source_generated_at':standard.get('generated_at'),'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':source_healthy,'fixture_count':len(compact),'fixtures':compact}
     OUT.write_text(json.dumps(out,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-    print(json.dumps({'source_healthy':out['source_healthy'],'fixtures':len(compact),'fixture_files':len(index),'gate_eligible':sum(1 for x in index if x['price_gate_fixture_eligible']),'bytes':OUT.stat().st_size},ensure_ascii=False))
+
+    status={
+        'schema_version':'betflag-live-status-v1',
+        'generated_at':generated_at,
+        'source_class':'BETFLAG_AAMS_DIRECT',
+        'source_healthy':source_healthy,
+        'player_source_healthy':bool(player.get('source_healthy')),
+        'standard_source_healthy':bool(standard.get('source_healthy')),
+        'player_source_generated_at':player.get('generated_at'),
+        'standard_source_generated_at':standard.get('generated_at'),
+        'player_rows':len(player.get('rows') or []),
+        'standard_rows':len(standard.get('rows') or []),
+        'fixture_count':len(index),
+        'gate_eligible_fixture_count':gate_eligible,
+        'player_transport':player.get('transport'),
+        'standard_transport':standard.get('transport'),
+        'read_contract':{'branch':'betflag-live','fixture_index':'feed/betflag-residential-fixtures-index.json','fixture_dir':'feed/betflag-residential-fixtures/'},
+    }
+    STATUS.write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')
+    print(json.dumps({'source_healthy':source_healthy,'fixtures':len(compact),'fixture_files':len(index),'gate_eligible':gate_eligible,'player_rows':status['player_rows'],'standard_rows':status['standard_rows'],'bytes':OUT.stat().st_size},ensure_ascii=False))
 
 if __name__=='__main__': main()
