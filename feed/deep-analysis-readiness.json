@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-29T19:08:01.227743+00:00",
+  "generated_at": "2026-08-29T19:08:20.994106+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.5,
-    "tactical": 12.5,
-    "betflag_fixture_feed": 11.9,
-    "betflag_standard_source": 12.1,
-    "betflag_player_source": 12.0,
-    "player_context": 9.1
+    "lineups": 0.9,
+    "tactical": 0.3,
+    "betflag_fixture_feed": 12.3,
+    "betflag_standard_source": 12.4,
+    "betflag_player_source": 12.4,
+    "player_context": 9.4
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -35,9 +35,8 @@
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
   "match_count": 64,
   "readiness_counts": {
-    "WAIT_TACTICAL_SYNC_TO_CURRENT_XI": 13,
-    "WAIT_OFFICIAL_STANDARD_XI": 50,
-    "WAIT_TACTICAL": 1
+    "STALE_BETFLAG_STANDARD_CURRENT": 14,
+    "WAIT_OFFICIAL_STANDARD_XI": 50
   },
   "ready_count": 0,
   "ready_matches": [],
@@ -52,13 +51,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -70,8 +69,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/ascoli-carrarese.json",
@@ -81,7 +80,7 @@
       "player_count": 33,
       "player_quote_count": 297,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
       "player_context_matches_current_xi": true,
@@ -103,14 +102,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -122,8 +120,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/atletico-rafaela-tristan-suarez.json",
@@ -155,13 +153,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -173,8 +171,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/avellino-l-r-vicenza.json",
@@ -184,7 +182,7 @@
       "player_count": 37,
       "player_quote_count": 336,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
       "player_context_matches_current_xi": true,
@@ -213,7 +211,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -225,7 +223,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -258,14 +256,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -274,11 +271,11 @@
       "lineup_ready": true,
       "xi_fingerprint": "b6b47c6ffff311cd113e",
       "xi_changed_after_confirmation": false,
-      "tactical_status": null,
-      "tactical_confidence": null,
+      "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/ciudad-de-bolivar-defensores-de-belgrano.json",
@@ -317,7 +314,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -329,7 +326,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -362,14 +359,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -382,8 +378,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/cukaricki-vojvodina.json",
@@ -422,7 +418,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -434,7 +430,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -445,7 +441,7 @@
       "player_count": 18,
       "player_quote_count": 72,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -474,7 +470,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -486,7 +482,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -526,7 +522,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -538,7 +534,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -578,7 +574,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -590,7 +586,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -623,14 +619,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -642,8 +637,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.86,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/madrid-ccf-granada-cf.json",
@@ -682,7 +677,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -694,7 +689,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -705,7 +700,7 @@
       "player_count": 17,
       "player_quote_count": 68,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -727,14 +722,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -746,8 +740,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/nk-varazdin-nk-rudes-zagreb.json",
@@ -779,14 +773,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -799,8 +792,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/novi-pazar-macva.json",
@@ -839,7 +832,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -851,7 +844,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -884,14 +877,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -903,8 +895,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/padova-hellas-verona.json",
@@ -914,7 +906,7 @@
       "player_count": 37,
       "player_quote_count": 444,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -943,7 +935,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -955,7 +947,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -966,7 +958,7 @@
       "player_count": 22,
       "player_quote_count": 88,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -988,14 +980,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -1008,8 +999,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/radnicki-nis-radnicki-kragujevac.json",
@@ -1048,7 +1039,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1060,7 +1051,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1100,7 +1091,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1112,7 +1103,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1152,7 +1143,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1164,7 +1155,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1197,14 +1188,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -1217,8 +1207,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/sportivo-trinidense-cs-2-de-mayo.json",
@@ -1250,14 +1240,13 @@
       "start_time": "29-08-2026 21:00",
       "start_utc": "2026-08-29T19:00:00+00:00",
       "minutes_to_start": -7.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -1269,8 +1258,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/zwolle-nec-nimega.json",
@@ -1280,7 +1269,7 @@
       "player_count": 32,
       "player_quote_count": 343,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -1309,7 +1298,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1321,7 +1310,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1361,7 +1350,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -1373,7 +1362,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1413,7 +1402,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1425,7 +1414,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1458,14 +1447,13 @@
       "start_time": "29-08-2026 21:30",
       "start_utc": "2026-08-29T19:30:00+00:00",
       "minutes_to_start": 22.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -1477,8 +1465,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/girona-ud-las-palmas.json",
@@ -1488,7 +1476,7 @@
       "player_count": 51,
       "player_quote_count": 306,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -1517,7 +1505,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1529,7 +1517,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1569,7 +1557,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1581,7 +1569,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1621,7 +1609,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1633,7 +1621,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1666,14 +1654,13 @@
       "start_time": "29-08-2026 21:30",
       "start_utc": "2026-08-29T19:30:00+00:00",
       "minutes_to_start": 22.5,
-      "readiness": "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_TACTICAL_SYNC_TO_CURRENT_XI",
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -1685,8 +1672,8 @@
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.86,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
-      "tactical_ready": false,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/siviglia-atletico-madrid.json",
@@ -1696,7 +1683,7 @@
       "player_count": 42,
       "player_quote_count": 1202,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -1725,7 +1712,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1737,7 +1724,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1777,7 +1764,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1789,7 +1776,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1829,7 +1816,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1841,7 +1828,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1881,7 +1868,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1893,7 +1880,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1933,7 +1920,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1945,7 +1932,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -1985,7 +1972,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1997,7 +1984,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2037,7 +2024,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2049,7 +2036,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2089,7 +2076,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2101,7 +2088,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2141,7 +2128,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2153,7 +2140,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2193,7 +2180,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -2205,7 +2192,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2245,7 +2232,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2257,7 +2244,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2297,7 +2284,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2309,7 +2296,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2349,7 +2336,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2361,7 +2348,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2401,7 +2388,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2413,7 +2400,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2453,7 +2440,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2465,7 +2452,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2505,7 +2492,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2517,7 +2504,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2557,7 +2544,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2569,7 +2556,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2609,7 +2596,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2621,7 +2608,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2632,7 +2619,7 @@
       "player_count": 65,
       "player_quote_count": 520,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -2661,7 +2648,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2673,7 +2660,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2713,7 +2700,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2725,7 +2712,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2765,7 +2752,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2777,7 +2764,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2817,7 +2804,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2829,7 +2816,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2869,7 +2856,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2881,7 +2868,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2921,7 +2908,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -2933,7 +2920,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -2944,7 +2931,7 @@
       "player_count": 41,
       "player_quote_count": 742,
       "player_props_available": true,
-      "player_props_ready": true,
+      "player_props_ready": false,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -2973,7 +2960,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -2985,7 +2972,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3025,7 +3012,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3037,7 +3024,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3077,7 +3064,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3089,7 +3076,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3129,7 +3116,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3141,7 +3128,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3181,7 +3168,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3193,7 +3180,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3233,7 +3220,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3245,7 +3232,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3285,7 +3272,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3297,7 +3284,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
@@ -3337,7 +3324,7 @@
         "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3349,7 +3336,7 @@
       "tactical_status": null,
       "tactical_confidence": null,
       "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": false,
+      "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
