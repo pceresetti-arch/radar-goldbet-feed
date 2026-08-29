@@ -42,6 +42,10 @@ jobs:
         shell: powershell
         run: |
           python collector/betflag_details_endpoint_probe.py
+      - name: Probe BetFlag overview response shape
+        shell: powershell
+        run: |
+          python collector/betflag_overview_shape_probe.py
       - name: Collect priority BetFlag standard markets
         shell: powershell
         run: |
@@ -55,7 +59,7 @@ jobs:
         run: |
           git config user.name "radar-betflag-residential-bot"
           git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
-          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-market-catalog-probe.json feed/betflag-details-endpoint-probe.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json
+          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-market-catalog-probe.json feed/betflag-details-endpoint-probe.json feed/betflag-overview-shape-probe.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json
           if (-not (git diff --cached --quiet)) {
             git commit -m "Refresh residential BetFlag feeds and movement"
             git fetch origin main
