@@ -983,6 +983,27 @@ async function publicPlayerPrice(url) {
     if (attempt < 3) await new Promise((resolve) => setTimeout(resolve, 180 * attempt));
   }
 
+  if (!(payload?.source_healthy && rows.length === 1)) {
+    const aggregatePayload = await fetchBetflagAggregate('full');
+    let aggregateRows = filterBetflagRows(aggregatePayload.rows, url, { exactPlayer: true, exactMarket: true });
+    if (!requestedSelection && aggregateRows.length > 1) {
+      const yesRows = aggregateRows.filter((row) => normalized(row.selection) === 'si');
+      if (yesRows.length === 1) aggregateRows = yesRows;
+    }
+    attempts.push({
+      attempt: 'full_aggregate_fallback',
+      acquisition_mode: 'FULL_AGGREGATE_FALLBACK',
+      source_healthy: Boolean(aggregatePayload.source_healthy),
+      source_rows: aggregatePayload.row_count,
+      exact_rows: aggregateRows.length,
+      upstream_elapsed_ms: aggregatePayload.elapsed_ms
+    });
+    if (aggregatePayload.source_healthy && aggregateRows.length === 1) {
+      payload = aggregatePayload;
+      rows = aggregateRows;
+    }
+  }
+
   const row = rows.length === 1 ? rows[0] : null;
   const certificate = await certificateFor(row, payload, rows.length);
   return json({
