@@ -8,11 +8,20 @@ URL=f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0'
 HEADERS={
     'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'',
     'X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/',
-    'User-Agent':'Mozilla/5.0 RadarBetFlagStandardOpen/1.2'
+    'User-Agent':'Mozilla/5.0 RadarBetFlagTrueOpen/2.0'
 }
 FEED=pathlib.Path('feed')
 STATE=FEED/'betflag-standard-movement.json'
 LATEST=FEED/'betflag-standard-current.json'
+
+# IMPORTANT CONTRACT
+# TRUE_OPEN means the real BetFlag opening price, not the first price observed by Radar.
+# A price can be TRUE_OPEN_CERTIFIED only when BetFlag itself exposes an explicit
+# opening-price field (and, when available, its source publication timestamp).
+# Scan appearance alone is FIRST_OBSERVED, never TRUE_OPEN.
+
+OPEN_ODD_KEYS=('openingOdd','openOdd','opening_odd','open_odd','oo','initialOdd','initial_odd')
+SOURCE_TIME_KEYS=('publishedAt','published_at','createdAt','created_at','openingAt','opening_at','openAt','open_at','timestamp','ts')
 
 
 def norm(v):
@@ -32,6 +41,16 @@ def parse_start(v):
     except Exception: return None
 
 
+def first_value(nodes, keys):
+    for node in nodes:
+        if not isinstance(node,dict): continue
+        for k in keys:
+            v=node.get(k)
+            if v not in (None,''):
+                return v,k
+    return None,None
+
+
 def market_rows(event):
     out=[]; mm=event.get('mmkW')
     markets=mm.values() if isinstance(mm,dict) else (mm if isinstance(mm,list) else [])
@@ -45,7 +64,15 @@ def market_rows(event):
             if line in (None,'',0,'0',0.0,'0.0') and str(spread_key) not in ('0','0.0'): line=spread_key
             for q in spread.get('asl') or []:
                 if not isinstance(q,dict) or q.get('ov') is None: continue
-                out.append({'market':mn,'line':line,'selection':q.get('sn'),'odd':q.get('ov'),'selection_id':q.get('si'),'selection_type':q.get('sti'),'market_type':q.get('mti'),'market_id':q.get('mi'),'odds_id':q.get('oi')})
+                opening_odd,opening_odd_field=first_value((q,spread,market),OPEN_ODD_KEYS)
+                source_open_at,source_time_field=first_value((q,spread,market),SOURCE_TIME_KEYS)
+                out.append({
+                    'market':mn,'line':line,'selection':q.get('sn'),'odd':q.get('ov'),
+                    'selection_id':q.get('si'),'selection_type':q.get('sti'),'market_type':q.get('mti'),
+                    'market_id':q.get('mi'),'odds_id':q.get('oi'),
+                    'betflag_opening_odd':opening_odd,'betflag_opening_odd_field':opening_odd_field,
+                    'betflag_source_open_at':source_open_at,'betflag_source_time_field':source_time_field
+                })
     return out
 
 
@@ -112,8 +139,25 @@ def qkey(event,row):
 
 
 def load_state():
-    if not STATE.exists(): return {'schema_version':'betflag-standard-movement-v1','source_class':'BETFLAG_AAMS_DIRECT_STANDARD','events':{},'last_success_at':None,'last_seen_keys':[],'last_detail_success_match_ids':[]}
-    return json.loads(STATE.read_text(encoding='utf-8'))
+    if not STATE.exists(): return {'schema_version':'betflag-standard-movement-v2','source_class':'BETFLAG_AAMS_DIRECT_STANDARD','events':{},'last_success_at':None,'last_seen_keys':[],'last_detail_success_match_ids':[]}
+    state=json.loads(STATE.read_text(encoding='utf-8'))
+    state['schema_version']='betflag-standard-movement-v2'
+    return state
+
+
+def repair_old_false_true_open(state):
+    repaired=0
+    for ev in (state.get('events') or {}).values():
+        for ms in (ev.get('markets') or {}).values():
+            old=str(ms.get('open_capture_status') or '')
+            # Old scan-interval certification was not a real BetFlag source opening.
+            if old.startswith('TRUE_OPEN') and not ms.get('betflag_opening_odd'):
+                ms['open_capture_status']='FIRST_OBSERVED_ONLY'
+                ms['open_certification_basis']=None
+                ms['true_open_odd']=None
+                ms['true_open_at']=None
+                repaired+=1
+    return repaired
 
 
 def main():
@@ -132,8 +176,7 @@ def main():
                 _,meta=fut.result()
                 if meta: detail_meta.append(meta)
 
-    state=load_state(); prev_keys=set(state.get('last_seen_keys') or []); prev_success=state.get('last_success_at')
-    prev_detail_ok=set(str(x) for x in (state.get('last_detail_success_match_ids') or []))
+    state=load_state(); repaired=repair_old_false_true_open(state)
     current=[]; seen_keys=set()
     for ev in events:
         eid=str(ev.get('match_market_id') or ev.get('event_id'))
@@ -141,26 +184,65 @@ def main():
         estate.update({k:ev.get(k) for k in ('event_id','match_market_id','event','league','start_time')})
         for row in ev['rows']:
             key=qkey(ev,row); seen_keys.add(key)
-            if row['family']=='TOTAL': first_after_absence=bool(prev_success and eid in prev_detail_ok and key not in prev_keys)
-            else: first_after_absence=bool(prev_success and key not in prev_keys)
-            ms=estate['markets'].setdefault(key,{'family':row['family'],'market':row.get('market'),'line':row.get('line'),'selection':row.get('selection'),'selection_id':row.get('selection_id'),'market_id':row.get('market_id'),'market_type':row.get('market_type'),'odds_id':row.get('odds_id'),'first_seen_at':now,'first_seen_odd':row.get('odd'),'open_capture_status':'TRUE_OPEN_CERTIFIED_WITHIN_SCAN_INTERVAL' if first_after_absence else 'FIRST_SEEN_ONLY','open_certification_basis':'previous_detail_scan_success' if first_after_absence and row['family']=='TOTAL' else ('previous_overview_scan_success' if first_after_absence else None),'history':[],'min_odd':row.get('odd'),'max_odd':row.get('odd'),'changes':0})
-            # Repair false certifications created before per-event detail coverage existed.
-            if row['family']=='TOTAL' and ms.get('open_capture_status')=='TRUE_OPEN_CERTIFIED_WITHIN_SCAN_INTERVAL' and ms.get('open_certification_basis')!='previous_detail_scan_success':
-                ms['open_capture_status']='FIRST_SEEN_ONLY'; ms['open_certification_basis']=None
+            source_open=row.get('betflag_opening_odd')
+            source_open_at=row.get('betflag_source_open_at')
+            source_certified=source_open not in (None,'')
+            ms=estate['markets'].setdefault(key,{
+                'family':row['family'],'market':row.get('market'),'line':row.get('line'),'selection':row.get('selection'),
+                'selection_id':row.get('selection_id'),'market_id':row.get('market_id'),'market_type':row.get('market_type'),
+                'odds_id':row.get('odds_id'),'first_seen_at':now,'first_seen_odd':row.get('odd'),
+                'open_capture_status':'TRUE_OPEN_BETFLAG_SOURCE_CERTIFIED' if source_certified else 'FIRST_OBSERVED_ONLY',
+                'open_certification_basis':'explicit_betflag_opening_field' if source_certified else None,
+                'true_open_odd':source_open if source_certified else None,
+                'true_open_at':source_open_at if source_certified else None,
+                'history':[],'min_odd':row.get('odd'),'max_odd':row.get('odd'),'changes':0
+            })
+            # Promote only from explicit BetFlag opening metadata; never from scan timing.
+            if source_certified:
+                ms['betflag_opening_odd']=source_open
+                ms['betflag_opening_odd_field']=row.get('betflag_opening_odd_field')
+                ms['betflag_source_open_at']=source_open_at
+                ms['betflag_source_time_field']=row.get('betflag_source_time_field')
+                ms['true_open_odd']=source_open
+                ms['true_open_at']=source_open_at
+                ms['open_capture_status']='TRUE_OPEN_BETFLAG_SOURCE_CERTIFIED'
+                ms['open_certification_basis']='explicit_betflag_opening_field'
+            elif str(ms.get('open_capture_status') or '').startswith('TRUE_OPEN') and not ms.get('betflag_opening_odd'):
+                ms['open_capture_status']='FIRST_OBSERVED_ONLY'; ms['open_certification_basis']=None
+                ms['true_open_odd']=None; ms['true_open_at']=None
+
             hist=ms.setdefault('history',[]); odd=row.get('odd')
             if not hist or hist[-1].get('odd')!=odd:
-                hist.append({'at':now,'odd':odd})
+                hist.append({'at':now,'odd':odd,'source':'BETFLAG_AAMS_DIRECT'})
                 if len(hist)>1: ms['changes']=int(ms.get('changes') or 0)+1
                 ms['last_change_at']=now
             ms['current_odd']=odd; ms['current_at']=now
             try: ms['min_odd']=min(float(ms.get('min_odd',odd)),float(odd)); ms['max_odd']=max(float(ms.get('max_odd',odd)),float(odd))
             except Exception: pass
-            current.append({**{k:ev.get(k) for k in ('event_id','event','league','start_time','match_market_id')},**row,'fetched_at':now,'open_capture_status':ms['open_capture_status'],'open_certification_basis':ms.get('open_certification_basis'),'first_seen_at':ms['first_seen_at'],'first_seen_odd':ms['first_seen_odd']})
+            current.append({
+                **{k:ev.get(k) for k in ('event_id','event','league','start_time','match_market_id')},**row,
+                'fetched_at':now,'open_capture_status':ms['open_capture_status'],
+                'open_certification_basis':ms.get('open_certification_basis'),
+                'true_open_odd':ms.get('true_open_odd'),'true_open_at':ms.get('true_open_at'),
+                'first_seen_at':ms['first_seen_at'],'first_seen_odd':ms['first_seen_odd']
+            })
+
     detail_ok=sorted({m['match_market_id'] for m in detail_meta if m.get('status')==200})
-    state.update({'generated_at':now,'last_success_at':now,'source_status':status,'source_url':URL,'source_class':'BETFLAG_AAMS_DIRECT_STANDARD','last_seen_keys':sorted(seen_keys),'detail_calls':detail_meta,'last_detail_success_match_ids':detail_ok})
+    state.update({'generated_at':now,'last_success_at':now,'source_status':status,'source_url':URL,
+                  'source_class':'BETFLAG_AAMS_DIRECT_STANDARD','last_seen_keys':sorted(seen_keys),
+                  'detail_calls':detail_meta,'last_detail_success_match_ids':detail_ok,
+                  'true_open_definition':'REAL_BETFLAG_OPENING_PRICE_ONLY','false_true_open_labels_repaired':repaired})
     STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2),encoding='utf-8')
     fam_counts={f:sum(1 for r in current if r.get('family')==f) for f in ('1X2','TOTAL')}
-    LATEST.write_text(json.dumps({'generated_at':now,'source_status':status,'source_class':'BETFLAG_AAMS_DIRECT_STANDARD','row_count':len(current),'family_counts':fam_counts,'detail_success_count':len(detail_ok),'rows':current},ensure_ascii=False,indent=2),encoding='utf-8')
-    print(json.dumps({'generated_at':now,'status':status,'events':len(events),'rows':len(current),'family_counts':fam_counts,'detail_calls':len(detail_meta),'detail_success_count':len(detail_ok),'true_open_within_scan':sum(1 for r in current if r['open_capture_status'].startswith('TRUE_OPEN'))},ensure_ascii=False,indent=2))
+    certified=sum(1 for r in current if r.get('open_capture_status')=='TRUE_OPEN_BETFLAG_SOURCE_CERTIFIED')
+    LATEST.write_text(json.dumps({
+        'generated_at':now,'source_status':status,'source_class':'BETFLAG_AAMS_DIRECT_STANDARD',
+        'true_open_definition':'REAL_BETFLAG_OPENING_PRICE_ONLY','row_count':len(current),
+        'family_counts':fam_counts,'detail_success_count':len(detail_ok),'true_open_source_certified_count':certified,
+        'rows':current
+    },ensure_ascii=False,indent=2),encoding='utf-8')
+    print(json.dumps({'generated_at':now,'status':status,'events':len(events),'rows':len(current),
+                      'family_counts':fam_counts,'detail_calls':len(detail_meta),'detail_success_count':len(detail_ok),
+                      'true_open_source_certified':certified,'old_false_labels_repaired':repaired},ensure_ascii=False,indent=2))
 
 if __name__=='__main__': main()
