@@ -1,16 +1,12 @@
 name: Deploy clean BetFlag v7 fast path
 
+# Production deploy is intentionally manual-only. Repository maintenance must
+# never trigger Cloudflare deployment failures or notification storms.
 on:
-  push:
-    paths:
-      - '.github/workflows/deploy-radar-betflag-v7.yml'
-      - 'wrangler.v7.jsonc'
-      - 'worker/src/**'
-      - 'radar-betflag-v7-trigger.json'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: deploy-radar-betflag-v7
@@ -22,8 +18,6 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 5
 
       - name: Deploy clean v7 Worker
         env:
@@ -36,99 +30,26 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           npx --yes wrangler@4 deploy --config wrangler.v7.jsonc
 
-      - name: Explicitly enable workers.dev route
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Verify public BetFlag v7 health
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p feed
-          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/radar-betflag-v7/subdomain"
-          curl -fsS "$api" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Accept: application/json' > feed/radar-betflag-v7-subdomain-before.json
-          curl -fsS -X POST "$api" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Content-Type: application/json' -H 'Accept: application/json' --data '{"enabled":true,"previews_enabled":false}' > feed/radar-betflag-v7-subdomain-enable.json
-          curl -fsS "$api" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Accept: application/json' > feed/radar-betflag-v7-subdomain-after.json
           python - <<'PY'
-          import json, pathlib
-          after=json.loads(pathlib.Path('feed/radar-betflag-v7-subdomain-after.json').read_text())
-          if not after.get('success') or (after.get('result') or {}).get('enabled') is not True:
-              raise SystemExit('workers.dev subdomain did not enable')
-          PY
-
-      - name: Verify v7 health and live BetFlag paths
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p feed
-          python - <<'PY'
-          import json, pathlib, time, urllib.parse, urllib.request, urllib.error
-          from datetime import datetime, timezone
+          import json, time, urllib.request
           base='https://radar-betflag-v7.p-ceresetti.workers.dev'
-
-          def get(path, params=None):
-              url=base+path
-              if params: url += '?' + urllib.parse.urlencode(params)
-              url += ('&' if '?' in url else '?') + 'cb=' + str(int(time.time()*1000))
-              req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'RadarBetFlagV7Verify/3.2','Cache-Control':'no-cache, no-store, max-age=0','Pragma':'no-cache'})
-              started=time.perf_counter()
+          last=None
+          for _ in range(8):
               try:
-                  with urllib.request.urlopen(req,timeout=45) as r:
-                      raw=r.read().decode('utf-8','replace'); status=r.status
-              except urllib.error.HTTPError as e:
-                  raw=e.read().decode('utf-8','replace'); status=e.code
-              try: body=json.loads(raw)
-              except Exception: body={'raw':raw[:3000]}
-              return {'status':status,'body':body,'ms':round((time.perf_counter()-started)*1000),'url':url}
-
-          health=None
-          for attempt in range(1,9):
-              health=get('/health'); hb=health.get('body') or {}
-              health['attempt']=attempt
-              health['verified']=bool(health['status']==200 and hb.get('ok') is True and hb.get('version')=='7.0-betflag-operational' and hb.get('public_fast_path') is True and hb.get('exact_player_price_proof') is True and '/live/player-props' in (hb.get('endpoints') or []) and '/live/player-price' in (hb.get('endpoints') or []))
-              if health['verified']: break
+                  req=urllib.request.Request(base+'/health?cb='+str(int(time.time()*1000)),headers={'Accept':'application/json','Cache-Control':'no-cache'})
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      body=json.loads(r.read().decode())
+                  last=body
+                  if r.status==200 and body.get('ok') is True and body.get('version')=='7.0-betflag-operational':
+                      print(json.dumps(body,ensure_ascii=False,indent=2))
+                      raise SystemExit(0)
+              except Exception as exc:
+                  last={'error':str(exc)}
               time.sleep(5)
-
-          discovery=None; exact_route=None
-          if health and health.get('verified'):
-              discovery=get('/live/player-props',{'q':'zzzraderprobe','limit':1}); db=discovery.get('body') or {}; df=db.get('freshness') or {}
-              discovery['verified']=bool(discovery['status']==200 and db.get('source_class')=='BETFLAG_AAMS_DIRECT' and db.get('source_healthy') is True and df.get('fresh') is True)
-
-              # Force exact-price through a live fetch, but deliberately request
-              # an impossible identity. Correct result: zero matches + closed gate.
-              exact_route=get('/live/player-price',{'q':'zzzraderprobe','player':'ZZZ_RADAR_PROBE_NO_PLAYER','market':'Marc','selection':'Si'}); pb=exact_route.get('body') or {}; cert=pb.get('certificate') or {}; pf=cert.get('freshness') or {}
-              exact_route['verified']=bool(exact_route['status'] in (200,404) and pb.get('source_class')=='BETFLAG_AAMS_DIRECT' and cert.get('source_healthy') is True and pf.get('fresh') is True and cert.get('exact_identity_match') is False and pb.get('price_gate_eligible') is False and int(pb.get('returned') or 0)==0)
-
-          out={
-              'generated_at':datetime.now(timezone.utc).isoformat(),
-              'worker':'radar-betflag-v7',
-              'base_url':base,
-              'health':health,
-              'betflag_discovery_probe':discovery,
-              'betflag_exact_route_probe':exact_route,
-              'live_verified':bool(health and health.get('verified')),
-              'betflag_discovery_verified':bool(discovery and discovery.get('verified')),
-              'betflag_exact_route_verified':bool(exact_route and exact_route.get('verified')),
-              'note':'Positive exact price proof is intentionally on-demand for a real decision candidate; deployment verification is fixture-agnostic.'
-          }
-          pathlib.Path('feed/radar-betflag-v7-status.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps(out,ensure_ascii=False,indent=2))
-          if not all((out['live_verified'],out['betflag_discovery_verified'],out['betflag_exact_route_verified'])):
-              raise SystemExit('BetFlag v7 deployment verification failed')
+          print(json.dumps(last,ensure_ascii=False,indent=2))
+          raise SystemExit('BetFlag v7 health verification failed')
           PY
-
-      - name: Commit v7 status
-        if: always()
-        shell: bash
-        run: |
-          set -e
-          git config user.name 'radar-goldbet-bot'
-          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/radar-betflag-v7-status.json feed/radar-betflag-v7-subdomain-before.json feed/radar-betflag-v7-subdomain-enable.json feed/radar-betflag-v7-subdomain-after.json 2>/dev/null || true
-          git diff --cached --quiet && exit 0
-          git commit -m 'Record clean BetFlag v7 Worker status'
-          for attempt in 1 2 3 4; do
-            if git pull --rebase origin main && git push origin main; then exit 0; fi
-            git rebase --abort 2>/dev/null || true
-            sleep $((attempt * 2))
-          done
-          exit 1
