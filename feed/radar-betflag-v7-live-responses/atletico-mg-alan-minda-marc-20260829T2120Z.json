@@ -1,0 +1,162 @@
+{
+  "schema_version": "radar-betflag-v7-live-bridge-v3",
+  "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
+  "requested_at": "2026-08-29T21:20:00Z",
+  "request_id": "atletico-mg-alan-minda-marc-20260829T2120Z",
+  "generated_at": "2026-08-29T21:24:06.975130+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "mode": "player_price",
+  "health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-29T21:24:03.969728+00:00",
+    "elapsed_ms": 150,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/standard-index",
+        "/live/player-index",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "calls": [
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?event_id=16042415&player=Alan+Minda&market=Marc&selection=Si",
+      "http_status": 200,
+      "fetched_at": "2026-08-29T21:24:06.975098+00:00",
+      "elapsed_ms": 3005,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-29T21:24:04.023Z",
+        "served_at": "2026-08-29T21:24:06.925Z",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "upstream_elapsed_ms": 2902,
+        "acquisition_attempts": [
+          {
+            "attempt": 1,
+            "source_healthy": true,
+            "source_rows": 993,
+            "exact_rows": 1,
+            "upstream_elapsed_ms": 2902
+          }
+        ],
+        "target": {
+          "tab": 2484,
+          "slot": 22884,
+          "market": "Marc"
+        },
+        "returned": 1,
+        "price_gate_eligible": true,
+        "certificate": {
+          "proof_id": "bf-cdd495c102f91db0a7f4",
+          "sha256": "cdd495c102f91db0a7f4ba8b1cb18965171c6543ce1292dfda54f96f15257485",
+          "exact_identity_match": true,
+          "source_healthy": true,
+          "freshness": {
+            "age_seconds": 2.9,
+            "max_age_seconds": 45,
+            "fresh": true
+          },
+          "price_gate_eligible": true,
+          "canonical": {
+            "source_class": "BETFLAG_AAMS_DIRECT",
+            "source_host": "sportservice.betflag.it",
+            "fetched_at": "2026-08-29T21:24:04.023Z",
+            "match": "Atletico Mineiro MG - EC Vitoria BA",
+            "match_market_id": "36351.388",
+            "match_event_id": 16042415,
+            "player": "Alan Minda",
+            "requested_market": "Marc",
+            "market": "Marc",
+            "line": null,
+            "selection": "Si",
+            "odd": 3.65,
+            "selection_id": 3748700300,
+            "market_id": -2114395094,
+            "odds_id": 1945444824
+          }
+        },
+        "quote": {
+          "event_id": 16044498,
+          "player_event": "(AMG*-VIT) Alan Minda",
+          "match_code": "AMG*-VIT",
+          "player": "Alan Minda",
+          "start_time": "29-08-2026 23:30",
+          "league": "Brasile Serie A",
+          "tournament_id": 687177,
+          "category_id": 14260,
+          "authority_id": 8,
+          "match_market_id": "36351.388",
+          "match": "Atletico Mineiro MG - EC Vitoria BA",
+          "match_event_id": 16042415,
+          "match_start": "29-08-2026 23:30",
+          "requested_market": "Marc",
+          "market": "Marc",
+          "line": null,
+          "selection": "Si",
+          "odd": 3.65,
+          "selection_id": 3748700300,
+          "selection_type": 1,
+          "market_type": 4490,
+          "market_id": -2114395094,
+          "odds_id": 1945444824,
+          "fetched_at": "2026-08-29T21:24:04.023Z"
+        },
+        "note": "Certified fresh BetFlag/AAMS operational player price."
+      }
+    }
+  ],
+  "no_cache_fallback": true,
+  "github_sha": "5ff586a92c2daeb6ce8cf2a3abf2b2378f5cd8a2"
+}
