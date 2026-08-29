@@ -28,7 +28,11 @@ jobs:
         shell: powershell
         run: |
           python collector/betflag_residential_collector.py
-      - name: Resolve exact requested price
+      - name: Update opening and movement state with current observation
+        shell: powershell
+        run: |
+          python collector/betflag_residential_movement.py
+      - name: Resolve exact requested price and movement
         shell: powershell
         run: |
           @'
@@ -38,8 +42,14 @@ jobs:
               s=unicodedata.normalize('NFD',str(v or ''))
               s=''.join(c for c in s if unicodedata.category(c)!='Mn').lower().replace('°','')
               return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
+          def quote_id(row):
+              vals=[row.get('match_market_id'),row.get('event_id'),row.get('player'),row.get('market'),row.get('line'),row.get('selection'),row.get('selection_id'),row.get('market_id')]
+              raw='|'.join('' if v is None else str(v) for v in vals)
+              return hashlib.sha1(raw.encode('utf-8')).hexdigest()[:24]
           req=json.loads(pathlib.Path('betflag-price-proof-request.json').read_text(encoding='utf-8'))
           feed=json.loads(pathlib.Path('feed/betflag-residential-current.json').read_text(encoding='utf-8'))
+          movement_path=pathlib.Path('feed/betflag-residential-movement.json')
+          movement=json.loads(movement_path.read_text(encoding='utf-8')) if movement_path.exists() else {'quotes':{}}
           want_player=norm(req.get('player')); want_market=norm(req.get('market')); want_sel=norm(req.get('selection')); qterms=norm(req.get('q')).split()
           aliases={
             'marcatore':['marc','marcatore','marcatore anytime'],
@@ -56,17 +66,33 @@ jobs:
               if want_sel and norm(r.get('selection')) != want_sel: continue
               cand.append(r)
           quote=cand[0] if len(cand)==1 else None
+          move=None
+          if quote:
+              ms=(movement.get('quotes') or {}).get(quote_id(quote))
+              if ms:
+                  move={
+                    'open_status':ms.get('open_status'),
+                    'true_open_odd':ms.get('true_open_odd'),'true_open_at':ms.get('true_open_at'),
+                    'true_open_source_field':ms.get('true_open_source_field'),
+                    'first_seen_odd':ms.get('first_seen_odd'),'first_seen_at':ms.get('first_seen_at'),
+                    'current_odd':ms.get('current_odd'),'current_at':ms.get('current_at'),
+                    'change_count':ms.get('change_count'),
+                    'checkpoints':ms.get('checkpoints') or {},
+                    'recent_changes':(ms.get('changes') or [])[-20:]
+                  }
           fetched=datetime.now(timezone.utc).isoformat()
           canonical={'player':quote.get('player') if quote else None,'match':quote.get('match') if quote else None,'market':quote.get('market') if quote else req.get('market'),'odd':quote.get('odd') if quote else None,'fetched_at':fetched}
           digest=hashlib.sha256(json.dumps(canonical,sort_keys=True).encode()).hexdigest()
           result={
-            'schema_version':'betflag-residential-price-proof-v1',
+            'schema_version':'betflag-residential-price-proof-v2',
             'requested_at':req.get('requested_at'),'fetched_at':fetched,
             'source_class':'BETFLAG_AAMS_DIRECT','source':'sportservice.betflag.it via residential self-hosted runner',
             'betflag_direct':True,'source_healthy':bool(feed.get('source_healthy')),
             'request':req,'exact_matches':len(cand),
             'price_gate_eligible':bool(quote and feed.get('source_healthy')),
             'proof_id':'bfr-'+digest[:20],'sha256':digest,'quote':quote,
+            'movement':move,
+            'true_open_policy':'TRUE OPEN is immutable and only certified by explicit BetFlag source evidence; first captured price remains separately labelled otherwise.',
             'candidates':cand[:25] if len(cand)!=1 else []
           }
           p=pathlib.Path('feed'); (p/'betflag-price-proof-latest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -80,9 +106,9 @@ jobs:
         run: |
           git config user.name "radar-betflag-residential-bot"
           git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
-          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-price-proof-latest.json feed/price-proofs
+          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-price-proof-latest.json feed/price-proofs
           if (-not (git diff --cached --quiet)) {
-            git commit -m "Record residential BetFlag exact price proof"
+            git commit -m "Record residential BetFlag exact price and movement proof"
             git fetch origin main
             git rebase origin/main
             git push origin HEAD:main
