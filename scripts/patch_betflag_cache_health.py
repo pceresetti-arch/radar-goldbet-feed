@@ -4,6 +4,16 @@ p = Path('worker/src/index.mjs')
 s = p.read_text(encoding='utf-8')
 changed = False
 
+# Health means the BetFlag service/slots were acquired correctly. Availability is separate.
+old = """    source_healthy: Boolean(baseResult.ok && rows.length > 0),
+    elapsed_ms: Date.now() - started,"""
+new = """    source_healthy: Boolean(baseResult.ok && slots.length > 0 && results.every((result) => result.ok)),
+    market_rows_available: rows.length > 0,
+    elapsed_ms: Date.now() - started,"""
+if old in s:
+    s = s.replace(old, new, 1)
+    changed = True
+
 replacements = [
 (
 """async function getCachedBetflagStandard(request, ctx) {
@@ -33,7 +43,7 @@ replacements = [
     const response = json(payload, 200, { 'Cache-Control': `public, s-maxage=${BETFLAG_SCAN_CACHE_SECONDS}, max-age=0` });
     ctx.waitUntil(cache.put(cacheKey, response.clone()));
   }
-  return { payload, cache: cacheable ? 'MISS:CACHED_HEALTHY' : 'MISS:NOT_CACHED_UNHEALTHY' };
+  return { payload, cache: cacheable ? 'MISS:CACHED_HEALTHY' : 'MISS:NOT_CACHED_EMPTY_OR_UNHEALTHY' };
 }"""
 ),
 (
@@ -64,7 +74,7 @@ replacements = [
     const response = json(payload, 200, { 'Cache-Control': `public, s-maxage=${BETFLAG_SCAN_CACHE_SECONDS}, max-age=0` });
     ctx.waitUntil(cache.put(cacheKey, response.clone()));
   }
-  return { payload, cache: cacheable ? 'MISS:CACHED_HEALTHY' : 'MISS:NOT_CACHED_UNHEALTHY' };
+  return { payload, cache: cacheable ? 'MISS:CACHED_HEALTHY' : 'MISS:NOT_CACHED_EMPTY_OR_UNHEALTHY' };
 }"""
 ),
 (
@@ -114,10 +124,11 @@ for old, new in replacements:
         changed = True
 
 required = [
+    "market_rows_available: rows.length > 0",
     "betflag-standard-index/v2",
     "betflag-player-props-v2/${mode}",
     "betflag-player-index/v3",
-    "MISS:NOT_CACHED_UNHEALTHY",
+    "MISS:NOT_CACHED_EMPTY_OR_UNHEALTHY",
     "NOT_CACHED_INCOMPLETE",
 ]
 for marker in required:
@@ -126,6 +137,6 @@ for marker in required:
 
 if changed:
     p.write_text(s, encoding='utf-8')
-    print('Patched BetFlag cache policy: unhealthy/empty payloads are never cached')
+    print('Patched BetFlag health semantics and healthy-only cache policy')
 else:
     print('BetFlag cache-health patch already present')
