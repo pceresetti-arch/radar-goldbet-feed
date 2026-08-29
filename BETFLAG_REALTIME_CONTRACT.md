@@ -1,136 +1,122 @@
-# BetFlag Realtime Operational Contract
+# BetFlag Realtime Operational Contract — V3
 
 ## Objective
 
-Use BetFlag/AAMS as the primary operational source for football player-prop prices while keeping GoldBet direct as a calibration/cross-check source when available.
+Use **BetFlag/AAMS direct only** for operational football odds. GitHub and Cloudflare are transports/read layers, not alternative bookmakers. No external bookmaker may replace a missing BetFlag CURRENT price.
 
-## Source of truth for player prices
+## Source of truth
 
-Primary source: `https://sportservice.betflag.it/api/sport/pregame`.
+Upstream source: `https://sportservice.betflag.it/api/sport/pregame`.
 
-Source label must remain **BetFlag/AAMS direct**. It must never be relabelled as GoldBet direct.
+Canonical source label: `BETFLAG_AAMS_DIRECT`.
 
-## Operational paths
+## Durable acquisition architecture
 
-### 1. Cloudflare fast path
+### A. Residential acquisition — authoritative upstream lane
+
+The authoritative collector runs on the self-hosted Windows runner labelled `betflag-residential`.
+
+Workflow: `.github/workflows/betflag-residential-feed.yml`.
+
+Fresh production artifacts:
+
+- `feed/betflag-residential-current.json` — player props;
+- `feed/betflag-standard-current.json` — standard markets;
+- `feed/betflag-residential-movement.json` — player movement;
+- `feed/betflag-standard-movement.json` — standard movement;
+- `feed/betflag-open-close-watch.json` — OPEN/CLOSE watch state;
+- `feed/betflag-hot-feed.json` and `feed/betflag-fixtures/` — compact discovery/read layer.
+
+The collector uses normal direct HTTP as the fast acquisition path. If BetFlag/Akamai returns HTTP 401/403/429, it MUST automatically bootstrap a real Chrome/Edge session on the residential runner and retry the BetFlag API inside the browser session. This is still BetFlag/AAMS direct; it is only a transport recovery mechanism.
+
+A browser-recovery failure is `ACQUISIZIONE BETFLAG FALLITA/QUOTA NON RECUPERATA`, never `MERCATO NON QUOTATO`.
+
+### B. Stable ChatGPT/read bridge — GitHub repository
+
+For ChatGPT and other callers, the repository `pceresetti-arch/radar-goldbet-feed` is the durable read bridge for the fresh residential artifacts above.
+
+This avoids making a caller-side `workers.dev` DNS/TLS/routing issue a blocker for the Radar. Reading a fresh GitHub artifact does **not** change the odds source: provenance remains `BETFLAG_AAMS_DIRECT` because the artifact was produced by the residential direct collector.
+
+A snapshot is operational CURRENT only when its own source health is true and its timestamp satisfies the Radar freshness requirement. A stale artifact is discovery/history only.
+
+### C. Cloudflare fast path — optional accelerator
 
 Canonical Worker: `https://radar-betflag-v7.p-ceresetti.workers.dev`.
 
-Target Worker version: `7.0-betflag-operational`.
+Endpoints:
 
-Exact endpoint: `/live/player-price`.
+- `/live/player-price` — exact player price;
+- `/live/player-props` — broad discovery.
 
-Broad discovery endpoint: `/live/player-props`.
+The Worker is an accelerator, not a single point of failure. If the caller cannot resolve/reach it, immediately use the fresh residential GitHub artifacts rather than declaring BetFlag unavailable.
 
-For player-prop decisions the canonical Worker above is authoritative. The legacy combined hostname `radar-goldbet.p-ceresetti.workers.dev` and `feed/cloudflare-deploy-status.json` MUST NOT be used to determine BetFlag player-price availability.
+### D. Exact price proof — residential on-demand
 
-Canonical machine health/status file: `feed/betflag-v7-worker-status.json`.
+Workflow: `.github/workflows/betflag-residential-price-proof.yml`.
 
-A player quote is eligible for FINAL GATE only when all of the following are true:
+Trigger file: `betflag-price-proof-request.json`.
 
-- source calls are healthy;
-- fixture identity matches;
-- player identity matches exactly;
-- market identity matches exactly;
-- selection and line are unambiguous when required;
-- exactly one quote remains after identity filtering;
-- the quote is fresh under the Worker freshness policy;
-- the response contains a proof fingerprint.
+Latest proof: `feed/betflag-price-proof-latest.json`.
 
-The exact endpoint bypasses the scan cache and requests the relevant BetFlag market directly.
+Archive: `feed/price-proofs/`.
 
-### 2. GitHub Actions on-demand fallback
+The workflow refreshes the BetFlag residential feed first, resolves exact fixture + player + market + line + selection identity, and sets `price_gate_eligible=true` only when the direct source is healthy and exactly one quote is resolved.
 
-Workflow: `.github/workflows/betflag-price-proof-on-demand.yml`.
+The old cloud-only `.github/workflows/betflag-price-proof-on-demand.yml` is diagnostic/deprecated and MUST NOT be used for operational price proof because cloud/datacenter egress can be rejected by BetFlag/Akamai.
 
-Request file: `betflag-price-proof-request.json`.
+## CURRENT price gate
 
-Latest result: `feed/betflag-price-proof-latest.json`.
+A quote is eligible for BET/NO BET price comparison only when:
 
-Historical proofs: `feed/price-proofs/`.
+1. provenance is `BETFLAG_AAMS_DIRECT`;
+2. source is healthy;
+3. observation is fresh under the Radar freshness policy;
+4. fixture identity is exact;
+5. market/period/line/selection identity is exact;
+6. player identity is exact when applicable;
+7. exactly one quote matches;
+8. the price is compared with the current FINAL GATE.
 
-This path is operational even when Cloudflare deployment credentials are unavailable. It directly calls BetFlag/AAMS, produces a source timestamp, exact identity check, quote identifiers and SHA-256 fingerprint, and commits the proof to the repository.
+If these conditions are not satisfied: `ATTESA` or `NO BET`; never invent or substitute a price.
 
-If the canonical Worker health check fails, times out, DNS resolution fails, TLS/routing fails, or the current execution environment cannot reach the Worker, trigger/use this fallback immediately. Do not downgrade to historical discovery snapshots and do not consult the legacy combined Worker as a substitute for player prices.
+## OPEN / movement policy
 
-### 3. Transport failure state machine — V2 mandatory
+Priority:
 
-Caller connectivity and BetFlag source health are separate states and MUST NOT be conflated.
+1. `TRUE OPEN BETFLAG` only when BetFlag itself exposes explicit opening evidence;
+2. otherwise `OPEN RADAR CERTIFICATA` only when continuous healthy BetFlag observation proves the exact quote was absent and then appeared;
+3. `FIRST_SEEN` remains diagnostic only;
+4. GoldBet may be retained only as `TRUE OPEN PROXY — GOLDBET` historical context and never as CURRENT BetFlag price.
+
+Movement identity must remain fixture + market + period + line + selection + player when applicable.
+
+## Health state machine
 
 Required states:
 
-- `PLAYER_FAST_PATH_OK`: Worker reachable and health/version contract valid.
-- `TRANSPORT_PRIMARY_FAILED`: caller cannot reach the Worker because of DNS/network/TLS/routing/timeout; this does **not** prove BetFlag or the Worker is down.
-- `BETFLAG_UPSTREAM_FAILED`: Worker/fallback reached but direct BetFlag/AAMS source reports unhealthy/fails.
-- `PLAYER_EXACT_FALLBACK_OK`: Worker transport failed but GitHub Actions on-demand direct proof returned a fresh unique healthy exact quote.
-- `PLAYER_LANE_UNREACHABLE`: fast path and direct on-demand fallback both failed or could not produce proof.
+- `BETFLAG_RESIDENTIAL_OK` — fresh direct residential acquisition healthy;
+- `BETFLAG_BROWSER_RECOVERY_OK` — raw direct request was blocked but browser-session retry recovered direct BetFlag data;
+- `TRANSPORT_WORKER_FAILED` — caller cannot reach the Cloudflare Worker, but this says nothing about BetFlag upstream;
+- `BETFLAG_UPSTREAM_PLAYER_FAILED` — player lane remains blocked/failing after browser recovery;
+- `BETFLAG_UPSTREAM_STANDARD_FAILED` — standard lane failed;
+- `BETFLAG_PARTIAL` — one lane healthy and another failed;
+- `BETFLAG_EXACT_PROOF_OK` — fresh unique residential exact proof available;
+- `PLAYER_LANE_UNREACHABLE` — no fresh direct player quote can be proven.
 
-A `TRANSPORT_PRIMARY_FAILED` event must never degrade the entire Radar run. Calendar, XI, tactical modelling, PRE-XI shortlist and POST-XI rediscovery logic continue independently. Only the unavailable player-price/discovery block is marked incomplete.
+Standard-market and player-prop health MUST be tracked separately. A player-prop 403 must not erase healthy standard-market data.
 
-The Radar must not convert a caller-side DNS/network failure into `market_not_quoted`, `source_unhealthy`, or global `PIPELINE_DEGRADED` without independent source evidence.
+## Mandatory market-availability distinction
 
-### 4. Discovery behaviour when fast path is unreachable
+`MERCATO NON QUOTATO/NON DISPONIBILE SU BETFLAG` requires positive evidence from a healthy BetFlag fixture/market scan that the requested market is absent.
 
-`/live/player-props` remains the preferred live discovery path.
+Any timeout, DNS failure, HTTP block, stale feed, parser failure, ambiguity, or unhealthy acquisition is `ACQUISIZIONE BETFLAG FALLITA/QUOTA NON RECUPERATA`.
 
-If the Worker cannot be reached by the caller:
+## Forbidden behaviour
 
-1. keep PRE-XI/XI/context/model lanes active;
-2. use any fresh direct BetFlag/AAMS discovery artifact produced by an operational direct-AAMS workflow when available;
-3. historical `player-props-current*` files may be used only as discovery hints / market-history context, never as current price proof;
-4. exact final price must still be certified through `/live/player-price` or `betflag-price-proof-on-demand.yml`;
-5. never infer `mercato non quotato` from a transport or acquisition failure.
-
-## Historical five-minute feed
-
-`feed/player-props-current*.json` remains a broad periodic archive/discovery feed. It is **not** the authoritative final-price endpoint because GitHub scheduled Actions can run late or be skipped.
-
-The historical feed is useful for:
-
-- market discovery;
-- OPEN/intermediate movement reconstruction;
-- retrospective analysis;
-- source health monitoring;
-- drift/calibration checks.
-
-A stale GitHub snapshot must never be treated as a current price solely because the file exists.
-
-## Price-gate rule
-
-For player props:
-
-1. perform deep analysis and compute fair odds / FINAL GATE;
-2. request the exact BetFlag/AAMS price at decision time from the canonical Worker;
-3. if that request is unavailable, immediately invoke/read the on-demand BetFlag proof fallback;
-4. require exact fixture + player + market + selection/line identity;
-5. require a unique healthy proof;
-6. compare `current_price >= FINAL_GATE`;
-7. classify BET only if all analysis and price conditions pass.
-
-If no unique fresh proof is available, classification is `ATTESA` or `NO BET`, never an inferred BetFlag price.
-
-## Provenance
-
-Allowed labels:
-
-- `BETFLAG_AAMS_DIRECT` — direct BetFlag/AAMS player service;
-- `GOLDBET_DIRECT_ODSS` — direct GoldBet source when fresh/mapped; player props used as cross-check when available.
-
-Forbidden behaviour:
-
-- substituting an external bookmaker price silently;
-- calling a shared or external quote “GoldBet direct”;
-- using an old GitHub snapshot as if it were live;
-- generating a BET from a non-unique player/market match;
-- treating `feed/cloudflare-deploy-status.json` as BetFlag player-fast-path health;
-- treating one DNS/network failure from the caller as evidence that the canonical Worker is down when the canonical status/fallback can still verify the source;
-- treating `not found` as `not quoted` without positive market-availability verification;
-- stopping the full PRE-MATCH Radar because only the player transport lane is unavailable.
-
-## Deployment state
-
-Dedicated BetFlag v7 deployment status is recorded in `feed/betflag-v7-worker-status.json` and is authoritative for player-price fast-path health when fresh.
-
-`feed/cloudflare-deploy-status.json` belongs to the legacy/combined `radar-goldbet` Worker and is not authoritative for player props.
-
-When the dedicated Worker is not live-verified, the GitHub Actions on-demand proof workflow is the immediate operational fallback for exact BetFlag player prices.
+- using another bookmaker as CURRENT fallback;
+- relabelling FIRST_SEEN as TRUE OPEN;
+- using stale BetFlag data as fresh CURRENT;
+- declaring a market non-quoted because acquisition failed;
+- treating a Cloudflare/ChatGPT networking problem as a BetFlag outage;
+- making the Worker a single point of failure;
+- producing a BET without exact fresh BetFlag price proof.
