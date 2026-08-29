@@ -1,88 +1,19 @@
-name: BetFlag price proof on demand
+name: BetFlag cloud price proof (deprecated manual diagnostic)
 
 on:
-  push:
-    paths:
-      - 'betflag-price-proof-request.json'
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: betflag-price-proof-on-demand
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  prove:
+  diagnostic:
     runs-on: ubuntu-latest
-    timeout-minutes: 7
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 10
-
-      - name: Fetch exact BetFlag quote and certify
+      - name: Cloud lane disabled for operational price proof
         shell: bash
         run: |
-          # Keep the existing certified fetcher from the checked-out workflow implementation.
-          # The repository version prior to this hotfix contains the full Python fetch step.
-          git show HEAD^:.github/workflows/betflag-price-proof-on-demand.yml > /tmp/old-workflow.yml || true
-          python - <<'PY'
-          import json, pathlib, urllib.request, re, unicodedata, hashlib
-          from datetime import datetime, timezone
-          BASE='https://sportservice.betflag.it/api/sport/pregame'; AGG=1334500001
-          TARGETS={'marcatore':(2484,22884,'Marc'),'marcatore anytime':(2484,22884,'Marc'),'marc':(2484,22884,'Marc'),'marcatore 1t':(2484,13820,'Marcatore 1T'),'marcatore 2t':(2484,13826,'Marcatore 2T'),'marcatore plus':(2484,13825,'Marcatore Plus'),'marcatore o sostituto':(2484,19405,'Marcatore o Sostituto'),'assist':(2484,13823,'Assist'),'gol e assist':(2484,13824,'Gol e Assist'),'tiri in porta giocatore':(2484,13495,'U/O Tiri In Porta Giocatore'),'u/o tiri in porta giocatore':(2484,13495,'U/O Tiri In Porta Giocatore'),'tiri totali giocatore':(2484,13496,'U/O Tiri Totali Giocatore'),'u/o tiri totali giocatore':(2484,13496,'U/O Tiri Totali Giocatore')}
-          H={'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/','User-Agent':'Mozilla/5.0 RadarBetFlagPriceProof/8.1'}
-          def norm(v):
-            s=unicodedata.normalize('NFD',str(v or '')); s=''.join(c for c in s if unicodedata.category(c)!='Mn').lower().replace('°',''); return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
-          def get(u):
-            with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=25) as r: return r.status,json.loads(r.read().decode())
-          def walk(x):
-            if isinstance(x,dict):
-              yield x
-              for v in x.values(): yield from walk(v)
-            elif isinstance(x,list):
-              for v in x: yield from walk(v)
-          req=json.loads(pathlib.Path('betflag-price-proof-request.json').read_text()); target=TARGETS[norm(req['market'])]; want=norm(req['player']); qterms=norm(req.get('q')).split(); sel=norm(req.get('selection'))
-          std_status,std=get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0'); mstatus,data=get(f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{target[0]}/{target[1]}/0?channelId=0')
-          matches={}
-          for x in walk(std):
-            if x.get('mi') is not None and x.get('en') and not str(x.get('en')).startswith('('): matches[str(x['mi'])]=x
-          candidates=[]
-          for x in walk(data):
-            en=str(x.get('en') or ''); sn=norm(x.get('sn'))
-            if 'ei' not in x or not en.startswith('(') or not sn.startswith('giocatori'): continue
-            player=re.sub(r'^\([^)]+\)\s*','',en).strip(); match=matches.get(str(x.get('mi'))); matchname=(match or {}).get('en')
-            hay=norm(matchname)
-            if norm(player)==want and (not qterms or all(t in hay for t in qterms)): candidates.append((x,player,matchname))
-          rows=[]
-          for ev,player,matchname in candidates:
-            mm=ev.get('mmkW') or {}; markets=mm.values() if isinstance(mm,dict) else mm
-            for mk in markets:
-              if norm(mk.get('mn'))!=norm(target[2]): continue
-              spd=mk.get('spd') or {}; spreads=spd.items() if isinstance(spd,dict) else enumerate(spd)
-              for line,spr in spreads:
-                for qq in spr.get('asl') or []:
-                  if qq.get('ov') is not None and (not sel or norm(qq.get('sn'))==sel): rows.append({'event_id':ev.get('ei'),'player_event':ev.get('en'),'player':player,'match_market_id':ev.get('mi'),'match':matchname,'match_start':ev.get('ed'),'requested_market':target[2],'market':mk.get('mn'),'line':None if str(line) in ('0','0.0') else line,'selection':qq.get('sn'),'odd':qq.get('ov'),'selection_id':qq.get('si'),'market_id':qq.get('mi'),'odds_id':qq.get('oi'),'fetched_at':datetime.now(timezone.utc).isoformat()})
-          quote=rows[0] if len(rows)==1 else None; fetched=datetime.now(timezone.utc).isoformat(); canonical={'player':quote.get('player') if quote else None,'match':quote.get('match') if quote else None,'market':target[2],'odd':quote.get('odd') if quote else None,'fetched_at':fetched}; digest=hashlib.sha256(json.dumps(canonical,sort_keys=True).encode()).hexdigest()
-          result={'schema_version':'betflag-price-proof-v2-hotfix','requested_at':req.get('requested_at'),'fetched_at':fetched,'source_class':'BETFLAG_AAMS_DIRECT','source':'sportservice.betflag.it direct AAMS player service','betflag_direct':True,'standard_status':std_status,'market_status':mstatus,'source_healthy':std_status==200 and mstatus==200,'request':req,'target':{'tab':target[0],'slot':target[1],'market':target[2]},'exact_matches':len(rows),'price_gate_eligible':bool(quote and std_status==200 and mstatus==200),'proof_id':'bf-'+digest[:20],'sha256':digest,'quote':quote,'candidates':rows[:25] if len(rows)!=1 else []}
-          p=pathlib.Path('feed'); p.mkdir(exist_ok=True); (p/'betflag-price-proof-latest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)); a=p/'price-proofs'; a.mkdir(exist_ok=True); stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ'); (a/f'{stamp}-{digest[:12]}.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)); print(json.dumps(result,ensure_ascii=False,indent=2))
-          PY
-
-      - name: Commit proof
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'radar-goldbet-bot'
-          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          # Stage proof BEFORE rebasing. Previous workflow rebased a dirty tree,
-          # which makes `git pull --rebase` abort with "unstaged changes".
-          git add feed/betflag-price-proof-latest.json feed/price-proofs
-          git diff --cached --quiet && exit 0
-          git commit -m 'Record certified BetFlag price proof'
-          # Request updates may land while this job runs. Rebase the proof commit,
-          # then retry the push once if another writer moved main.
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
+          echo "Operational BetFlag exact-price acquisition moved to the residential self-hosted workflow."
+          echo "Reason: BetFlag/Akamai rejects datacenter-origin requests with HTTP 403 Access Denied."
+          echo "This workflow remains manual-only for diagnostics and MUST NOT write betflag-price-proof-latest.json."
