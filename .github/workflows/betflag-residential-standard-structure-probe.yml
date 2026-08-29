@@ -1,0 +1,52 @@
+name: BetFlag residential standard structure probe
+
+on:
+  push:
+    paths:
+      - 'betflag-standard-structure-probe-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect standard match market structure
+        shell: powershell
+        run: |
+          @'
+          import json, urllib.request
+          BASE='https://sportservice.betflag.it/api/sport/pregame'; AGG=1334500001
+          H={'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/','User-Agent':'Mozilla/5.0'}
+          req=urllib.request.Request(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0',headers=H)
+          with urllib.request.urlopen(req,timeout=30) as r: data=json.loads(r.read().decode())
+          def walk(x):
+            if isinstance(x,dict):
+              yield x
+              for v in x.values(): yield from walk(v)
+            elif isinstance(x,list):
+              for v in x: yield from walk(v)
+          target=None
+          for d in walk(data):
+            en=str(d.get('en') or '')
+            if en.lower()=='bournemouth - everton': target=d; break
+          if target is None:
+            for d in walk(data):
+              if d.get('en') and not str(d.get('en')).startswith('(') and d.get('mmkW'):
+                target=d; break
+          def scalar(d): return {str(k):v for k,v in d.items() if v is None or isinstance(v,(str,int,float,bool))}
+          samples=[]
+          for d in walk(target or {}):
+            s=scalar(d)
+            if s and len(samples)<120: samples.append(s)
+          out={'target_top':scalar(target or {}),'target_keys':sorted((target or {}).keys()),'mmkW_type':type((target or {}).get('mmkW')).__name__,'nested_scalar_samples':samples}
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          '@ | Set-Content -Encoding UTF8 .tmp_standard_probe.py
+          python .tmp_standard_probe.py
