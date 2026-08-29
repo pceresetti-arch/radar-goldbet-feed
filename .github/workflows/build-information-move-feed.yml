@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'scripts/build_information_move_feed.py'
+      - 'scripts/build_market_xg_shift.py'
       - '.github/workflows/build-information-move-feed.yml'
 
 permissions:
@@ -19,20 +20,22 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Build GoldBet TRUE OPEN and cross-book Information Move feed
         run: python scripts/build_information_move_feed.py
-      - name: Commit current Information Move feed
+      - name: Build market-implied team xG shift
+        run: python scripts/build_market_xg_shift.py
+      - name: Commit current movement and market-xG feeds
         shell: bash
         run: |
           git config user.name 'radar-information-move-bot'
           git config user.email 'radar-information-move-bot@users.noreply.github.com'
           git pull --rebase || true
-          git add feed/information-move-current.json
+          git add feed/information-move-current.json feed/market-xg-shift-current.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh Radar information move feed'
+          git commit -m 'Refresh Radar information move and market xG feeds'
           git push
