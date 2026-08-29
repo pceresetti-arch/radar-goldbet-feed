@@ -1,5 +1,6 @@
-import json, pathlib, re, unicodedata, hashlib, urllib.request
+import json, pathlib, re, unicodedata, hashlib
 from datetime import datetime, timezone
+from betflag_session_transport import BetFlagTransport
 
 BASE='https://sportservice.betflag.it/api/sport/pregame'
 AGG=1334500001
@@ -14,16 +15,7 @@ TARGETS={
  'tiri in porta giocatore':(2484,13495,'U/O Tiri In Porta Giocatore'),
  'tiri totali giocatore':(2484,13496,'U/O Tiri Totali Giocatore'),
 }
-H={
- 'Accept':'application/json,text/plain,*/*',
- 'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
- 'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/',
- 'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36'
-}
 
-# Only explicit semantic field names may certify a real BetFlag opening odd.
-# The first price captured by the Radar is kept separately and must never be
-# silently promoted to TRUE OPEN.
 OPEN_FIELD_NAMES={
  'openingodd','openodd','initialodd','originalodd','startingodd','startodd',
  'oddopen','oddopening','oddinitial','oddoriginal'
@@ -52,12 +44,6 @@ def explicit_open_field(*dicts):
    if compact_key(k) in OPEN_FIELD_NAMES and isinstance(v,(int,float)) and v>1:
     return str(k),v
  return None,None
-
-
-def get(url):
- req=urllib.request.Request(url,headers=H)
- with urllib.request.urlopen(req,timeout=30) as r:
-  return r.status,json.loads(r.read().decode())
 
 
 def walk(x):
@@ -118,19 +104,20 @@ def main():
  now=datetime.now(timezone.utc).isoformat()
  diag={'quote_keys':set(),'market_keys':set(),'spread_keys':set(),'quote_samples':[],'explicit_open_fields':{}}
  result={
-  'schema_version':'betflag-residential-feed-v2','generated_at':now,
+  'schema_version':'betflag-residential-feed-v3','generated_at':now,
   'source_class':'BETFLAG_AAMS_DIRECT',
   'source':'sportservice.betflag.it via residential self-hosted runner',
   'source_healthy':False,'standard_status':None,'markets':{},'rows':[]
  }
+ client=BetFlagTransport(timeout=30)
  try:
-  st,std=get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
+  st,std=client.get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
   result['standard_status']=st
   matches=extract_matches(std)
   ok=0
   for key,(tab,slot,name) in TARGETS.items():
    try:
-    status,data=get(f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0')
+    status,data=client.get(f'{BASE}/getOverviewEventsAams/0/-1/0/{AGG}/{tab}/{slot}/0?channelId=0')
     rows=extract_market(data,matches,name,diag) if status==200 else []
     result['markets'][key]={'status':status,'rows':len(rows),'target':{'tab':tab,'slot':slot,'market':name}}
     result['rows'].extend(rows)
@@ -140,6 +127,9 @@ def main():
   result['source_healthy']=st==200 and ok>0
  except Exception as e:
   result['error']=repr(e)
+ finally:
+  result['transport']=client.diagnostics()
+  client.close()
 
  diagnostics={
   'schema_version':'betflag-opening-field-diagnostics-v1',
@@ -161,7 +151,7 @@ def main():
  (hist/f'{stamp}.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
  print(json.dumps({
   'source_healthy':result['source_healthy'],'rows':len(result['rows']),
-  'generated_at':result['generated_at'],
+  'generated_at':result['generated_at'],'transport':result.get('transport'),
   'explicit_open_fields':diagnostics['explicit_open_fields'],
   'quote_keys':diagnostics['quote_keys']
  },ensure_ascii=False))
