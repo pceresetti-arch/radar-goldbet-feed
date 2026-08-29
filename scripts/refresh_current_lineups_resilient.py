@@ -189,7 +189,29 @@ def add_target(targets, *, market_id=None, event_id=None, match=None, league=Non
 targets = {}
 target_sources = []
 
-# 1) Cached BetFlag upcoming feed: independent from a fresh direct BetFlag call.
+# 1) Canonical fresh BetFlag Worker-backed fixture index. This is the primary
+# target source for the same fixtures whose prices the Radar will analyse.
+fi = pathlib.Path('feed/betflag-fixtures-index.json')
+if fi.exists():
+    try:
+        j = json.loads(fi.read_text(encoding='utf-8'))
+        if j.get('source_healthy'):
+            for f in j.get('fixtures') or []:
+                if isinstance(f, dict):
+                    add_target(
+                        targets,
+                        market_id=f.get('match_market_id'),
+                        event_id=f.get('match_event_id'),
+                        match=f.get('match'),
+                        league=f.get('league'),
+                        start=f.get('match_start'),
+                        origin='BETFLAG_WORKER_FIXTURE_INDEX'
+                    )
+            target_sources.append('feed/betflag-fixtures-index.json')
+    except Exception:
+        pass
+
+# 2) Legacy cached upcoming summary remains continuity-only fallback.
 up = pathlib.Path('feed/radar-betflag-v7-live-upcoming-summary.json')
 if up.exists():
     try:
@@ -201,7 +223,7 @@ if up.exists():
     except Exception:
         pass
 
-# 2) Runtime request fixtures: lets Radar pass the exact fixtures it is analysing.
+# 3) Runtime request fixtures: lets Radar pass the exact fixtures it is analysing.
 rp = pathlib.Path('radar-runtime-request.json')
 if rp.exists():
     try:
@@ -213,7 +235,7 @@ if rp.exists():
     except Exception:
         pass
 
-# 3) Retain still-relevant targets from the previous feed as a last continuity fallback.
+# 4) Retain still-relevant targets from the previous feed as a last continuity fallback.
 old_by_key = {}
 oldp = pathlib.Path('feed/lineups-current.json')
 if oldp.exists():
@@ -316,7 +338,7 @@ for r in results: counts[r['status']]=counts.get(r['status'],0)+1
 payload={
     'generated_at':NOW.isoformat(),
     'window':'T-120 to T+15 minutes',
-    'source_strategy':'Resilient target discovery: cached BetFlag upcoming + explicit Radar runtime fixtures + previous feed; FotMob standard XI certification',
+    'source_strategy':'Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification',
     'target_sources':target_sources,
     'target_count':len(results),
     'status_counts':counts,
