@@ -2,9 +2,9 @@ import json, pathlib, re, unicodedata
 from datetime import datetime, timezone
 
 FEED=pathlib.Path('feed')
-OUT=FEED/'betflag-hot-feed.json'
-FIXTURE_DIR=FEED/'betflag-fixtures'
-FIXTURE_INDEX=FEED/'betflag-fixtures-index.json'
+OUT=FEED/'betflag-residential-hot-feed.json'
+FIXTURE_DIR=FEED/'betflag-residential-fixtures'
+FIXTURE_INDEX=FEED/'betflag-residential-fixtures-index.json'
 
 
 def norm(v):
@@ -36,7 +36,7 @@ def add(fixtures,row,kind):
 
 
 def slim(r):
-    keep=('event_id','match_market_id','match','match_start','market_family','market','line','selection','odd','selection_id','market_id','odds_id','player','betflag_opening_odd','betflag_opening_odd_field')
+    keep=('event_id','match_market_id','match','match_start','market_family','family','market_scope','market','line','selection','odd','selection_id','market_id','odds_id','player','player_event','betflag_opening_odd','betflag_opening_odd_field')
     return {x:r.get(x) for x in keep if r.get(x) is not None}
 
 
@@ -52,53 +52,62 @@ def main():
     compact={}
     FIXTURE_DIR.mkdir(parents=True,exist_ok=True)
 
-    # Remove only previously materialized JSON files so stale fixtures cannot survive indefinitely.
     for p in FIXTURE_DIR.glob('*.json'):
         try: p.unlink()
         except OSError: pass
 
     index=[]
     for k,f in fixtures.items():
+        mids=sorted({str(r.get('match_market_id')) for r in f['standard']+f['player_props'] if r.get('match_market_id') is not None})
+        # A fixture document is gate-eligible only when standard and player rows
+        # resolve to one BetFlag match-market identity (or one side is absent).
+        identity_consistent=len(mids)<=1
         fixture={
-            'schema_version':'betflag-fixture-feed-v1',
+            'schema_version':'betflag-residential-fixture-v2',
             'generated_at':generated_at,
             'player_source_generated_at':player.get('generated_at'),
             'standard_source_generated_at':standard.get('generated_at'),
             'source_class':'BETFLAG_AAMS_DIRECT',
+            'source':'sportservice.betflag.it via residential self-hosted runner',
             'source_healthy':source_healthy,
+            'identity_consistent':identity_consistent,
+            'price_gate_fixture_eligible':bool(source_healthy and identity_consistent),
             'match':f.get('match'),
             'match_start':f.get('match_start'),
+            'match_market_ids':mids,
             'standard':[slim(r) for r in f['standard']],
             'player_props':[slim(r) for r in f['player_props']],
         }
-        compact[k]={x:fixture[x] for x in ('match','match_start','standard','player_props')}
+        compact[k]={x:fixture[x] for x in ('match','match_start','match_market_ids','identity_consistent','price_gate_fixture_eligible','standard','player_props')}
         filename=slug(f.get('match'))+'.json'
         path=FIXTURE_DIR/filename
         path.write_text(json.dumps(fixture,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
         index.append({
             'match':f.get('match'),
             'match_start':f.get('match_start'),
-            'file':f'feed/betflag-fixtures/{filename}',
+            'file':f'feed/betflag-residential-fixtures/{filename}',
             'standard_count':len(fixture['standard']),
             'player_props_count':len(fixture['player_props']),
-            'match_market_ids':sorted({str(r.get('match_market_id')) for r in f['standard']+f['player_props'] if r.get('match_market_id') is not None}),
+            'match_market_ids':mids,
+            'identity_consistent':identity_consistent,
+            'price_gate_fixture_eligible':fixture['price_gate_fixture_eligible'],
         })
 
     index.sort(key=lambda x:((x.get('match_start') or ''),(x.get('match') or '')))
     FIXTURE_INDEX.write_text(json.dumps({
-        'schema_version':'betflag-fixtures-index-v1',
+        'schema_version':'betflag-residential-fixtures-index-v2',
         'generated_at':generated_at,
         'player_source_generated_at':player.get('generated_at'),
         'standard_source_generated_at':standard.get('generated_at'),
+        'source_class':'BETFLAG_AAMS_DIRECT',
         'source_healthy':source_healthy,
         'fixture_count':len(index),
+        'gate_eligible_fixture_count':sum(1 for x in index if x['price_gate_fixture_eligible']),
         'fixtures':index,
     },ensure_ascii=False,separators=(',',':')),encoding='utf-8')
 
-    out={'schema_version':'betflag-hot-feed-v1','generated_at':generated_at,'player_source_generated_at':player.get('generated_at'),'standard_source_generated_at':standard.get('generated_at'),'source_healthy':source_healthy,'fixture_count':len(compact),'fixtures':compact}
+    out={'schema_version':'betflag-residential-hot-feed-v2','generated_at':generated_at,'player_source_generated_at':player.get('generated_at'),'standard_source_generated_at':standard.get('generated_at'),'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':source_healthy,'fixture_count':len(compact),'fixtures':compact}
     OUT.write_text(json.dumps(out,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-    print(json.dumps({'source_healthy':out['source_healthy'],'fixtures':len(compact),'fixture_files':len(index),'bytes':OUT.stat().st_size},ensure_ascii=False))
+    print(json.dumps({'source_healthy':out['source_healthy'],'fixtures':len(compact),'fixture_files':len(index),'gate_eligible':sum(1 for x in index if x['price_gate_fixture_eligible']),'bytes':OUT.stat().st_size},ensure_ascii=False))
 
 if __name__=='__main__': main()
-
-# cloud-feed-trigger: 2026-08-29T18:00Z
