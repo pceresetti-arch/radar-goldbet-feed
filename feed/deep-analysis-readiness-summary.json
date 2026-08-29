@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-29T18:55:50.957675+00:00",
+  "generated_at": "2026-08-29T18:56:09.619410+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 1.1,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 6.9,
-    "betflag_standard_source": 7.0,
-    "betflag_player_source": 7.0,
-    "player_context": 8.9
+    "lineups": 1.4,
+    "tactical": 0.7,
+    "betflag_fixture_feed": 7.2,
+    "betflag_standard_source": 7.3,
+    "betflag_player_source": 7.3,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -48,11 +48,11 @@
       "start_time": "29-08-2026 21:00",
       "minutes_to_start": 5.2,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 33,
       "player_quote_count": 297,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -76,11 +76,11 @@
       "start_time": "29-08-2026 21:00",
       "minutes_to_start": 5.2,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 37,
       "player_quote_count": 336,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -224,6 +224,33 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "player_lane_ready_count": 2,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36351.5072",
+      "match": "Ascoli - Carrarese",
+      "league": "Serie B",
+      "start_time": "29-08-2026 21:00",
+      "minutes_to_start": 5.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 33,
+      "player_quote_count": 297,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.5073",
+      "match": "Avellino - L.R. Vicenza",
+      "league": "Serie B",
+      "start_time": "29-08-2026 21:00",
+      "minutes_to_start": 5.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 37,
+      "player_quote_count": 336,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
