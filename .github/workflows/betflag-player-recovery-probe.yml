@@ -1,0 +1,113 @@
+name: BetFlag player recovery probe
+
+on:
+  push:
+    paths:
+      - 'betflag-player-recovery-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe BetFlag player routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, requests
+          from datetime import datetime, timezone
+
+          BASES=['https://sportservice.betflag.it','https://www.betflag.it']
+          AGG=1334500001
+          H={
+            'Accept':'application/json,text/plain,*/*',
+            'x-api-version':'1.0','X-Auth-Token':'','X-Brand':'3','X-IdCanale':'0',
+            'Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/',
+            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+            'Accept-Language':'it-IT,it;q=0.9,en;q=0.8',
+            'Sec-Fetch-Site':'same-site','Sec-Fetch-Mode':'cors','Sec-Fetch-Dest':'empty'
+          }
+          paths={
+            'program':'/api/sport/pregame/getProgram?channelId=0',
+            'standard':f'/api/sport/pregame/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0',
+            'scorer':f'/api/sport/pregame/getOverviewEventsAams/0/-1/0/{AGG}/2484/22884/0?channelId=0',
+            'goal_assist':f'/api/sport/pregame/getOverviewEventsAams/0/-1/0/{AGG}/2484/13824/0?channelId=0',
+          }
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'attempts':[],'fixture_candidates':[],'detail_attempts':[]}
+
+          def snap(name,url,r,session_mode):
+            ct=r.headers.get('content-type','')
+            try: body=r.json()
+            except: body={'raw':r.text[:1200]}
+            row={'name':name,'url':url,'session_mode':session_mode,'status':r.status_code,'content_type':ct,'server':r.headers.get('server'),'cf_ray':r.headers.get('cf-ray'),'set_cookie':r.headers.get('set-cookie'),'body_preview':body if len(json.dumps(body,default=str))<6000 else str(body)[:6000]}
+            out['attempts'].append(row)
+            return body
+
+          # Plain and cookie-primed sessions, both hosts.
+          good_standard=None
+          for base in BASES:
+            for mode in ('plain','primed'):
+              s=requests.Session(); s.headers.update(H)
+              if mode=='primed':
+                try: s.get('https://www.betflag.it/sport',timeout=20,allow_redirects=True)
+                except Exception as e: out['attempts'].append({'name':'prime','base':base,'error':repr(e)})
+              for name,path in paths.items():
+                url=base+path
+                try:
+                  r=s.get(url,timeout=25,allow_redirects=True)
+                  body=snap(name,url,r,mode)
+                  if name=='standard' and r.status_code==200 and good_standard is None: good_standard=(base,mode,s,body)
+                except Exception as e: out['attempts'].append({'name':name,'url':url,'session_mode':mode,'error':repr(e)})
+
+          def walk(x):
+            if isinstance(x,dict):
+              yield x
+              for v in x.values(): yield from walk(v)
+            elif isinstance(x,list):
+              for v in x: yield from walk(v)
+
+          # Resolve Liverpool-Forest identifiers from any successful standard body.
+          if good_standard:
+            base,mode,s,std=good_standard
+            for x in walk(std):
+              en=str(x.get('en') or '')
+              n=re.sub(r'[^a-z0-9]+',' ',en.lower())
+              if 'liverpool' in n and ('nottingham' in n or 'forest' in n):
+                cand={k:x.get(k) for k in ('en','ei','mi','ti','tai','td','ed','si','ci')}
+                if cand not in out['fixture_candidates']: out['fixture_candidates'].append(cand)
+            # Probe detail endpoint using resolved IDs and several manage-section values.
+            for c in out['fixture_candidates'][:3]:
+              if None in (c.get('ti'),c.get('mi'),c.get('ei')): continue
+              tai=c.get('tai') or 0
+              for sec in (0,1,2,3,4,5,6,7,8,9,10,2484):
+                # UI signature: authorityId/tournamentId/matchMarketId/eventId/manageSection/last
+                url=f"{base}/api/sport/pregame/getDetailsEventAams/{tai}/{c['ti']}/{c['mi']}/{c['ei']}/{sec}/0?channelId=0"
+                try:
+                  r=s.get(url,timeout=20)
+                  try: b=r.json()
+                  except: b={'raw':r.text[:800]}
+                  txt=json.dumps(b,ensure_ascii=False,default=str)
+                  out['detail_attempts'].append({'section':sec,'url':url,'status':r.status_code,'bytes':len(r.content),'mentions_isak':'isak' in txt.lower(),'mentions_gakpo':'gakpo' in txt.lower(),'mentions_giocatori':'giocatori' in txt.lower(),'body_preview':txt[:1800]})
+                except Exception as e: out['detail_attempts'].append({'section':sec,'url':url,'error':repr(e)})
+
+          p=pathlib.Path('feed'); p.mkdir(exist_ok=True)
+          (p/'betflag-player-recovery-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'attempts':[{k:a.get(k) for k in ('name','session_mode','status','url','error')} for a in out['attempts']], 'fixture_candidates':out['fixture_candidates'],'detail_summary':[{k:d.get(k) for k in ('section','status','bytes','mentions_isak','mentions_gakpo','mentions_giocatori','error')} for d in out['detail_attempts']]},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/betflag-player-recovery-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag player recovery routes'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
