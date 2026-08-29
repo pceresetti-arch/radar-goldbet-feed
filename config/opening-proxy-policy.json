@@ -1,0 +1,26 @@
+{
+  "schema_version": "radar-opening-proxy-policy-v1",
+  "primary_bookmaker": "BETFLAG",
+  "operational_price_bookmaker": "BETFLAG",
+  "proxy_bookmaker": "GOLDBET",
+  "proxy_purpose": "historical_open_only",
+  "labels": {
+    "betflag_source_certified": "TRUE OPEN BETFLAG CERTIFICATA",
+    "betflag_continuous_watch": "OPEN RADAR CERTIFICATA BETFLAG",
+    "goldbet_historical_proxy": "TRUE OPEN PROXY — GOLDBET",
+    "unresolved": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+  },
+  "rules": [
+    "Never present a GoldBet opening price as a BetFlag opening price.",
+    "GoldBet may only fill the historical-opening reference when the exact fixture, market, period, line and selection identity match.",
+    "BET/NO BET price gate always uses a fresh verified BetFlag price, never the GoldBet proxy.",
+    "Keep BetFlag direct movement snapshots separate from the GoldBet opening proxy.",
+    "When both GoldBet proxy open and BetFlag first/open observation exist, store their absolute and percentage difference for validation.",
+    "Do not promote the proxy to TRUE OPEN BETFLAG unless independently source-certified as BetFlag."
+  ],
+  "validation": {
+    "required_identity": ["fixture", "market", "period", "line", "selection"],
+    "comparison_metrics": ["absolute_odds_difference", "relative_odds_difference_pct"],
+    "future_confidence_model": "calibrate only from matched historical samples; no assumed equivalence"
+  }
+}
