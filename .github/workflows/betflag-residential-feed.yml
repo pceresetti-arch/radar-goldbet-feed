@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 20
+          fetch-depth: 5
       - name: Clear stale git operation metadata
         shell: powershell
         run: |
@@ -67,57 +67,31 @@ jobs:
       - name: Update standard-market movement
         shell: powershell
         run: python collector/betflag_standard_movement.py
-      - name: Build compact fixture hot feed
+      - name: Build residential per-fixture live feed
         shell: powershell
         run: python collector/betflag_hot_feed.py
-      - name: Preserve canonical Worker-backed fixture feed
-        shell: powershell
-        run: |
-          if (Test-Path 'feed\betflag-fixtures') { git clean -fd -- feed/betflag-fixtures | Out-Null }
-          if (Test-Path 'feed\betflag-fixtures-index.json') { git restore -- feed/betflag-fixtures-index.json }
-          git restore -- feed/betflag-fixtures 2>$null
       - name: Import local open-close watcher state
         shell: powershell
         run: |
           $src = 'C:\BetFlagRadar\state\betflag-open-close-watch.json'
           if (Test-Path $src) { Copy-Item $src 'feed\betflag-open-close-watch.json' -Force }
-      - name: Commit fresh production feeds
+      - name: Publish conflict-free live branch
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           git config user.name "radar-betflag-residential-bot"
           git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
 
-          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-hot-feed.json
+          git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures
           if (Test-Path 'feed\betflag-open-close-watch.json') { git add feed/betflag-open-close-watch.json }
-          if (git diff --cached --quiet) { exit 0 }
 
-          git commit -m "Refresh residential BetFlag production feeds"
-          if ($LASTEXITCODE -ne 0) { throw 'Unable to create residential feed commit' }
-
-          for ($attempt=1; $attempt -le 8; $attempt++) {
-            Write-Host "Publish attempt $attempt/8"
-            git fetch origin main
-            if ($LASTEXITCODE -ne 0) {
-              Start-Sleep -Seconds ([Math]::Min(2 * $attempt, 10))
-              continue
-            }
-
-            git rebase origin/main
-            if ($LASTEXITCODE -ne 0) {
-              if ((Test-Path '.git\rebase-merge') -or (Test-Path '.git\rebase-apply')) {
-                git rebase --abort | Out-Null
-              }
-              throw 'Residential feed rebase conflict: refusing to overwrite concurrent repository work'
-            }
-
-            git push origin HEAD:main
-            if ($LASTEXITCODE -eq 0) { exit 0 }
-
-            # A moving main is expected in this repository. Keep the local feed
-            # commit, fetch the new tip, rebase again, and retry. Do not call
-            # `rebase --abort` here because no rebase is in progress after a
-            # successful rebase followed by a rejected push.
-            Start-Sleep -Seconds ([Math]::Min(2 * $attempt, 10))
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "Publish BetFlag residential live snapshot"
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to create BetFlag live snapshot commit' }
           }
-          throw 'Unable to publish residential BetFlag feed after 8 concurrent-update retries'
+
+          # This branch is owned exclusively by this workflow. It is deliberately
+          # force-updated from each fresh residential snapshot, so high-frequency
+          # bots writing main can never create merge/rebase conflicts here.
+          git push --force origin HEAD:refs/heads/betflag-live
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to publish dedicated betflag-live branch' }
