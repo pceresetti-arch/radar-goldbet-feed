@@ -1,0 +1,162 @@
+{
+  "schema_version": "radar-betflag-v7-live-bridge-v3",
+  "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
+  "requested_at": "2026-08-29T19:14:00Z",
+  "request_id": "lookman-sot15-fullfallback-final-20260829T1914Z",
+  "generated_at": "2026-08-29T19:13:13.307368+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "mode": "player_price",
+  "health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-29T19:13:11.463366+00:00",
+    "elapsed_ms": 105,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/standard-index",
+        "/live/player-index",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "calls": [
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?event_id=16038591&player=Ademola+Lookman&market=U%2FO+Tiri+In+Porta+Giocatore&line=1.5&selection=Over",
+      "http_status": 200,
+      "fetched_at": "2026-08-29T19:13:13.307335+00:00",
+      "elapsed_ms": 1844,
+      "error": null,
+      "body": {
+        "generated_at": "2026-08-29T19:13:11.514Z",
+        "served_at": "2026-08-29T19:13:13.251Z",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "upstream_elapsed_ms": 1737,
+        "acquisition_attempts": [
+          {
+            "attempt": 1,
+            "source_healthy": true,
+            "source_rows": 1615,
+            "exact_rows": 1,
+            "upstream_elapsed_ms": 1737
+          }
+        ],
+        "target": {
+          "tab": 2484,
+          "slot": 13495,
+          "market": "U/O Tiri In Porta Giocatore"
+        },
+        "returned": 1,
+        "price_gate_eligible": true,
+        "certificate": {
+          "proof_id": "bf-0a4d21ee2bb0065f7062",
+          "sha256": "0a4d21ee2bb0065f7062e6fb3d97f5f1a54bd845475bb56bf94c71e13ef53ea3",
+          "exact_identity_match": true,
+          "source_healthy": true,
+          "freshness": {
+            "age_seconds": 1.7,
+            "max_age_seconds": 45,
+            "fresh": true
+          },
+          "price_gate_eligible": true,
+          "canonical": {
+            "source_class": "BETFLAG_AAMS_DIRECT",
+            "source_host": "sportservice.betflag.it",
+            "fetched_at": "2026-08-29T19:13:11.514Z",
+            "match": "Siviglia - Atletico Madrid",
+            "match_market_id": "36351.2888",
+            "match_event_id": 16038591,
+            "player": "Ademola Lookman",
+            "requested_market": "U/O Tiri In Porta Giocatore",
+            "market": "U/O Tiri In Porta Giocatore",
+            "line": "1.5",
+            "selection": "Over",
+            "odd": 2.6,
+            "selection_id": 3745015267,
+            "market_id": -2115585070,
+            "odds_id": 1829010965
+          }
+        },
+        "quote": {
+          "event_id": 16039221,
+          "player_event": "(SIV-ATM*) Ademola Lookman",
+          "match_code": "SIV-ATM*",
+          "player": "Ademola Lookman",
+          "start_time": "29-08-2026 21:30",
+          "league": "Spagna Liga ",
+          "tournament_id": 30102,
+          "category_id": 14260,
+          "authority_id": 79,
+          "match_market_id": "36351.2888",
+          "match": "Siviglia - Atletico Madrid",
+          "match_event_id": 16038591,
+          "match_start": "29-08-2026 21:30",
+          "requested_market": "U/O Tiri In Porta Giocatore",
+          "market": "U/O Tiri In Porta Giocatore",
+          "line": "1.5",
+          "selection": "Over",
+          "odd": 2.6,
+          "selection_id": 3745015267,
+          "selection_type": 2,
+          "market_type": 7636,
+          "market_id": -2115585070,
+          "odds_id": 1829010965,
+          "fetched_at": "2026-08-29T19:13:11.514Z"
+        },
+        "note": "Certified fresh BetFlag/AAMS operational player price."
+      }
+    }
+  ],
+  "no_cache_fallback": true,
+  "github_sha": "5168cfc0fe8feca34d6f8a5f9cded910fdb359f7"
+}
