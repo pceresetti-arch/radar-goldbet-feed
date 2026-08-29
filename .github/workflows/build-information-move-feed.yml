@@ -32,10 +32,19 @@ jobs:
       - name: Commit current movement and market-xG feeds
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'radar-information-move-bot'
           git config user.email 'radar-information-move-bot@users.noreply.github.com'
-          git pull --rebase || true
           git add feed/information-move-current.json feed/market-xg-shift-current.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh Radar information move and market xG feeds'
-          git push
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Concurrent update detected; retry $attempt/4"
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to publish movement/xG feed after retries' >&2
+          exit 1
