@@ -1,0 +1,129 @@
+{
+  "schema_version": "radar-betflag-v7-live-bridge-v3",
+  "bridge_mode": "ON_DEMAND_WORKER_LIVE_NO_CACHE",
+  "requested_at": "2026-08-29T19:09:00Z",
+  "request_id": "lookman-sot15-exact-postdeploy-20260829T1909Z",
+  "generated_at": "2026-08-29T19:07:49.647918+00:00",
+  "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
+  "mode": "player_price",
+  "health": {
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health",
+    "http_status": 200,
+    "fetched_at": "2026-08-29T19:07:49.392020+00:00",
+    "elapsed_ms": 179,
+    "error": null,
+    "body": {
+      "ok": true,
+      "service": "radar-goldbet",
+      "version": "7.0-betflag-operational",
+      "player_props_forwarding": true,
+      "public_fast_path": true,
+      "exact_player_price_proof": true,
+      "cache_ttl_seconds": {
+        "direct_goldbet": 8,
+        "betflag_scan": 12,
+        "betflag_exact": 0
+      },
+      "freshness_policy_seconds": {
+        "betflag_exact_price": 45
+      },
+      "provenance_contract": {
+        "BETFLAG_AAMS_DIRECT": "primary operational player-prop source; exact fresh unique quote is eligible for FINAL GATE",
+        "GOLDBET_DIRECT_ODSS": "direct GoldBet source when fresh/mapped; player props used as cross-check when available"
+      },
+      "endpoints": [
+        "/health",
+        "/live/goldbet",
+        "/live/standard-index",
+        "/live/player-index",
+        "/live/player-props",
+        "/live/player-price",
+        "/live/fixture",
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "protected_endpoints": [
+        "/sports",
+        "/bookmakers",
+        "/leagues",
+        "/odds",
+        "/history"
+      ],
+      "odds_params": [
+        "sport",
+        "market",
+        "league",
+        "bookmakers",
+        "event_id",
+        "state",
+        "limit",
+        "offset",
+        "content",
+        "player",
+        "q"
+      ]
+    }
+  },
+  "calls": [
+    {
+      "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?event_id=16038591&player=Ademola+Lookman&market=U%2FO+Tiri+In+Porta+Giocatore&line=1.5&selection=Over",
+      "http_status": 404,
+      "fetched_at": "2026-08-29T19:07:49.647894+00:00",
+      "elapsed_ms": 256,
+      "error": "HTTPError 404",
+      "body": {
+        "generated_at": "2026-08-29T19:07:49.410Z",
+        "served_at": "2026-08-29T19:07:49.639Z",
+        "source_class": "BETFLAG_AAMS_DIRECT",
+        "source": "sportservice.betflag.it direct AAMS player service",
+        "betflag_direct": true,
+        "goldbet_direct": false,
+        "upstream_elapsed_ms": 229,
+        "target": {
+          "tab": 2484,
+          "slot": 13495,
+          "market": "U/O Tiri In Porta Giocatore"
+        },
+        "returned": 0,
+        "price_gate_eligible": false,
+        "certificate": {
+          "proof_id": "bf-3f815eb8dc961820964c",
+          "sha256": "3f815eb8dc961820964c55aa8993c357168ef74d1a0e3ee8a3a88332db320d56",
+          "exact_identity_match": false,
+          "source_healthy": false,
+          "freshness": {
+            "age_seconds": 0.2,
+            "max_age_seconds": 45,
+            "fresh": true
+          },
+          "price_gate_eligible": false,
+          "canonical": {
+            "source_class": "BETFLAG_AAMS_DIRECT",
+            "source_host": "sportservice.betflag.it",
+            "fetched_at": "2026-08-29T19:07:49.410Z",
+            "match": null,
+            "match_market_id": null,
+            "match_event_id": null,
+            "player": null,
+            "requested_market": null,
+            "market": null,
+            "line": null,
+            "selection": null,
+            "odd": null,
+            "selection_id": null,
+            "market_id": null,
+            "odds_id": null
+          }
+        },
+        "quote": null,
+        "candidates": [],
+        "note": "No unique fresh exact quote; do not classify BET from this response."
+      }
+    }
+  ],
+  "no_cache_fallback": true,
+  "github_sha": "f4ea7a5eb5cf9036aaf02387319c955638675d66"
+}
