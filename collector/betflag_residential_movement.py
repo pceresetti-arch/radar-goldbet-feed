@@ -14,7 +14,7 @@ def last_sunday(year,month):
 
 def rome_tz_for_local(naive):
  # EU daylight-saving rule: last Sunday of March 02:00 local to
- # last Sunday of October 03:00 local. This avoids relying on tzdata on Windows runners.
+ # last Sunday of October 03:00 local. Avoids a tzdata dependency on Windows runners.
  y=naive.year
  dst_start=datetime(y,3,last_sunday(y,3),2,0)
  dst_end=datetime(y,10,last_sunday(y,10),3,0)
@@ -55,14 +55,14 @@ def qid(row):
 def load_state():
  if not STATE.exists():
   return {
-   'schema_version':'betflag-residential-movement-v1',
+   'schema_version':'betflag-residential-movement-v2',
    'source_class':'BETFLAG_AAMS_DIRECT',
-   'true_open_policy':'TRUE OPEN is immutable and certified only by an explicit BetFlag opening field; first residential capture stays FIRST_OBSERVED_ONLY otherwise.',
+   'true_open_policy':'TRUE OPEN is immutable and certified only by explicit BetFlag source evidence. If a quote first appears after an earlier healthy scan, its first-availability price is frozen separately as CAPTURED OPEN.',
    'quotes':{}
   }
  try:
   data=json.loads(STATE.read_text(encoding='utf-8'))
-  data['schema_version']='betflag-residential-movement-v1'
+  data['schema_version']='betflag-residential-movement-v2'
   data.setdefault('quotes',{})
   return data
  except Exception:
@@ -85,6 +85,14 @@ def checkpoint(ms,label,target,at,odd,start):
   }
 
 
+def status_summary(ms):
+ if ms.get('true_open_odd') is not None:
+  return 'TRUE_OPEN_CERTIFIED_FULL_MOVEMENT'
+ if ms.get('captured_open_odd') is not None:
+  return 'OPEN_CAPTURED_AT_FIRST_BETFLAG_AVAILABILITY'
+ return 'TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO'
+
+
 def main():
  if not CURRENT.exists(): raise SystemExit('Missing residential current feed')
  feed=json.loads(CURRENT.read_text(encoding='utf-8'))
@@ -92,7 +100,11 @@ def main():
  fetched=iso_dt(feed.get('generated_at')) or datetime.now(timezone.utc)
  if fetched.tzinfo is None: fetched=fetched.replace(tzinfo=timezone.utc)
  state=load_state()
- seen=0; changed=0; certified=0; new_quotes=0
+ # If a previous healthy scan exists, a quote absent from the persisted state and present
+ # now has genuinely appeared after our monitoring started. Freeze that first captured
+ # BetFlag availability price forever; do not confuse it with source-certified TRUE OPEN.
+ prior_success=state.get('last_success_at') if state.get('source_healthy') else None
+ seen=0; changed=0; certified=0; new_quotes=0; captured_new_opens=0
 
  for row in feed.get('rows') or []:
   odd=row.get('odd')
@@ -100,6 +112,7 @@ def main():
   key=qid(row); seen+=1
   ms=state['quotes'].get(key)
   if ms is None:
+   captured=bool(prior_success)
    ms={
     'quote_id':key,
     'identity':{
@@ -109,14 +122,24 @@ def main():
      'selection_id':row.get('selection_id'),'market_id':row.get('market_id'),'odds_id':row.get('odds_id')
     },
     'first_seen_at':fetched.isoformat(),'first_seen_odd':odd,
-    'open_status':'FIRST_OBSERVED_ONLY',
+    'captured_open_odd':odd if captured else None,
+    'captured_open_at':fetched.isoformat() if captured else None,
+    'captured_open_basis':'ABSENT_FROM_PREVIOUS_HEALTHY_RESIDENTIAL_SCAN' if captured else None,
+    'previous_healthy_scan_at':prior_success if captured else None,
+    'open_status':'OPEN_CAPTURED_AT_FIRST_BETFLAG_AVAILABILITY' if captured else 'FIRST_OBSERVED_ONLY',
     'true_open_odd':None,'true_open_at':None,'true_open_source_field':None,
     'current_odd':odd,'current_at':fetched.isoformat(),
     'change_count':0,'changes':[],
     'checkpoints':{},'last_seen_at':fetched.isoformat()
    }
    state['quotes'][key]=ms; new_quotes+=1
+   if captured: captured_new_opens+=1
   else:
+   # Backward-compatible defaults for records created before v2.
+   ms.setdefault('captured_open_odd',None)
+   ms.setdefault('captured_open_at',None)
+   ms.setdefault('captured_open_basis',None)
+   ms.setdefault('previous_healthy_scan_at',None)
    for k,v in {'match':row.get('match'),'match_start':row.get('match_start'),'odds_id':row.get('odds_id')}.items():
     if v not in (None,''): ms.setdefault('identity',{})[k]=v
 
@@ -146,6 +169,7 @@ def main():
   ms['current_odd']=odd
   ms['current_at']=fetched.isoformat()
   ms['last_seen_at']=fetched.isoformat()
+  ms['movement_status']=status_summary(ms)
 
   start=iso_dt(ms.get('identity',{}).get('match_start'))
   if start:
@@ -156,14 +180,17 @@ def main():
   'generated_at':fetched.isoformat(),'last_success_at':fetched.isoformat(),
   'source_healthy':True,'rows_seen':seen,
   'true_open_certified_rows':certified,
-  'true_open_definition':'REAL_BETFLAG_OPENING_PRICE_ONLY',
-  'first_seen_definition':'FIRST PRICE CAPTURED BY RESIDENTIAL RADAR; NEVER A SUBSTITUTE FOR TRUE OPEN'
+  'captured_new_opens_this_scan':captured_new_opens,
+  'true_open_definition':'REAL_BETFLAG_OPENING_PRICE_ONLY — IMMUTABLE',
+  'captured_open_definition':'FIRST BETFLAG PRICE SEEN FOR A QUOTE THAT WAS ABSENT FROM THE PREVIOUS HEALTHY RESIDENTIAL SCAN — IMMUTABLE, NOT SOURCE-CERTIFIED TRUE OPEN',
+  'first_seen_definition':'FIRST PRICE CAPTURED BY RESIDENTIAL RADAR; NEVER A SUBSTITUTE FOR TRUE OPEN WHEN MONITORING STARTED AFTER THE MARKET WAS ALREADY AVAILABLE'
  })
  FEED.mkdir(exist_ok=True)
  STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2),encoding='utf-8')
  print(json.dumps({
-  'rows_seen':seen,'new_quotes':new_quotes,'price_changes':changed,
-  'true_open_certified_rows':certified,'generated_at':fetched.isoformat()
+  'rows_seen':seen,'new_quotes':new_quotes,'captured_new_opens':captured_new_opens,
+  'price_changes':changed,'true_open_certified_rows':certified,
+  'generated_at':fetched.isoformat()
  },ensure_ascii=False))
 
 if __name__=='__main__': main()
