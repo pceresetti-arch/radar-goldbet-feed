@@ -1,10 +1,10 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-08-29T15:21:59.409467+00:00",
+  "generated_at": "2026-08-29T18:13:07.892972+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "29-08-2026",
-  "ready": true,
-  "status": "READY",
+  "ready": false,
+  "status": "PIPELINE_DEGRADED",
   "contract": {
     "preferred_discovery": "/live/player-index?date=DD-MM-YYYY",
     "single_call_index_required": true,
@@ -18,9 +18,9 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 7323,
-    "index_warm_elapsed_ms": 384,
-    "fallback_discovery_elapsed_ms": 191,
+    "index_first_elapsed_ms": 8821,
+    "index_warm_elapsed_ms": 83,
+    "fallback_discovery_elapsed_ms": 500,
     "index_first_cache": "MISS:MISS",
     "index_warm_cache": "HIT"
   },
@@ -29,12 +29,12 @@
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 13707,
-    "scoped_source_rows": 13707,
-    "indexed_rows": 13707,
+    "source_rows": 14194,
+    "scoped_source_rows": 14194,
+    "indexed_rows": 14194,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 13707,
+      "standard_match": 14194,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
@@ -44,7 +44,7 @@
     "fixtures": 25,
     "exact_fixtures": 25,
     "fallback_fixtures": 0,
-    "player_fixtures": 1000,
+    "player_fixtures": 999,
     "markets_present": [
       "1° Marcatore",
       "1° Marcatore o Sostituto",
@@ -74,11 +74,11 @@
     "static_index_endpoint": true,
     "static_index_v2_mapping": true,
     "static_index_cache": true,
-    "bridge_prefers_index": true,
+    "bridge_prefers_index": false,
     "bridge_today_scoped": true,
-    "bridge_forces_full": true,
-    "bridge_paginates": true,
-    "bridge_min_page_500": true,
+    "bridge_forces_full": false,
+    "bridge_paginates": false,
+    "bridge_min_page_500": false,
     "health_200": true,
     "health_version": true,
     "health_exact_enabled": true,
@@ -113,14 +113,14 @@
     "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": "Champions FC Arges - Sepsi OSK Sfantu Gheorghe",
-    "match_market_id": "36351.2723",
-    "player": "Aboubakar Keita",
+    "match": "CS Corvinul Hunedoara - FC Dinamo Bucuresti 1948",
+    "match_market_id": "36351.2729",
+    "player": "Adrian Mazilu",
     "market": "1° Marcatore",
     "selection": "Si",
-    "odd": 23,
-    "scan_odd": 23,
-    "proof_id": "bf-186b52d38adc31bae5df"
+    "odd": 7.5,
+    "scan_odd": 7.5,
+    "proof_id": "bf-ddc5976178a334d8d190"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
