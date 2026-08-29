@@ -1,0 +1,61 @@
+name: BetFlag Anakin relay probe
+
+on:
+  push:
+    paths:
+      - 'betflag-anakin-relay-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe BetFlag through managed scraper relay
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib,requests
+          from datetime import datetime,timezone
+
+          endpoint='https://api.anakin.io/v1/url-scraper/scrape'
+          targets={
+            'site':'https://www.betflag.it/sport',
+            'program':'https://sportservice.betflag.it/api/sport/pregame/getProgram?channelId=0',
+            'scorer':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0?channelId=0',
+            'goal_assist':'https://sportservice.betflag.it/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/13824/0?channelId=0'
+          }
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'endpoint':endpoint,'results':[]}
+          for name,url in targets.items():
+            variants=[
+              {'url':url},
+              {'url':url,'render':True},
+              {'url':url,'javascript':True}
+            ]
+            for i,payload in enumerate(variants):
+              try:
+                r=requests.post(endpoint,json=payload,headers={'Accept':'application/json','Content-Type':'application/json','User-Agent':'radar-betflag-recovery/1.0'},timeout=45)
+                txt=r.text
+                out['results'].append({'name':name,'variant':i,'payload':payload,'status':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(r.content),'mentions_isak':'isak' in txt.lower(),'mentions_gakpo':'gakpo' in txt.lower(),'mentions_access_denied':'access denied' in txt.lower(),'preview':txt[:6000]})
+              except Exception as e:
+                out['results'].append({'name':name,'variant':i,'payload':payload,'error':repr(e)})
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-anakin-relay-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps([{k:x.get(k) for k in ('name','variant','status','bytes','mentions_isak','mentions_gakpo','mentions_access_denied','error')} for x in out['results']],ensure_ascii=False,indent=2))
+          PY
+      - name: Commit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-anakin-relay-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag through managed scraper relay'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
