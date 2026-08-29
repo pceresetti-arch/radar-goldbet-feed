@@ -26,6 +26,30 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Ensure local true-open close watcher
+        shell: powershell
+        run: |
+          $root = 'C:\BetFlagRadar'
+          $state = Join-Path $root 'state'
+          $script = Join-Path $root 'betflag_true_open_close_watcher.py'
+          New-Item -ItemType Directory -Force -Path $root,$state | Out-Null
+          Copy-Item 'collector\betflag_true_open_close_watcher.py' $script -Force
+          $taskName = 'BetFlag True Open Close Watcher'
+          $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+          if (-not $task) {
+            $python = (Get-Command python.exe -ErrorAction Stop).Source
+            $action = New-ScheduledTaskAction -Execute $python -Argument ('"' + $script + '" --window-seconds 50 --interval 20')
+            $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(20) -RepetitionInterval (New-TimeSpan -Minutes 1)
+            $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 2)
+            Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -RunLevel Highest -Description 'BetFlag residential watcher: open, movement and last pre-kickoff close.' | Out-Null
+            Write-Host 'Installed BetFlag True Open Close Watcher.'
+          } else {
+            Write-Host 'BetFlag True Open Close Watcher already installed.'
+          }
+          if (-not (Test-Path (Join-Path $state 'betflag-open-close-watch.json'))) {
+            Start-ScheduledTask -TaskName $taskName
+            Write-Host 'Started watcher immediately for first state capture.'
+          }
       - name: Collect BetFlag player markets
         shell: powershell
         run: |
@@ -50,7 +74,7 @@ jobs:
             Copy-Item $src 'feed\betflag-open-close-watch.json' -Force
             Write-Host 'Imported local BetFlag open-close watcher state.'
           } else {
-            Write-Host 'Local open-close watcher not installed yet; production feed continues without it.'
+            Write-Host 'Watcher state not ready yet; next cycle will import it.'
           }
       - name: Commit fresh production feeds
         shell: powershell
