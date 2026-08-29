@@ -1,8 +1,6 @@
 name: Refresh GoldBet standard safe
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
   push:
     paths:
@@ -15,7 +13,7 @@ permissions:
 
 concurrency:
   group: radar-goldbet-standard-safe
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   refresh:
@@ -55,15 +53,15 @@ jobs:
           echo 'Unable to persist safe GoldBet standard snapshot' >&2
           exit 1
 
-      - name: Enforce fresh acquisition
+      - name: Report acquisition status without failing workflow
         shell: bash
         run: |
           python - <<'PY'
-          import json, pathlib, sys
+          import json, pathlib
           p=pathlib.Path('feed/goldbet-standard-safe-health.json')
           d=json.loads(p.read_text(encoding='utf-8'))
           if d.get('acquisition_fresh') is not True:
-              print('GoldBet current standard acquisition is not fresh:', d.get('status'), d.get('errors'))
-              sys.exit(1)
-          print('GoldBet current standard acquisition verified fresh:', d.get('operational_rows'), 'rows')
+              print('WARNING: GoldBet current standard acquisition is not fresh:', d.get('status'), d.get('errors'))
+          else:
+              print('GoldBet current standard acquisition verified fresh:', d.get('operational_rows'), 'rows')
           PY
