@@ -141,24 +141,29 @@ def main():
  except Exception as e:
   result['error']=repr(e)
 
- result['opening_field_diagnostics']={
+ diagnostics={
+  'schema_version':'betflag-opening-field-diagnostics-v1',
+  'generated_at':now,'source_healthy':result.get('source_healthy'),
   'quote_keys':sorted(diag['quote_keys']),
   'market_keys':sorted(diag['market_keys']),
   'spread_keys':sorted(diag['spread_keys']),
   'explicit_open_fields':diag['explicit_open_fields'],
   'quote_samples':diag['quote_samples']
  }
+ result['opening_field_diagnostics']=diagnostics
  canonical=json.dumps({'generated_at':result['generated_at'],'rows':result['rows']},sort_keys=True,ensure_ascii=False)
  result['sha256']=hashlib.sha256(canonical.encode()).hexdigest()
  p=pathlib.Path('feed'); p.mkdir(exist_ok=True)
  (p/'betflag-residential-current.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+ (p/'betflag-opening-field-diagnostics.json').write_text(json.dumps(diagnostics,ensure_ascii=False,indent=2),encoding='utf-8')
  hist=p/'betflag-residential-history'; hist.mkdir(exist_ok=True)
  stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
  (hist/f'{stamp}.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
  print(json.dumps({
   'source_healthy':result['source_healthy'],'rows':len(result['rows']),
   'generated_at':result['generated_at'],
-  'explicit_open_fields':result['opening_field_diagnostics']['explicit_open_fields']
+  'explicit_open_fields':diagnostics['explicit_open_fields'],
+  'quote_keys':diagnostics['quote_keys']
  },ensure_ascii=False))
 
 if __name__=='__main__': main()
