@@ -1,89 +1,17 @@
-name: Certify GoldBet player props
+name: Certify GoldBet player props [LEGACY MANUAL]
 
+# Retired from Radar V2 operational flow.
+# Player exact-price proof is authoritative through BetFlag V7 /live/player-price.
 on:
-  push:
-    paths:
-      - 'certify-goldbet-player-props-trigger.json'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  certify:
+  legacy_notice:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - name: Compare direct GoldBet player props with shared AAMS
-        env:
-          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
-        shell: bash
-        run: |
-          python - <<'PY'
-          import json, os, pathlib, urllib.parse, urllib.request, re
-          from datetime import datetime, timezone
-          key=os.environ.get('ODDSPAPI_KEY','').strip()
-          if not key: raise SystemExit('Missing ODDSPAPI_KEY')
-          base='https://api.oddspapi.io/v4'
-          H={'Accept':'application/json','User-Agent':'RadarGoldBetPlayerCert/1.0'}
-          def get(path,params):
-            p=dict(params); p['apiKey']=key
-            u=base+path+'?'+urllib.parse.urlencode(p)
-            with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=90) as r:
-              return json.loads(r.read().decode('utf-8','replace'))
-          fs=get('/fixtures',{'from':'2026-08-29','to':'2026-08-30','language':'en'})
-          fixtures=fs if isinstance(fs,list) else fs.get('data',[]) if isinstance(fs,dict) else []
-          cand=[]
-          for f in fixtures:
-            txt=(str(f.get('participant1Name',''))+' '+str(f.get('participant2Name',''))).lower()
-            if 'monza' in txt and 'udinese' in txt and 'srl' not in txt:
-              cand.append(f)
-          out={'generated_at':datetime.now(timezone.utc).isoformat(),'matches':cand}
-          if cand:
-            f=cand[0]; fid=f['fixtureId']
-            odds=get('/odds',{'fixtureId':fid,'bookmakers':'goldbet.it','language':'en','oddsFormat':'decimal','verbosity':3})
-            markets_resp=get('/markets',{'language':'en'})
-            cat=markets_resp if isinstance(markets_resp,list) else markets_resp.get('data',[]) if isinstance(markets_resp,dict) else []
-            mmap={str(m.get('marketId')):m for m in cat if isinstance(m,dict)}
-            book=(odds.get('bookmakerOdds') or {}).get('goldbet.it',{}) if isinstance(odds,dict) else {}
-            rows=[]; market_summary=[]
-            for mid,md in (book.get('markets') or {}).items():
-              meta=mmap.get(str(mid),{})
-              mr={'marketId':str(mid),'marketName':meta.get('marketName'),'marketType':meta.get('marketType'),'period':meta.get('period'),'playerProp':meta.get('playerProp'),'bookmakerMarketId':md.get('bookmakerMarketId'),'rows':[]}
-              outs=md.get('outcomes') or {}
-              for oid,od in outs.items() if isinstance(outs,dict) else []:
-                players=od.get('players') if isinstance(od,dict) else None
-                if isinstance(players,dict):
-                  for pid,p in players.items():
-                    if not isinstance(p,dict): continue
-                    row={'marketId':str(mid),'marketName':meta.get('marketName'),'marketType':meta.get('marketType'),'period':meta.get('period'),'playerProp':meta.get('playerProp'),'outcomeId':str(oid),'playerId':str(pid),'playerName':p.get('playerName'),'price':p.get('price'),'active':p.get('active'),'mainLine':p.get('mainLine'),'bookmakerOutcomeId':p.get('bookmakerOutcomeId'),'changedAt':p.get('changedAt')}
-                    mr['rows'].append(row)
-                    if row['playerName'] or meta.get('playerProp'):
-                      rows.append(row)
-              market_summary.append({'marketId':mr['marketId'],'marketName':mr['marketName'],'marketType':mr['marketType'],'period':mr['period'],'playerProp':mr['playerProp'],'rowCount':len(mr['rows']),'namedPlayerCount':sum(1 for x in mr['rows'] if x.get('playerName')),'sample':mr['rows'][:8]})
-            # shared AAMS known proof rows for same match
-            shared=[]
-            try:
-              j=json.loads(pathlib.Path('feed/player-market-odds-map.json').read_text(encoding='utf-8'))
-              for r in j.get('rows',[]):
-                if 'mnz' in str(r.get('en','')).lower() and 'udi' in str(r.get('en','')).lower(): shared.append(r)
-            except Exception: pass
-            out.update({'fixtureId':fid,'event':f"{odds.get('participant1Name')} - {odds.get('participant2Name')}",'bookmakerFixtureId':book.get('bookmakerFixtureId'),'market_count':len(book.get('markets') or {}),'direct_player_rows':rows,'market_summary':market_summary,'shared_rows':shared[:120]})
-          pathlib.Path('feed').mkdir(exist_ok=True)
-          pathlib.Path('feed/goldbet-player-props-certification.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-          compact={k:out.get(k) for k in ('generated_at','fixtureId','event','bookmakerFixtureId','market_count')}
-          compact['matches_found']=len(cand)
-          compact['direct_player_rows']=out.get('direct_player_rows',[])[:100]
-          compact['player_markets']=[m for m in out.get('market_summary',[]) if m.get('playerProp') or m.get('namedPlayerCount')][:100]
-          compact['shared_rows']=out.get('shared_rows',[])[:30]
-          pathlib.Path('feed/goldbet-player-props-certification-summary.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps(compact,ensure_ascii=False,indent=2)[:60000])
-          PY
-      - name: Commit result
-        run: |
-          git config user.name 'radar-goldbet-bot'
-          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/goldbet-player-props-certification.json feed/goldbet-player-props-certification-summary.json
-          git diff --cached --quiet && exit 0
-          git commit -m 'Certify direct GoldBet player props'
-          git push
+      - run: |
+          echo "GoldBet/OddsPapi player certification is legacy/manual only."
+          echo "Use BetFlag V7 /live/player-price for exact price certification."
