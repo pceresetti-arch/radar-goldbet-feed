@@ -10,25 +10,26 @@ on:
       - 'radar-runtime-request.json'
       - 'scripts/refresh_current_lineups_resilient.py'
       - 'scripts/refresh_current_lineups_watchdog.py'
+      - 'scripts/refresh_urgent_lineups.py'
 
 permissions:
   contents: write
 
 concurrency:
   group: refresh-current-lineups
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
         with:
           ref: main
       - name: Install browser-like client
         run: pip install -q curl_cffi
-      - name: Watch official XI and burst-poll near kickoff
+      - name: Watch official XI with fast dual-source urgent polling
         run: python scripts/refresh_current_lineups_watchdog.py
       - name: Commit lineup feed and POST-XI trigger safely
         shell: bash
