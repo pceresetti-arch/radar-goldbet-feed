@@ -1,159 +1,211 @@
 {
-  "schema": "radar-lineup-watchdog-v1",
-  "generated_at": "2026-08-29T23:09:02.372349+00:00",
+  "schema": "radar-lineup-watchdog-v2",
+  "generated_at": "2026-08-29T23:17:56.545541+00:00",
   "source_strategy": "FotMob standard 11v11 official XI through resilient canonical fixture matcher; burst polling near kickoff",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "poll_policy": {
     "base_schedule": "GitHub cron every 5 minutes",
     "urgent_window_minutes": [
-      -5,
-      80
+      0.0,
+      80.0
     ],
-    "max_attempts_per_run": 4,
-    "interval_seconds": 45,
-    "stop_immediately_on_official_transition": true
+    "post_xi_actionable_window_minutes": [
+      0.0,
+      100.0
+    ],
+    "max_attempts_per_run": 6,
+    "interval_seconds": 40,
+    "stop_immediately_on_actionable_official_transition": true,
+    "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
-      "started_at": "2026-08-29T23:08:43.170826+00:00",
-      "finished_at": "2026-08-29T23:09:02.372307+00:00",
+      "started_at": "2026-08-29T23:13:42.058197+00:00",
+      "finished_at": "2026-08-29T23:13:56.692517+00:00",
       "official_count": 18,
-      "urgent_unconfirmed_count": 13,
+      "urgent_unconfirmed_count": 22,
       "events": [
         {
           "event": "XI_OFFICIAL_CHANGED",
-          "detected_at": "2026-08-29T23:09:02.372202+00:00",
-          "match": "Chattanooga - Carolina Core FC",
-          "league": "Mls Next Pro",
+          "detected_at": "2026-08-29T23:13:56.692419+00:00",
+          "match": "Portland Hearts of Pine - Fort Wayne FC",
+          "league": "USL League One",
           "start_time": "30-08-2026 01:00",
-          "minutes_to_start": -8.7,
-          "match_market_id": "36354.17467",
-          "match_event_id": 16069193,
+          "minutes_to_start": -13.7,
+          "match_market_id": "36355.19020",
+          "match_event_id": 16064504,
           "source": "FotMob",
-          "provider_match_id": 1000007743,
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5109525,
           "previous_status": "SOURCE_CONFIRMED",
           "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "11563ff5e098db6895df",
-          "current_xi_fingerprint": "a93f0ce1bd3806fd1d20",
-          "confirmed_at": "2026-08-29T23:08:43.304630+00:00"
+          "previous_xi_fingerprint": "3797fd2bd8ad0d63378b",
+          "current_xi_fingerprint": "6c3d2964757b054ce937",
+          "confirmed_at": "2026-08-29T23:13:42.193599+00:00",
+          "actionable_for_post_xi": false,
+          "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
         },
         {
           "event": "XI_OFFICIAL_CHANGED",
-          "detected_at": "2026-08-29T23:09:02.372236+00:00",
+          "detected_at": "2026-08-29T23:13:56.692440+00:00",
           "match": "Richmond Kickers - Forward Madison FC",
           "league": "USL League One",
           "start_time": "30-08-2026 01:00",
-          "minutes_to_start": -8.7,
+          "minutes_to_start": -13.7,
           "match_market_id": "36351.572",
           "match_event_id": 16064332,
           "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
           "provider_match_id": 5109526,
           "previous_status": "SOURCE_CONFIRMED",
           "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "aed07b7665ce8e672c45",
-          "current_xi_fingerprint": "73e3f1b09a61725cc366",
-          "confirmed_at": "2026-08-29T23:08:43.304630+00:00"
+          "previous_xi_fingerprint": "73e3f1b09a61725cc366",
+          "current_xi_fingerprint": "419e0b2d4f568ce502b9",
+          "confirmed_at": "2026-08-29T23:13:42.193599+00:00",
+          "actionable_for_post_xi": false,
+          "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
         },
         {
           "event": "XI_OFFICIAL_CHANGED",
-          "detected_at": "2026-08-29T23:09:02.372242+00:00",
+          "detected_at": "2026-08-29T23:13:56.692446+00:00",
           "match": "Sao Paulo FC SP - Bragantino SP",
           "league": "Serie A",
           "start_time": "30-08-2026 01:00",
-          "minutes_to_start": -8.7,
+          "minutes_to_start": -13.7,
           "match_market_id": "36351.385",
           "match_event_id": 16042419,
           "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
           "provider_match_id": 5103606,
           "previous_status": "SOURCE_CONFIRMED",
           "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "c4a8f9f5d7ab0ab2ac2d",
-          "current_xi_fingerprint": "cbf3da220ed52957cabe",
-          "confirmed_at": "2026-08-29T23:08:43.304630+00:00"
+          "previous_xi_fingerprint": "cbf3da220ed52957cabe",
+          "current_xi_fingerprint": "154e9504c3b38ee383be",
+          "confirmed_at": "2026-08-29T23:13:42.193599+00:00",
+          "actionable_for_post_xi": false,
+          "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
         }
-      ]
+      ],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "started_at": "2026-08-29T23:14:36.692662+00:00",
+      "finished_at": "2026-08-29T23:14:47.499514+00:00",
+      "official_count": 18,
+      "urgent_unconfirmed_count": 22,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "started_at": "2026-08-29T23:15:27.500173+00:00",
+      "finished_at": "2026-08-29T23:15:34.373932+00:00",
+      "official_count": 4,
+      "urgent_unconfirmed_count": 20,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "started_at": "2026-08-29T23:16:14.374541+00:00",
+      "finished_at": "2026-08-29T23:16:21.774493+00:00",
+      "official_count": 4,
+      "urgent_unconfirmed_count": 20,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "started_at": "2026-08-29T23:17:01.774939+00:00",
+      "finished_at": "2026-08-29T23:17:08.846369+00:00",
+      "official_count": 4,
+      "urgent_unconfirmed_count": 20,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "started_at": "2026-08-29T23:17:48.846797+00:00",
+      "finished_at": "2026-08-29T23:17:56.545500+00:00",
+      "official_count": 4,
+      "urgent_unconfirmed_count": 20,
+      "events": [],
+      "actionable_events": []
     }
   ],
-  "events": [
+  "observed_events": [
     {
       "event": "XI_OFFICIAL_CHANGED",
-      "detected_at": "2026-08-29T23:09:02.372202+00:00",
-      "match": "Chattanooga - Carolina Core FC",
-      "league": "Mls Next Pro",
+      "detected_at": "2026-08-29T23:13:56.692419+00:00",
+      "match": "Portland Hearts of Pine - Fort Wayne FC",
+      "league": "USL League One",
       "start_time": "30-08-2026 01:00",
-      "minutes_to_start": -8.7,
-      "match_market_id": "36354.17467",
-      "match_event_id": 16069193,
+      "minutes_to_start": -13.7,
+      "match_market_id": "36355.19020",
+      "match_event_id": 16064504,
       "source": "FotMob",
-      "provider_match_id": 1000007743,
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5109525,
       "previous_status": "SOURCE_CONFIRMED",
       "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "11563ff5e098db6895df",
-      "current_xi_fingerprint": "a93f0ce1bd3806fd1d20",
-      "confirmed_at": "2026-08-29T23:08:43.304630+00:00"
+      "previous_xi_fingerprint": "3797fd2bd8ad0d63378b",
+      "current_xi_fingerprint": "6c3d2964757b054ce937",
+      "confirmed_at": "2026-08-29T23:13:42.193599+00:00",
+      "actionable_for_post_xi": false,
+      "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
     },
     {
       "event": "XI_OFFICIAL_CHANGED",
-      "detected_at": "2026-08-29T23:09:02.372236+00:00",
+      "detected_at": "2026-08-29T23:13:56.692440+00:00",
       "match": "Richmond Kickers - Forward Madison FC",
       "league": "USL League One",
       "start_time": "30-08-2026 01:00",
-      "minutes_to_start": -8.7,
+      "minutes_to_start": -13.7,
       "match_market_id": "36351.572",
       "match_event_id": 16064332,
       "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
       "provider_match_id": 5109526,
       "previous_status": "SOURCE_CONFIRMED",
       "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "aed07b7665ce8e672c45",
-      "current_xi_fingerprint": "73e3f1b09a61725cc366",
-      "confirmed_at": "2026-08-29T23:08:43.304630+00:00"
+      "previous_xi_fingerprint": "73e3f1b09a61725cc366",
+      "current_xi_fingerprint": "419e0b2d4f568ce502b9",
+      "confirmed_at": "2026-08-29T23:13:42.193599+00:00",
+      "actionable_for_post_xi": false,
+      "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
     },
     {
       "event": "XI_OFFICIAL_CHANGED",
-      "detected_at": "2026-08-29T23:09:02.372242+00:00",
+      "detected_at": "2026-08-29T23:13:56.692446+00:00",
       "match": "Sao Paulo FC SP - Bragantino SP",
       "league": "Serie A",
       "start_time": "30-08-2026 01:00",
-      "minutes_to_start": -8.7,
+      "minutes_to_start": -13.7,
       "match_market_id": "36351.385",
       "match_event_id": 16042419,
       "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
       "provider_match_id": 5103606,
       "previous_status": "SOURCE_CONFIRMED",
       "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "c4a8f9f5d7ab0ab2ac2d",
-      "current_xi_fingerprint": "cbf3da220ed52957cabe",
-      "confirmed_at": "2026-08-29T23:08:43.304630+00:00"
+      "previous_xi_fingerprint": "cbf3da220ed52957cabe",
+      "current_xi_fingerprint": "154e9504c3b38ee383be",
+      "confirmed_at": "2026-08-29T23:13:42.193599+00:00",
+      "actionable_for_post_xi": false,
+      "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
     }
   ],
-  "post_xi_required": true,
+  "actionable_events": [],
+  "post_xi_required": false,
   "urgent_unconfirmed_remaining": [
-    {
-      "match": "Platense - CA Independiente Siguatepeque",
-      "match_market_id": "36356.37647",
-      "match_event_id": 16070278,
-      "minutes_to_start": 6.3,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5962683
-    },
-    {
-      "match": "Union Deportivo Universitario - Arabe Unido",
-      "match_market_id": "36355.60744",
-      "match_event_id": 16067185,
-      "minutes_to_start": 6.3,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5954317
-    },
     {
       "match": "DC United - Los Angeles",
       "match_market_id": "36351.255",
       "match_event_id": 16040657,
-      "minutes_to_start": 21.3,
+      "minutes_to_start": 12.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -162,7 +214,7 @@
       "match": "Toronto - New York City",
       "match_market_id": "36351.272",
       "match_event_id": 16040659,
-      "minutes_to_start": 21.3,
+      "minutes_to_start": 12.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -171,7 +223,7 @@
       "match": "Deportes Iquique - San Luis de Quillota",
       "match_market_id": "36351.933",
       "match_event_id": 16067186,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 1000007293
@@ -180,7 +232,7 @@
       "match": "Diriangen FC - Art Municipal Jalapa",
       "match_market_id": "36356.42966",
       "match_event_id": 16070758,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -189,7 +241,7 @@
       "match": "Louisville City - Detroit City FC",
       "match_market_id": "36351.589",
       "match_event_id": 16034748,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5109917
@@ -198,7 +250,7 @@
       "match": "Manta - Barcelona Guayaquil",
       "match_market_id": "36351.1210",
       "match_event_id": 16044984,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000009081
@@ -207,7 +259,7 @@
       "match": "Municipal Grecia - AD Sarchi",
       "match_market_id": "36356.34047",
       "match_event_id": 16070125,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -216,7 +268,7 @@
       "match": "Nublense - Dep. Concepcion",
       "match_market_id": "36361.891",
       "match_event_id": 16042435,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000013218
@@ -225,8 +277,8 @@
       "match": "Oakland Roots SC - Orange County SC",
       "match_market_id": "36351.578",
       "match_event_id": 16034749,
-      "minutes_to_start": 51.3,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 42.2,
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "source": "FotMob",
       "fotmob_match_id": 5109920
     },
@@ -234,7 +286,7 @@
       "match": "Union Omaha SC - NY Cosmos",
       "match_market_id": "36355.19025",
       "match_event_id": 16064511,
-      "minutes_to_start": 51.3,
+      "minutes_to_start": 42.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5109527
@@ -243,11 +295,92 @@
       "match": "CR Vasco da Gama RJ - Cruzeiro",
       "match_market_id": "36351.391",
       "match_event_id": 16042433,
-      "minutes_to_start": 71.3,
+      "minutes_to_start": 62.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5103605
+    },
+    {
+      "match": "Alianza Lima - Deportivo Garcilaso",
+      "match_market_id": "36351.2140",
+      "match_event_id": 16041358,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000017214
+    },
+    {
+      "match": "Atletico Tucuman - Belgrano",
+      "match_market_id": "36351.10395",
+      "match_event_id": 16044797,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5115964
+    },
+    {
+      "match": "FC Tulsa - Rhode Island FC",
+      "match_market_id": "36351.584",
+      "match_event_id": 16034750,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5109913
+    },
+    {
+      "match": "Houston Dynamo - San Jose Earthquakes",
+      "match_market_id": "36351.262",
+      "match_event_id": 16040661,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5071314
+    },
+    {
+      "match": "Minas Brasilia - Itabirito",
+      "match_market_id": "36356.37632",
+      "match_event_id": 16070279,
+      "minutes_to_start": 72.2,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Minnesota United - Orlando City",
+      "match_market_id": "36351.256",
+      "match_event_id": 16040670,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5071316
+    },
+    {
+      "match": "Nashville - Cincinnati",
+      "match_market_id": "36351.254",
+      "match_event_id": 16040668,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5071317
+    },
+    {
+      "match": "Sporting Kansas City - Vancouver Whitecaps",
+      "match_market_id": "36351.258",
+      "match_event_id": 16040671,
+      "minutes_to_start": 72.2,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Talleres de Cordoba - Central Cordoba",
+      "match_market_id": "36351.10354",
+      "match_event_id": 16044798,
+      "minutes_to_start": 72.2,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5115975
     }
   ],
-  "target_count": 54
+  "target_count": 39
 }
