@@ -1,0 +1,89 @@
+name: BetFlag residential exact price proof
+
+on:
+  push:
+    paths:
+      - 'betflag-price-proof-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-residential-price-proof
+  cancel-in-progress: false
+
+jobs:
+  prove:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch full residential player feed
+        shell: powershell
+        run: |
+          python collector/betflag_residential_collector.py
+      - name: Resolve exact requested price
+        shell: powershell
+        run: |
+          @'
+          import json, pathlib, re, unicodedata, hashlib
+          from datetime import datetime, timezone
+          def norm(v):
+              s=unicodedata.normalize('NFD',str(v or ''))
+              s=''.join(c for c in s if unicodedata.category(c)!='Mn').lower().replace('°','')
+              return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
+          req=json.loads(pathlib.Path('betflag-price-proof-request.json').read_text(encoding='utf-8'))
+          feed=json.loads(pathlib.Path('feed/betflag-residential-current.json').read_text(encoding='utf-8'))
+          want_player=norm(req.get('player')); want_market=norm(req.get('market')); want_sel=norm(req.get('selection')); qterms=norm(req.get('q')).split()
+          aliases={
+            'marcatore':['marc','marcatore','marcatore anytime'],
+            'marcatore anytime':['marc','marcatore','marcatore anytime'],
+            'gol o assist':['gol e assist','gol o assist'],
+            'gol e assist':['gol e assist','gol o assist'],
+          }
+          valid_market={norm(x) for x in aliases.get(want_market,[want_market])}
+          cand=[]
+          for r in feed.get('rows',[]):
+              if norm(r.get('player')) != want_player: continue
+              if valid_market and norm(r.get('market')) not in valid_market: continue
+              if qterms and not all(t in norm(r.get('match')) for t in qterms): continue
+              if want_sel and norm(r.get('selection')) != want_sel: continue
+              cand.append(r)
+          quote=cand[0] if len(cand)==1 else None
+          fetched=datetime.now(timezone.utc).isoformat()
+          canonical={'player':quote.get('player') if quote else None,'match':quote.get('match') if quote else None,'market':quote.get('market') if quote else req.get('market'),'odd':quote.get('odd') if quote else None,'fetched_at':fetched}
+          digest=hashlib.sha256(json.dumps(canonical,sort_keys=True).encode()).hexdigest()
+          result={
+            'schema_version':'betflag-residential-price-proof-v1',
+            'requested_at':req.get('requested_at'),'fetched_at':fetched,
+            'source_class':'BETFLAG_AAMS_DIRECT','source':'sportservice.betflag.it via residential self-hosted runner',
+            'betflag_direct':True,'source_healthy':bool(feed.get('source_healthy')),
+            'request':req,'exact_matches':len(cand),
+            'price_gate_eligible':bool(quote and feed.get('source_healthy')),
+            'proof_id':'bfr-'+digest[:20],'sha256':digest,'quote':quote,
+            'candidates':cand[:25] if len(cand)!=1 else []
+          }
+          p=pathlib.Path('feed'); (p/'betflag-price-proof-latest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          a=p/'price-proofs'; a.mkdir(exist_ok=True); stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+          (a/f'{stamp}-{digest[:12]}.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          '@ | Set-Content -Encoding UTF8 .tmp_resolve_exact.py
+          python .tmp_resolve_exact.py
+      - name: Commit exact proof
+        shell: powershell
+        run: |
+          git config user.name "radar-betflag-residential-bot"
+          git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-price-proof-latest.json feed/price-proofs
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "Record residential BetFlag exact price proof"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          }
