@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-29T19:57:34.696546+00:00",
+  "generated_at": "2026-08-29T20:10:06.729552+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -11,8 +11,8 @@
   "target_count": 40,
   "status_counts": {
     "NOT_AVAILABLE": 29,
-    "REFERENCE_PREVIOUS_XI": 9,
-    "SOURCE_CONFIRMED": 2
+    "SOURCE_CONFIRMED": 3,
+    "REFERENCE_PREVIOUS_XI": 8
   },
   "schedule_stats": [
     {
@@ -30,7 +30,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -63,7 +63,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -96,7 +96,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Segunda Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -121,7 +121,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -142,30 +142,33 @@
         "complete_11v11": false,
         "confirmed": false,
         "historical_reference": false,
-        "lineup_type": "standard",
-        "provider_source": "",
+        "lineup_type": "unavailable",
+        "provider_source": "optaSdapi",
         "teams": [
           {
             "team_id": 1320333,
             "team_name": "Barra FC",
-            "formation": null,
+            "formation": "",
             "starters": [],
             "bench": [],
             "raw_keys": [
               "id",
               "name",
-              "unavailable"
+              "formation",
+              "starters"
             ]
           },
           {
             "team_id": 198135,
             "team_name": "Volta Redonda",
-            "formation": null,
+            "formation": "",
             "starters": [],
             "bench": [],
             "raw_keys": [
               "id",
               "name",
+              "formation",
+              "starters",
               "unavailable"
             ]
           }
@@ -174,6 +177,7 @@
         "raw_keys": [
           "matchId",
           "lineupType",
+          "source",
           "availableFilters",
           "homeTeam",
           "awayTeam"
@@ -188,7 +192,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Copa Santa Catarina",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -213,7 +217,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -238,7 +242,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Segunda Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -263,7 +267,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Segunda Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -288,10 +292,10 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
-      "status": "REFERENCE_PREVIOUS_XI",
-      "confirmed_at": null,
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-29T20:10:06.729552+00:00",
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
       "previous_xi_fingerprint": null,
@@ -307,20 +311,20 @@
       "lineup": {
         "present": true,
         "complete_11v11": true,
-        "confirmed": false,
-        "historical_reference": true,
-        "lineup_type": "lastStarting11",
-        "provider_source": "lastStartingLineups",
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "enetpulse",
         "teams": [
           {
             "team_id": 7796,
             "team_name": "Defensor Sporting",
-            "formation": "3-4-2-1",
+            "formation": "4-2-3-1",
             "starters": [
               {
-                "name": "Kevin Dawson",
-                "id": 829670,
-                "shirt_number": "12",
+                "name": "Lucas Machado",
+                "id": 1021600,
+                "shirt_number": "1",
                 "position_id": 11,
                 "usual_position_id": 0,
                 "horizontal_layout": {
@@ -337,115 +341,58 @@
                 }
               },
               {
-                "name": "Lucas de los Santos",
-                "id": 1357410,
-                "shirt_number": "24",
-                "position_id": 33,
-                "usual_position_id": 2,
+                "name": "Lucas Agazzi",
+                "id": 1437532,
+                "shirt_number": "11",
+                "position_id": 32,
+                "usual_position_id": 1,
                 "horizontal_layout": {
                   "x": 0.292,
-                  "y": 0.79,
+                  "y": 0.875,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.385
                 },
                 "vertical_layout": {
-                  "x": 0.21,
+                  "x": 0.125,
                   "y": 0.292,
                   "height": 0.192,
-                  "width": 0.29
+                  "width": 0.25
                 }
               },
               {
                 "name": "Guillermo De Los Santos",
                 "id": 438648,
                 "shirt_number": "3",
-                "position_id": 35,
+                "position_id": 34,
                 "usual_position_id": 1,
                 "horizontal_layout": {
                   "x": 0.292,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Edgar Elizalde",
-                "id": 883695,
-                "shirt_number": "2",
-                "position_id": 37,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Lucas Agazzi",
-                "id": 1437532,
-                "shirt_number": "11",
-                "position_id": 62,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Germán Barrios",
-                "id": 1617168,
-                "shirt_number": "5",
-                "position_id": 64,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
                   "y": 0.625,
                   "height": 0.25,
                   "width": 0.192
                 },
                 "vertical_layout": {
                   "x": 0.375,
-                  "y": 0.485,
+                  "y": 0.292,
                   "height": 0.192,
                   "width": 0.25
                 }
               },
               {
-                "name": "Erico Cuello",
-                "id": 1437533,
-                "shirt_number": "30",
-                "position_id": 66,
-                "usual_position_id": 2,
+                "name": "Edgar Elizalde",
+                "id": 883695,
+                "shirt_number": "2",
+                "position_id": 36,
+                "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.485,
+                  "x": 0.292,
                   "y": 0.375,
                   "height": 0.25,
                   "width": 0.192
                 },
                 "vertical_layout": {
                   "x": 0.625,
-                  "y": 0.485,
+                  "y": 0.292,
                   "height": 0.192,
                   "width": 0.25
                 }
@@ -454,64 +401,121 @@
                 "name": "Axel Frugone",
                 "id": 1710230,
                 "shirt_number": "15",
-                "position_id": 68,
+                "position_id": 38,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.485,
+                  "x": 0.292,
                   "y": 0.125,
                   "height": 0.25,
                   "width": 0.192
                 },
                 "vertical_layout": {
                   "x": 0.875,
-                  "y": 0.485,
+                  "y": 0.292,
                   "height": 0.192,
                   "width": 0.25
                 }
               },
               {
-                "name": "Alan Torterolo",
-                "id": 1793910,
-                "shirt_number": "22",
-                "position_id": 84,
+                "name": "Erico Cuello",
+                "id": 1437533,
+                "shirt_number": "30",
+                "position_id": 64,
                 "usual_position_id": 2,
                 "horizontal_layout": {
-                  "x": 0.678,
+                  "x": 0.485,
                   "y": 0.7,
                   "height": 0.25,
-                  "width": 0.193
+                  "width": 0.192
                 },
                 "vertical_layout": {
                   "x": 0.3,
-                  "y": 0.678,
+                  "y": 0.485,
                   "height": 0.192,
                   "width": 0.4
                 }
               },
               {
-                "name": "Nicolás Medina",
-                "id": 1439172,
-                "shirt_number": "7",
-                "position_id": 86,
-                "usual_position_id": 3,
+                "name": "Martín Rabuñal",
+                "id": 635427,
+                "shirt_number": "55",
+                "position_id": 66,
+                "usual_position_id": 2,
                 "horizontal_layout": {
-                  "x": 0.678,
+                  "x": 0.485,
                   "y": 0.3,
                   "height": 0.25,
                   "width": 0.192
                 },
                 "vertical_layout": {
                   "x": 0.7,
-                  "y": 0.678,
+                  "y": 0.485,
                   "height": 0.192,
                   "width": 0.4
+                }
+              },
+              {
+                "name": "Germán Barrios",
+                "id": 1617168,
+                "shirt_number": "5",
+                "position_id": 83,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Tomás Pozzo",
+                "id": 1209106,
+                "shirt_number": "29",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Alan Torterolo",
+                "id": 1793910,
+                "shirt_number": "22",
+                "position_id": 87,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
                 }
               },
               {
                 "name": "Brian Montenegro",
                 "id": 207300,
                 "shirt_number": "26",
-                "position_id": 105,
+                "position_id": 115,
                 "usual_position_id": 3,
                 "horizontal_layout": {
                   "x": 0.87,
@@ -529,9 +533,9 @@
             ],
             "bench": [
               {
-                "name": "Lucas Machado",
-                "id": 1021600,
-                "shirt_number": "1"
+                "name": "Geanfranco Rodríguez",
+                "id": 1810068,
+                "shirt_number": "4"
               },
               {
                 "name": "Mateo Caballero",
@@ -544,9 +548,9 @@
                 "shirt_number": "25"
               },
               {
-                "name": "Juan Manuel Jorge",
-                "id": 1437534,
-                "shirt_number": "27"
+                "name": "Lucas de los Santos",
+                "id": 1357410,
+                "shirt_number": "24"
               },
               {
                 "name": "Nicolás Wunsch",
@@ -569,11 +573,6 @@
                 "shirt_number": "9"
               },
               {
-                "name": "Juan Díaz",
-                "id": 1972014,
-                "shirt_number": "19"
-              },
-              {
                 "name": "Lautaro Navarro",
                 "id": 1711755,
                 "shirt_number": "99"
@@ -587,8 +586,7 @@
               "coach",
               "subs",
               "averageStarterAge",
-              "totalStarterMarketValue",
-              "lastMatch"
+              "totalStarterMarketValue"
             ]
           },
           {
@@ -597,9 +595,9 @@
             "formation": "4-3-3",
             "starters": [
               {
-                "name": "Franco Torgnascioli",
-                "id": 310290,
-                "shirt_number": "1",
+                "name": "Gastón Rodríguez",
+                "id": 429990,
+                "shirt_number": "13",
                 "position_id": 11,
                 "usual_position_id": 0,
                 "horizontal_layout": {
@@ -692,11 +690,11 @@
                 }
               },
               {
-                "name": "Luka Andrade",
-                "id": 1710288,
-                "shirt_number": "7",
+                "name": "Diogo Guzmán",
+                "id": 1606901,
+                "shirt_number": "19",
                 "position_id": 73,
-                "usual_position_id": 3,
+                "usual_position_id": 2,
                 "horizontal_layout": {
                   "x": 0.613,
                   "y": 0.79,
@@ -787,9 +785,9 @@
                 }
               },
               {
-                "name": "Ramiro Lecchini",
-                "id": 1901730,
-                "shirt_number": "18",
+                "name": "Luka Andrade",
+                "id": 1710288,
+                "shirt_number": "7",
                 "position_id": 107,
                 "usual_position_id": 3,
                 "horizontal_layout": {
@@ -808,9 +806,9 @@
             ],
             "bench": [
               {
-                "name": "Gastón Rodríguez",
-                "id": 429990,
-                "shirt_number": "13"
+                "name": "Mathías Aguiar",
+                "id": 1779439,
+                "shirt_number": "12"
               },
               {
                 "name": "Brian Gutiérrez",
@@ -833,19 +831,14 @@
                 "shirt_number": "14"
               },
               {
+                "name": "Franco Pizzichillo",
+                "id": 1174809,
+                "shirt_number": "5"
+              },
+              {
                 "name": "Lucas Duré",
                 "id": 1712420,
                 "shirt_number": "23"
-              },
-              {
-                "name": "Sebastián Cáceres",
-                "id": 1213979,
-                "shirt_number": "32"
-              },
-              {
-                "name": "Tomás Shaw",
-                "id": 2140516,
-                "shirt_number": "31"
               },
               {
                 "name": "Juan Quintana",
@@ -856,6 +849,11 @@
                 "name": "Nahuel Da Silva",
                 "id": 1651114,
                 "shirt_number": "11"
+              },
+              {
+                "name": "Ramiro Lecchini",
+                "id": 1901730,
+                "shirt_number": "18"
               }
             ],
             "raw_keys": [
@@ -866,12 +864,11 @@
               "coach",
               "subs",
               "averageStarterAge",
-              "totalStarterMarketValue",
-              "lastMatch"
+              "totalStarterMarketValue"
             ]
           }
         ],
-        "xi_fingerprint": "e9c50a55f1c77c5214da",
+        "xi_fingerprint": "a787296a98404eee6a34",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -890,7 +887,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -923,7 +920,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -956,7 +953,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -989,7 +986,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1022,7 +1019,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1055,7 +1052,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Liga Femenina",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1080,7 +1077,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Serie C",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1113,7 +1110,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Segunda Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1138,7 +1135,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1163,7 +1160,7 @@
       "start_time": "29-08-2026 22:00",
       "start_utc": "2026-08-29T20:00:00+00:00",
       "league": "Liga de Ascenso",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -10.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1188,7 +1185,7 @@
       "start_time": "29-08-2026 22:15",
       "start_utc": "2026-08-29T20:15:00+00:00",
       "league": "Segunda Division",
-      "minutes_to_start": 17.4,
+      "minutes_to_start": 4.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1213,7 +1210,7 @@
       "start_time": "29-08-2026 22:30",
       "start_utc": "2026-08-29T20:30:00+00:00",
       "league": "Primera B",
-      "minutes_to_start": 32.4,
+      "minutes_to_start": 19.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1246,7 +1243,7 @@
       "start_time": "29-08-2026 22:30",
       "start_utc": "2026-08-29T20:30:00+00:00",
       "league": "Serie B",
-      "minutes_to_start": 32.4,
+      "minutes_to_start": 19.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1271,7 +1268,7 @@
       "start_time": "29-08-2026 22:30",
       "start_utc": "2026-08-29T20:30:00+00:00",
       "league": "Primera B",
-      "minutes_to_start": 32.4,
+      "minutes_to_start": 19.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1304,7 +1301,7 @@
       "start_time": "29-08-2026 22:30",
       "start_utc": "2026-08-29T20:30:00+00:00",
       "league": "MLS",
-      "minutes_to_start": 32.4,
+      "minutes_to_start": 19.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-29T19:45:13.095971+00:00",
@@ -1583,6 +1580,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -1857,6 +1855,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -1886,13 +1885,13 @@
       "start_time": "29-08-2026 22:30",
       "start_utc": "2026-08-29T20:30:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 32.4,
+      "minutes_to_start": 19.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-29T19:57:34.696546+00:00",
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
-      "previous_xi_fingerprint": null,
+      "previous_xi_fingerprint": "bb27fc34f22f642a369e",
       "source": "FotMob",
       "fotmob_match": {
         "id": 1000017217,
@@ -2467,7 +2466,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2492,7 +2491,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2525,7 +2524,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "Soccer League",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -3097,7 +3096,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "Liga Nacional",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3122,7 +3121,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "Serie A",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -3745,7 +3744,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "NASL",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -4321,7 +4320,7 @@
       "start_time": "29-08-2026 23:00",
       "start_utc": "2026-08-29T21:00:00+00:00",
       "league": "Paulista coppa",
-      "minutes_to_start": 62.4,
+      "minutes_to_start": 49.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -4354,7 +4353,7 @@
       "start_time": "29-08-2026 23:25",
       "start_utc": "2026-08-29T21:25:00+00:00",
       "league": "Primera A",
-      "minutes_to_start": 87.4,
+      "minutes_to_start": 74.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -4948,7 +4947,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Serie A",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -5572,7 +5571,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Serie B",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -6183,7 +6182,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6208,7 +6207,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -6830,7 +6829,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Primera C ",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6855,7 +6854,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -7443,7 +7442,7 @@
       "start_time": "29-08-2026 23:30",
       "start_utc": "2026-08-29T21:30:00+00:00",
       "league": "Primera B",
-      "minutes_to_start": 92.4,
+      "minutes_to_start": 79.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
