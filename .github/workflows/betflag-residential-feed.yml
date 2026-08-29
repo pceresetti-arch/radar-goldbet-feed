@@ -18,7 +18,7 @@ concurrency:
 jobs:
   collect:
     runs-on: [self-hosted, windows, betflag-residential]
-    timeout-minutes: 4
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v6
         with:
@@ -26,50 +26,30 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Collect BetFlag player markets from residential network
+      - name: Collect BetFlag player markets
         shell: powershell
         run: |
           python collector/betflag_residential_collector.py
-      - name: Update player opening and movement history
+      - name: Update player movement history
         shell: powershell
         run: |
           python collector/betflag_residential_movement.py
-      - name: Probe BetFlag market catalog
-        shell: powershell
-        run: |
-          python collector/betflag_market_catalog_probe.py
-      - name: Probe BetFlag event details endpoint
-        shell: powershell
-        run: |
-          python collector/betflag_details_endpoint_probe.py
-      - name: Probe BetFlag overview response shape
-        shell: powershell
-        run: |
-          python collector/betflag_overview_shape_probe.py
-      - name: Probe BetFlag standard slots
-        shell: powershell
-        run: |
-          python collector/betflag_standard_slots_probe.py
-      - name: Inspect BetFlag lmtW metadata
-        shell: powershell
-        run: |
-          python collector/betflag_lmtw_probe.py
-      - name: Collect priority BetFlag standard markets
+      - name: Collect BetFlag standard markets
         shell: powershell
         run: |
           python collector/betflag_standard_market_collector.py
-      - name: Update 1X2 totals and cross-market movement index
+      - name: Update standard-market movement
         shell: powershell
         run: |
           python collector/betflag_standard_movement.py
-      - name: Commit fresh BetFlag feeds and movement
+      - name: Commit fresh production feeds
         shell: powershell
         run: |
           git config user.name "radar-betflag-residential-bot"
           git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
-          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-market-catalog-probe.json feed/betflag-details-endpoint-probe.json feed/betflag-overview-shape-probe.json feed/betflag-standard-slots-probe.json feed/betflag-lmtw-probe.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json
+          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json
           if (-not (git diff --cached --quiet)) {
-            git commit -m "Refresh residential BetFlag feeds and movement"
+            git commit -m "Refresh residential BetFlag production feeds"
             git fetch origin main
             git rebase origin/main
             git push origin HEAD:main
