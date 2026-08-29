@@ -27,14 +27,18 @@ jobs:
         shell: powershell
         run: |
           python collector/betflag_residential_collector.py
-      - name: Commit fresh BetFlag feed
+      - name: Update immutable opening and movement history
+        shell: powershell
+        run: |
+          python collector/betflag_residential_movement.py
+      - name: Commit fresh BetFlag feed and movement
         shell: powershell
         run: |
           git config user.name "radar-betflag-residential-bot"
           git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
-          git add feed/betflag-residential-current.json feed/betflag-residential-history
+          git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json
           if (-not (git diff --cached --quiet)) {
-            git commit -m "Refresh residential BetFlag player feed"
+            git commit -m "Refresh residential BetFlag feed and movement"
             git fetch origin main
             git rebase origin/main
             git push origin HEAD:main
