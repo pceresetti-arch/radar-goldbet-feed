@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 import pathlib
+import re
 import subprocess
 import sys
 import time
+import unicodedata
 from datetime import datetime, timezone
 
 BASE_SCRIPT = pathlib.Path('scripts/refresh_current_lineups_resilient.py')
@@ -14,7 +17,7 @@ POSTXI = pathlib.Path('feed/post-xi-refresh-request.json')
 
 # One complete target-discovery pass per workflow. If official XI is still
 # missing close to kickoff, subsequent checks are lightweight direct probes of
-# only the imminent fixtures, using FotMob plus Sofascore fallback/cross-check.
+# only the imminent fixtures, using FotMob plus a secondary-source fallback.
 MAX_ATTEMPTS = 6
 POLL_INTERVAL_SECONDS = 35
 URGENT_FROM_MIN = 0.0
@@ -34,6 +37,11 @@ def load_json(path, default=None):
         return {} if default is None else default
 
 
+def norm(s):
+    s = unicodedata.normalize('NFKD', str(s or '')).encode('ascii', 'ignore').decode().lower()
+    return ' '.join(re.sub(r'[^a-z0-9]+', ' ', s).split())
+
+
 def key_of(m):
     return str(m.get('match_market_id') or m.get('match_event_id') or m.get('match') or '')
 
@@ -49,9 +57,29 @@ def is_official(m):
     )
 
 
-def fingerprint(m):
-    ln = ((m or {}).get('lineup') or {})
-    return ln.get('xi_name_fingerprint') or ln.get('xi_fingerprint')
+def canonical_xi_fingerprint(m):
+    """Cross-provider XI identity based only on normalized starter names.
+
+    Provider player/team IDs are intentionally ignored: FotMob, Sofascore and
+    Flashscore use different IDs. Sorting the 11 names per side also makes the
+    identity insensitive to provider lineup ordering/layout.
+    """
+    teams = (((m or {}).get('lineup') or {}).get('teams') or [])
+    if len(teams) < 2:
+        return None
+    parts = []
+    for t in teams[:2]:
+        names = sorted(
+            norm((p or {}).get('name'))
+            for p in (t.get('starters') or [])
+            if isinstance(p, dict) and (p or {}).get('name')
+        )
+        if len(names) != 11:
+            return None
+        # Do not include provider team IDs or even team labels: participant
+        # mapping is already fixture-scoped and provider aliases can differ.
+        parts.append(','.join(names))
+    return hashlib.sha256('|'.join(parts).encode()).hexdigest()[:20]
 
 
 def match_map(payload):
@@ -95,13 +123,39 @@ def urgent_missing(payload):
     return out
 
 
+def reconcile_official_metadata(before, after):
+    """Repair provider-ID artifacts before event detection/persistence."""
+    bmap, amap = match_map(before), match_map(after)
+    repaired = []
+    for k, cur in amap.items():
+        prev = bmap.get(k)
+        if not prev or not is_official(cur) or not is_official(prev):
+            continue
+        prev_fp = canonical_xi_fingerprint(prev)
+        cur_fp = canonical_xi_fingerprint(cur)
+        if not prev_fp or not cur_fp:
+            continue
+        if prev_fp == cur_fp:
+            if cur.get('xi_changed_after_confirmation'):
+                repaired.append({'match': cur.get('match'), 'repair': 'FALSE_XI_CHANGE_SUPPRESSED'})
+            cur['xi_changed_after_confirmation'] = False
+            if prev.get('confirmed_at'):
+                cur['confirmed_at'] = prev.get('confirmed_at')
+        else:
+            cur['xi_changed_after_confirmation'] = True
+    if repaired:
+        after['watchdog_identity_repairs'] = repaired
+    LINEUPS.write_text(json.dumps(after, ensure_ascii=False, indent=2), encoding='utf-8')
+    return after
+
+
 def detect_events(before, after):
     bmap, amap = match_map(before), match_map(after)
     events = []
     for k, cur in amap.items():
         prev = bmap.get(k) or {}
         cur_off, prev_off = is_official(cur), is_official(prev)
-        cur_fp, prev_fp = fingerprint(cur), fingerprint(prev)
+        cur_fp, prev_fp = canonical_xi_fingerprint(cur), canonical_xi_fingerprint(prev)
         event_type = None
         if cur_off and not prev_off:
             event_type = 'XI_OFFICIAL_DETECTED'
@@ -159,11 +213,11 @@ final_payload = run_script(BASE_SCRIPT)
 missing = urgent_missing(final_payload)
 
 # If anything imminent is still unresolved, immediately run the lightweight
-# dual-source probe before waiting. This can promote a Sofascore-confirmed XI
-# even when FotMob has not published its standard lineup yet.
+# multi-source probe before waiting.
 if missing:
     final_payload = run_script(URGENT_SCRIPT)
 
+final_payload = reconcile_official_metadata(reference, final_payload)
 events = detect_events(reference, final_payload)
 actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
 missing = urgent_missing(final_payload)
@@ -187,12 +241,13 @@ if not actionable_now and missing:
         time.sleep(POLL_INTERVAL_SECONDS)
         started = now_iso()
         final_payload = run_script(URGENT_SCRIPT)
+        final_payload = reconcile_official_metadata(reference, final_payload)
         events = detect_events(reference, final_payload)
         actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
         missing = urgent_missing(final_payload)
         attempt_records.append({
             'attempt': attempt,
-            'mode': 'URGENT_DIRECT_DUAL_SOURCE',
+            'mode': 'URGENT_DIRECT_MULTI_SOURCE',
             'started_at': started,
             'finished_at': now_iso(),
             'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
@@ -208,10 +263,11 @@ if not actionable_now and missing:
 
 remaining = urgent_missing(final_payload)
 watchdog = {
-    'schema': 'radar-lineup-watchdog-v3',
+    'schema': 'radar-lineup-watchdog-v4',
     'generated_at': now_iso(),
-    'source_strategy': 'One canonical full discovery; then targeted FotMob + Sofascore confirmed XI probes for imminent unresolved fixtures',
+    'source_strategy': 'One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures',
     'official_definition': 'SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11',
+    'xi_change_identity': 'SHA256 of sorted normalized 11 starter names per side; provider IDs ignored',
     'poll_policy': {
         'base_schedule': 'GitHub cron every 5 minutes',
         'urgent_window_minutes': [URGENT_FROM_MIN, URGENT_TO_MIN],
@@ -220,7 +276,6 @@ watchdog = {
         'interval_seconds': POLL_INTERVAL_SECONDS,
         'full_discovery_attempts_per_run': 1,
         'subsequent_attempt_mode': 'targeted imminent fixtures only',
-        'secondary_source': 'Sofascore confirmed=true',
         'stop_immediately_on_actionable_official_transition': True,
         'started_matches_are_audit_only': True,
     },
@@ -235,11 +290,11 @@ watchdog = {
 WATCHDOG.write_text(json.dumps(watchdog, ensure_ascii=False, indent=2), encoding='utf-8')
 
 postxi = {
-    'schema': 'radar-post-xi-refresh-request-v3',
+    'schema': 'radar-post-xi-refresh-request-v4',
     'generated_at': watchdog['generated_at'],
     'required': bool(actionable_events),
     'reason': (
-        'Pre-kickoff official XI detected or changed; rebuild tactical roles, player context and deep-analysis readiness immediately.'
+        'Pre-kickoff official XI detected or genuinely changed; rebuild tactical roles, player context and deep-analysis readiness immediately.'
         if actionable_events
         else 'No actionable pre-kickoff official XI transition in this watchdog run.'
     ),
