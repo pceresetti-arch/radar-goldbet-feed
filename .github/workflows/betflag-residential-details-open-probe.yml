@@ -1,0 +1,117 @@
+name: BetFlag residential event-details opening probe
+
+on:
+  push:
+    paths:
+      - 'betflag-details-open-probe-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe BetFlag event details for opening fields
+        shell: powershell
+        run: |
+          @'
+          import json, pathlib, urllib.request, urllib.error, re
+          from datetime import datetime, timezone
+
+          BASE='https://sportservice.betflag.it/api/sport/pregame'
+          AGG=1334500001
+          H={
+            'Accept':'application/json,text/plain,*/*','x-api-version':'1.0','X-Auth-Token':'',
+            'X-Brand':'3','X-IdCanale':'0','Origin':'https://www.betflag.it','Referer':'https://www.betflag.it/',
+            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36'
+          }
+          def fetch(url):
+            req=urllib.request.Request(url,headers=H)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read().decode('utf-8','replace')
+                return r.status,json.loads(raw),raw[:1000]
+            except urllib.error.HTTPError as e:
+              return e.code,None,e.read().decode('utf-8','replace')[:1000]
+            except Exception as e:
+              return None,None,repr(e)
+          def walk(x):
+            if isinstance(x,dict):
+              yield x
+              for v in x.values(): yield from walk(v)
+            elif isinstance(x,list):
+              for v in x: yield from walk(v)
+          def scalars(d):
+            return {str(k):v for k,v in d.items() if v is None or isinstance(v,(str,int,float,bool))}
+          def summarize(data):
+            keys=set(); quoteish=[]; openingish=[]
+            if data is None: return {'all_keys':[],'quoteish':[],'openingish':[]}
+            for d in walk(data):
+              keys.update(str(k) for k in d.keys())
+              sd=scalars(d)
+              lk=' '.join(str(k).lower() for k in d.keys())
+              if 'ov' in d or any(k in lk for k in ('odd','quota','open','initial','start','original')):
+                if len(quoteish)<30: quoteish.append(sd)
+              for k,v in sd.items():
+                ck=re.sub(r'[^a-z0-9]','',k.lower())
+                if any(t in ck for t in ('open','initial','original','start','odd','quota')) and k!='ov':
+                  if len(openingish)<50: openingish.append({'field':k,'value':v,'object':sd})
+            return {'all_keys':sorted(keys),'quoteish':quoteish,'openingish':openingish}
+
+          st,std,_=fetch(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
+          candidates=[]
+          if std:
+            for d in walk(std):
+              en=str(d.get('en') or '')
+              if 'bournemouth' in en.lower() and 'everton' in en.lower():
+                candidates.append(scalars(d))
+          # Prefer a normal match object (not synthetic player event) with a real event id.
+          event=None
+          for c in candidates:
+            if c.get('ei') is not None and not str(c.get('en') or '').startswith('('):
+              event=c; break
+          if event is None:
+            for d in walk(std or {}):
+              if d.get('ei') is not None and d.get('en') and not str(d.get('en')).startswith('('):
+                event=scalars(d); break
+          ei=(event or {}).get('ei')
+          attempts=[]
+          if ei is not None:
+            patterns=[
+              (0,ei,0,0,0,0),(1,ei,0,0,0,0),(0,ei,1,0,0,0),
+              (0,ei,0,1,0,0),(0,ei,0,0,1,0),(0,ei,0,0,0,1)
+            ]
+            for args in patterns:
+              url=f'{BASE}/getDetailsEventAams/'+'/'.join(map(str,args))+'?channelId=0'
+              status,data,prefix=fetch(url)
+              attempts.append({'args':args,'url':url,'status':status,'prefix':prefix if data is None else None,'summary':summarize(data)})
+          out={
+            'schema_version':'betflag-residential-details-open-probe-v1',
+            'generated_at':datetime.now(timezone.utc).isoformat(),
+            'overview_status':st,'selected_event':event,'candidate_matches':candidates[:20],
+            'attempts':attempts
+          }
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-details-open-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'selected_event':event,'attempts':[{'args':a['args'],'status':a['status'],'keys':a['summary']['all_keys'][:80],'openingish':a['summary']['openingish'][:8]} for a in attempts]},ensure_ascii=False,indent=2))
+          '@ | Set-Content -Encoding UTF8 .tmp_details_open_probe.py
+          python .tmp_details_open_probe.py
+      - name: Commit probe
+        shell: powershell
+        run: |
+          git config user.name "radar-betflag-residential-bot"
+          git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+          git add feed/betflag-details-open-probe.json
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "Probe BetFlag event details for opening evidence"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          }
