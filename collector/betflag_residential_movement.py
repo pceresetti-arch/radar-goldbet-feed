@@ -1,11 +1,28 @@
-import json, pathlib, hashlib
-from datetime import datetime, timezone
-from zoneinfo import ZoneInfo
+import json, pathlib, hashlib, calendar
+from datetime import datetime, timezone, timedelta
 
 FEED=pathlib.Path('feed')
 CURRENT=FEED/'betflag-residential-current.json'
 STATE=FEED/'betflag-residential-movement.json'
-ROME=ZoneInfo('Europe/Rome')
+
+
+def last_sunday(year,month):
+ last_day=calendar.monthrange(year,month)[1]
+ d=datetime(year,month,last_day)
+ return last_day-((d.weekday()+1)%7)
+
+
+def rome_tz_for_local(naive):
+ # EU daylight-saving rule: last Sunday of March 02:00 local to
+ # last Sunday of October 03:00 local. This avoids relying on tzdata on Windows runners.
+ y=naive.year
+ dst_start=datetime(y,3,last_sunday(y,3),2,0)
+ dst_end=datetime(y,10,last_sunday(y,10),3,0)
+ return timezone(timedelta(hours=2 if dst_start<=naive<dst_end else 1))
+
+
+def localize_rome(naive):
+ return naive.replace(tzinfo=rome_tz_for_local(naive))
 
 
 def iso_dt(v):
@@ -16,17 +33,12 @@ def iso_dt(v):
   try: return datetime.fromtimestamp(n,tz=timezone.utc)
   except Exception: return None
  s=str(v).strip()
- for parser in (
-  lambda x: datetime.fromisoformat(x.replace('Z','+00:00')),
-  lambda x: datetime.strptime(x,'%d-%m-%Y %H:%M').replace(tzinfo=ROME),
-  lambda x: datetime.strptime(x,'%d/%m/%Y %H:%M').replace(tzinfo=ROME),
-  lambda x: datetime.strptime(x,'%Y-%m-%d %H:%M:%S').replace(tzinfo=ROME),
-  lambda x: datetime.strptime(x,'%Y-%m-%d %H:%M').replace(tzinfo=ROME),
- ):
-  try:
-   d=parser(s)
-   if d.tzinfo is None: d=d.replace(tzinfo=ROME)
-   return d
+ try:
+  d=datetime.fromisoformat(s.replace('Z','+00:00'))
+  return localize_rome(d) if d.tzinfo is None else d
+ except Exception: pass
+ for fmt in ('%d-%m-%Y %H:%M','%d/%m/%Y %H:%M','%Y-%m-%d %H:%M:%S','%Y-%m-%d %H:%M'):
+  try: return localize_rome(datetime.strptime(s,fmt))
   except Exception: pass
  return None
 
@@ -105,10 +117,7 @@ def main():
    }
    state['quotes'][key]=ms; new_quotes+=1
   else:
-   # Identity metadata may improve over time, but immutable price fields are untouched.
-   for k,v in {
-    'match':row.get('match'),'match_start':row.get('match_start'),'odds_id':row.get('odds_id')
-   }.items():
+   for k,v in {'match':row.get('match'),'match_start':row.get('match_start'),'odds_id':row.get('odds_id')}.items():
     if v not in (None,''): ms.setdefault('identity',{})[k]=v
 
   # A real opening quote is fixed forever once BetFlag explicitly certifies it.
