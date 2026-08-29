@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "scope": "Historical migration for Registro giocate radar unico",
+  "rule": "No historical day may be declared authoritative until all confirmed bets, corrections and receipts are reconciled. Existing historical artifacts are preserved; migration is additive only.",
+  "days": [
+    {"date":"2026-08-09","status":"RECONCILIATION_REQUIRED","known_fact":"Halmstad–GAIS Under 2.5 @1.95, stake 20 EUR, WON; return 39 EUR, net +19 EUR."},
+    {"date":"2026-08-16","status":"RECONCILIATION_REQUIRED","known_conflict":"Historical summaries contain differing intermediate counts (15 bets / 187 EUR versus later 18 bets / 215 EUR). Must reconcile receipts and later corrections before authoritative migration."},
+    {"date":"2026-08-21","status":"RECONCILIATION_REQUIRED","known_fact":"Multiple confirmed bets exist in prior register; must migrate all exact entries and outcomes."},
+    {"date":"2026-08-22","status":"RECONCILIATION_REQUIRED","known_fact":"Multiple confirmed bets exist in prior register; must migrate all exact entries and outcomes."},
+    {"date":"2026-08-23","status":"RECONCILIATION_REQUIRED","known_fact":"Multiple confirmed bets exist in prior register; must migrate all exact entries and outcomes."},
+    {"date":"2026-08-24","status":"RECONCILIATION_REQUIRED","known_fact":"Six confirmed bets were recorded after corrections; Botheim was explicitly cancelled/not placed and must remain excluded."},
+    {"date":"2026-08-25","status":"RECONCILIATION_REQUIRED","known_fact":"Historical register/backtest artifacts exist; migrate only explicitly confirmed bets."},
+    {"date":"2026-08-26","status":"RECONCILIATION_REQUIRED","known_fact":"Confirmed bets include Lyon–Fenerbahçe Loïs Openda anytime @3.00 stake 5 EUR and Viking–Dinamo Zagreb Dion Drena Beljo anytime @2.75 stake 5 EUR; verify full day before closure."},
+    {"date":"2026-08-27","status":"RECONCILIATION_REQUIRED","known_fact":"Historical project activity exists; migrate only confirmed wagers, not forecasts."},
+    {"date":"2026-08-28","status":"RECONCILIATION_REQUIRED","known_fact":"Historical project activity exists; migrate only confirmed wagers, not forecasts."},
+    {"date":"2026-08-29","status":"AUTHORITATIVE","bet_count":12,"stake_total_eur":60.0,"returns_total_eur":86.9,"net_pl_eur":26.9}
+  ]
+}
