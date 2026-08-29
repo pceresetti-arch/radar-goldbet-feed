@@ -1,0 +1,130 @@
+name: BetFlag residential browser opening probe
+
+on:
+  push:
+    paths:
+      - 'betflag-browser-open-probe-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright client
+        shell: powershell
+        run: python -m pip install --disable-pip-version-check playwright
+      - name: Capture actual BetFlag browser API calls
+        shell: powershell
+        run: |
+          @'
+          import json, pathlib, re, time
+          from datetime import datetime, timezone
+          from playwright.sync_api import sync_playwright
+
+          def scalar_map(d):
+              if not isinstance(d,dict): return {}
+              return {str(k):v for k,v in d.items() if v is None or isinstance(v,(str,int,float,bool))}
+          def walk(x):
+              if isinstance(x,dict):
+                  yield x
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+          def summarize(data):
+              keys=set(); openingish=[]; quoteish=[]
+              for d in walk(data):
+                  keys.update(str(k) for k in d.keys())
+                  sd=scalar_map(d)
+                  if 'ov' in d and len(quoteish)<50: quoteish.append(sd)
+                  for k,v in sd.items():
+                      ck=re.sub(r'[^a-z0-9]','',str(k).lower())
+                      if any(t in ck for t in ('open','initial','original','starting','startodd','oddopen','quotaapert')):
+                          if len(openingish)<100: openingish.append({'field':k,'value':v,'object':sd})
+              return {'keys':sorted(keys),'openingish':openingish,'quoteish':quoteish}
+
+          captured=[]; errors=[]; clicked=False
+          with sync_playwright() as p:
+              browser=None
+              for channel in ('chrome','msedge'):
+                  try:
+                      browser=p.chromium.launch(channel=channel,headless=True)
+                      break
+                  except Exception as e:
+                      errors.append(f'{channel}: {e!r}')
+              if browser is None:
+                  raise RuntimeError('No installed Chrome/Edge usable by Playwright: '+repr(errors))
+              page=browser.new_page(viewport={'width':1440,'height':1000})
+              def on_response(resp):
+                  u=resp.url
+                  if 'sportservice.betflag.it' not in u and '/api/sport/' not in u: return
+                  if not any(x in u for x in ('getDetailsEventAams','getOverviewEventsAams','getProgram','getDetailsEvent')): return
+                  item={'url':u,'status':resp.status}
+                  try:
+                      data=resp.json()
+                      item['summary']=summarize(data)
+                  except Exception as e:
+                      item['json_error']=repr(e)
+                  captured.append(item)
+              page.on('response',on_response)
+              r=page.goto('https://www.betflag.it/sport',wait_until='domcontentloaded',timeout=45000)
+              initial={'url':page.url,'status':r.status if r else None,'title':page.title()}
+              page.wait_for_timeout(5000)
+              # Search/click exact fixture text if rendered.
+              for text in ('Bournemouth - Everton','Bournemouth','Everton'):
+                  try:
+                      loc=page.get_by_text(text,exact=False)
+                      if loc.count()>0:
+                          loc.first.click(timeout=7000)
+                          clicked=True
+                          break
+                  except Exception as e:
+                      errors.append(f'click {text}: {e!r}')
+              if clicked:
+                  page.wait_for_timeout(8000)
+              out={
+                'schema_version':'betflag-residential-browser-open-probe-v1',
+                'generated_at':datetime.now(timezone.utc).isoformat(),
+                'initial':initial,'clicked_fixture':clicked,'final_url':page.url,
+                'captured':captured,'errors':errors
+              }
+              browser.close()
+          pathlib.Path('feed').mkdir(exist_ok=True)
+          pathlib.Path('feed/betflag-browser-open-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({
+            'initial':out['initial'],'clicked_fixture':clicked,'final_url':out['final_url'],
+            'requests':[{'url':x['url'],'status':x['status'],'openingish':(x.get('summary') or {}).get('openingish',[])[:10],'quote_count':len((x.get('summary') or {}).get('quoteish',[]))} for x in captured],
+            'errors':errors
+          },ensure_ascii=False,indent=2))
+          '@ | Set-Content -Encoding UTF8 .tmp_browser_open_probe.py
+          python .tmp_browser_open_probe.py
+      - name: Persist probe safely
+        shell: powershell
+        continue-on-error: true
+        run: |
+          git rebase --abort 2>$null
+          if (Test-Path .git/rebase-merge) { Remove-Item -Recurse -Force .git/rebase-merge }
+          if (Test-Path .git/rebase-apply) { Remove-Item -Recurse -Force .git/rebase-apply }
+          git config user.name "radar-betflag-residential-bot"
+          git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+          git add feed/betflag-browser-open-probe.json
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "Capture residential BetFlag browser opening evidence"
+            for ($i=1; $i -le 4; $i++) {
+              git fetch origin main
+              if (git rebase origin/main) {
+                if (git push origin HEAD:main) { exit 0 }
+              }
+              git rebase --abort 2>$null
+              Start-Sleep -Seconds (2*$i)
+            }
+          }
