@@ -18,7 +18,7 @@ def walk(x):
 
 def get(url):
  req=urllib.request.Request(url,headers=H)
- with urllib.request.urlopen(req,timeout=20) as r: return r.status,json.loads(r.read().decode())
+ with urllib.request.urlopen(req,timeout=12) as r: return r.status,json.loads(r.read().decode())
 
 def family(name):
  n=norm(name)
@@ -31,19 +31,24 @@ def family(name):
  return None
 
 def slots_from_lmtw(data):
- out=[]; seen=set()
+ candidates=[]
  for tab in (data.get('lmtW') or []) if isinstance(data,dict) else []:
   if not isinstance(tab,dict): continue
   tb=tab.get('tbI'); tbn=tab.get('tbN')
   for item in tab.get('lotb') or []:
    if not isinstance(item,dict): continue
    ti=item.get('ti'); sn=item.get('sn'); fam=family(sn)
-   if fam and tb is not None and ti is not None and (tb,ti) not in seen:
-    seen.add((tb,ti)); out.append({'tab_id':tb,'tab_name':tbn,'slot_id':ti,'slot_name':sn,'family':fam})
- # Primary families first. Limit keeps the scheduled residential run bounded.
+   if fam and tb is not None and ti is not None:
+    candidates.append({'tab_id':tb,'tab_name':tbn,'slot_id':ti,'slot_name':sn,'family':fam})
+ # Fast cycle: one canonical slot per family, preferring BetFlag's PRINCIPALI tab.
  rank={'1X2':0,'OVER_UNDER':1,'GOAL_NO_GOAL':2,'DOUBLE_CHANCE':3,'TEAM_TOTAL':4,'HANDICAP':5}
- out.sort(key=lambda x:(rank.get(x['family'],9),str(x.get('tab_name')),int(x.get('slot_id') or 0)))
- return out[:40]
+ candidates.sort(key=lambda x:(0 if norm(x.get('tab_name'))=='principali' else 1,rank.get(x['family'],9),int(x.get('slot_id') or 0)))
+ out=[]; seen_fam=set()
+ for x in candidates:
+  if x['family'] in seen_fam: continue
+  seen_fam.add(x['family']); out.append(x)
+  if len(out)>=6: break
+ return out
 
 def extract(data, slot, rows, markets_seen, all_market_names, dedupe):
  for ev in walk(data):
@@ -73,7 +78,6 @@ def main():
  try:
   status,base=get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
   slots=slots_from_lmtw(base)
-  # lmtW gives BetFlag's real tab/slot identifiers: no guessed market IDs.
   for slot in slots:
    try:
     st,data=get(f"{BASE}/getOverviewEventsAams/0/1/0/{AGG}/{slot['tab_id']}/{slot['slot_id']}/0?channelId=0")
@@ -81,12 +85,11 @@ def main():
     if st==200: extract(data,slot,rows,markets_seen,all_market_names,dedupe)
     slot_results.append({**slot,'status':st,'rows':len(rows)-before})
    except Exception as e:
-    errors.append({'slot':slot,'error':repr(e)})
-    slot_results.append({**slot,'status':None,'rows':0,'error':repr(e)})
+    errors.append({'slot':slot,'error':repr(e)}); slot_results.append({**slot,'status':None,'rows':0,'error':repr(e)})
  except Exception as e:
   base=None; slots=[]; errors.append({'stage':'base','error':repr(e)})
  families={f:sum(1 for r in rows if r['family']==f) for f in sorted(set(r['family'] for r in rows))}
- out={'schema_version':'betflag-standard-markets-v2','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':status==200 and len(rows)>0,'priority':['1X2','OVER_UNDER'],'secondary':['GOAL_NO_GOAL','TEAM_TOTAL','HANDICAP','DOUBLE_CHANCE'],'status':status,'slot_catalog':slots,'slot_results':slot_results,'markets_seen':markets_seen,'all_market_names_seen':dict(sorted(all_market_names.items(),key=lambda kv:(-kv[1],kv[0]))),'families':families,'rows':rows}
+ out={'schema_version':'betflag-standard-markets-v3','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':status==200 and len(rows)>0,'priority':['1X2','OVER_UNDER'],'secondary':['GOAL_NO_GOAL','TEAM_TOTAL','HANDICAP','DOUBLE_CHANCE'],'status':status,'slot_catalog':slots,'slot_results':slot_results,'markets_seen':markets_seen,'all_market_names_seen':dict(sorted(all_market_names.items(),key=lambda kv:(-kv[1],kv[0]))),'families':families,'rows':rows}
  if errors: out['errors']=errors
  p=pathlib.Path('feed'); p.mkdir(exist_ok=True)
  (p/'betflag-standard-current.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
