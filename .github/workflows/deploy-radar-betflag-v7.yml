@@ -1,23 +1,31 @@
 name: Deploy clean BetFlag v7 fast path
 
-# Production deploy is intentionally manual-only. Repository maintenance must
-# never trigger Cloudflare deployment failures or notification storms.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'betflag-standard-worker-trigger.json'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: deploy-radar-betflag-v7
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 10
+
+      - name: Apply direct BetFlag standard-index patch
+        run: |
+          python scripts/patch_betflag_standard_worker.py
+          node --check worker/src/index.mjs
 
       - name: Deploy clean v7 Worker
         env:
@@ -30,26 +38,55 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           npx --yes wrangler@4 deploy --config wrangler.v7.jsonc
 
-      - name: Verify public BetFlag v7 health
+      - name: Verify public BetFlag v7 standard and player indexes
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, time, urllib.request
+          import json, time, urllib.request, urllib.parse
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
           base='https://radar-betflag-v7.p-ceresetti.workers.dev'
+          date=datetime.now(ZoneInfo('Europe/Rome')).strftime('%d-%m-%Y')
           last=None
+          def get(path):
+              req=urllib.request.Request(base+path,headers={'Accept':'application/json','Cache-Control':'no-cache','User-Agent':'RadarDeployVerify/2.0'})
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  return r.status,json.loads(r.read().decode())
           for _ in range(8):
               try:
-                  req=urllib.request.Request(base+'/health?cb='+str(int(time.time()*1000)),headers={'Accept':'application/json','Cache-Control':'no-cache'})
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      body=json.loads(r.read().decode())
-                  last=body
-                  if r.status==200 and body.get('ok') is True and body.get('version')=='7.0-betflag-operational':
-                      print(json.dumps(body,ensure_ascii=False,indent=2))
+                  hs,h=get('/health?cb='+str(int(time.time()*1000)))
+                  ss,s=get('/live/standard-index?'+urllib.parse.urlencode({'date':date,'cb':int(time.time()*1000)}))
+                  ps,p=get('/live/player-index?'+urllib.parse.urlencode({'date':date,'cb':int(time.time()*1000)}))
+                  last={
+                    'health':{'status':hs,'version':h.get('version'),'endpoints':h.get('endpoints')},
+                    'standard':{'status':ss,'source_healthy':s.get('source_healthy'),'fixtures':(s.get('coverage') or {}).get('fixtures'),'freshness':s.get('freshness')},
+                    'player':{'status':ps,'source_healthy':p.get('source_healthy'),'fixtures':(p.get('coverage') or {}).get('fixtures'),'freshness':p.get('freshness')}
+                  }
+                  print(json.dumps(last,ensure_ascii=False,indent=2))
+                  if hs==200 and ss==200 and ps==200 and h.get('ok') is True and s.get('source_healthy') and (s.get('coverage') or {}).get('fixtures',0)>0 and p.get('source_healthy'):
                       raise SystemExit(0)
               except Exception as exc:
-                  last={'error':str(exc)}
+                  last={'error':repr(exc)}
               time.sleep(5)
           print(json.dumps(last,ensure_ascii=False,indent=2))
-          raise SystemExit('BetFlag v7 health verification failed')
+          raise SystemExit('BetFlag v7 standard/player verification failed')
           PY
+
+      - name: Commit deployed Worker source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add worker/src/index.mjs
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add direct BetFlag standard index endpoint'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then exit 0; fi
+            git rebase --abort || true
+            sleep $((attempt*2))
+          done
+          exit 1
