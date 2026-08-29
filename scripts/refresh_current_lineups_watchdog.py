@@ -8,14 +8,19 @@ from datetime import datetime, timezone
 
 BASE_SCRIPT = pathlib.Path('scripts/refresh_current_lineups_resilient.py')
 LINEUPS = pathlib.Path('feed/lineups-current.json')
-SUMMARY = pathlib.Path('feed/lineups-current-summary.json')
 WATCHDOG = pathlib.Path('feed/lineup-watchdog-current.json')
 POSTXI = pathlib.Path('feed/post-xi-refresh-request.json')
 
-MAX_ATTEMPTS = 4
-POLL_INTERVAL_SECONDS = 45
-URGENT_FROM_MIN = -5
-URGENT_TO_MIN = 80
+# GitHub cron is the coarse 5-minute heartbeat. Inside the last 80 minutes,
+# this watchdog creates a short burst of checks so an official XI published
+# just after a cron tick is normally detected within tens of seconds rather
+# than waiting for the next 5-minute run.
+MAX_ATTEMPTS = 6
+POLL_INTERVAL_SECONDS = 40
+URGENT_FROM_MIN = 0.0
+URGENT_TO_MIN = 80.0
+POST_XI_ACTIONABLE_FROM_MIN = 0.0
+POST_XI_ACTIONABLE_TO_MIN = 100.0
 
 
 def now_iso():
@@ -37,7 +42,11 @@ def is_official(m):
     if not isinstance(m, dict) or m.get('status') not in ('SOURCE_CONFIRMED', 'CROSS_CONFIRMED'):
         return False
     ln = m.get('lineup') or {}
-    return bool(ln.get('confirmed')) and str(ln.get('lineup_type') or '').lower() == 'standard' and bool(ln.get('complete_11v11'))
+    return (
+        bool(ln.get('confirmed'))
+        and str(ln.get('lineup_type') or '').lower() == 'standard'
+        and bool(ln.get('complete_11v11'))
+    )
 
 
 def fingerprint(m):
@@ -45,7 +54,23 @@ def fingerprint(m):
 
 
 def match_map(payload):
-    return {key_of(m): m for m in (payload.get('matches') or []) if isinstance(m, dict) and key_of(m)}
+    return {
+        key_of(m): m
+        for m in (payload.get('matches') or [])
+        if isinstance(m, dict) and key_of(m)
+    }
+
+
+def numeric_minutes(m):
+    try:
+        return float((m or {}).get('minutes_to_start'))
+    except Exception:
+        return None
+
+
+def actionable_minutes(m):
+    mins = numeric_minutes(m)
+    return mins is not None and POST_XI_ACTIONABLE_FROM_MIN < mins <= POST_XI_ACTIONABLE_TO_MIN
 
 
 def urgent_missing(payload):
@@ -53,11 +78,10 @@ def urgent_missing(payload):
     for m in payload.get('matches') or []:
         if not isinstance(m, dict):
             continue
-        try:
-            mins = float(m.get('minutes_to_start'))
-        except Exception:
+        mins = numeric_minutes(m)
+        if mins is None:
             continue
-        if URGENT_FROM_MIN <= mins <= URGENT_TO_MIN and not is_official(m):
+        if URGENT_FROM_MIN < mins <= URGENT_TO_MIN and not is_official(m):
             out.append({
                 'match': m.get('match'),
                 'match_market_id': m.get('match_market_id'),
@@ -82,24 +106,35 @@ def detect_events(before, after):
             event_type = 'XI_OFFICIAL_DETECTED'
         elif cur_off and prev_off and cur_fp and prev_fp and cur_fp != prev_fp:
             event_type = 'XI_OFFICIAL_CHANGED'
-        if event_type:
-            events.append({
-                'event': event_type,
-                'detected_at': now_iso(),
-                'match': cur.get('match'),
-                'league': cur.get('league'),
-                'start_time': cur.get('start_time'),
-                'minutes_to_start': cur.get('minutes_to_start'),
-                'match_market_id': cur.get('match_market_id'),
-                'match_event_id': cur.get('match_event_id'),
-                'source': cur.get('source'),
-                'provider_match_id': ((cur.get('fotmob_match') or {}).get('id')),
-                'previous_status': prev.get('status'),
-                'current_status': cur.get('status'),
-                'previous_xi_fingerprint': prev_fp,
-                'current_xi_fingerprint': cur_fp,
-                'confirmed_at': cur.get('confirmed_at'),
-            })
+        if not event_type:
+            continue
+
+        mins = numeric_minutes(cur)
+        actionable = actionable_minutes(cur)
+        events.append({
+            'event': event_type,
+            'detected_at': now_iso(),
+            'match': cur.get('match'),
+            'league': cur.get('league'),
+            'start_time': cur.get('start_time'),
+            'minutes_to_start': mins,
+            'match_market_id': cur.get('match_market_id'),
+            'match_event_id': cur.get('match_event_id'),
+            'source': cur.get('source'),
+            'source_status': cur.get('status'),
+            'provider_match_id': ((cur.get('fotmob_match') or {}).get('id')),
+            'previous_status': prev.get('status'),
+            'current_status': cur.get('status'),
+            'previous_xi_fingerprint': prev_fp,
+            'current_xi_fingerprint': cur_fp,
+            'confirmed_at': cur.get('confirmed_at'),
+            'actionable_for_post_xi': actionable,
+            'actionability_reason': (
+                'PRE_KICKOFF_OFFICIAL_XI_TRANSITION'
+                if actionable
+                else 'AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW'
+            ),
+        })
     return events
 
 
@@ -115,12 +150,14 @@ initial = load_json(LINEUPS, {'matches': []})
 reference = initial
 attempt_records = []
 all_events = []
+actionable_events = []
 final_payload = initial
 
 for attempt in range(1, MAX_ATTEMPTS + 1):
     started = now_iso()
     final_payload = run_base()
     events = detect_events(reference, final_payload)
+    actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
     missing = urgent_missing(final_payload)
     attempt_records.append({
         'attempt': attempt,
@@ -129,13 +166,15 @@ for attempt in range(1, MAX_ATTEMPTS + 1):
         'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
         'urgent_unconfirmed_count': len(missing),
         'events': events,
+        'actionable_events': actionable_now,
     })
     all_events.extend(events)
+    actionable_events.extend(actionable_now)
 
-    # The moment a new/changed official XI is detected, stop the burst so the
-    # workflow can commit immediately and workflow_run consumers can rebuild
-    # tactical/player/readiness layers without waiting for unrelated fixtures.
-    if events:
+    # Commit immediately when a genuinely pre-kickoff official XI transition
+    # appears. Late discoveries remain in the audit trail but never trigger a
+    # betting POST-XI refresh.
+    if actionable_now:
         break
     if not missing or attempt >= MAX_ATTEMPTS:
         break
@@ -145,32 +184,40 @@ for attempt in range(1, MAX_ATTEMPTS + 1):
 
 remaining = urgent_missing(final_payload)
 watchdog = {
-    'schema': 'radar-lineup-watchdog-v1',
+    'schema': 'radar-lineup-watchdog-v2',
     'generated_at': now_iso(),
     'source_strategy': 'FotMob standard 11v11 official XI through resilient canonical fixture matcher; burst polling near kickoff',
     'official_definition': 'SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11',
     'poll_policy': {
         'base_schedule': 'GitHub cron every 5 minutes',
         'urgent_window_minutes': [URGENT_FROM_MIN, URGENT_TO_MIN],
+        'post_xi_actionable_window_minutes': [POST_XI_ACTIONABLE_FROM_MIN, POST_XI_ACTIONABLE_TO_MIN],
         'max_attempts_per_run': MAX_ATTEMPTS,
         'interval_seconds': POLL_INTERVAL_SECONDS,
-        'stop_immediately_on_official_transition': True,
+        'stop_immediately_on_actionable_official_transition': True,
+        'started_matches_are_audit_only': True,
     },
     'attempt_count': len(attempt_records),
     'attempts': attempt_records,
-    'events': all_events,
-    'post_xi_required': bool(all_events),
+    'observed_events': all_events,
+    'actionable_events': actionable_events,
+    'post_xi_required': bool(actionable_events),
     'urgent_unconfirmed_remaining': remaining,
     'target_count': len(final_payload.get('matches') or []),
 }
 WATCHDOG.write_text(json.dumps(watchdog, ensure_ascii=False, indent=2), encoding='utf-8')
 
 postxi = {
-    'schema': 'radar-post-xi-refresh-request-v1',
+    'schema': 'radar-post-xi-refresh-request-v2',
     'generated_at': watchdog['generated_at'],
-    'required': bool(all_events),
-    'reason': 'Official XI detected or changed; rebuild tactical roles, player context and deep-analysis readiness immediately.' if all_events else 'No new official XI transition in this watchdog run.',
-    'events': all_events,
+    'required': bool(actionable_events),
+    'reason': (
+        'Pre-kickoff official XI detected or changed; rebuild tactical roles, player context and deep-analysis readiness immediately.'
+        if actionable_events
+        else 'No actionable pre-kickoff official XI transition in this watchdog run.'
+    ),
+    'events': actionable_events,
+    'observed_audit_events': [e for e in all_events if not e.get('actionable_for_post_xi')],
 }
 POSTXI.write_text(json.dumps(postxi, ensure_ascii=False, indent=2), encoding='utf-8')
 print(json.dumps(watchdog, ensure_ascii=False, indent=2))
