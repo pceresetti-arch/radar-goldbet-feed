@@ -1,0 +1,63 @@
+name: BetFlag origin probe
+
+on:
+  push:
+    paths:
+      - 'betflag-origin-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe DNS chain and candidate origin
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,subprocess,pathlib,requests,socket,ssl
+          from datetime import datetime,timezone
+          hosts=['sportservice.betflag.it','appapi.betflag.it','www.betflag.it']
+          out={'generated_at':datetime.now(timezone.utc).isoformat(),'dns':{},'origin_tests':[]}
+          for h in hosts:
+            d={}
+            for typ in ('CNAME','A','AAAA'):
+              try:d[typ]=subprocess.check_output(['dig','+short',typ,h],text=True,timeout=8).strip().splitlines()
+              except Exception as e:d[typ]=['ERR:'+repr(e)]
+            out['dns'][h]=d
+          # Historical/public BetFlag origin candidate from prior DNS records.
+          candidates=['151.1.245.33']
+          paths=['/','/sport','/api/sport/pregame/getProgram?channelId=0','/api/sport/pregame/getOverviewEventsAams/0/1/0/1334500001/0/0/0?channelId=0','/api/sport/pregame/getOverviewEventsAams/0/-1/0/1334500001/2484/22884/0?channelId=0']
+          for ip in candidates:
+            for host in hosts:
+              for path in paths:
+                url=f'https://{host}{path}'
+                cmd=['curl','-ksS','--max-time','8','--resolve',f'{host}:443:{ip}','-D','-','-o','/tmp/body',url]
+                try:
+                  p=subprocess.run(cmd,text=True,capture_output=True,timeout=12)
+                  body=pathlib.Path('/tmp/body').read_text(errors='replace')[:900] if pathlib.Path('/tmp/body').exists() else ''
+                  status=None
+                  for line in p.stdout.splitlines():
+                    if line.startswith('HTTP/'):
+                      try:status=int(line.split()[1])
+                      except:pass
+                  out['origin_tests'].append({'ip':ip,'host':host,'path':path,'status':status,'curl_rc':p.returncode,'headers':p.stdout[:1600],'stderr':p.stderr[:700],'preview':body})
+                except Exception as e:out['origin_tests'].append({'ip':ip,'host':host,'path':path,'error':repr(e)})
+          pathlib.Path('feed').mkdir(exist_ok=True);pathlib.Path('feed/betflag-origin-probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps({'dns':out['dns'],'origin_tests':[{k:x.get(k) for k in ('ip','host','path','status','curl_rc','error')} for x in out['origin_tests']]},indent=2))
+          PY
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name radar-goldbet-bot
+          git config user.email radar-goldbet-bot@users.noreply.github.com
+          git add feed/betflag-origin-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe BetFlag origin bypass'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
