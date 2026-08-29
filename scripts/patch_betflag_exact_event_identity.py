@@ -1,5 +1,6 @@
 from pathlib import Path
 
+# Canonical deploy patch: exact FINAL GATE accepts stable BetFlag match event identity.
 p = Path('worker/src/index.mjs')
 s = p.read_text(encoding='utf-8')
 
