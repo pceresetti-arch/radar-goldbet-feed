@@ -1,0 +1,38 @@
+name: Build Radar information move feed
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/build_information_move_feed.py'
+      - '.github/workflows/build-information-move-feed.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-information-move-feed
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Build GoldBet TRUE OPEN and cross-book Information Move feed
+        run: python scripts/build_information_move_feed.py
+      - name: Commit current Information Move feed
+        shell: bash
+        run: |
+          git config user.name 'radar-information-move-bot'
+          git config user.email 'radar-information-move-bot@users.noreply.github.com'
+          git pull --rebase || true
+          git add feed/information-move-current.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh Radar information move feed'
+          git push
