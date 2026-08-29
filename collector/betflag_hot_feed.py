@@ -100,3 +100,5 @@ def main():
     print(json.dumps({'source_healthy':out['source_healthy'],'fixtures':len(compact),'fixture_files':len(index),'bytes':OUT.stat().st_size},ensure_ascii=False))
 
 if __name__=='__main__': main()
+
+# cloud-feed-trigger: 2026-08-29T18:00Z
