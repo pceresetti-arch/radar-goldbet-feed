@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T23:33:17.718803+00:00",
+  "generated_at": "2026-08-29T10:03:01.379618+00:00",
   "worker": "radar-betflag-v7",
   "base_url": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "health": {
@@ -57,32 +57,32 @@
         "q"
       ]
     },
-    "ms": 166,
-    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health?cb=1787959990544",
+    "ms": 80,
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/health?cb=1787997778962",
     "attempt": 1,
     "verified": true
   },
   "betflag_discovery_probe": {
     "status": 200,
     "body": {
-      "generated_at": "2026-08-28T23:33:10.860Z",
-      "served_at": "2026-08-28T23:33:15.411Z",
+      "generated_at": "2026-08-29T10:02:59.084Z",
+      "served_at": "2026-08-29T10:02:59.812Z",
       "cache": "MISS",
       "source_class": "BETFLAG_AAMS_DIRECT",
       "source": "sportservice.betflag.it direct AAMS player service",
       "betflag_direct": true,
       "goldbet_direct": false,
-      "source_healthy": true,
+      "source_healthy": false,
       "freshness": {
-        "age_seconds": 4.6,
+        "age_seconds": 0.7,
         "max_age_seconds": 45,
         "fresh": true
       },
-      "scan_price_gate_capable": true,
+      "scan_price_gate_capable": false,
       "price_gate_rule": "Use /live/player-price for exact fixture+player+market certification before BET.",
       "mode": "full",
-      "upstream_elapsed_ms": 4551,
-      "total_source_rows": 6453,
+      "upstream_elapsed_ms": 728,
+      "total_source_rows": 0,
       "returned": 0,
       "pagination": {
         "limit": 1,
@@ -92,20 +92,20 @@
       },
       "rows": []
     },
-    "ms": 4900,
-    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?q=zzzraderprobe&limit=1&cb=1787959990710",
-    "verified": true
+    "ms": 780,
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-props?q=zzzraderprobe&limit=1&cb=1787997779042",
+    "verified": false
   },
   "betflag_exact_route_probe": {
     "status": 404,
     "body": {
-      "generated_at": "2026-08-28T23:33:15.695Z",
-      "served_at": "2026-08-28T23:33:17.670Z",
+      "generated_at": "2026-08-29T10:02:59.849Z",
+      "served_at": "2026-08-29T10:03:01.340Z",
       "source_class": "BETFLAG_AAMS_DIRECT",
       "source": "sportservice.betflag.it direct AAMS player service",
       "betflag_direct": true,
       "goldbet_direct": false,
-      "upstream_elapsed_ms": 1975,
+      "upstream_elapsed_ms": 1491,
       "target": {
         "tab": 2484,
         "slot": 22884,
@@ -114,12 +114,12 @@
       "returned": 0,
       "price_gate_eligible": false,
       "certificate": {
-        "proof_id": "bf-402f70ae56e4b9cc6468",
-        "sha256": "402f70ae56e4b9cc6468564e2b0fe794cab33de1e5331a264fd5fcc469c1d07a",
+        "proof_id": "bf-7db00464ecca0b4da9ef",
+        "sha256": "7db00464ecca0b4da9ef779a0963da0533772a9da1349356c99fdf98220763e4",
         "exact_identity_match": false,
         "source_healthy": true,
         "freshness": {
-          "age_seconds": 2,
+          "age_seconds": 1.5,
           "max_age_seconds": 45,
           "fresh": true
         },
@@ -127,7 +127,7 @@
         "canonical": {
           "source_class": "BETFLAG_AAMS_DIRECT",
           "source_host": "sportservice.betflag.it",
-          "fetched_at": "2026-08-28T23:33:15.695Z",
+          "fetched_at": "2026-08-29T10:02:59.849Z",
           "match": null,
           "match_market_id": null,
           "match_event_id": null,
@@ -146,12 +146,12 @@
       "candidates": [],
       "note": "No unique fresh exact quote; do not classify BET from this response."
     },
-    "ms": 2108,
-    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?q=zzzraderprobe&player=ZZZ_RADAR_PROBE_NO_PLAYER&market=Marc&selection=Si&cb=1787959995611",
+    "ms": 1557,
+    "url": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price?q=zzzraderprobe&player=ZZZ_RADAR_PROBE_NO_PLAYER&market=Marc&selection=Si&cb=1787997779822",
     "verified": true
   },
   "live_verified": true,
-  "betflag_discovery_verified": true,
+  "betflag_discovery_verified": false,
   "betflag_exact_route_verified": true,
   "note": "Positive exact price proof is intentionally on-demand for a real decision candidate; deployment verification is fixture-agnostic."
 }
