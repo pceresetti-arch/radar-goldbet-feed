@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 10
+          fetch-depth: 20
       - name: Clear stale git operation metadata
         shell: powershell
         run: |
@@ -93,14 +93,31 @@ jobs:
           if (git diff --cached --quiet) { exit 0 }
 
           git commit -m "Refresh residential BetFlag production feeds"
-          for ($attempt=1; $attempt -le 4; $attempt++) {
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to create residential feed commit' }
+
+          for ($attempt=1; $attempt -le 8; $attempt++) {
+            Write-Host "Publish attempt $attempt/8"
             git fetch origin main
-            git rebase origin/main
-            if ($LASTEXITCODE -eq 0) {
-              git push origin HEAD:main
-              if ($LASTEXITCODE -eq 0) { exit 0 }
+            if ($LASTEXITCODE -ne 0) {
+              Start-Sleep -Seconds ([Math]::Min(2 * $attempt, 10))
+              continue
             }
-            git rebase --abort 2>$null
-            Start-Sleep -Seconds (2 * $attempt)
+
+            git rebase origin/main
+            if ($LASTEXITCODE -ne 0) {
+              if ((Test-Path '.git\rebase-merge') -or (Test-Path '.git\rebase-apply')) {
+                git rebase --abort | Out-Null
+              }
+              throw 'Residential feed rebase conflict: refusing to overwrite concurrent repository work'
+            }
+
+            git push origin HEAD:main
+            if ($LASTEXITCODE -eq 0) { exit 0 }
+
+            # A moving main is expected in this repository. Keep the local feed
+            # commit, fetch the new tip, rebase again, and retry. Do not call
+            # `rebase --abort` here because no rebase is in progress after a
+            # successful rebase followed by a rejected push.
+            Start-Sleep -Seconds ([Math]::Min(2 * $attempt, 10))
           }
-          throw 'Unable to publish residential BetFlag feed after 4 attempts'
+          throw 'Unable to publish residential BetFlag feed after 8 concurrent-update retries'
