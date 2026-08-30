@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T01:30:29.822521+00:00",
+  "generated_at": "2026-08-30T01:40:35.232443+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T01:27:26.116236+00:00",
-      "finished_at": "2026-08-30T01:27:31.435037+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T01:28:06.435185+00:00",
-      "finished_at": "2026-08-30T01:28:07.006562+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T01:28:42.006827+00:00",
-      "finished_at": "2026-08-30T01:28:42.985828+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T01:29:17.986072+00:00",
-      "finished_at": "2026-08-30T01:29:18.687053+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T01:29:53.687250+00:00",
-      "finished_at": "2026-08-30T01:29:54.559694+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T01:30:29.559950+00:00",
-      "finished_at": "2026-08-30T01:30:29.822413+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-08-30T01:40:31.010156+00:00",
+      "finished_at": "2026-08-30T01:40:35.232425+00:00",
+      "official_count": 3,
+      "urgent_unconfirmed_count": 5,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T01:40:35.232223+00:00",
+          "match": "Portland Timbers - Austin",
+          "league": "MLS",
+          "start_time": "30-08-2026 04:30",
+          "minutes_to_start": 49.4,
+          "match_market_id": "36351.253",
+          "match_event_id": 16040673,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5071318,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "274528af6e46f08196dc",
+          "current_xi_fingerprint": "2b84e71eba579c1b471e",
+          "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T01:40:35.232223+00:00",
+          "match": "Portland Timbers - Austin",
+          "league": "MLS",
+          "start_time": "30-08-2026 04:30",
+          "minutes_to_start": 49.4,
+          "match_market_id": "36351.253",
+          "match_event_id": 16040673,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5071318,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "274528af6e46f08196dc",
+          "current_xi_fingerprint": "2b84e71eba579c1b471e",
+          "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T01:40:35.232223+00:00",
+      "match": "Portland Timbers - Austin",
+      "league": "MLS",
+      "start_time": "30-08-2026 04:30",
+      "minutes_to_start": 49.4,
+      "match_market_id": "36351.253",
+      "match_event_id": 16040673,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5071318,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "274528af6e46f08196dc",
+      "current_xi_fingerprint": "2b84e71eba579c1b471e",
+      "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T01:40:35.232223+00:00",
+      "match": "Portland Timbers - Austin",
+      "league": "MLS",
+      "start_time": "30-08-2026 04:30",
+      "minutes_to_start": 49.4,
+      "match_market_id": "36351.253",
+      "match_event_id": 16040673,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5071318,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "274528af6e46f08196dc",
+      "current_xi_fingerprint": "2b84e71eba579c1b471e",
+      "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "Monterey Bay FC - Sacramento Republic",
       "match_market_id": "36351.591",
       "match_event_id": 16034751,
-      "minutes_to_start": 29.5,
+      "minutes_to_start": 19.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5109918
@@ -101,7 +135,7 @@
       "match": "Perez Zeledon - Alajuelense",
       "match_market_id": "36351.2304",
       "match_event_id": 16052818,
-      "minutes_to_start": 29.5,
+      "minutes_to_start": 19.4,
       "status": "LINEUP_PRESENT_UNCONFIRMED",
       "source": "FotMob",
       "fotmob_match_id": 5833782
@@ -110,8 +144,8 @@
       "match": "Las Vegas Lights - Charleston Battery",
       "match_market_id": "36351.590",
       "match_event_id": 16034762,
-      "minutes_to_start": 59.5,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 49.4,
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "source": "FotMob",
       "fotmob_match_id": 5109915
     },
@@ -119,25 +153,16 @@
       "match": "Phoenix Rising - Indy Eleven",
       "match_market_id": "36351.582",
       "match_event_id": 16034752,
-      "minutes_to_start": 59.5,
+      "minutes_to_start": 49.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5109921
     },
     {
-      "match": "Portland Timbers - Austin",
-      "match_market_id": "36351.253",
-      "match_event_id": 16040673,
-      "minutes_to_start": 59.5,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 5071318
-    },
-    {
       "match": "San Diego FC - LA Galaxy",
       "match_market_id": "36351.275",
       "match_event_id": 16040674,
-      "minutes_to_start": 59.5,
+      "minutes_to_start": 49.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5071319
