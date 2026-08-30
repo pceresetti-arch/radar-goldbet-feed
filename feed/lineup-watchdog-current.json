@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T23:10:43.992076+00:00",
+  "generated_at": "2026-08-30T23:20:28.989194+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,96 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T23:07:39.605750+00:00",
-      "finished_at": "2026-08-30T23:07:46.894675+00:00",
-      "official_count": 10,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T23:08:21.894834+00:00",
-      "finished_at": "2026-08-30T23:08:22.242054+00:00",
-      "official_count": 10,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T23:08:57.242436+00:00",
-      "finished_at": "2026-08-30T23:08:57.780759+00:00",
-      "official_count": 10,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T23:09:32.781209+00:00",
-      "finished_at": "2026-08-30T23:09:33.126895+00:00",
-      "official_count": 10,
-      "urgent_unconfirmed_count": 9,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T23:10:08.127300+00:00",
-      "finished_at": "2026-08-30T23:10:08.678417+00:00",
-      "official_count": 10,
-      "urgent_unconfirmed_count": 10,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T23:10:43.678868+00:00",
-      "finished_at": "2026-08-30T23:10:43.991799+00:00",
-      "official_count": 10,
-      "urgent_unconfirmed_count": 10,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-08-30T23:20:20.833610+00:00",
+      "finished_at": "2026-08-30T23:20:28.989175+00:00",
+      "official_count": 3,
+      "urgent_unconfirmed_count": 7,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T23:20:28.988714+00:00",
+          "match": "CS Cienciano - Cusco FC",
+          "league": "Primera Division",
+          "start_time": "31-08-2026 02:00",
+          "minutes_to_start": 39.5,
+          "match_market_id": "36351.2135",
+          "match_event_id": 16041375,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000017210,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "ec2b80f0f4b40535d2f2",
+          "current_xi_fingerprint": "ef24c7c14dbe6a0c08cb",
+          "confirmed_at": "2026-08-30T23:20:28.728223+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T23:20:28.988714+00:00",
+          "match": "CS Cienciano - Cusco FC",
+          "league": "Primera Division",
+          "start_time": "31-08-2026 02:00",
+          "minutes_to_start": 39.5,
+          "match_market_id": "36351.2135",
+          "match_event_id": 16041375,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000017210,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "ec2b80f0f4b40535d2f2",
+          "current_xi_fingerprint": "ef24c7c14dbe6a0c08cb",
+          "confirmed_at": "2026-08-30T23:20:28.728223+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T23:20:28.988714+00:00",
+      "match": "CS Cienciano - Cusco FC",
+      "league": "Primera Division",
+      "start_time": "31-08-2026 02:00",
+      "minutes_to_start": 39.5,
+      "match_market_id": "36351.2135",
+      "match_event_id": 16041375,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000017210,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "ec2b80f0f4b40535d2f2",
+      "current_xi_fingerprint": "ef24c7c14dbe6a0c08cb",
+      "confirmed_at": "2026-08-30T23:20:28.728223+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T23:20:28.988714+00:00",
+      "match": "CS Cienciano - Cusco FC",
+      "league": "Primera Division",
+      "start_time": "31-08-2026 02:00",
+      "minutes_to_start": 39.5,
+      "match_market_id": "36351.2135",
+      "match_event_id": 16041375,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000017210,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "ec2b80f0f4b40535d2f2",
+      "current_xi_fingerprint": "ef24c7c14dbe6a0c08cb",
+      "confirmed_at": "2026-08-30T23:20:28.728223+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
-    {
-      "match": "Real España - Choloma",
-      "match_market_id": "36361.32226",
-      "match_event_id": 16068519,
-      "minutes_to_start": 4.3,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5962686
-    },
-    {
-      "match": "San Miguelito - Herrera",
-      "match_market_id": "36361.32220",
-      "match_event_id": 16068508,
-      "minutes_to_start": 4.3,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5954320
-    },
     {
       "match": "Blooming - Oriente Petrolero",
       "match_market_id": "36361.16473",
       "match_event_id": 16073947,
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +135,7 @@
       "match": "CD Fas - CD Luis Angel Firpo",
       "match_market_id": "36361.5627",
       "match_event_id": 16066209,
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5962405
@@ -128,25 +144,16 @@
       "match": "Club Oriental - Colonia",
       "match_market_id": "36361.31085",
       "match_event_id": 16066033,
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6090254
     },
     {
-      "match": "CS Cienciano - Cusco FC",
-      "match_market_id": "36351.2135",
-      "match_event_id": 16041375,
-      "minutes_to_start": 49.3,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000017210
-    },
-    {
       "match": "Coquimbo Unido - Huachipato",
       "match_market_id": "36361.893",
       "match_event_id": 16061173,
-      "minutes_to_start": 49.3,
+      "minutes_to_start": 39.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000013215
@@ -155,7 +162,7 @@
       "match": "Deportivo Saprissa - CD Escorpiones Belen",
       "match_market_id": "36361.31083",
       "match_event_id": 16066013,
-      "minutes_to_start": 49.3,
+      "minutes_to_start": 39.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5961120
@@ -164,7 +171,7 @@
       "match": "Deportivo Toluca - Juarez FC",
       "match_market_id": "36361.3015",
       "match_event_id": 16041316,
-      "minutes_to_start": 49.3,
+      "minutes_to_start": 39.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000014551
@@ -173,11 +180,11 @@
       "match": "Independiente Rivadavia - Racing",
       "match_market_id": "36351.10407",
       "match_event_id": 16042490,
-      "minutes_to_start": 79.3,
+      "minutes_to_start": 69.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5115972
     }
   ],
-  "target_count": 26
+  "target_count": 16
 }

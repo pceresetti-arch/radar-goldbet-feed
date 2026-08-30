@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T23:10:43.793276+00:00",
+  "generated_at": "2026-08-30T23:20:28.728223+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 26,
+  "target_count": 16,
   "status_counts": {
-    "NOT_AVAILABLE": 11,
-    "SOURCE_CONFIRMED": 10,
+    "NOT_AVAILABLE": 8,
+    "SOURCE_CONFIRMED": 3,
     "REFERENCE_PREVIOUS_XI": 5
   },
   "schedule_stats": [
@@ -29,12 +29,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-30T23:10:43.793276+00:00",
+    "generated_at": "2026-08-30T23:20:28.728223+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 12,
+    "target_count": 9,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -49,176 +49,31 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Deportivo La Guaira - Estudiantes de Merida",
+        "minutes_to_start": 9.5,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "CS Cienciano - Cusco FC",
+        "minutes_to_start": 39.5,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "CS Emelec - Club Leones Del Norte",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Carabobo - Zamora",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "New England Revolution II - Huntsville City FC",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "ORLANDO CITY - Crown Legacy FC",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Vancouver Whitec. II - Kansas City II",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Millonarios - Internacional de Bogota.",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Deportivo La Guaira - Estudiantes de Merida",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "matches": [
-    {
-      "match": "Atletico San Luis - Atlas FC",
-      "start_time": "31-08-2026 01:00",
-      "league": "Liga Mx Femminile",
-      "minutes_to_start": -10.7,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.5896",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Aurora FC - CD Malacateco",
-      "start_time": "31-08-2026 01:00",
-      "league": "Primera Division",
-      "minutes_to_start": -10.7,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.27052",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "CS Emelec - Club Leones Del Norte",
-      "start_time": "31-08-2026 01:00",
-      "league": "Serie A",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.1209",
-      "confirmed_at": "2026-08-30T22:42:32.704867+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Carabobo - Zamora",
-      "start_time": "31-08-2026 01:00",
-      "league": "Primera Division",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.18314",
-      "confirmed_at": "2026-08-30T22:42:32.704867+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Houston Dynamo 2 - Minnesota United FC 2",
-      "start_time": "31-08-2026 01:00",
-      "league": "Mls Next Pro",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.32008",
-      "confirmed_at": "2026-08-30T22:17:46.966590+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "New England Revolution II - Huntsville City FC",
-      "start_time": "31-08-2026 01:00",
-      "league": "Mls Next Pro",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.52652",
-      "confirmed_at": "2026-08-30T22:42:32.704867+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "OL Reign - Houston Dash",
-      "start_time": "31-08-2026 01:00",
-      "league": "NWSL Femminile",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.918",
-      "confirmed_at": "2026-08-30T22:30:04.813956+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "ORLANDO CITY - Crown Legacy FC",
-      "start_time": "31-08-2026 01:00",
-      "league": "Mls Next Pro",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.22054",
-      "confirmed_at": "2026-08-30T22:17:46.966590+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Saint Louis City SC - Dallas",
-      "start_time": "31-08-2026 01:00",
-      "league": "MLS",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.512",
-      "confirmed_at": "2026-08-30T22:17:46.966590+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "San Marcos FC - C.D. Walter Ferretti",
-      "start_time": "31-08-2026 01:00",
-      "league": "Primera Division",
-      "minutes_to_start": -10.7,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.52978",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Vancouver Whitec. II - Kansas City II",
-      "start_time": "31-08-2026 01:00",
-      "league": "Mls Next Pro",
-      "minutes_to_start": -10.7,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.45912",
-      "confirmed_at": "2026-08-30T22:42:32.704867+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "CD Guadalajara - Pumas Unam",
       "start_time": "31-08-2026 01:06",
       "league": "Liga Mx Femminile",
-      "minutes_to_start": -4.7,
+      "minutes_to_start": -14.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.5890",
       "confirmed_at": null,
@@ -230,11 +85,11 @@
       "match": "Millonarios - Internacional de Bogota.",
       "start_time": "31-08-2026 01:15",
       "league": "Primera A",
-      "minutes_to_start": 4.3,
+      "minutes_to_start": -5.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.31039",
-      "confirmed_at": "2026-08-30T22:55:23.540081+00:00",
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T23:20:20.962107+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -242,7 +97,7 @@
       "match": "Real España - Choloma",
       "start_time": "31-08-2026 01:15",
       "league": "Liga Nacional",
-      "minutes_to_start": 4.3,
+      "minutes_to_start": -5.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.32226",
       "confirmed_at": null,
@@ -254,7 +109,7 @@
       "match": "San Miguelito - Herrera",
       "start_time": "31-08-2026 01:15",
       "league": "Liga",
-      "minutes_to_start": 4.3,
+      "minutes_to_start": -5.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.32220",
       "confirmed_at": null,
@@ -266,7 +121,7 @@
       "match": "Blooming - Oriente Petrolero",
       "start_time": "31-08-2026 01:30",
       "league": "Bolivia Coppa",
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16473",
       "confirmed_at": null,
@@ -278,7 +133,7 @@
       "match": "CD Fas - CD Luis Angel Firpo",
       "start_time": "31-08-2026 01:30",
       "league": "Primera Division",
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.5627",
       "confirmed_at": null,
@@ -290,7 +145,7 @@
       "match": "Club Oriental - Colonia",
       "start_time": "31-08-2026 01:30",
       "league": "Segunda Division",
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.31085",
       "confirmed_at": null,
@@ -302,11 +157,11 @@
       "match": "Deportivo La Guaira - Estudiantes de Merida",
       "start_time": "31-08-2026 01:30",
       "league": "Primera Division",
-      "minutes_to_start": 19.3,
+      "minutes_to_start": 9.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.23903",
-      "confirmed_at": "2026-08-30T22:55:23.540081+00:00",
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T23:20:28.728223+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -314,11 +169,11 @@
       "match": "CS Cienciano - Cusco FC",
       "start_time": "31-08-2026 02:00",
       "league": "Primera Division",
-      "minutes_to_start": 49.3,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 39.5,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2135",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T23:20:28.728223+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -326,7 +181,7 @@
       "match": "Coquimbo Unido - Huachipato",
       "start_time": "31-08-2026 02:00",
       "league": "Primera Division",
-      "minutes_to_start": 49.3,
+      "minutes_to_start": 39.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.893",
       "confirmed_at": null,
@@ -338,7 +193,7 @@
       "match": "Deportivo Saprissa - CD Escorpiones Belen",
       "start_time": "31-08-2026 02:00",
       "league": "Primera Division",
-      "minutes_to_start": 49.3,
+      "minutes_to_start": 39.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.31083",
       "confirmed_at": null,
@@ -350,7 +205,7 @@
       "match": "Deportivo Toluca - Juarez FC",
       "start_time": "31-08-2026 02:00",
       "league": "Primera Division",
-      "minutes_to_start": 49.3,
+      "minutes_to_start": 39.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.3015",
       "confirmed_at": null,
@@ -362,7 +217,7 @@
       "match": "Independiente Rivadavia - Racing",
       "start_time": "31-08-2026 02:30",
       "league": "Primera Division",
-      "minutes_to_start": 79.3,
+      "minutes_to_start": 69.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.10407",
       "confirmed_at": null,
@@ -374,21 +229,33 @@
       "match": "Unan Managua - Managua FC",
       "start_time": "31-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 109.3,
+      "minutes_to_start": 99.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.52982",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Xelaju - Deportivo Mixco",
       "start_time": "31-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 109.3,
+      "minutes_to_start": 99.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.2870",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "Deportivo Cali - Bucaramanga",
+      "start_time": "31-08-2026 03:20",
+      "league": "Primera A",
+      "minutes_to_start": 119.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.3428",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
