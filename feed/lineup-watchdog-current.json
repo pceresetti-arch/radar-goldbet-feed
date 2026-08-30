@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T14:56:21.703939+00:00",
+  "generated_at": "2026-08-30T15:12:07.031894+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,73 +21,124 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T14:55:42.903393+00:00",
-      "finished_at": "2026-08-30T14:56:21.703830+00:00",
-      "official_count": 34,
-      "urgent_unconfirmed_count": 109,
+      "started_at": "2026-08-30T15:08:20.790195+00:00",
+      "finished_at": "2026-08-30T15:09:07.606192+00:00",
+      "official_count": 32,
+      "urgent_unconfirmed_count": 77,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_CHANGED",
+          "detected_at": "2026-08-30T15:09:07.602898+00:00",
+          "match": "Sandefjord - Brann",
+          "league": "Eliteserien",
+          "start_time": "30-08-2026 17:00",
+          "minutes_to_start": -9.1,
+          "match_market_id": "36351.429",
+          "match_event_id": 16032423,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5104988,
+          "previous_status": "SOURCE_CONFIRMED",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "bceb400ffa7743525b11",
+          "current_xi_fingerprint": "aff0f90fb86508961f82",
+          "confirmed_at": "2026-08-30T15:08:20.909725+00:00",
+          "actionable_for_post_xi": false,
+          "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
+        },
+        {
+          "event": "XI_OFFICIAL_CHANGED",
+          "detected_at": "2026-08-30T15:09:07.603550+00:00",
+          "match": "Tromso - Sarpsborg 08",
+          "league": "Eliteserien",
+          "start_time": "30-08-2026 17:00",
+          "minutes_to_start": -9.1,
+          "match_market_id": "36351.424",
+          "match_event_id": 16032424,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5104990,
+          "previous_status": "SOURCE_CONFIRMED",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "05bc288785f75363e1be",
+          "current_xi_fingerprint": "61894ba0697f8314f9aa",
+          "confirmed_at": "2026-08-30T15:08:20.909725+00:00",
+          "actionable_for_post_xi": false,
+          "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
+        }
+      ],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-30T15:09:42.606347+00:00",
+      "finished_at": "2026-08-30T15:09:43.511690+00:00",
+      "official_count": 32,
+      "urgent_unconfirmed_count": 77,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-30T15:10:18.512807+00:00",
+      "finished_at": "2026-08-30T15:10:19.462730+00:00",
+      "official_count": 32,
+      "urgent_unconfirmed_count": 87,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-30T15:10:54.463780+00:00",
+      "finished_at": "2026-08-30T15:10:55.207904+00:00",
+      "official_count": 32,
+      "urgent_unconfirmed_count": 87,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-30T15:11:30.208976+00:00",
+      "finished_at": "2026-08-30T15:11:31.184723+00:00",
+      "official_count": 32,
+      "urgent_unconfirmed_count": 87,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-30T15:12:06.185772+00:00",
+      "finished_at": "2026-08-30T15:12:07.030848+00:00",
+      "official_count": 33,
+      "urgent_unconfirmed_count": 86,
       "events": [
         {
           "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T14:56:21.700872+00:00",
-          "match": "Moss - Strommen",
-          "league": "OBOS-ligaen",
-          "start_time": "30-08-2026 17:00",
-          "minutes_to_start": 3.7,
-          "match_market_id": "36354.33493",
-          "match_event_id": 16060655,
-          "source": "FotMob",
-          "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5105238,
-          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-          "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "5421d443c72cbfb674f4",
-          "current_xi_fingerprint": "5421d443c72cbfb674f4",
-          "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-          "actionable_for_post_xi": true,
-          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-        },
-        {
-          "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T14:56:21.702432+00:00",
-          "match": "Gornik Zabrze - GKS Katowice",
-          "league": "Ekstraklasa",
-          "start_time": "30-08-2026 17:30",
-          "minutes_to_start": 33.7,
-          "match_market_id": "36351.2265",
-          "match_event_id": 16041435,
-          "source": "FotMob",
-          "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5803959,
-          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-          "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "5df12967c9fbefd74845",
-          "current_xi_fingerprint": "5df12967c9fbefd74845",
-          "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-          "actionable_for_post_xi": true,
-          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-        },
-        {
-          "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T14:56:21.702622+00:00",
-          "match": "Botev Plovdiv - Levski Sofia",
-          "league": "Premier League",
+          "detected_at": "2026-08-30T15:12:07.029057+00:00",
+          "match": "Nordsjaelland - Brøndby IF",
+          "league": "Superligaen",
           "start_time": "30-08-2026 18:00",
-          "minutes_to_start": 63.7,
-          "match_market_id": "36351.2159",
-          "match_event_id": 16044869,
+          "minutes_to_start": 47.9,
+          "match_market_id": "36351.2125",
+          "match_event_id": 16044917,
           "source": "FotMob",
           "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5760476,
+          "provider_match_id": 5739495,
           "previous_status": "REFERENCE_PREVIOUS_XI",
           "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "2cf253ec6f354d760b6b",
-          "current_xi_fingerprint": "cc67446fd8582e42bff9",
-          "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
+          "previous_xi_fingerprint": "a6bd151d844e0f927960",
+          "current_xi_fingerprint": "d16d9d2fbfb9b0a89ce5",
+          "confirmed_at": "2026-08-30T15:12:06.295807+00:00",
           "actionable_for_post_xi": true,
           "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
         }
@@ -95,61 +146,21 @@
       "actionable_events": [
         {
           "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T14:56:21.700872+00:00",
-          "match": "Moss - Strommen",
-          "league": "OBOS-ligaen",
-          "start_time": "30-08-2026 17:00",
-          "minutes_to_start": 3.7,
-          "match_market_id": "36354.33493",
-          "match_event_id": 16060655,
-          "source": "FotMob",
-          "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5105238,
-          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-          "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "5421d443c72cbfb674f4",
-          "current_xi_fingerprint": "5421d443c72cbfb674f4",
-          "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-          "actionable_for_post_xi": true,
-          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-        },
-        {
-          "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T14:56:21.702432+00:00",
-          "match": "Gornik Zabrze - GKS Katowice",
-          "league": "Ekstraklasa",
-          "start_time": "30-08-2026 17:30",
-          "minutes_to_start": 33.7,
-          "match_market_id": "36351.2265",
-          "match_event_id": 16041435,
-          "source": "FotMob",
-          "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5803959,
-          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-          "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "5df12967c9fbefd74845",
-          "current_xi_fingerprint": "5df12967c9fbefd74845",
-          "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-          "actionable_for_post_xi": true,
-          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-        },
-        {
-          "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T14:56:21.702622+00:00",
-          "match": "Botev Plovdiv - Levski Sofia",
-          "league": "Premier League",
+          "detected_at": "2026-08-30T15:12:07.029057+00:00",
+          "match": "Nordsjaelland - Brøndby IF",
+          "league": "Superligaen",
           "start_time": "30-08-2026 18:00",
-          "minutes_to_start": 63.7,
-          "match_market_id": "36351.2159",
-          "match_event_id": 16044869,
+          "minutes_to_start": 47.9,
+          "match_market_id": "36351.2125",
+          "match_event_id": 16044917,
           "source": "FotMob",
           "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5760476,
+          "provider_match_id": 5739495,
           "previous_status": "REFERENCE_PREVIOUS_XI",
           "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "2cf253ec6f354d760b6b",
-          "current_xi_fingerprint": "cc67446fd8582e42bff9",
-          "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
+          "previous_xi_fingerprint": "a6bd151d844e0f927960",
+          "current_xi_fingerprint": "d16d9d2fbfb9b0a89ce5",
+          "confirmed_at": "2026-08-30T15:12:06.295807+00:00",
           "actionable_for_post_xi": true,
           "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
         }
@@ -158,62 +169,62 @@
   ],
   "observed_events": [
     {
-      "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T14:56:21.700872+00:00",
-      "match": "Moss - Strommen",
-      "league": "OBOS-ligaen",
+      "event": "XI_OFFICIAL_CHANGED",
+      "detected_at": "2026-08-30T15:09:07.602898+00:00",
+      "match": "Sandefjord - Brann",
+      "league": "Eliteserien",
       "start_time": "30-08-2026 17:00",
-      "minutes_to_start": 3.7,
-      "match_market_id": "36354.33493",
-      "match_event_id": 16060655,
+      "minutes_to_start": -9.1,
+      "match_market_id": "36351.429",
+      "match_event_id": 16032423,
       "source": "FotMob",
       "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5105238,
-      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+      "provider_match_id": 5104988,
+      "previous_status": "SOURCE_CONFIRMED",
       "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "5421d443c72cbfb674f4",
-      "current_xi_fingerprint": "5421d443c72cbfb674f4",
-      "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-      "actionable_for_post_xi": true,
-      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+      "previous_xi_fingerprint": "bceb400ffa7743525b11",
+      "current_xi_fingerprint": "aff0f90fb86508961f82",
+      "confirmed_at": "2026-08-30T15:08:20.909725+00:00",
+      "actionable_for_post_xi": false,
+      "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
+    },
+    {
+      "event": "XI_OFFICIAL_CHANGED",
+      "detected_at": "2026-08-30T15:09:07.603550+00:00",
+      "match": "Tromso - Sarpsborg 08",
+      "league": "Eliteserien",
+      "start_time": "30-08-2026 17:00",
+      "minutes_to_start": -9.1,
+      "match_market_id": "36351.424",
+      "match_event_id": 16032424,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5104990,
+      "previous_status": "SOURCE_CONFIRMED",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "05bc288785f75363e1be",
+      "current_xi_fingerprint": "61894ba0697f8314f9aa",
+      "confirmed_at": "2026-08-30T15:08:20.909725+00:00",
+      "actionable_for_post_xi": false,
+      "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
     },
     {
       "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T14:56:21.702432+00:00",
-      "match": "Gornik Zabrze - GKS Katowice",
-      "league": "Ekstraklasa",
-      "start_time": "30-08-2026 17:30",
-      "minutes_to_start": 33.7,
-      "match_market_id": "36351.2265",
-      "match_event_id": 16041435,
-      "source": "FotMob",
-      "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5803959,
-      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-      "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "5df12967c9fbefd74845",
-      "current_xi_fingerprint": "5df12967c9fbefd74845",
-      "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-      "actionable_for_post_xi": true,
-      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-    },
-    {
-      "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T14:56:21.702622+00:00",
-      "match": "Botev Plovdiv - Levski Sofia",
-      "league": "Premier League",
+      "detected_at": "2026-08-30T15:12:07.029057+00:00",
+      "match": "Nordsjaelland - Brøndby IF",
+      "league": "Superligaen",
       "start_time": "30-08-2026 18:00",
-      "minutes_to_start": 63.7,
-      "match_market_id": "36351.2159",
-      "match_event_id": 16044869,
+      "minutes_to_start": 47.9,
+      "match_market_id": "36351.2125",
+      "match_event_id": 16044917,
       "source": "FotMob",
       "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5760476,
+      "provider_match_id": 5739495,
       "previous_status": "REFERENCE_PREVIOUS_XI",
       "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "2cf253ec6f354d760b6b",
-      "current_xi_fingerprint": "cc67446fd8582e42bff9",
-      "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
+      "previous_xi_fingerprint": "a6bd151d844e0f927960",
+      "current_xi_fingerprint": "d16d9d2fbfb9b0a89ce5",
+      "confirmed_at": "2026-08-30T15:12:06.295807+00:00",
       "actionable_for_post_xi": true,
       "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
     }
@@ -221,61 +232,21 @@
   "actionable_events": [
     {
       "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T14:56:21.700872+00:00",
-      "match": "Moss - Strommen",
-      "league": "OBOS-ligaen",
-      "start_time": "30-08-2026 17:00",
-      "minutes_to_start": 3.7,
-      "match_market_id": "36354.33493",
-      "match_event_id": 16060655,
-      "source": "FotMob",
-      "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5105238,
-      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-      "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "5421d443c72cbfb674f4",
-      "current_xi_fingerprint": "5421d443c72cbfb674f4",
-      "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-      "actionable_for_post_xi": true,
-      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-    },
-    {
-      "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T14:56:21.702432+00:00",
-      "match": "Gornik Zabrze - GKS Katowice",
-      "league": "Ekstraklasa",
-      "start_time": "30-08-2026 17:30",
-      "minutes_to_start": 33.7,
-      "match_market_id": "36351.2265",
-      "match_event_id": 16041435,
-      "source": "FotMob",
-      "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5803959,
-      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-      "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "5df12967c9fbefd74845",
-      "current_xi_fingerprint": "5df12967c9fbefd74845",
-      "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
-      "actionable_for_post_xi": true,
-      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
-    },
-    {
-      "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T14:56:21.702622+00:00",
-      "match": "Botev Plovdiv - Levski Sofia",
-      "league": "Premier League",
+      "detected_at": "2026-08-30T15:12:07.029057+00:00",
+      "match": "Nordsjaelland - Brøndby IF",
+      "league": "Superligaen",
       "start_time": "30-08-2026 18:00",
-      "minutes_to_start": 63.7,
-      "match_market_id": "36351.2159",
-      "match_event_id": 16044869,
+      "minutes_to_start": 47.9,
+      "match_market_id": "36351.2125",
+      "match_event_id": 16044917,
       "source": "FotMob",
       "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5760476,
+      "provider_match_id": 5739495,
       "previous_status": "REFERENCE_PREVIOUS_XI",
       "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "2cf253ec6f354d760b6b",
-      "current_xi_fingerprint": "cc67446fd8582e42bff9",
-      "confirmed_at": "2026-08-30T14:56:20.648177+00:00",
+      "previous_xi_fingerprint": "a6bd151d844e0f927960",
+      "current_xi_fingerprint": "d16d9d2fbfb9b0a89ce5",
+      "confirmed_at": "2026-08-30T15:12:06.295807+00:00",
       "actionable_for_post_xi": true,
       "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
     }
@@ -283,307 +254,10 @@
   "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
-      "match": "Atyrau - Astana",
-      "match_market_id": "36351.1650",
-      "match_event_id": 16063451,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5204225
-    },
-    {
-      "match": "Barakaldo CF - Cultural Leonesa",
-      "match_market_id": "36351.3363",
-      "match_event_id": 16068601,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5883232
-    },
-    {
-      "match": "Benatky Nad Jizerou - SK Sokol Brozany",
-      "match_market_id": "36357.12735",
-      "match_event_id": 16077244,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "CDC Montalegre - Ponte Da Barca",
-      "match_market_id": "36357.2066",
-      "match_event_id": 16073517,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Doma United FC - Sporting Lagos FC",
-      "match_market_id": "36351.16005",
-      "match_event_id": 16073919,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 6012139
-    },
-    {
-      "match": "Eik Toensberg - Sotra",
-      "match_market_id": "36356.63937",
-      "match_event_id": 16073203,
-      "minutes_to_start": 3.7,
-      "status": "LINEUP_PRESENT_UNCONFIRMED",
-      "source": "FotMob",
-      "fotmob_match_id": 5143358
-    },
-    {
-      "match": "Glentoran Belfast - Cliftonville LFC",
-      "match_market_id": "36356.57814",
-      "match_event_id": 16072920,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Ikorodu City - Ranchers Bees",
-      "match_market_id": "36357.8224",
-      "match_event_id": 16075456,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 6012140
-    },
-    {
-      "match": "Kiffen - HPS",
-      "match_market_id": "36357.9549",
-      "match_event_id": 16075785,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Kladno - FK Viktoria Zizkov",
-      "match_market_id": "36355.16364",
-      "match_event_id": 16063986,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 1000015693
-    },
-    {
-      "match": "Kustosija Zagreb - Mladost Zdralovi",
-      "match_market_id": "36355.59710",
-      "match_event_id": 16073911,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "LKS Lodz II - Lomza",
-      "match_market_id": "36357.6388",
-      "match_event_id": 16075116,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Lech Poznan II - Uks Staszkowka Jelna",
-      "match_market_id": "36357.10453",
-      "match_event_id": 16076227,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Medyk - Czarni Sosnowiec II",
-      "match_market_id": "36357.10452",
-      "match_event_id": 16076224,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Montana - Lokomotiv Gorna Oryahovitsa",
-      "match_market_id": "36351.2810",
-      "match_event_id": 16066160,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5874185
-    },
-    {
-      "match": "Moravia Morawica - KSZO Ostrowiec Swietokrzyski",
-      "match_market_id": "36357.5027",
-      "match_event_id": 16074100,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Naprzod Jedrzejow - Wisla II Krakow",
-      "match_market_id": "36357.5024",
-      "match_event_id": 16074098,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Niger Tornadoes FC - Enyimba",
-      "match_market_id": "36351.16004",
-      "match_event_id": 16073918,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 6012142
-    },
-    {
-      "match": "Petah Tikva - Hapoel Beer Sheva",
-      "match_market_id": "36355.60240",
-      "match_event_id": 16074851,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Pisek - FK Motorlet Praga",
-      "match_market_id": "36356.44523",
-      "match_event_id": 16071113,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Rivers United FC - Plateau United",
-      "match_market_id": "36351.16006",
-      "match_event_id": 16075454,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 6012144
-    },
-    {
-      "match": "SJK Akatemia - HJK Klubi 04",
-      "match_market_id": "36351.665",
-      "match_event_id": 16044431,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5163760
-    },
-    {
-      "match": "Samgurali Tskaltubo - Rustavi",
-      "match_market_id": "36357.3622",
-      "match_event_id": 16073594,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5165352
-    },
-    {
-      "match": "Sochi - Chelyabinsk",
-      "match_market_id": "36356.7206",
-      "match_event_id": 16068615,
-      "minutes_to_start": 3.7,
-      "status": "LINEUP_PRESENT_UNCONFIRMED",
-      "source": "FotMob",
-      "fotmob_match_id": 5897590
-    },
-    {
-      "match": "Sparta Kolin - SK Kosmonosy",
-      "match_market_id": "36357.5017",
-      "match_event_id": 16074102,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Taborsko Akademie - Petrin Plzen",
-      "match_market_id": "36357.5000",
-      "match_event_id": 16074101,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Tj Dvur Kralove Nad Labem - Svitavy",
-      "match_market_id": "36357.11327",
-      "match_event_id": 16076643,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Zapy - FK Jablonec B",
-      "match_market_id": "36351.2771",
-      "match_event_id": 16068622,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Drobak Frogn - Fram IF",
-      "match_market_id": "36356.58189",
-      "match_event_id": 16072928,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 5144739
-    },
-    {
-      "match": "OFK Vrsac - FK Borac Cacak",
-      "match_market_id": "36351.2353",
-      "match_event_id": 16072921,
-      "minutes_to_start": 3.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "AL Nasr (OMA) - Fanja",
-      "match_market_id": "36357.4624",
-      "match_event_id": 16073917,
-      "minutes_to_start": 8.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Emirates Club - Palm City",
-      "match_market_id": "36357.6433",
-      "match_event_id": 16075134,
-      "minutes_to_start": 8.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Al Hamriyah - Gulf FC",
-      "match_market_id": "36356.56931",
-      "match_event_id": 16072900,
-      "minutes_to_start": 13.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
       "match": "Chrobry Glogow - Ruch Chorzow",
       "match_market_id": "36351.2523",
       "match_event_id": 16045746,
-      "minutes_to_start": 18.7,
+      "minutes_to_start": 2.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5861905
@@ -592,7 +266,7 @@
       "match": "1908 Szac Budapest - Szombathelyi",
       "match_market_id": "36357.8273",
       "match_event_id": 16075474,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -601,7 +275,7 @@
       "match": "Astra Budapest - Diosgyori Miskol",
       "match_market_id": "36357.3103",
       "match_event_id": 16073571,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -610,7 +284,7 @@
       "match": "Balatonalmadi SE - Tatabanya FC",
       "match_market_id": "36357.8276",
       "match_event_id": 16075475,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -619,25 +293,16 @@
       "match": "Cigand - Tarpa SC",
       "match_market_id": "36357.8264",
       "match_event_id": 16075473,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Club S Hammam Lif - Bizertin",
-      "match_market_id": "36356.58122",
-      "match_event_id": 16072930,
-      "minutes_to_start": 33.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 6050461
-    },
-    {
       "match": "Dabas - Ujpest II",
       "match_market_id": "36357.6851",
       "match_event_id": 16075250,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -646,7 +311,7 @@
       "match": "Debreceni Eac - Godolloi",
       "match_market_id": "36357.12687",
       "match_event_id": 16077200,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -655,7 +320,7 @@
       "match": "Deportivo Armenio - Villa San Carlos",
       "match_market_id": "36351.42251",
       "match_event_id": 16065716,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5114030
@@ -664,7 +329,7 @@
       "match": "ES Sahel - Metlaoui",
       "match_market_id": "36356.53254",
       "match_event_id": 16072416,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6050460
@@ -673,7 +338,7 @@
       "match": "Karcag - Fehervar Szekesfeh.",
       "match_market_id": "36355.15220",
       "match_event_id": 16063738,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -682,7 +347,7 @@
       "match": "Majosi SE - Erdi",
       "match_market_id": "36357.6843",
       "match_event_id": 16075248,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -691,7 +356,7 @@
       "match": "Olympique de Beja - Ben Guerdane",
       "match_market_id": "36356.53242",
       "match_event_id": 16072411,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6050464
@@ -700,7 +365,7 @@
       "match": "Omrane - Esperance Tunis",
       "match_market_id": "36356.53244",
       "match_event_id": 16072415,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6050462
@@ -709,7 +374,7 @@
       "match": "Pecsi - Ivancsa KSE",
       "match_market_id": "36357.8277",
       "match_event_id": 16075476,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -718,7 +383,7 @@
       "match": "Solin - Uljanik",
       "match_market_id": "36357.10439",
       "match_event_id": 16076204,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -727,7 +392,7 @@
       "match": "Soroksar SC - Aqvital FC Csakvar",
       "match_market_id": "36351.3010",
       "match_event_id": 16063735,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5922768
@@ -736,16 +401,25 @@
       "match": "Szentlorinc SE - FC Ajka",
       "match_market_id": "36351.3008",
       "match_event_id": 16063736,
-      "minutes_to_start": 33.7,
+      "minutes_to_start": 17.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5922770
     },
     {
+      "match": "Club S Hammam Lif - Bizertin",
+      "match_market_id": "36356.58122",
+      "match_event_id": 16072930,
+      "minutes_to_start": 17.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 6050461
+    },
+    {
       "match": "Al-Nasr SC - Al-Fahaheel SC",
       "match_market_id": "36351.36700",
       "match_event_id": 16074125,
-      "minutes_to_start": 43.7,
+      "minutes_to_start": 27.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6018561
@@ -754,7 +428,7 @@
       "match": "AL Karma - Karbalaa",
       "match_market_id": "36357.10454",
       "match_event_id": 16076234,
-      "minutes_to_start": 48.7,
+      "minutes_to_start": 32.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6028520
@@ -763,7 +437,7 @@
       "match": "FK Banga Gargz - FK Kauno Zalgiris",
       "match_market_id": "36351.2103",
       "match_event_id": 16065145,
-      "minutes_to_start": 48.7,
+      "minutes_to_start": 32.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5900544
@@ -772,7 +446,7 @@
       "match": "Newroz SC - Duhok",
       "match_market_id": "36357.10714",
       "match_event_id": 16076387,
-      "minutes_to_start": 48.7,
+      "minutes_to_start": 32.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6028527
@@ -781,7 +455,7 @@
       "match": "Union Minas - Sport Huancayo Reserve",
       "match_market_id": "36357.3479",
       "match_event_id": 16073591,
-      "minutes_to_start": 48.7,
+      "minutes_to_start": 32.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -790,7 +464,7 @@
       "match": "AE Kifisia U19 - AEK Athens U19",
       "match_market_id": "36351.17175",
       "match_event_id": 16076386,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5943235
@@ -799,7 +473,7 @@
       "match": "AEL Limassol - Anorthosis Famagosta",
       "match_market_id": "36351.5183",
       "match_event_id": 16063442,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5975383
@@ -808,7 +482,7 @@
       "match": "AS Roma - Sassuolo",
       "match_market_id": "36356.55154",
       "match_event_id": 16072806,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -817,7 +491,7 @@
       "match": "Adc Rebordelo - GD Braganca",
       "match_market_id": "36357.2089",
       "match_event_id": 16073518,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -826,7 +500,7 @@
       "match": "Arzignano Valchiampo - Pro Vercelli",
       "match_market_id": "36351.12813",
       "match_event_id": 16065704,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5990427
@@ -835,7 +509,7 @@
       "match": "Asd Solbiatese Calcio 1911 - Citta Di Varese",
       "match_market_id": "36357.5113",
       "match_event_id": 16074152,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -844,7 +518,7 @@
       "match": "Atalanta U23 - Guidonia Montecelio",
       "match_market_id": "36351.12829",
       "match_event_id": 16063404,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5990825
@@ -853,7 +527,7 @@
       "match": "Biellese - Borgosesia Calcio",
       "match_market_id": "36357.5112",
       "match_event_id": 16074151,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -862,7 +536,7 @@
       "match": "Brezice 1919 U19 - NK Rudar Velenje U19",
       "match_market_id": "36357.12734",
       "match_event_id": 16077245,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -871,7 +545,7 @@
       "match": "CD Cinfaes - Espinho",
       "match_market_id": "36357.2100",
       "match_event_id": 16073519,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -880,7 +554,7 @@
       "match": "CD Moquegua - Alianza Atletico",
       "match_market_id": "36352.25273",
       "match_event_id": 16041359,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000017212
@@ -889,7 +563,7 @@
       "match": "Caldas - Sintrense",
       "match_market_id": "36356.42545",
       "match_event_id": 16070699,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -898,7 +572,7 @@
       "match": "Carpi - Juventus Next Gen",
       "match_market_id": "36351.12820",
       "match_event_id": 16065695,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5990428
@@ -907,7 +581,7 @@
       "match": "Covilha - Mortagua",
       "match_market_id": "36357.2147",
       "match_event_id": 16073521,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -916,7 +590,7 @@
       "match": "Dolomiti Bellunesi - Alcione Milano",
       "match_market_id": "36351.12797",
       "match_event_id": 16062644,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5990429
@@ -925,7 +599,7 @@
       "match": "Esenler Erokspor - Igdir FK",
       "match_market_id": "36354.7860",
       "match_event_id": 16060789,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5908609
@@ -934,7 +608,7 @@
       "match": "Eyupspor - Alanyaspor",
       "match_market_id": "36351.3946",
       "match_event_id": 16045035,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5904723
@@ -943,7 +617,7 @@
       "match": "FC Cincinnati 2 - Philadelphia",
       "match_market_id": "36356.53203",
       "match_event_id": 16072408,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000007746
@@ -952,25 +626,16 @@
       "match": "FC Una Strassen - Bissen",
       "match_market_id": "36356.53263",
       "match_event_id": 16072423,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5974692
     },
     {
-      "match": "FK JAVOR IVANJICA - Napredak",
-      "match_market_id": "36357.4617",
-      "match_event_id": 16073912,
-      "minutes_to_start": 63.7,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
       "match": "FK Panevezys - Vilnius FK Zalgiris",
       "match_market_id": "36351.2107",
       "match_event_id": 16065147,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5900545
@@ -979,7 +644,7 @@
       "match": "FK Spartak 1918 Varna - Ludogorets Razgrad",
       "match_market_id": "36351.2160",
       "match_event_id": 16044876,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5760480
@@ -988,7 +653,7 @@
       "match": "Fazendense - Ccrd Mocarriense",
       "match_market_id": "36357.6425",
       "match_event_id": 16075136,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -997,7 +662,7 @@
       "match": "Florgrade FC - Sao",
       "match_market_id": "36356.45711",
       "match_event_id": 16071385,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1006,7 +671,7 @@
       "match": "Gd Nazarenos - Vitoria Sernache",
       "match_market_id": "36357.2170",
       "match_event_id": 16073524,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1015,7 +680,7 @@
       "match": "Gimnasia Y Esgrima La Plata - CA Talleres de Cordoba",
       "match_market_id": "36356.54437",
       "match_event_id": 16072641,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1024,7 +689,7 @@
       "match": "Hapoel Kfar Shelem - Hapoel Kiryat Yam",
       "match_market_id": "36356.32696",
       "match_event_id": 16070020,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5832546
@@ -1033,7 +698,7 @@
       "match": "Hapoel Rishon Lezion FC - FC Kafr Qasim",
       "match_market_id": "36351.2549",
       "match_event_id": 16070024,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5832547
@@ -1042,7 +707,7 @@
       "match": "Inter - Napoli",
       "match_market_id": "36356.53684",
       "match_event_id": 16072482,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1051,7 +716,7 @@
       "match": "Ironi Modiin - Maccabi Ironi Kiryat Gat",
       "match_market_id": "36356.28459",
       "match_event_id": 16069680,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5832548
@@ -1060,7 +725,7 @@
       "match": "Lazio Rome - Parma Calcio",
       "match_market_id": "36357.5099",
       "match_event_id": 16074140,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1069,7 +734,7 @@
       "match": "Lusitano - Os Belenenses",
       "match_market_id": "36356.42541",
       "match_event_id": 16070698,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1078,7 +743,7 @@
       "match": "Maccabi Herzliya - Kfar Saba",
       "match_market_id": "36356.28462",
       "match_event_id": 16069683,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5832551
@@ -1087,7 +752,7 @@
       "match": "Maccabi Kabilio Jaffa - Nazareth",
       "match_market_id": "36356.28460",
       "match_event_id": 16069682,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5832550
@@ -1096,7 +761,7 @@
       "match": "Maia Lidador - Vila Mea",
       "match_market_id": "36357.5179",
       "match_event_id": 16074182,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1105,7 +770,7 @@
       "match": "Nk Brinje Grosuplje - NK Celje",
       "match_market_id": "36351.2534",
       "match_event_id": 16041453,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5833563
@@ -1114,7 +779,7 @@
       "match": "Noah Yerevan - Ararat Yerevan",
       "match_market_id": "36351.21634",
       "match_event_id": 16072926,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5972952
@@ -1123,25 +788,16 @@
       "match": "Nogueirense - Naval",
       "match_market_id": "36356.45705",
       "match_event_id": 16071375,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Nordsjaelland - Brøndby IF",
-      "match_market_id": "36351.2125",
-      "match_event_id": 16044917,
-      "minutes_to_start": 63.7,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 5739495
-    },
-    {
       "match": "Oltrepo FBC - FC Pavia 1911",
       "match_market_id": "36357.5100",
       "match_event_id": 16074141,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1150,7 +806,7 @@
       "match": "Prato - ASD San Donato Tavarnelle",
       "match_market_id": "36355.63741",
       "match_event_id": 16074150,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1159,7 +815,7 @@
       "match": "Rebordosa - FC Alpendorada",
       "match_market_id": "36357.8278",
       "match_event_id": 16075481,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1168,7 +824,7 @@
       "match": "River Plate - Rentistas",
       "match_market_id": "36355.56407",
       "match_event_id": 16066022,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6090253
@@ -1177,7 +833,7 @@
       "match": "Salgueiros - Sousense",
       "match_market_id": "36357.2101",
       "match_event_id": 16073520,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1186,7 +842,7 @@
       "match": "Ssd Athletic Club Palermo - Trapani",
       "match_market_id": "36357.5101",
       "match_event_id": 16074142,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1195,7 +851,7 @@
       "match": "Trans Narva - Tartu JK Tammeka",
       "match_market_id": "36351.1097",
       "match_event_id": 16045007,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 1000007942
@@ -1204,7 +860,7 @@
       "match": "Uniao Serra - Uniao Pombal",
       "match_market_id": "36357.6417",
       "match_event_id": 16075135,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1213,7 +869,7 @@
       "match": "Usd Sestri Levante 1919 - Scd Ligorna 1922",
       "match_market_id": "36357.5060",
       "match_event_id": 16074121,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1222,7 +878,16 @@
       "match": "Virtus Francavilla - AC Nardo",
       "match_market_id": "36357.5103",
       "match_event_id": 16074149,
-      "minutes_to_start": 63.7,
+      "minutes_to_start": 47.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "FK JAVOR IVANJICA - Napredak",
+      "match_market_id": "36357.4617",
+      "match_event_id": 16073912,
+      "minutes_to_start": 47.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1231,7 +896,7 @@
       "match": "AL Hazem FC - AL Shabab FC (KSA)",
       "match_market_id": "36351.5166",
       "match_event_id": 16060363,
-      "minutes_to_start": 68.7,
+      "minutes_to_start": 52.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5970114
@@ -1240,7 +905,7 @@
       "match": "Bahla - Al Seeb",
       "match_market_id": "36356.61876",
       "match_event_id": 16073182,
-      "minutes_to_start": 78.7,
+      "minutes_to_start": 62.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1249,7 +914,7 @@
       "match": "Skala IF - Vestur Sorvagur",
       "match_market_id": "36356.53280",
       "match_event_id": 16072428,
-      "minutes_to_start": 78.7,
+      "minutes_to_start": 62.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -1258,11 +923,110 @@
       "match": "Zira FK - Neftchi Baku",
       "match_market_id": "36351.14089",
       "match_event_id": 16069681,
-      "minutes_to_start": 78.7,
+      "minutes_to_start": 62.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5987508
+    },
+    {
+      "match": "AL Wahda - Baniyas Club",
+      "match_market_id": "36351.4997",
+      "match_event_id": 16042439,
+      "minutes_to_start": 77.9,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5961831
+    },
+    {
+      "match": "Al Kharaitiyat - Al Khor",
+      "match_market_id": "36357.5193",
+      "match_event_id": 16074193,
+      "minutes_to_start": 77.9,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000018600
+    },
+    {
+      "match": "Aris Salonicco - OFI Creta",
+      "match_market_id": "36351.4488",
+      "match_event_id": 16041302,
+      "minutes_to_start": 77.9,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5943232
+    },
+    {
+      "match": "Birkirkara - Mosta FC",
+      "match_market_id": "36351.2987",
+      "match_event_id": 16074191,
+      "minutes_to_start": 77.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Deportes Copiapo - Antofagasta",
+      "match_market_id": "36355.57201",
+      "match_event_id": 16066179,
+      "minutes_to_start": 77.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007292
+    },
+    {
+      "match": "Napoli - Como",
+      "match_market_id": "36351.2151",
+      "match_event_id": 16037211,
+      "minutes_to_start": 77.9,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5749658
+    },
+    {
+      "match": "Raelingen - Oppsal",
+      "match_market_id": "36356.58190",
+      "match_event_id": 16072933,
+      "minutes_to_start": 77.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5144740
+    },
+    {
+      "match": "Real Union de Irun - Coria",
+      "match_market_id": "36356.7104",
+      "match_event_id": 16068603,
+      "minutes_to_start": 77.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5883235
+    },
+    {
+      "match": "Union Saint Gilloise - Anderlecht",
+      "match_market_id": "36351.2437",
+      "match_event_id": 16041171,
+      "minutes_to_start": 77.9,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5811743
+    },
+    {
+      "match": "Washington Spirit - Bay FC",
+      "match_market_id": "36351.821",
+      "match_event_id": 16042448,
+      "minutes_to_start": 77.9,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5161622
+    },
+    {
+      "match": "Werder Bremen - RB Leipzig",
+      "match_market_id": "36351.4542",
+      "match_event_id": 16063077,
+      "minutes_to_start": 77.9,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5934513
     }
   ],
-  "target_count": 155
+  "target_count": 183
 }
