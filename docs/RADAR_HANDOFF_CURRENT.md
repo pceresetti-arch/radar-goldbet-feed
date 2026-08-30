@@ -52,6 +52,25 @@ I task attivi `Radar Pre-XI + Watch` e `Radar XI + Final Gate` sono stati irrigi
 7. se manca solo OPEN/movimento, lo stato obbligatorio è `CURRENT BETFLAG RECUPERATA — OPEN/MOVIMENTO INCOMPLETO`;
 8. `ACQUISIZIONE BETFLAG FALLITA / QUOTA CURRENT NON RECUPERATA` è consentito solo se index/file non sono realmente leggibili o la fixture non è recuperabile dopo verifica identità.
 
+## Standard obbligatorio di analisi POST-XI — aggiornamento 30/08/2026
+Quando entrambe le formazioni ufficiali sono disponibili, ogni analisi automatica deve essere realmente approfondita e completa, sul livello qualitativo dell'analisi manuale Utrecht–PSV del 30/08/2026. Non è sufficiente riportare XI, forma recente, 1-2 note generiche e quote.
+
+Prima di qualsiasi verdetto finale BET / NO BET devono essere completati tutti questi blocchi:
+1. FORMAZIONE CONTRO FORMAZIONE: confronto XI vs XI ruolo per ruolo e linea per linea, moduli in possesso/non possesso, altezza, ampiezza, mezzi spazi, costruzione, pressing, trigger di pressione, transizioni, cross/cut-back, palle inattive e vulnerabilità specifiche;
+2. ZONE E MATCHUP CHIAVE: duelli individuali e di zona per centravanti, esterni, trequartisti, mezzali offensive, terzini/quinti e altri profili rilevanti;
+3. ASSENZE / PANCHINA / MINUTI / CONDIZIONE: indisponibili, rientri, acciacchi, rotazioni, congestione calendario, riposo, viaggio, rischio sostituzione e qualità delle alternative;
+4. CONTESTO PARTITA: classifica, obiettivi, andata/ritorno se coppa, game state plausibile, incentivi a ritmo alto/basso e possibilità di gestione;
+5. MODELLO GOL/XG: xG squadra e match, distribuzione 0/1/2/3/4+ gol, BTTS, Over/Under, team total, profilo 1T/2T e P(almeno 1 gol 1T);
+6. PLAYER CONTEXT COMPLETO: scorer allocation e assist allocation, xG/xA, tiri/SOT, big chances, tocchi area, ruolo reale, piazzati/rigori, minuti e concorrenza interna;
+7. SCANSIONE PLAYER PROPS: Marcatore anytime, Marcatore 1T/2T, Primo Marcatore, Gol o Assist, Assist, Marcatore Plus / Marc o Sostituto e altri props disponibili, confrontando i mercati collegati della stessa tesi;
+8. MERCATI STANDARD E CORRELATI: 1X2, DNB/handicap, doppia chance, Goal/No Goal, O/U, team total, 1T/2T e combo quando disponibili;
+9. QUOTE E MOVIMENTI: CURRENT BetFlag exact dal file per-fixture, OPEN/movimento separato, eventuale divergenza GoldBet/BetFlag;
+10. PRICE GATE: solo alla fine calcolare P Radar, fair odds, FINAL GATE e verdetto.
+
+Regola anti-scorciatoia: con XI ufficiali la sezione `FORMAZIONE CONTRO FORMAZIONE` deve contenere almeno 3-6 osservazioni concrete e i matchup devono incidere esplicitamente su P Radar / fair / gate. Se un blocco essenziale non è completabile, l'output obbligatorio è `ANALISI POST-XI INCOMPLETA — NESSUN VERDETTO FINALE`, non una BET/NO BET abbreviata.
+
+Il task `Radar Pre-XI + Watch`, se incontra entrambe le formazioni ufficiali, deve cessare il PRE-XI per quella gara e trasformarsi immediatamente nella stessa analisi POST-XI completa.
+
 ## Percorso quote vincolante per ogni run
 CURRENT BetFlag:
 1. repository `pceresetti-arch/radar-goldbet-feed`;
@@ -96,24 +115,29 @@ Entrambi ora:
 - usano fast lookup dei movimenti come prima scelta;
 - non aspettano lo storico BetFlag se la OPEN GoldBet/mercato è già disponibile esternamente;
 - non dichiarano quote mancanti solo per assenza di OPEN;
-- devono mostrare un errore di percorso esplicito se il connettore/branch non è leggibile.
+- devono mostrare un errore di percorso esplicito se il connettore/branch non è leggibile;
+- con XI ufficiali devono eseguire il POST-XI completo prima di qualsiasi verdetto finale.
 
 ## Modifiche recenti rilevanti
 - commit fast lookup script: `303dec8c5ee0a0e8286412b045a5f9796d01477f`
 - commit workflow fast lookup: `2455e0762cd4c7ff50dbb873e4940a9e3ae264ed`
-- task preflight quote-path: aggiornato 30/08/2026 su entrambi i task automatici attivi.
+- task preflight quote-path: aggiornato 30/08/2026 su entrambi i task automatici attivi;
+- hard gate di deep analysis POST-XI: aggiornato 30/08/2026 su entrambi i task automatici attivi.
 
 ## Prossimo controllo consigliato
 Osservare il prossimo run automatico su una partita imminente e verificare che l'output riporti:
 - `CURRENT BETFLAG RECUPERATA` con quota exact;
 - OPEN/movimento separato;
 - player props letti dal file per-fixture;
+- formazione contro formazione realmente sviluppata;
+- zone e matchup chiave;
+- xG/gol/1T e player allocation;
 - P Radar / fair / final gate;
 - nessun falso `quote non recuperate` se il preflight ha passato.
 
-Se compare ancora un falso negativo, il run deve fornire il punto preciso di failure (`index`, `fixture file`, `movement index`, `movement fixture`) e non una diagnosi generica.
+Se compare ancora un falso negativo o una analisi troppo superficiale, il run deve fornire il punto preciso di failure e non una diagnosi generica.
 
 ## Come riprendere in una nuova chat
 Prompt consigliato:
 
-`Continua il progetto Radar Unico Value Bet Calcio. Leggi prima docs/RADAR_HANDOFF_CURRENT.md nel repository pceresetti-arch/radar-goldbet-feed. Il feed BetFlag live e il fast path movimenti sono già verificati; riparti dal monitoraggio del prossimo run automatico e correggi solo eventuali path read failure residui, senza ricominciare l'architettura.`
+`Continua il progetto Radar Unico Value Bet Calcio. Leggi prima docs/RADAR_HANDOFF_CURRENT.md nel repository pceresetti-arch/radar-goldbet-feed. Il feed BetFlag live, il fast path movimenti e l'hard gate di deep analysis POST-XI sono già attivi; riparti dal monitoraggio del prossimo run automatico e correggi solo eventuali path read failure o scorciatoie di analisi residue, senza ricominciare l'architettura.`
