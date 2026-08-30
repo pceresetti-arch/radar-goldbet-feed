@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T08:16:02.554786+00:00",
+  "generated_at": "2026-08-30T08:25:50.294167+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T08:12:52.175804+00:00",
-      "finished_at": "2026-08-30T08:13:05.034509+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 31,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T08:13:40.034693+00:00",
-      "finished_at": "2026-08-30T08:13:40.466223+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 31,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T08:14:15.466486+00:00",
-      "finished_at": "2026-08-30T08:14:16.071397+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 31,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T08:14:51.071698+00:00",
-      "finished_at": "2026-08-30T08:14:51.607356+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 31,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T08:15:26.607610+00:00",
-      "finished_at": "2026-08-30T08:15:27.129003+00:00",
-      "official_count": 2,
+      "started_at": "2026-08-30T08:25:40.833277+00:00",
+      "finished_at": "2026-08-30T08:25:50.294133+00:00",
+      "official_count": 3,
       "urgent_unconfirmed_count": 22,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T08:16:02.129269+00:00",
-      "finished_at": "2026-08-30T08:16:02.554661+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 22,
-      "events": [],
-      "actionable_events": []
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T08:25:50.293645+00:00",
+          "match": "Elfen Saitama - Kobe Leonessa",
+          "league": "WE League Femm.",
+          "start_time": "30-08-2026 11:00",
+          "minutes_to_start": 34.2,
+          "match_market_id": "36356.40264",
+          "match_event_id": 16070400,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000015899,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "e1efef34bcd8e6c10600",
+          "current_xi_fingerprint": "f5447915fb9ee48776e8",
+          "confirmed_at": "2026-08-30T08:25:49.973839+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T08:25:50.293645+00:00",
+          "match": "Elfen Saitama - Kobe Leonessa",
+          "league": "WE League Femm.",
+          "start_time": "30-08-2026 11:00",
+          "minutes_to_start": 34.2,
+          "match_market_id": "36356.40264",
+          "match_event_id": 16070400,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000015899,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "e1efef34bcd8e6c10600",
+          "current_xi_fingerprint": "f5447915fb9ee48776e8",
+          "confirmed_at": "2026-08-30T08:25:49.973839+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T08:25:50.293645+00:00",
+      "match": "Elfen Saitama - Kobe Leonessa",
+      "league": "WE League Femm.",
+      "start_time": "30-08-2026 11:00",
+      "minutes_to_start": 34.2,
+      "match_market_id": "36356.40264",
+      "match_event_id": 16070400,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000015899,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "e1efef34bcd8e6c10600",
+      "current_xi_fingerprint": "f5447915fb9ee48776e8",
+      "confirmed_at": "2026-08-30T08:25:49.973839+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T08:25:50.293645+00:00",
+      "match": "Elfen Saitama - Kobe Leonessa",
+      "league": "WE League Femm.",
+      "start_time": "30-08-2026 11:00",
+      "minutes_to_start": 34.2,
+      "match_market_id": "36356.40264",
+      "match_event_id": 16070400,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000015899,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "e1efef34bcd8e6c10600",
+      "current_xi_fingerprint": "f5447915fb9ee48776e8",
+      "confirmed_at": "2026-08-30T08:25:49.973839+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "FC Viktoria Plzen B - Ceske Budejovice",
       "match_market_id": "36354.7905",
       "match_event_id": 16069751,
-      "minutes_to_start": 14.0,
+      "minutes_to_start": 4.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,7 +135,7 @@
       "match": "Las Rozas - CD Tarancon",
       "match_market_id": "36357.5319",
       "match_event_id": 16074270,
-      "minutes_to_start": 14.0,
+      "minutes_to_start": 4.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -110,7 +144,7 @@
       "match": "Petrzalka - MFK Tatran Liptovsky Mikulas",
       "match_market_id": "36351.2594",
       "match_event_id": 16062473,
-      "minutes_to_start": 14.0,
+      "minutes_to_start": 4.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5820725
@@ -119,7 +153,7 @@
       "match": "Raca - SK 1923 Gabcikovo",
       "match_market_id": "36356.58253",
       "match_event_id": 16072953,
-      "minutes_to_start": 14.0,
+      "minutes_to_start": 4.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -128,7 +162,7 @@
       "match": "Slovan Bratislava - MSK Povazska Bystrica",
       "match_market_id": "36351.2592",
       "match_event_id": 16062472,
-      "minutes_to_start": 14.0,
+      "minutes_to_start": 4.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5820726
@@ -137,16 +171,25 @@
       "match": "Sturm Graz II - Rapid Vienna Amatori",
       "match_market_id": "36351.2790",
       "match_event_id": 16044820,
-      "minutes_to_start": 14.0,
+      "minutes_to_start": 4.2,
       "status": "LINEUP_PRESENT_UNCONFIRMED",
       "source": "FotMob",
       "fotmob_match_id": 5874964
     },
     {
+      "match": "Sunshine Coast - Ipswich FC",
+      "match_market_id": "36357.6299",
+      "match_event_id": 16075070,
+      "minutes_to_start": 4.2,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
       "match": "Budapest Honved MFA - Monori",
       "match_market_id": "36357.2887",
       "match_event_id": 16073563,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -155,25 +198,16 @@
       "match": "Diosgyori II - Hajdunanas FK",
       "match_market_id": "36356.58241",
       "match_event_id": 16072946,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Elfen Saitama - Kobe Leonessa",
-      "match_market_id": "36356.40264",
-      "match_event_id": 16070400,
-      "minutes_to_start": 44.0,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000015899
-    },
-    {
       "match": "FC Yenisey Krasnoyarsk - FC Shinnik Yaroslavl",
       "match_market_id": "36351.3462",
       "match_event_id": 16068614,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5897592
@@ -182,7 +216,7 @@
       "match": "Ichihara Chiba - Cerezo Osaka Sakai",
       "match_market_id": "36356.40266",
       "match_event_id": 16070402,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -191,7 +225,7 @@
       "match": "Nagano Parceiro - Kusatsu G",
       "match_market_id": "36354.7762",
       "match_event_id": 16066131,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -200,7 +234,7 @@
       "match": "Nice U19 - US Colomiers U19",
       "match_market_id": "36381.4779",
       "match_event_id": 16073838,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -209,7 +243,7 @@
       "match": "Slavia Tu Kosice - Tesla Stropkov",
       "match_market_id": "36356.61188",
       "match_event_id": 16073153,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -218,7 +252,7 @@
       "match": "Urawa Red Diamonds - Kanagawa Sagamihara",
       "match_market_id": "36354.7704",
       "match_event_id": 16070089,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -227,7 +261,7 @@
       "match": "Vasas SC II - III Keruleti Tve",
       "match_market_id": "36357.2892",
       "match_event_id": 16073566,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -236,7 +270,7 @@
       "match": "Yangon City FC - Shan United",
       "match_market_id": "36357.4947",
       "match_event_id": 16074075,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -245,7 +279,7 @@
       "match": "Yokohama - Tiamo",
       "match_market_id": "36356.42921",
       "match_event_id": 16070746,
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -254,7 +288,7 @@
       "match": "Calcutta Customs - East Bengal FC Reserves",
       "match_market_id": "36357.3104",
       "match_event_id": 16073573,
-      "minutes_to_start": 74.0,
+      "minutes_to_start": 64.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -263,7 +297,7 @@
       "match": "Criacao Shinjuku - Tokyo Musashino",
       "match_market_id": "36356.42930",
       "match_event_id": 16070748,
-      "minutes_to_start": 74.0,
+      "minutes_to_start": 64.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -272,7 +306,7 @@
       "match": "Peerless SC - POLICE AC",
       "match_market_id": "36355.60629",
       "match_event_id": 16073572,
-      "minutes_to_start": 74.0,
+      "minutes_to_start": 64.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -281,7 +315,7 @@
       "match": "Reilac Shiga - Gainare Tottori",
       "match_market_id": "36354.7773",
       "match_event_id": 16063644,
-      "minutes_to_start": 74.0,
+      "minutes_to_start": 64.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5987123
