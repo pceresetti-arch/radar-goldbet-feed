@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-08-30T00:22:21.983208+00:00",
+  "generated_at": "2026-08-30T03:22:16.690082+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "30-08-2026",
   "ready": false,
@@ -18,9 +18,9 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 5701,
-    "index_warm_elapsed_ms": 236,
-    "fallback_discovery_elapsed_ms": 403,
+    "index_first_elapsed_ms": 6281,
+    "index_warm_elapsed_ms": 80,
+    "fallback_discovery_elapsed_ms": 276,
     "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
     "index_warm_cache": "HIT"
   },
@@ -29,20 +29,20 @@
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 11138,
-    "scoped_source_rows": 11138,
-    "indexed_rows": 11138,
+    "source_rows": 11992,
+    "scoped_source_rows": 11992,
+    "indexed_rows": 11992,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 11138,
+      "standard_match": 11992,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
       "missing_stable_identity": 0,
       "missing_player": 0
     },
-    "fixtures": 22,
-    "exact_fixtures": 22,
+    "fixtures": 23,
+    "exact_fixtures": 23,
     "fallback_fixtures": 0,
     "player_fixtures": 1000,
     "markets_present": [
@@ -58,6 +58,7 @@
       "Marcatore Plus",
       "Marcatore o Sostituto",
       "Tripletta",
+      "U/O Parate Giocatore",
       "U/O Tiri In Porta Giocatore",
       "U/O Tiri Totali Giocatore",
       "U/O Tiri Totali Plus",
@@ -104,22 +105,22 @@
     "pagination_runtime": true,
     "dynamic_index_candidate_found": true,
     "player_lookup_runtime": true,
-    "exact_200": false,
-    "exact_unique": false,
-    "exact_source_healthy": false,
+    "exact_200": true,
+    "exact_unique": true,
+    "exact_source_healthy": true,
     "exact_fresh": true,
     "exact_fingerprint": true,
-    "exact_price_gate_eligible": false
+    "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": null,
-    "match_market_id": null,
-    "player": null,
-    "market": null,
-    "selection": null,
-    "odd": null,
-    "scan_odd": 19,
-    "proof_id": "bf-7c8ccdf79a72eaee9d3d"
+    "match": "Utrecht - PSV Eindhoven",
+    "match_market_id": "36351.2243",
+    "player": "Adrian Blake",
+    "market": "1° Marcatore",
+    "selection": "Si",
+    "odd": 12,
+    "scan_odd": 12,
+    "proof_id": "bf-297988f5968b623a1fc0"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
