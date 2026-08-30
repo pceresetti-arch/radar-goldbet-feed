@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-30T19:42:13.525447+00:00",
+  "generated_at": "2026-08-30T19:47:47.021085+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 5.1,
-    "tactical": 4.7,
-    "betflag_fixture_feed": 0.4,
-    "betflag_standard_source": 0.5,
-    "betflag_player_source": 0.5,
-    "player_context": 4.6
+    "lineups": 1.0,
+    "tactical": 0.6,
+    "betflag_fixture_feed": 5.9,
+    "betflag_standard_source": 6.1,
+    "betflag_player_source": 6.0,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -33,20 +33,33 @@
     "exact_proof_required_at_decision_time": true
   },
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
-  "match_count": 39,
+  "match_count": 32,
   "readiness_counts": {
-    "WAIT_OFFICIAL_STANDARD_XI": 35,
-    "WAIT_BETFLAG_FIXTURE_MAPPING": 3,
-    "READY_DEEP_ANALYSIS": 1
+    "WAIT_OFFICIAL_STANDARD_XI": 28,
+    "READY_DEEP_ANALYSIS": 4
   },
-  "ready_count": 1,
+  "ready_count": 4,
   "ready_matches": [
+    {
+      "match_market_id": "36351.10355",
+      "match": "Argentinos Juniors - Aldosivi",
+      "league": "Primera Division",
+      "start_time": "30-08-2026 22:00",
+      "minutes_to_start": 13.2,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
+      "betflag_standard_count": 35,
+      "player_count": 59,
+      "player_quote_count": 472,
+      "player_lane_ready": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    },
     {
       "match_market_id": "36356.3164",
       "match": "Portland Timbers II - Austin FC II",
       "league": "Mls Next Pro",
       "start_time": "30-08-2026 22:00",
-      "minutes_to_start": 22.8,
+      "minutes_to_start": 13.2,
       "readiness": "READY_DEEP_ANALYSIS",
       "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
       "betflag_standard_count": 26,
@@ -54,8 +67,63 @@
       "player_quote_count": 0,
       "player_lane_ready": false,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    },
+    {
+      "match_market_id": "36331.410",
+      "match": "Racing de Cordoba - Colon",
+      "league": "Primera B Nacional",
+      "start_time": "30-08-2026 22:00",
+      "minutes_to_start": 13.2,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "betflag_standard_count": 31,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_lane_ready": false,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    },
+    {
+      "match_market_id": "36351.260",
+      "match": "Columbus Crew - New England Revolution",
+      "league": "MLS",
+      "start_time": "30-08-2026 22:30",
+      "minutes_to_start": 43.2,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
+      "betflag_standard_count": 38,
+      "player_count": 43,
+      "player_quote_count": 810,
+      "player_lane_ready": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "player_lane_ready_count": 2,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36351.10355",
+      "match": "Argentinos Juniors - Aldosivi",
+      "league": "Primera Division",
+      "start_time": "30-08-2026 22:00",
+      "minutes_to_start": 13.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 59,
+      "player_quote_count": 472,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.260",
+      "match": "Columbus Crew - New England Revolution",
+      "league": "MLS",
+      "start_time": "30-08-2026 22:30",
+      "minutes_to_start": 43.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 43,
+      "player_quote_count": 810,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
