@@ -1,97 +1,113 @@
 # Radar Unico — TRUE OPEN Movement Policy
 
-## Regola principale — BETFLAG ONLY
-Per qualunque richiesta sul movimento di una quota e per qualunque controllo operativo automatico PRE-MATCH, POST-XI, T-40/T-30 e PRE-BET, **BetFlag e' l'unico bookmaker operativo ammesso** per tutti i mercati quotati e per la TRUE OPEN.
+## Principio operativo
+Per la decisione pre-match la quota `CURRENT` deve essere una quota BetFlag reale, fresca e riferita alla stessa identica chiave evento + mercato + periodo + linea + selezione + giocatore, quando applicabile.
 
-La regola vale senza eccezioni per:
-- 1X2;
-- Goal/No Goal;
-- Over/Under;
-- handicap e doppia chance;
-- team total e combo;
-- mercati 1° tempo e altri periodi;
-- marcatori, marcatore 1T, primo marcatore;
-- Gol o Assist, Assist;
-- tiri, tiri in porta, tiri 1T;
-- Marc o Sost / Marcatore Plus e mercati equivalenti;
-- qualsiasi altro standard market o player prop disponibile su BetFlag.
+La disponibilita' della `CURRENT` e la disponibilita' della `OPEN` sono due fatti separati.
 
-GoldBet, ODSS/OddsPapi, aggregatori e medie di mercato non possono essere usati come fonte operativa, fallback silenzioso o sostituto di BetFlag.
+**Regola vincolante:** se una `CURRENT BETFLAG` fresca e' presente, la quota E' RECUPERATA e deve essere usata normalmente per P Radar, fair odds, FINAL GATE e decisione. La mancanza della OPEN, di T-30 o di altri checkpoint storici limita soltanto il giudizio sul movimento/MMS e non deve mai essere descritta come `quota non recuperata` o `acquisizione fallita`.
 
-## Sequenza operativa obbligatoria
-`BETFLAG TRUE OPEN CERTIFICATA -> snapshot intermedi BETFLAG -> T-40 BETFLAG -> T-30 BETFLAG -> CURRENT/PRE-BET BETFLAG`
+## GoldBet e BetFlag — uso operativo pragmatico
+GoldBet e BetFlag vengono trattati come riferimenti dello stesso mercato quando:
+- fixture, mercato, periodo, linea e selezione coincidono esattamente;
+- la fonte storica della OPEN e' verificabile;
+- i prezzi correnti GoldBet/BetFlag, quando entrambi osservabili, sono sufficientemente coerenti da non indicare due mercati materialmente diversi.
 
-Ogni punto della sequenza deve appartenere alla stessa identica chiave BetFlag: evento + mercato + periodo + linea + selezione + giocatore, quando applicabile.
+In questo caso una OPEN storica GoldBet puo' essere usata come riferimento operativo del movimento BetFlag con etichetta esplicita:
 
-## Definizioni
-- `TRUE_OPEN_CERTIFIED_BETFLAG`: prima quota realmente pubblicata da BetFlag per la specifica chiave evento/mercato/periodo/linea/selezione/giocatore, certificata da un campo opening affidabile o da una cattura dimostrabile della prima pubblicazione.
-- `FIRST_SEEN_BETFLAG` / `OPEN_RADAR_BETFLAG`: prima quota BetFlag osservata dal Radar. E' solo diagnostica e non equivale alla TRUE OPEN salvo certificazione separata.
-- `OPEN_CAPTURED_NEAR_PUBLICATION_BETFLAG`: quota BetFlag intercettata molto vicino alla comparsa del mercato. Resta distinta dalla TRUE OPEN certificata.
-- `T-40`, `T-30`, `CURRENT/PRE-BET`: snapshot BetFlag rispettivamente piu' vicini possibile ai relativi momenti operativi.
+`TRUE OPEN PROXY — GOLDBET/MERCATO`
 
-Se la vera apertura BetFlag non e' certificabile, il Radar deve scrivere esplicitamente:
+La provenienza resta auditabile dietro le quinte, ma l'analisi operativa non deve bloccarsi per il solo fatto che la OPEN storica e la CURRENT provengano da due bookmaker molto allineati.
 
-`TRUE OPEN BETFLAG: NON CERTIFICATA / MOVIMENTO OPEN→CURRENT INCOMPLETO`
+La proxy non deve essere riscritta come `TRUE OPEN BETFLAG UFFICIALE`.
 
-Il FIRST_SEEN non puo' essere promosso ad apertura reale e non puo' generare da solo un MMS primario.
+## Gerarchia OPEN
+1. `TRUE_OPEN_CERTIFIED_BETFLAG`: apertura BetFlag certificata da campo opening affidabile o prova storica BetFlag verificabile.
+2. `OPEN_RADAR_CERTIFICATA_BETFLAG`: apertura catturata dal watcher continuo con prova di comparsa del mercato.
+3. `TRUE_OPEN_PROXY_GOLDBET_MARKET`: apertura GoldBet/mercato verificata e coerente con la stessa identica selezione; valida per lettura operativa del movimento, non come certificazione BetFlag ufficiale.
+4. `FIRST_SEEN_BETFLAG`: prima osservazione tecnica non certificata.
+5. `OPEN_UNKNOWN`: nessuna apertura affidabile disponibile.
 
-## Gerarchia di affidabilita
-1. `TRUE_OPEN_CERTIFIED_BETFLAG`: unico benchmark operativo ammesso come apertura reale.
-2. `OPEN_CAPTURED_NEAR_PUBLICATION_BETFLAG`: diagnostica ad alta confidenza, non apertura reale certificata.
-3. `FIRST_SEEN_BETFLAG` / `OPEN_RADAR_BETFLAG`: diagnostica tecnica.
-4. `OPEN_UNKNOWN`: nessuna apertura affidabile.
+Se manca una apertura utilizzabile ma la quota corrente esiste, il formato corretto e':
 
-## Same-bookmaker / same-market rule
-Il movimento principale e' sempre **BetFlag→BetFlag**. Non e' valido costruire un movimento usando quote GoldBet, ODSS/OddsPapi, altri bookmaker, aggregatori o linee/mercati differenti.
+`CURRENT BETFLAG DISPONIBILE — OPEN STORICA NON ANCORA RICOSTRUITA / MOVIMENTO INCOMPLETO`
 
-Eventuali fonti esterne possono essere consultate esclusivamente per contesto statistico non-quote, mai per sostituire una quota BetFlag mancante e mai per certificare la TRUE OPEN BetFlag.
+## Sequenza di movimento
+Ordine preferito:
 
-## Mercato non quotato vs acquisizione fallita
-Quando una quota o un player prop BetFlag non viene recuperato, il Radar deve distinguere obbligatoriamente tra:
+`OPEN certificata/proxy -> snapshot intermedi -> T-40 -> T-30 -> T-15 -> CURRENT/PRE-BET`
+
+Usare soltanto checkpoint realmente osservati. Non ricostruire retroattivamente snapshot mancanti come se fossero osservati.
+
+Quando la OPEN e la CURRENT sono entrambe BetFlag, il movimento e' `SAME-BOOK CERTIFIED`.
+
+Quando la OPEN e' GoldBet/mercato e la CURRENT e' BetFlag, il movimento e' `MARKET/PROXY MOVEMENT`.
+
+Entrambi possono essere mostrati e usati nell'analisi; solo il primo va chiamato movimento BetFlag same-book certificato.
+
+## CURRENT e FINAL GATE
+La quota operativa per la decisione resta `CURRENT BETFLAG` fresca/exact quando disponibile.
+
+Per ogni candidata:
+- stima P Radar;
+- calcola fair odds;
+- calcola un solo FINAL GATE;
+- BET solo se `CURRENT BETFLAG >= FINAL GATE` e tutti gli altri blocchi dell'analisi sono completi;
+- sotto gate = NO BET, salvo USER OVERRIDE esplicito.
+
+La OPEN serve a interpretare il mercato, non a determinare se la quota corrente esiste.
+
+## Mercato non quotato vs acquisizione fallita vs storico incompleto
+Quando manca un dato, distinguere sempre tre casi:
 1. `MERCATO NON QUOTATO / NON DISPONIBILE SU BETFLAG`;
-2. `MERCATO PROBABILMENTE DISPONIBILE MA ACQUISIZIONE BETFLAG FALLITA / QUOTA NON RECUPERATA`.
+2. `ACQUISIZIONE BETFLAG FALLITA / QUOTA CURRENT NON RECUPERATA`;
+3. `QUOTA CURRENT BETFLAG RECUPERATA MA OPEN/MOVIMENTO INCOMPLETO`.
 
-Un semplice “non trovato” non equivale mai automaticamente a “non quotato”.
+Il caso 3 non deve mai essere descritto come caso 2.
 
-## Freschezza
-Una quota non deve essere chiamata `CURRENT BETFLAG` se lo snapshot non e' sufficientemente fresco. Il report deve indicare timestamp o eta' della quota quando disponibile; se stale, deve tentare un refresh prima della decisione finale.
+Un semplice `non trovato` non equivale automaticamente a `non quotato`.
+
+## Coerenza GoldBet/BetFlag
+La OPEN GoldBet/mercato puo' essere usata come proxy solo quando non emergono divergenze correnti materiali tra GoldBet e BetFlag.
+
+Se i prezzi correnti divergono in modo significativo, separare le due fonti e non usare automaticamente la OPEN GoldBet come proxy BetFlag.
+
+La soglia di coerenza puo' essere implementata dal software con una regola documentata e auditabile; il Radar deve conservare sia quota assoluta sia probabilita' implicita per misurare il drift.
 
 ## Metriche di movimento
-Per TRUE_OPEN→CURRENT, TRUE_OPEN→T-40 e TRUE_OPEN→T-30 calcolare quando disponibili:
-- variazione assoluta della quota;
+Quando disponibili, calcolare:
+- variazione assoluta quota;
 - variazione percentuale;
-- variazione della probabilita' implicita;
-- direzione e numero dei cambi;
+- variazione probabilita' implicita;
+- direzione e numero cambi;
 - minimo/massimo intermedio;
-- accelerazione post formazione;
-- stato `ACTIVE_DROP` o `REBOUNDED_AFTER_DROP`.
+- accelerazione post-XI;
+- `ACTIVE_DROP` / `REBOUNDED_AFTER_DROP`;
+- tipo di movimento: `SAME_BOOK_CERTIFIED` oppure `MARKET_PROXY`.
 
-## Soglia MMS primaria
-Il segnale forte standard resta:
+## MMS
+Il segnale MMS same-book piu' forte resta basato su BetFlag OPEN -> BetFlag CURRENT/T-40/T-30 sulla stessa chiave.
 
-`TRUE_OPEN_CERTIFIED_BETFLAG - quota BETFLAG osservata >= 0.20`
+Una OPEN GoldBet/mercato verificata -> CURRENT BetFlag puo' produrre un segnale di movimento operativo `MARKET_PROXY`, utile come conferma e contesto. Non va chiamato same-book e non deve da solo generare una BET.
 
-La soglia deve essere misurata sulla stessa identica selezione BetFlag. Un FIRST_SEEN→CURRENT >= 0.20 resta diagnostico e non e' MMS primario.
+## Freschezza
+Una quota non deve essere chiamata `CURRENT BETFLAG` se lo snapshot e' stale. Il report deve usare timestamp/freshness quando disponibile e tentare refresh prima della decisione finale.
 
-## Relazione con le formazioni
-Distinguere temporalmente il movimento BetFlag iniziato prima delle XI ufficiali, quello immediatamente successivo, quello fra T-40 e T-30 e quello successivo a T-30 fino al price gate finale.
+## Formato operativo
+Esempio con OPEN BetFlag:
+
+`OPEN @2.70 [BETFLAG CERTIFICATA] -> T-30 @2.48 -> CURRENT @2.38 [BETFLAG]`
+
+Esempio con OPEN GoldBet/mercato:
+
+`OPEN @2.70 [PROXY GOLDBET/MERCATO] -> CURRENT BETFLAG @2.38`
+
+Se manca la OPEN:
+
+`CURRENT BETFLAG @2.38 — OPEN STORICA NON ANCORA RICOSTRUITA`
 
 ## Regola decisionale
-Il movimento di quota e' un input e non genera automaticamente una BET. Restano obbligatori analisi formazione-vs-formazione, matchup e zona-vs-zona, ruolo/minutaggio, contesto tattico/fisico/motivazionale, stima probabilita'/fair odds, quota minima Radar e price gate finale.
+Il movimento e' un input, non una BET automatica. Restano obbligatori analisi profonda, XI/ruoli/minuti, matchup, scorer allocation, contesto, P Radar, fair odds e FINAL GATE.
 
-## Formato di trasparenza
-Quando disponibile:
-
-`TRUE OPEN BETFLAG: @X.XX [TRUE_OPEN_CERTIFIED_BETFLAG]`
-`INTERMEDI BETFLAG: ...`
-`T-40 BETFLAG: @X.XX [timestamp]`
-`T-30 BETFLAG: @X.XX [timestamp]`
-`CURRENT BETFLAG: @X.XX [timestamp/freshness]`
-
-Se manca la certificazione:
-
-`TRUE OPEN BETFLAG: NON CERTIFICATA`
-`FIRST_SEEN BETFLAG: @X.XX [SOLO DIAGNOSTICA]`
-
-## Obiettivo operativo
-Per tutte le partite future il tracker deve acquisire quanto prima la TRUE OPEN BetFlag di ogni mercato disponibile, conservarla immutabile e accumulare snapshot BetFlag intermedi fino a T-40, T-30 e CURRENT. La sequenza deve essere auditabile ex post e non riscritta dopo il risultato.
+## Obiettivo
+Il Radar deve massimizzare velocita' e utilita' operativa senza perdere tracciabilita': recuperare la CURRENT BetFlag direttamente, usare la migliore OPEN storica verificabile disponibile — BetFlag se certificata, altrimenti GoldBet/mercato come proxy coerente — e conservare la provenienza separatamente per audit e retroanalisi.
