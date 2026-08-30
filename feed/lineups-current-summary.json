@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T02:43:59.083309+00:00",
+  "generated_at": "2026-08-30T02:59:08.052669+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,9 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 7,
+  "target_count": 3,
   "status_counts": {
-    "SOURCE_CONFIRMED": 5,
+    "SOURCE_CONFIRMED": 1,
     "NOT_AVAILABLE": 2
   },
   "schedule_stats": [
@@ -23,7 +23,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-30T02:43:59.083309+00:00",
+    "generated_at": "2026-08-30T02:59:08.052669+00:00",
     "window_minutes": [
       0,
       85.0
@@ -39,75 +39,24 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Club Santos Laguna - Tigres",
-        "minutes_to_start": 26.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Club Santos Laguna - Tigres",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
-    {
-      "match": "Las Vegas Lights - Charleston Battery",
-      "start_time": "30-08-2026 04:30",
-      "league": "NASL",
-      "minutes_to_start": -14.0,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.590",
-      "confirmed_at": "2026-08-30T02:43:55.441302+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Phoenix Rising - Indy Eleven",
-      "start_time": "30-08-2026 04:30",
-      "league": "NASL",
-      "minutes_to_start": -14.0,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.582",
-      "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Portland Timbers - Austin",
-      "start_time": "30-08-2026 04:30",
-      "league": "MLS",
-      "minutes_to_start": -14.0,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.253",
-      "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "San Diego FC - LA Galaxy",
-      "start_time": "30-08-2026 04:30",
-      "league": "MLS",
-      "minutes_to_start": -14.0,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.275",
-      "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Club Santos Laguna - Tigres",
       "start_time": "30-08-2026 05:10",
       "league": "Primera Division",
-      "minutes_to_start": 26.0,
+      "minutes_to_start": 10.9,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2315",
       "confirmed_at": "2026-08-30T02:43:59.083309+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -115,7 +64,7 @@
       "match": "FC Juarez - Cruz Azul",
       "start_time": "30-08-2026 05:10",
       "league": "Liga Mx Femminile",
-      "minutes_to_start": 26.0,
+      "minutes_to_start": 10.9,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.5258",
       "confirmed_at": null,
@@ -127,7 +76,7 @@
       "match": "SWQ Thunder - Pine Hills",
       "start_time": "30-08-2026 06:30",
       "league": "Queensland Premier League 2",
-      "minutes_to_start": 106.0,
+      "minutes_to_start": 90.9,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.58242",
       "confirmed_at": null,
