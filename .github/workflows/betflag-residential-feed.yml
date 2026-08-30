@@ -75,23 +75,84 @@ jobs:
         run: |
           $src = 'C:\BetFlagRadar\state\betflag-open-close-watch.json'
           if (Test-Path $src) { Copy-Item $src 'feed\betflag-open-close-watch.json' -Force }
-      - name: Publish conflict-free live branch
+      - name: Publish data-only live branch
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           $ErrorActionPreference = 'Stop'
-          git config user.name "radar-betflag-residential-bot"
-          git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+          $workspace = (Get-Location).Path
+          $publishRoot = Join-Path $env:RUNNER_TEMP 'betflag-live-publish'
 
-          git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures
-          if (Test-Path 'feed\betflag-open-close-watch.json') { git add feed/betflag-open-close-watch.json }
-
-          if (-not (git diff --cached --quiet)) {
-            git commit -m "Publish BetFlag residential live snapshot"
-            if ($LASTEXITCODE -ne 0) { throw 'Unable to create BetFlag live snapshot commit' }
+          # betflag-live is a data publication branch. Build the new snapshot on
+          # top of its own history so changes under .github/workflows on main are
+          # never included in the live-branch push (GITHUB_TOKEN has contents
+          # permission only, by design).
+          git worktree prune
+          if (Test-Path $publishRoot) {
+            git worktree remove --force $publishRoot 2>$null
+            Remove-Item $publishRoot -Recurse -Force -ErrorAction SilentlyContinue
           }
+          git fetch origin betflag-live:refs/remotes/origin/betflag-live
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to fetch dedicated betflag-live branch' }
+          git worktree add --detach $publishRoot origin/betflag-live
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to create data-only BetFlag publish worktree' }
 
-          # This branch is owned exclusively by this workflow. It is deliberately
-          # force-updated from each fresh residential snapshot, so high-frequency
-          # bots writing main can never create merge/rebase conflicts here.
-          git push --force origin HEAD:refs/heads/betflag-live
-          if ($LASTEXITCODE -ne 0) { throw 'Unable to publish dedicated betflag-live branch' }
+          try {
+            $files = @(
+              'feed/betflag-residential-current.json',
+              'feed/betflag-residential-movement.json',
+              'feed/betflag-opening-field-diagnostics.json',
+              'feed/betflag-standard-current.json',
+              'feed/betflag-standard-movement.json',
+              'feed/betflag-movement-index.json',
+              'feed/betflag-residential-hot-feed.json',
+              'feed/betflag-live-status.json',
+              'feed/betflag-residential-fixtures-index.json'
+            )
+
+            foreach ($rel in $files) {
+              $src = Join-Path $workspace $rel
+              if (-not (Test-Path $src)) { throw "Missing generated BetFlag publication file: $rel" }
+              $dst = Join-Path $publishRoot $rel
+              New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+              Copy-Item $src $dst -Force
+            }
+
+            $srcFixtures = Join-Path $workspace 'feed/betflag-residential-fixtures'
+            $dstFixtures = Join-Path $publishRoot 'feed/betflag-residential-fixtures'
+            if (-not (Test-Path $srcFixtures)) { throw 'Missing generated BetFlag fixture directory' }
+            Remove-Item $dstFixtures -Recurse -Force -ErrorAction SilentlyContinue
+            New-Item -ItemType Directory -Force -Path $dstFixtures | Out-Null
+            Copy-Item (Join-Path $srcFixtures '*') $dstFixtures -Recurse -Force
+
+            $watchRel = 'feed/betflag-open-close-watch.json'
+            $watchSrc = Join-Path $workspace $watchRel
+            if (Test-Path $watchSrc) {
+              $watchDst = Join-Path $publishRoot $watchRel
+              New-Item -ItemType Directory -Force -Path (Split-Path $watchDst -Parent) | Out-Null
+              Copy-Item $watchSrc $watchDst -Force
+            }
+
+            Push-Location $publishRoot
+            try {
+              git config user.name "radar-betflag-residential-bot"
+              git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+              git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures
+              if (Test-Path $watchRel) { git add $watchRel }
+
+              git diff --cached --quiet
+              if ($LASTEXITCODE -ne 0) {
+                git commit -m "Publish BetFlag residential live snapshot"
+                if ($LASTEXITCODE -ne 0) { throw 'Unable to create data-only BetFlag live snapshot commit' }
+              }
+
+              git push origin HEAD:refs/heads/betflag-live
+              if ($LASTEXITCODE -ne 0) { throw 'Unable to publish dedicated betflag-live data branch' }
+            }
+            finally {
+              Pop-Location
+            }
+          }
+          finally {
+            git worktree remove --force $publishRoot 2>$null
+            git worktree prune
+          }
