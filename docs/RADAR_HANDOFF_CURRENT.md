@@ -17,7 +17,7 @@ La pipeline esiste già ed è attiva:
 - feed principale: `feed/information-move-current.json`
 - workflow: `.github/workflows/build-information-move-feed.yml`
 
-Nuovo fast path introdotto il 30/08/2026:
+Fast path introdotto il 30/08/2026:
 - `feed/information-move-index.json`
 - `feed/information-move-fixtures/<slug>.json`
 - i task automatici devono leggere PRIMA l'indice e poi SOLO il file della partita interessata; il feed monolitico è fallback/debug.
@@ -29,41 +29,91 @@ Gerarchia movimento operativa:
 
 Quando GoldBet current e BetFlag current sono sostanzialmente allineati, mostrare operativamente `OPEN DI MERCATO/GOLDBET -> CURRENT BETFLAG` senza appesantire l'output. Segnalare la distinzione solo in caso di divergenza materiale.
 
-## Bug aperto prioritario
-Le analisi automatiche continuano talvolta a dichiarare di non trovare le quote anche quando il feed BetFlag live è sano e i file per-fixture contengono quote aggiornate.
+## Bug prioritario quote automatiche — diagnosi 30/08/2026
+Il bug osservato era: alcune analisi automatiche dichiaravano `quote non recuperate` nonostante il feed BetFlag live fosse sano.
 
-Questo va trattato come problema di LETTURA/PERCORSO DEL TASK, non come problema di acquisizione BetFlag, finché il feed live risulta sano.
+La verifica manuale del percorso ha confermato che il problema NON è l'acquisizione BetFlag:
+- `feed/betflag-residential-fixtures-index.json` su branch `betflag-live` è leggibile, `source_healthy=true` e contiene le fixture operative;
+- test su `Utrecht - PSV Eindhoven`: fixture trovata nell'indice, file `feed/betflag-residential-fixtures/utrecht-psv-eindhoven.json` leggibile su `betflag-live`, con 41 mercati standard e 232 player props;
+- nel test la CURRENT BetFlag 1X2 PSV era `1.50`;
+- `feed/information-move-index.json` su `main` è pubblicato e leggibile;
+- per Utrecht–PSV il fast path movimento conteneva GoldBet opening `1.63` e GoldBet current `1.50` sulla vittoria PSV.
 
-Diagnosi da completare nella prossima chat:
-1. verificare esattamente quali file/branch consulta il task automatico nel run che fallisce;
-2. verificare se legge per errore file vecchi/vuoti come `feed/betflag-standard-current.json` o `feed/betflag-residential-hot-feed.json` invece dei file per-fixture su `betflag-live`;
-3. verificare che il fast path movimenti appena introdotto sia realmente pubblicato e leggibile;
-4. correggere il task perché usi direttamente l'indice fixture BetFlag e il relativo file per-partita;
-5. fare test pratico su una partita imminente e confermare: quote CURRENT, OPEN/movimento, player props, P/fair/gate.
+Conclusione: quando un run automatico continua a dire che non trova le quote, va classificato come problema di LETTURA/PERCORSO DEL TASK, non come problema BetFlag, salvo prova contraria sul feed live.
+
+## Correzione applicata ai task automatici il 30/08/2026
+I task attivi `Radar Pre-XI + Watch` e `Radar XI + Final Gate` sono stati irrigiditi con un PRE-FLIGHT obbligatorio:
+1. prima di qualsiasi analisi devono usare il connettore GitHub e leggere `feed/betflag-residential-fixtures-index.json` con ref ESPLICITO `betflag-live`;
+2. devono conservare `generated_at`, `source_healthy`, `fixture_count`;
+3. se la lettura fallisce devono emettere `BETFLAG PATH READ FAILURE — betflag-live/index`, non `quote non recuperate`;
+4. se il preflight passa con `source_healthy=true`, i feed legacy su `main` non possono diventare fonte primaria;
+5. per ogni partita devono prendere il campo `file` dall'indice e leggere ESATTAMENTE quel file ancora con ref=`betflag-live`;
+6. se fixture + file sono sani e contengono quote, lo stato obbligatorio è `CURRENT BETFLAG RECUPERATA`;
+7. se manca solo OPEN/movimento, lo stato obbligatorio è `CURRENT BETFLAG RECUPERATA — OPEN/MOVIMENTO INCOMPLETO`;
+8. `ACQUISIZIONE BETFLAG FALLITA / QUOTA CURRENT NON RECUPERATA` è consentito solo se index/file non sono realmente leggibili o la fixture non è recuperabile dopo verifica identità.
+
+## Percorso quote vincolante per ogni run
+CURRENT BetFlag:
+1. repository `pceresetti-arch/radar-goldbet-feed`;
+2. branch `betflag-live`;
+3. leggere `feed/betflag-residential-fixtures-index.json`;
+4. trovare partita + orario;
+5. prendere il campo `file`;
+6. leggere quel file ancora da `betflag-live`;
+7. validare `source_healthy`, `identity_consistent`, `price_gate_fixture_eligible`;
+8. usare standard + player props del file per P Radar / fair / gate.
+
+Movimenti:
+1. branch `main`;
+2. leggere `feed/information-move-index.json`;
+3. trovare la partita;
+4. leggere SOLO il campo `file` relativo alla fixture;
+5. usare GoldBet opening/current, implied probability shift e consensus;
+6. confrontare con CURRENT BetFlag.
+
+Vietato usare come fonte primaria per la CURRENT:
+- `feed/betflag-standard-current.json` se vuoto/stale;
+- `feed/betflag-residential-hot-feed.json` se vuoto/stale;
+- file per-fixture cercati erroneamente su `main`;
+- feed monolitici quando è disponibile il file per-partita.
 
 ## Regole operative quote / errori
 Distinguere sempre:
 1. `MERCATO BETFLAG NON QUOTATO / NON DISPONIBILE`
 2. `ACQUISIZIONE BETFLAG FALLITA / QUOTA CURRENT NON RECUPERATA`
 3. `CURRENT BETFLAG RECUPERATA MA OPEN/MOVIMENTO INCOMPLETO`
+4. `BETFLAG PATH READ FAILURE — betflag-live/index` o file specifico, quando il problema è tecnico di lettura del task.
 
-Non confondere mai il caso 3 con il caso 2.
+Non confondere mai il caso 3 o 4 con il caso 2.
 
-## Task automatici aggiornati
+## Task automatici attivi
 - `Radar Pre-XI + Watch`
 - `Radar XI + Final Gate`
 
-Entrambi sono stati aggiornati per:
-- usare BetFlag CURRENT direct per decisione;
-- usare fast lookup dei movimenti come prima scelta;
-- non aspettare lo storico BetFlag se la OPEN GoldBet/mercato è già disponibile esternamente;
-- non dichiarare quote mancanti solo per assenza di OPEN.
+Entrambi ora:
+- eseguono preflight GitHub branch-aware;
+- usano BetFlag CURRENT direct per decisione;
+- usano fast lookup dei movimenti come prima scelta;
+- non aspettano lo storico BetFlag se la OPEN GoldBet/mercato è già disponibile esternamente;
+- non dichiarano quote mancanti solo per assenza di OPEN;
+- devono mostrare un errore di percorso esplicito se il connettore/branch non è leggibile.
 
 ## Modifiche recenti rilevanti
 - commit fast lookup script: `303dec8c5ee0a0e8286412b045a5f9796d01477f`
 - commit workflow fast lookup: `2455e0762cd4c7ff50dbb873e4940a9e3ae264ed`
+- task preflight quote-path: aggiornato 30/08/2026 su entrambi i task automatici attivi.
+
+## Prossimo controllo consigliato
+Osservare il prossimo run automatico su una partita imminente e verificare che l'output riporti:
+- `CURRENT BETFLAG RECUPERATA` con quota exact;
+- OPEN/movimento separato;
+- player props letti dal file per-fixture;
+- P Radar / fair / final gate;
+- nessun falso `quote non recuperate` se il preflight ha passato.
+
+Se compare ancora un falso negativo, il run deve fornire il punto preciso di failure (`index`, `fixture file`, `movement index`, `movement fixture`) e non una diagnosi generica.
 
 ## Come riprendere in una nuova chat
 Prompt consigliato:
 
-`Continua il progetto Radar Unico Value Bet Calcio. Leggi prima docs/RADAR_HANDOFF_CURRENT.md nel repository pceresetti-arch/radar-goldbet-feed e riparti dal bug prioritario: le analisi automatiche continuano a dichiarare di non trovare le quote nonostante il feed BetFlag live sia sano. Verifica il percorso di lettura del task, correggilo e fai un test pratico.`
+`Continua il progetto Radar Unico Value Bet Calcio. Leggi prima docs/RADAR_HANDOFF_CURRENT.md nel repository pceresetti-arch/radar-goldbet-feed. Il feed BetFlag live e il fast path movimenti sono già verificati; riparti dal monitoraggio del prossimo run automatico e correggi solo eventuali path read failure residui, senza ricominciare l'architettura.`
