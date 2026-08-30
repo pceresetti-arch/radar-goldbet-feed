@@ -1,8 +1,10 @@
 name: Build player matchup context
 
 on:
+  # Primary trigger: rebuild immediately after a successful XI refresh.
+  # Keep one low-frequency cron only as a safety net in case a workflow_run event is missed.
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '17 * * * *'
   workflow_run:
     workflows: ["Refresh current lineups"]
     types: [completed]
