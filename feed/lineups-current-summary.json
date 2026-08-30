@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T02:34:15.987474+00:00",
+  "generated_at": "2026-08-30T02:43:59.083309+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -10,8 +10,7 @@
   ],
   "target_count": 7,
   "status_counts": {
-    "SOURCE_CONFIRMED": 4,
-    "REFERENCE_PREVIOUS_XI": 1,
+    "SOURCE_CONFIRMED": 5,
     "NOT_AVAILABLE": 2
   },
   "schedule_stats": [
@@ -24,7 +23,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-30T02:34:15.987474+00:00",
+    "generated_at": "2026-08-30T02:43:59.083309+00:00",
     "window_minutes": [
       0,
       85.0
@@ -40,18 +39,27 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Club Santos Laguna - Tigres",
+        "minutes_to_start": 26.0,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
   "matches": [
     {
       "match": "Las Vegas Lights - Charleston Battery",
       "start_time": "30-08-2026 04:30",
       "league": "NASL",
-      "minutes_to_start": -4.3,
+      "minutes_to_start": -14.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.590",
-      "confirmed_at": "2026-08-30T02:31:16.175824+00:00",
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T02:43:55.441302+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -59,7 +67,7 @@
       "match": "Phoenix Rising - Indy Eleven",
       "start_time": "30-08-2026 04:30",
       "league": "NASL",
-      "minutes_to_start": -4.3,
+      "minutes_to_start": -14.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.582",
       "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
@@ -71,7 +79,7 @@
       "match": "Portland Timbers - Austin",
       "start_time": "30-08-2026 04:30",
       "league": "MLS",
-      "minutes_to_start": -4.3,
+      "minutes_to_start": -14.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.253",
       "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
@@ -83,7 +91,7 @@
       "match": "San Diego FC - LA Galaxy",
       "start_time": "30-08-2026 04:30",
       "league": "MLS",
-      "minutes_to_start": -4.3,
+      "minutes_to_start": -14.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.275",
       "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
@@ -95,11 +103,11 @@
       "match": "Club Santos Laguna - Tigres",
       "start_time": "30-08-2026 05:10",
       "league": "Primera Division",
-      "minutes_to_start": 35.7,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 26.0,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2315",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T02:43:59.083309+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -107,7 +115,7 @@
       "match": "FC Juarez - Cruz Azul",
       "start_time": "30-08-2026 05:10",
       "league": "Liga Mx Femminile",
-      "minutes_to_start": 35.7,
+      "minutes_to_start": 26.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.5258",
       "confirmed_at": null,
@@ -119,12 +127,12 @@
       "match": "SWQ Thunder - Pine Hills",
       "start_time": "30-08-2026 06:30",
       "league": "Queensland Premier League 2",
-      "minutes_to_start": 115.7,
+      "minutes_to_start": 106.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.58242",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     }
   ]

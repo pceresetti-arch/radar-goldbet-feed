@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T02:34:16.108061+00:00",
+  "generated_at": "2026-08-30T02:43:59.287805+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,129 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T02:31:16.105838+00:00",
-      "finished_at": "2026-08-30T02:31:19.953964+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 2,
+      "started_at": "2026-08-30T02:43:55.338154+00:00",
+      "finished_at": "2026-08-30T02:43:59.287784+00:00",
+      "official_count": 5,
+      "urgent_unconfirmed_count": 1,
       "events": [
         {
           "event": "XI_OFFICIAL_DETECTED",
-          "detected_at": "2026-08-30T02:31:19.953703+00:00",
-          "match": "Las Vegas Lights - Charleston Battery",
-          "league": "NASL",
-          "start_time": "30-08-2026 04:30",
-          "minutes_to_start": -1.3,
-          "match_market_id": "36351.590",
-          "match_event_id": 16034762,
+          "detected_at": "2026-08-30T02:43:59.287742+00:00",
+          "match": "Club Santos Laguna - Tigres",
+          "league": "Primera Division",
+          "start_time": "30-08-2026 05:10",
+          "minutes_to_start": 26.0,
+          "match_market_id": "36351.2315",
+          "match_event_id": 16041315,
           "source": "FotMob",
           "source_status": "SOURCE_CONFIRMED",
-          "provider_match_id": 5109915,
-          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+          "provider_match_id": 1000014550,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
           "current_status": "SOURCE_CONFIRMED",
-          "previous_xi_fingerprint": "95c6aadf668f6f0b5c2d",
-          "current_xi_fingerprint": "95c6aadf668f6f0b5c2d",
-          "confirmed_at": "2026-08-30T02:31:16.175824+00:00",
-          "actionable_for_post_xi": false,
-          "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
+          "previous_xi_fingerprint": "fd9e1a249576f5966fda",
+          "current_xi_fingerprint": "654505bf7a13fd9a2d66",
+          "confirmed_at": "2026-08-30T02:43:59.083309+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
         }
       ],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T02:31:54.954056+00:00",
-      "finished_at": "2026-08-30T02:31:55.175219+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 2,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T02:32:30.175370+00:00",
-      "finished_at": "2026-08-30T02:32:30.531029+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 2,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T02:33:05.531199+00:00",
-      "finished_at": "2026-08-30T02:33:05.718697+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 2,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T02:33:40.718890+00:00",
-      "finished_at": "2026-08-30T02:33:40.917866+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 2,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T02:34:15.918026+00:00",
-      "finished_at": "2026-08-30T02:34:16.107969+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 2,
-      "events": [],
-      "actionable_events": []
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T02:43:59.287742+00:00",
+          "match": "Club Santos Laguna - Tigres",
+          "league": "Primera Division",
+          "start_time": "30-08-2026 05:10",
+          "minutes_to_start": 26.0,
+          "match_market_id": "36351.2315",
+          "match_event_id": 16041315,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000014550,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "fd9e1a249576f5966fda",
+          "current_xi_fingerprint": "654505bf7a13fd9a2d66",
+          "confirmed_at": "2026-08-30T02:43:59.083309+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
   "observed_events": [
     {
       "event": "XI_OFFICIAL_DETECTED",
-      "detected_at": "2026-08-30T02:31:19.953703+00:00",
-      "match": "Las Vegas Lights - Charleston Battery",
-      "league": "NASL",
-      "start_time": "30-08-2026 04:30",
-      "minutes_to_start": -1.3,
-      "match_market_id": "36351.590",
-      "match_event_id": 16034762,
-      "source": "FotMob",
-      "source_status": "SOURCE_CONFIRMED",
-      "provider_match_id": 5109915,
-      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
-      "current_status": "SOURCE_CONFIRMED",
-      "previous_xi_fingerprint": "95c6aadf668f6f0b5c2d",
-      "current_xi_fingerprint": "95c6aadf668f6f0b5c2d",
-      "confirmed_at": "2026-08-30T02:31:16.175824+00:00",
-      "actionable_for_post_xi": false,
-      "actionability_reason": "AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW"
-    }
-  ],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
-    {
+      "detected_at": "2026-08-30T02:43:59.287742+00:00",
       "match": "Club Santos Laguna - Tigres",
+      "league": "Primera Division",
+      "start_time": "30-08-2026 05:10",
+      "minutes_to_start": 26.0,
       "match_market_id": "36351.2315",
       "match_event_id": 16041315,
-      "minutes_to_start": 35.7,
-      "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
-      "fotmob_match_id": 1000014550
-    },
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000014550,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "fd9e1a249576f5966fda",
+      "current_xi_fingerprint": "654505bf7a13fd9a2d66",
+      "confirmed_at": "2026-08-30T02:43:59.083309+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T02:43:59.287742+00:00",
+      "match": "Club Santos Laguna - Tigres",
+      "league": "Primera Division",
+      "start_time": "30-08-2026 05:10",
+      "minutes_to_start": 26.0,
+      "match_market_id": "36351.2315",
+      "match_event_id": 16041315,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000014550,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "fd9e1a249576f5966fda",
+      "current_xi_fingerprint": "654505bf7a13fd9a2d66",
+      "confirmed_at": "2026-08-30T02:43:59.083309+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
     {
       "match": "FC Juarez - Cruz Azul",
       "match_market_id": "36351.5258",
       "match_event_id": 16069748,
-      "minutes_to_start": 35.7,
+      "minutes_to_start": 26.0,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5977331
