@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-30T11:23:32.991524+00:00",
+  "generated_at": "2026-08-30T11:24:00.382719+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.7,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 4.8,
-    "betflag_standard_source": 5.0,
-    "betflag_player_source": 4.9,
-    "player_context": 0.8
+    "lineups": 1.2,
+    "tactical": 0.8,
+    "betflag_fixture_feed": 5.3,
+    "betflag_standard_source": 5.4,
+    "betflag_player_source": 5.4,
+    "player_context": 0.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -89,11 +89,11 @@
       "start_time": "30-08-2026 13:30",
       "minutes_to_start": 7.2,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 52,
       "player_quote_count": 312,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -103,11 +103,11 @@
       "start_time": "30-08-2026 13:30",
       "minutes_to_start": 7.2,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 51,
       "player_quote_count": 306,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -117,11 +117,11 @@
       "start_time": "30-08-2026 14:00",
       "minutes_to_start": 37.2,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 41,
       "player_count": 51,
       "player_quote_count": 306,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -209,7 +209,7 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 2,
+  "player_lane_ready_count": 5,
   "player_lane_ready_matches": [
     {
       "match_market_id": "36351.2439",
@@ -234,6 +234,45 @@
       "player_market_bet_ready": true,
       "player_count": 42,
       "player_quote_count": 252,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.3040",
+      "match": "SV Darmstadt 98 - Hannover",
+      "league": "Bundesliga 2",
+      "start_time": "30-08-2026 13:30",
+      "minutes_to_start": 7.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 52,
+      "player_quote_count": 312,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.3039",
+      "match": "St. Pauli - Kaiserslautern",
+      "league": "Bundesliga 2",
+      "start_time": "30-08-2026 13:30",
+      "minutes_to_start": 7.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 51,
+      "player_quote_count": 306,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.555",
+      "match": "AIK - Hammarby",
+      "league": "Allsvenskan",
+      "start_time": "30-08-2026 14:00",
+      "minutes_to_start": 37.2,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 51,
+      "player_quote_count": 306,
       "player_price_source_class": "BETFLAG_AAMS_DIRECT",
       "player_exact_price_required_at_decision_time": true
     }
