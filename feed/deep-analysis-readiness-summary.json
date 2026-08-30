@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-30T16:00:21.509719+00:00",
+  "generated_at": "2026-08-30T16:00:40.074995+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.7,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 4.8,
-    "betflag_standard_source": 5.0,
-    "betflag_player_source": 4.9,
-    "player_context": 12.8
+    "lineups": 1.0,
+    "tactical": 0.7,
+    "betflag_fixture_feed": 5.1,
+    "betflag_standard_source": 5.3,
+    "betflag_player_source": 5.2,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -117,11 +117,11 @@
       "start_time": "30-08-2026 18:00",
       "minutes_to_start": 0.3,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 32,
       "player_count": 47,
       "player_quote_count": 188,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -195,7 +195,7 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 2,
+  "player_lane_ready_count": 3,
   "player_lane_ready_matches": [
     {
       "match_market_id": "36351.2159",
@@ -220,6 +220,19 @@
       "player_market_bet_ready": true,
       "player_count": 47,
       "player_quote_count": 701,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.2160",
+      "match": "FK Spartak 1918 Varna - Ludogorets Razgrad",
+      "league": "Premier League",
+      "start_time": "30-08-2026 18:00",
+      "minutes_to_start": 0.3,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 47,
+      "player_quote_count": 188,
       "player_price_source_class": "BETFLAG_AAMS_DIRECT",
       "player_exact_price_required_at_decision_time": true
     }
