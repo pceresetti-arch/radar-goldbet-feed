@@ -36,6 +36,27 @@ jobs:
         run: pip install -q curl_cffi
       - name: Build current player matchup context
         run: python scripts/build_player_matchup_context.py
+      - name: Stamp XI snapshot provenance
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+
+          root = pathlib.Path('feed')
+          lineups = json.loads((root / 'lineups-current.json').read_text(encoding='utf-8'))
+          source_generated_at = lineups.get('generated_at')
+          if not source_generated_at:
+              raise SystemExit('lineups-current.json has no generated_at provenance')
+
+          for name in ('player-matchup-context-current.json', 'player-matchup-context-current-summary.json'):
+              path = root / name
+              doc = json.loads(path.read_text(encoding='utf-8'))
+              doc['source_lineup_generated_at'] = source_generated_at
+              path.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          print('player context source_lineup_generated_at=' + source_generated_at)
+          PY
       - name: Build robust player heatmap context
         run: python scripts/build_player_heatmap_context.py
       - name: Archive prospective player-context snapshot
