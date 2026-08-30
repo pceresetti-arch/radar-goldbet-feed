@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 import json
-import math
 import re
 import statistics
-import time
 import unicodedata
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 import requests
 
@@ -33,9 +31,10 @@ ITALY_PARAMS = {
     "geoIpCode": "IT",
     "geoIpSubdivisionCode": "IT",
 }
-ROME = ZoneInfo("Europe/Rome")
 MAX_HOURS = 18
-MAX_FIXTURES = 80
+MAX_FIXTURES = 50
+PARALLEL_WORKERS = 8
+REQUEST_TIMEOUT = (4, 12)
 MIN_BOOKS = 4
 MIN_CONSENSUS = 0.65
 PRIORITY_STANDARD_COUNT = 35
@@ -63,8 +62,7 @@ def split_match(s):
     return (parts[0], parts[1]) if len(parts) == 2 else (str(s or ""), "")
 
 
-def similarity(a, b):
-    a, b = norm(a), norm(b)
+def similarity_norm(a, b):
     if not a or not b:
         return 0.0
     if a == b:
@@ -134,12 +132,6 @@ def identity_rows(item):
 
 
 def fixture_priority(b):
-    """Prioritize Radar-quality fixtures before minor/reserve fixtures.
-
-    The BetFlag index already exposes coverage depth. Full-scan/player-prop
-    fixtures are normally the competitions where the Radar can complete the
-    deepest analysis; broad standard-market coverage is the second tier.
-    """
     try:
         standard_count = int(b.get("standard_count") or 0)
     except Exception:
@@ -163,7 +155,6 @@ def fixture_priority(b):
 
 
 def move_score(gb_pp, median_pp, ratio, n_books):
-    # Score is intentionally conservative: movement cannot create a BET by itself.
     mag = min(40.0, max(0.0, gb_pp) * 8.0)
     consensus = 30.0 * max(0.0, min(1.0, ratio)) * min(1.0, n_books / 6.0)
     market = min(20.0, max(0.0, median_pp) * (20.0 / 3.0))
@@ -186,18 +177,135 @@ def move_class(score):
     return "NO_STRONG_INFORMATION_MOVE"
 
 
+def process_candidate(candidate):
+    _, match_score, ev, bf_ev = candidate
+    params = dict(ITALY_PARAMS)
+    params["eventId"] = ev["event_id"]
+    entry = {
+        "flashscore_event_id": ev["event_id"],
+        "betflag_event_id": bf_ev.get("match_event_id"),
+        "match": bf_ev.get("match"),
+        "league": bf_ev.get("league"),
+        "flashscore_match": f"{ev['home']} - {ev['away']}",
+        "match_score": round(match_score, 3),
+        "start_ts": ev["start_ts"],
+        "start_time_utc": datetime.fromtimestamp(ev["start_ts"], tz=timezone.utc).isoformat(),
+        "priority_tier": fixture_priority(bf_ev)[0],
+        "markets": [],
+    }
+
+    try:
+        rr = requests.get(ODDS_URL, params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        entry["http_status"] = rr.status_code
+        if not rr.ok:
+            return entry, []
+        fo = ((rr.json().get("data") or {}).get("findOddsByEventId") or {})
+    except Exception as exc:
+        entry["error"] = repr(exc)
+        return entry, []
+
+    bmap = {}
+    for x in (fo.get("settings") or {}).get("bookmakers", []):
+        b = (x or {}).get("bookmaker") or {}
+        if b.get("id") is not None:
+            bmap[str(b["id"])] = b.get("name")
+
+    buckets = {}
+    for item in fo.get("odds") or []:
+        bn = bmap.get(str(item.get("bookmakerId", "")), "")
+        if not bn:
+            continue
+        for market, selection, line, o in identity_rows(item):
+            op, cur = price(o.get("opening")), price(o.get("value"))
+            if op is None or cur is None:
+                continue
+            key = (market, selection, line)
+            buckets.setdefault(key, []).append({
+                "bookmaker": bn,
+                "opening": op,
+                "current": cur,
+                "shift_pp": round(prob_shift_pp(op, cur), 3),
+            })
+
+    signals = []
+    for (market, selection, line), books in buckets.items():
+        gb = next((x for x in books if str(x["bookmaker"]).lower() == "goldbet"), None)
+        if not gb:
+            continue
+        shifts = [x["shift_pp"] for x in books if x.get("shift_pp") is not None]
+        if not shifts:
+            continue
+        gb_pp = gb["shift_pp"]
+        direction = 1 if gb_pp > 0.15 else (-1 if gb_pp < -0.15 else 0)
+        directional = [x for x in shifts if abs(x) >= 0.15]
+        if direction == 0:
+            same = 0
+            ratio = 0.0
+        else:
+            same = sum(1 for x in directional if (x > 0) == (direction > 0))
+            ratio = same / len(directional) if directional else 0.0
+        med = statistics.median(shifts)
+        score = move_score(gb_pp, med, ratio, len(books)) if gb_pp > 0 else 0.0
+        cls = move_class(score)
+        likely = (
+            cls in ("INFORMATION_MOVE_A", "INFORMATION_MOVE_B")
+            and gb_pp > 0
+            and med >= 0.5
+            and len(books) >= MIN_BOOKS
+            and ratio >= MIN_CONSENSUS
+        )
+        rec = {
+            "market": market,
+            "selection": selection,
+            "line": line,
+            "goldbet_opening": gb["opening"],
+            "goldbet_current": gb["current"],
+            "goldbet_decimal_drop": round(gb["opening"] - gb["current"], 3),
+            "goldbet_implied_prob_shift_pp": gb_pp,
+            "books_with_open_current": len(books),
+            "directional_books": len(directional),
+            "same_direction_count": same,
+            "consensus_ratio": round(ratio, 3),
+            "median_implied_prob_shift_pp": round(med, 3),
+            "information_move_score": score,
+            "information_move_class": cls,
+            "likely_information_move": likely,
+            "requires_news_xi_recheck": likely,
+            "radar_use": "PRIORITY_RECHECK_AND_LAG_TEST" if likely else "CONTEXT_ONLY",
+            "book_moves": books,
+        }
+        entry["markets"].append(rec)
+        if likely:
+            signals.append({
+                "match": entry["match"],
+                "league": entry.get("league"),
+                "betflag_event_id": entry["betflag_event_id"],
+                **{k: rec[k] for k in rec if k != "book_moves"},
+            })
+
+    entry["markets"].sort(key=lambda x: -x["information_move_score"])
+    return entry, signals
+
+
 def main():
-    now = datetime.now(timezone.utc)
+    started = datetime.now(timezone.utc)
+    now = started
     try:
         bf = json.loads(BETFLAG_INDEX.read_text(encoding="utf-8"))
     except Exception:
         bf = {}
     bf_fixtures = bf.get("fixtures") or []
 
-    sess = requests.Session()
-    r = sess.get(FLASH_FEED, headers=HEADERS, timeout=25)
+    r = requests.get(FLASH_FEED, headers=HEADERS, timeout=REQUEST_TIMEOUT)
     r.raise_for_status()
     flash = parse_flash_feed(r.text)
+
+    # Pre-normalize BetFlag identities once instead of redoing string cleanup
+    # for every Flashscore x BetFlag comparison.
+    bf_identity = []
+    for b in bf_fixtures:
+        bh, ba = split_match(b.get("match"))
+        bf_identity.append((b, norm(bh), norm(ba)))
 
     candidates = []
     horizon = now + timedelta(hours=MAX_HOURS)
@@ -207,10 +315,10 @@ def main():
         dt = datetime.fromtimestamp(ev["start_ts"], tz=timezone.utc)
         if dt < now - timedelta(minutes=10) or dt > horizon:
             continue
+        eh, ea = norm(ev["home"]), norm(ev["away"])
         best = None
-        for b in bf_fixtures:
-            bh, ba = split_match(b.get("match"))
-            sh, sa = similarity(ev["home"], bh), similarity(ev["away"], ba)
+        for b, bh, ba in bf_identity:
+            sh, sa = similarity_norm(eh, bh), similarity_norm(ea, ba)
             score = (sh + sa) / 2.0
             if min(sh, sa) >= 0.76 and (best is None or score > best[0]):
                 best = (score, b)
@@ -220,126 +328,40 @@ def main():
     candidate_fixture_count_before_cap = len(candidates)
     candidates.sort(key=lambda x: (fixture_priority(x[3]), x[0]))
     candidates = candidates[:MAX_FIXTURES]
-    # Keep the output human-friendly after the priority selection.
-    candidates.sort(key=lambda x: x[0])
 
     fixtures_out = []
     all_signals = []
-
-    for _, match_score, ev, bf_ev in candidates:
-        params = dict(ITALY_PARAMS)
-        params["eventId"] = ev["event_id"]
-        priority_tier = fixture_priority(bf_ev)[0]
-        entry = {
-            "flashscore_event_id": ev["event_id"],
-            "betflag_event_id": bf_ev.get("match_event_id"),
-            "match": bf_ev.get("match"),
-            "league": bf_ev.get("league"),
-            "flashscore_match": f"{ev['home']} - {ev['away']}",
-            "match_score": round(match_score, 3),
-            "start_ts": ev["start_ts"],
-            "start_time_utc": datetime.fromtimestamp(ev["start_ts"], tz=timezone.utc).isoformat(),
-            "priority_tier": priority_tier,
-            "markets": [],
-        }
-        try:
-            rr = sess.get(ODDS_URL, params=params, headers=HEADERS, timeout=25)
-            entry["http_status"] = rr.status_code
-            if not rr.ok:
-                fixtures_out.append(entry)
-                continue
-            fo = ((rr.json().get("data") or {}).get("findOddsByEventId") or {})
-        except Exception as exc:
-            entry["error"] = repr(exc)
+    with ThreadPoolExecutor(max_workers=PARALLEL_WORKERS) as executor:
+        future_map = {executor.submit(process_candidate, c): c for c in candidates}
+        for future in as_completed(future_map):
+            try:
+                entry, signals = future.result()
+            except Exception as exc:
+                c = future_map[future]
+                _, match_score, ev, bf_ev = c
+                entry = {
+                    "flashscore_event_id": ev["event_id"],
+                    "betflag_event_id": bf_ev.get("match_event_id"),
+                    "match": bf_ev.get("match"),
+                    "league": bf_ev.get("league"),
+                    "match_score": round(match_score, 3),
+                    "start_ts": ev["start_ts"],
+                    "priority_tier": fixture_priority(bf_ev)[0],
+                    "markets": [],
+                    "error": repr(exc),
+                }
+                signals = []
             fixtures_out.append(entry)
-            continue
+            all_signals.extend(signals)
 
-        bmap = {}
-        for x in (fo.get("settings") or {}).get("bookmakers", []):
-            b = (x or {}).get("bookmaker") or {}
-            if b.get("id") is not None:
-                bmap[str(b["id"])] = b.get("name")
-
-        buckets = {}
-        for item in fo.get("odds") or []:
-            bn = bmap.get(str(item.get("bookmakerId", "")), "")
-            if not bn:
-                continue
-            for market, selection, line, o in identity_rows(item):
-                op, cur = price(o.get("opening")), price(o.get("value"))
-                if op is None or cur is None:
-                    continue
-                key = (market, selection, line)
-                buckets.setdefault(key, []).append({
-                    "bookmaker": bn,
-                    "opening": op,
-                    "current": cur,
-                    "shift_pp": round(prob_shift_pp(op, cur), 3),
-                })
-
-        for (market, selection, line), books in buckets.items():
-            gb = next((x for x in books if str(x["bookmaker"]).lower() == "goldbet"), None)
-            if not gb:
-                continue
-            shifts = [x["shift_pp"] for x in books if x.get("shift_pp") is not None]
-            if not shifts:
-                continue
-            gb_pp = gb["shift_pp"]
-            # Same-direction consensus is measured against GoldBet's direction.
-            direction = 1 if gb_pp > 0.15 else (-1 if gb_pp < -0.15 else 0)
-            directional = [x for x in shifts if abs(x) >= 0.15]
-            if direction == 0:
-                same = 0
-                ratio = 0.0
-            else:
-                same = sum(1 for x in directional if (x > 0) == (direction > 0))
-                ratio = same / len(directional) if directional else 0.0
-            med = statistics.median(shifts)
-            score = move_score(gb_pp, med, ratio, len(books)) if gb_pp > 0 else 0.0
-            cls = move_class(score)
-            likely = (
-                cls in ("INFORMATION_MOVE_A", "INFORMATION_MOVE_B")
-                and gb_pp > 0
-                and med >= 0.5
-                and len(books) >= MIN_BOOKS
-                and ratio >= MIN_CONSENSUS
-            )
-            rec = {
-                "market": market,
-                "selection": selection,
-                "line": line,
-                "goldbet_opening": gb["opening"],
-                "goldbet_current": gb["current"],
-                "goldbet_decimal_drop": round(gb["opening"] - gb["current"], 3),
-                "goldbet_implied_prob_shift_pp": gb_pp,
-                "books_with_open_current": len(books),
-                "directional_books": len(directional),
-                "same_direction_count": same,
-                "consensus_ratio": round(ratio, 3),
-                "median_implied_prob_shift_pp": round(med, 3),
-                "information_move_score": score,
-                "information_move_class": cls,
-                "likely_information_move": likely,
-                "requires_news_xi_recheck": likely,
-                "radar_use": "PRIORITY_RECHECK_AND_LAG_TEST" if likely else "CONTEXT_ONLY",
-                "book_moves": books,
-            }
-            entry["markets"].append(rec)
-            if likely:
-                all_signals.append({
-                    "match": entry["match"],
-                    "league": entry.get("league"),
-                    "betflag_event_id": entry["betflag_event_id"],
-                    **{k: rec[k] for k in rec if k != "book_moves"},
-                })
-        entry["markets"].sort(key=lambda x: -x["information_move_score"])
-        fixtures_out.append(entry)
-        time.sleep(0.05)
-
+    fixtures_out.sort(key=lambda x: (x.get("start_ts") or 0, x.get("match") or ""))
     all_signals.sort(key=lambda x: -x["information_move_score"])
+    finished = datetime.now(timezone.utc)
+    duration_seconds = round((finished - started).total_seconds(), 3)
+
     out = {
-        "schema_version": "radar-information-move-v2",
-        "generated_at": now.isoformat(),
+        "schema_version": "radar-information-move-v3",
+        "generated_at": finished.isoformat(),
         "source": "Flashscore/Diretta odds comparison historical opening + current",
         "primary_bookmaker": "GoldBet",
         "source_provenance": "GOLDBET_VIA_FLASHSCORE_HISTORICAL",
@@ -353,7 +375,14 @@ def main():
             "min_consensus_ratio": MIN_CONSENSUS,
             "max_hours": MAX_HOURS,
             "max_fixtures": MAX_FIXTURES,
+            "parallel_workers": PARALLEL_WORKERS,
             "fixture_priority": "tier0=full scan/player coverage; tier1=standard_count>=35; tier2=remaining fixtures",
+        },
+        "performance": {
+            "duration_seconds": duration_seconds,
+            "parallel_workers": PARALLEL_WORKERS,
+            "request_timeout_connect_seconds": REQUEST_TIMEOUT[0],
+            "request_timeout_read_seconds": REQUEST_TIMEOUT[1],
         },
         "betflag_index_generated_at": bf.get("generated_at"),
         "candidate_fixture_count_before_cap": candidate_fixture_count_before_cap,
@@ -366,6 +395,7 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(json.dumps({
+        "duration_seconds": duration_seconds,
         "candidate_fixture_count_before_cap": candidate_fixture_count_before_cap,
         "processed_fixture_count": len(fixtures_out),
         "likely_information_move_count": len(all_signals),
