@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-30T16:13:42.502892+00:00",
+  "generated_at": "2026-08-30T16:17:45.442037+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 1.1,
-    "tactical": 0.7,
-    "betflag_fixture_feed": 3.5,
-    "betflag_standard_source": 3.7,
-    "betflag_player_source": 3.6,
-    "player_context": 0.7
+    "lineups": 5.1,
+    "tactical": 4.8,
+    "betflag_fixture_feed": 0.3,
+    "betflag_standard_source": 0.5,
+    "betflag_player_source": 0.5,
+    "player_context": 4.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -3197,10 +3197,11 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3215,11 +3216,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/bahla-al-seeb.json",
-      "betflag_standard_count": 19,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3248,10 +3249,11 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3266,11 +3268,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/skala-if-vestur-sorvagur.json",
-      "betflag_standard_count": 29,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3299,10 +3301,11 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3317,11 +3320,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/zira-fk-neftchi-baku.json",
-      "betflag_standard_count": 28,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4077,7 +4080,7 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/cs-cartagines-herediano.json",
-      "betflag_standard_count": 31,
+      "betflag_standard_count": 29,
       "betflag_standard_current_fresh": true,
       "betflag_standard_ready": true,
       "player_count": 0,
@@ -4532,7 +4535,7 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/fk-rubin-kazan-fc-dynamo-makhachkala.json",
-      "betflag_standard_count": 35,
+      "betflag_standard_count": 38,
       "betflag_standard_current_fresh": true,
       "betflag_standard_ready": true,
       "player_count": 0,
