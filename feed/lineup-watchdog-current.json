@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T09:32:05.288952+00:00",
+  "generated_at": "2026-08-30T09:41:35.829035+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,192 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T09:28:56.693003+00:00",
-      "finished_at": "2026-08-30T09:29:08.014859+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 23,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T09:29:43.015001+00:00",
-      "finished_at": "2026-08-30T09:29:43.517384+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 23,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T09:30:18.517724+00:00",
-      "finished_at": "2026-08-30T09:30:19.061556+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 20,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T09:30:54.061908+00:00",
-      "finished_at": "2026-08-30T09:30:54.405888+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 20,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T09:31:29.406253+00:00",
-      "finished_at": "2026-08-30T09:31:29.967151+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 20,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T09:32:04.967507+00:00",
-      "finished_at": "2026-08-30T09:32:05.288754+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 20,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-08-30T09:41:23.701778+00:00",
+      "finished_at": "2026-08-30T09:41:35.828988+00:00",
+      "official_count": 6,
+      "urgent_unconfirmed_count": 42,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T09:41:35.828113+00:00",
+          "match": "Utrecht - PSV Eindhoven",
+          "league": "Eredivisie",
+          "start_time": "30-08-2026 12:15",
+          "minutes_to_start": 33.4,
+          "match_market_id": "36351.2243",
+          "match_event_id": 16037236,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5781726,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "86b7edec01e4c27b19b5",
+          "current_xi_fingerprint": "3291323d70c44cfdc2fe",
+          "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        },
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T09:41:35.828217+00:00",
+          "match": "Gangwon - Pohang Steelers",
+          "league": "K League Classic",
+          "start_time": "30-08-2026 12:30",
+          "minutes_to_start": 48.4,
+          "match_market_id": "36352.42347",
+          "match_event_id": 16069513,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5140017,
+          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "433d47621ad7279d573f",
+          "current_xi_fingerprint": "433d47621ad7279d573f",
+          "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T09:41:35.828113+00:00",
+          "match": "Utrecht - PSV Eindhoven",
+          "league": "Eredivisie",
+          "start_time": "30-08-2026 12:15",
+          "minutes_to_start": 33.4,
+          "match_market_id": "36351.2243",
+          "match_event_id": 16037236,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5781726,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "86b7edec01e4c27b19b5",
+          "current_xi_fingerprint": "3291323d70c44cfdc2fe",
+          "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        },
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T09:41:35.828217+00:00",
+          "match": "Gangwon - Pohang Steelers",
+          "league": "K League Classic",
+          "start_time": "30-08-2026 12:30",
+          "minutes_to_start": 48.4,
+          "match_market_id": "36352.42347",
+          "match_event_id": 16069513,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5140017,
+          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "433d47621ad7279d573f",
+          "current_xi_fingerprint": "433d47621ad7279d573f",
+          "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T09:41:35.828113+00:00",
+      "match": "Utrecht - PSV Eindhoven",
+      "league": "Eredivisie",
+      "start_time": "30-08-2026 12:15",
+      "minutes_to_start": 33.4,
+      "match_market_id": "36351.2243",
+      "match_event_id": 16037236,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5781726,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "86b7edec01e4c27b19b5",
+      "current_xi_fingerprint": "3291323d70c44cfdc2fe",
+      "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    },
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T09:41:35.828217+00:00",
+      "match": "Gangwon - Pohang Steelers",
+      "league": "K League Classic",
+      "start_time": "30-08-2026 12:30",
+      "minutes_to_start": 48.4,
+      "match_market_id": "36352.42347",
+      "match_event_id": 16069513,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5140017,
+      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "433d47621ad7279d573f",
+      "current_xi_fingerprint": "433d47621ad7279d573f",
+      "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T09:41:35.828113+00:00",
+      "match": "Utrecht - PSV Eindhoven",
+      "league": "Eredivisie",
+      "start_time": "30-08-2026 12:15",
+      "minutes_to_start": 33.4,
+      "match_market_id": "36351.2243",
+      "match_event_id": 16037236,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5781726,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "86b7edec01e4c27b19b5",
+      "current_xi_fingerprint": "3291323d70c44cfdc2fe",
+      "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    },
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T09:41:35.828217+00:00",
+      "match": "Gangwon - Pohang Steelers",
+      "league": "K League Classic",
+      "start_time": "30-08-2026 12:30",
+      "minutes_to_start": 48.4,
+      "match_market_id": "36352.42347",
+      "match_event_id": 16069513,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5140017,
+      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "433d47621ad7279d573f",
+      "current_xi_fingerprint": "433d47621ad7279d573f",
+      "confirmed_at": "2026-08-30T09:41:35.326388+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "AD Machico - Camacha",
       "match_market_id": "36357.2042",
       "match_event_id": 16073516,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,7 +215,7 @@
       "match": "Amarante - SL Benfica B",
       "match_market_id": "36355.11110",
       "match_event_id": 16063243,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5888046
@@ -110,7 +224,7 @@
       "match": "Atl. Bilbao - FC Badalona Women",
       "match_market_id": "36356.53808",
       "match_event_id": 16072515,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +233,7 @@
       "match": "FC Chernomorets Odessa - FC Kryvbas Kriviy Rih",
       "match_market_id": "36351.2749",
       "match_event_id": 16071730,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5909138
@@ -128,7 +242,7 @@
       "match": "FC Mokpo - Yeoju Citizen FC",
       "match_market_id": "36351.1252",
       "match_event_id": 16071070,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5201125
@@ -137,7 +251,7 @@
       "match": "Probiy Gorodenka - Viktoriya Sumy",
       "match_market_id": "36356.53228",
       "match_event_id": 16072413,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -146,7 +260,7 @@
       "match": "Skanstes SK - FK Tukums 2000/Tss II",
       "match_market_id": "36356.58254",
       "match_event_id": 16072950,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -155,7 +269,7 @@
       "match": "Slask Wroclaw - Rekord Bielsko Biala",
       "match_market_id": "36356.58257",
       "match_event_id": 16072951,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -164,7 +278,7 @@
       "match": "Ulsan Citizen FC - Busan Transportation Corporation FC",
       "match_market_id": "36351.1251",
       "match_event_id": 16070855,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5201126
@@ -173,7 +287,7 @@
       "match": "Zaglebie - Gornik Zabrze",
       "match_market_id": "36357.4523",
       "match_event_id": 16073839,
-      "minutes_to_start": 27.9,
+      "minutes_to_start": 18.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -182,34 +296,16 @@
       "match": "FC Eindhoven - Almelo",
       "match_market_id": "36352.48411",
       "match_event_id": 16045964,
-      "minutes_to_start": 42.9,
+      "minutes_to_start": 33.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Utrecht - PSV Eindhoven",
-      "match_market_id": "36351.2243",
-      "match_event_id": 16037236,
-      "minutes_to_start": 42.9,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 5781726
-    },
-    {
-      "match": "Gangwon - Pohang Steelers",
-      "match_market_id": "36352.42347",
-      "match_event_id": 16069513,
-      "minutes_to_start": 57.9,
-      "status": "LINEUP_PRESENT_UNCONFIRMED",
-      "source": "FotMob",
-      "fotmob_match_id": 5140017
-    },
-    {
       "match": "Gimhae FC - Yongin FC",
       "match_market_id": "36352.43127",
       "match_event_id": 16044996,
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5155894
@@ -218,7 +314,7 @@
       "match": "Gwangju - Seul",
       "match_market_id": "36351.801",
       "match_event_id": 16060567,
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5140014
@@ -227,7 +323,7 @@
       "match": "Hong Kong Rangers - Eastern District",
       "match_market_id": "36355.9967",
       "match_event_id": 16063081,
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -236,7 +332,7 @@
       "match": "Incheon United - Jeonbuk Hyundai",
       "match_market_id": "36351.799",
       "match_event_id": 16060569,
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5140015
@@ -245,8 +341,8 @@
       "match": "Jeju United FC - Daejeon Citizen",
       "match_market_id": "36351.806",
       "match_event_id": 16060571,
-      "minutes_to_start": 57.9,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 48.4,
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "source": "FotMob",
       "fotmob_match_id": 5140016
     },
@@ -254,7 +350,7 @@
       "match": "Miedz Legnica - KS Warta Poznan",
       "match_market_id": "37091.497",
       "match_event_id": 16045054,
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5862085
@@ -263,11 +359,227 @@
       "match": "Suwon - Busan I Park",
       "match_market_id": "36352.43126",
       "match_event_id": 16044995,
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5155895
+    },
+    {
+      "match": "Aberdeen - Glasgow Rangers",
+      "match_market_id": "36351.2426",
+      "match_event_id": 16034783,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5793916
+    },
+    {
+      "match": "Angby IF - Korsnas IF FK",
+      "match_market_id": "36356.58251",
+      "match_event_id": 16072949,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Dalian Kun City - Nantong Zhiyun",
+      "match_market_id": "36355.55577",
+      "match_event_id": 16065888,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5207212
+    },
+    {
+      "match": "Enköpings SK - FC STOCCOLMA INTERNAZIONALE",
+      "match_market_id": "36351.1118",
+      "match_event_id": 16063336,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "FBK Karlstad - Piteaa IF",
+      "match_market_id": "36351.1131",
+      "match_event_id": 16068532,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5127558
+    },
+    {
+      "match": "FK Arsenal Dzerzhinsk - FC Torpedo Belaz Zhodino",
+      "match_market_id": "36356.42942",
+      "match_event_id": 16070745,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5215502
+    },
+    {
+      "match": "Frigg Oslo FK - Bryne",
+      "match_market_id": "36356.10688",
+      "match_event_id": 16068971,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5190020
+    },
+    {
+      "match": "Fyllingsdalen - Austevoll",
+      "match_market_id": "36357.4437",
+      "match_event_id": 16073781,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5144185
+    },
+    {
+      "match": "Haninge - Lindo",
+      "match_market_id": "36355.57140",
+      "match_event_id": 16066115,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Heming - Valerenga 2",
+      "match_market_id": "36356.7092",
+      "match_event_id": 16068599,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5143819
+    },
+    {
+      "match": "Hillerød - Hobro IK",
+      "match_market_id": "36351.2269",
+      "match_event_id": 16044928,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5764591
+    },
+    {
+      "match": "Husqvarna - Grebbestads",
+      "match_market_id": "36356.58247",
+      "match_event_id": 16072948,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Hvidovre IF - FC Fredericia",
+      "match_market_id": "36351.2271",
+      "match_event_id": 16044929,
+      "minutes_to_start": 78.4,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5764590
+    },
+    {
+      "match": "IFK Skovde FK - Motala",
+      "match_market_id": "36356.58245",
+      "match_event_id": 16072947,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Jonsereds - Astrio",
+      "match_market_id": "36356.58244",
+      "match_event_id": 16072945,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Kongsvinger IL Fotball 2 - IL Ulfstind",
+      "match_market_id": "36357.4948",
+      "match_event_id": 16074073,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5144545
+    },
+    {
+      "match": "Kungsangens - Helges IF",
+      "match_market_id": "36355.55933",
+      "match_event_id": 16065978,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Lucksta IF - Luleaa",
+      "match_market_id": "36355.57213",
+      "match_event_id": 16066180,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Mandalskameratene - Varhaug",
+      "match_market_id": "36356.7095",
+      "match_event_id": 16068602,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5144364
+    },
+    {
+      "match": "Pecsi MFC - Szent Mihaly SE",
+      "match_market_id": "36356.63919",
+      "match_event_id": 16073200,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Ready Fotball - Gamle Oslo FK",
+      "match_market_id": "36356.32759",
+      "match_event_id": 16070023,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5143820
+    },
+    {
+      "match": "Shanghai Jiading - Meizhou Hakka",
+      "match_market_id": "36355.55586",
+      "match_event_id": 16065891,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Sparta Prague B - SK Dynamo Ceske Budejovice",
+      "match_market_id": "36355.59292",
+      "match_event_id": 16074117,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Vaxjo Norra - Osterlen",
+      "match_market_id": "36355.57143",
+      "match_event_id": 16066119,
+      "minutes_to_start": 78.4,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
     }
   ],
-  "target_count": 51
+  "target_count": 58
 }
