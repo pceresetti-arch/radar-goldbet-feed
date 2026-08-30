@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-30T19:12:06.114058+00:00",
+  "generated_at": "2026-08-30T19:21:43.709790+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-30T19:08:52.945666+00:00",
-      "finished_at": "2026-08-30T19:09:09.518830+00:00",
-      "official_count": 13,
-      "urgent_unconfirmed_count": 12,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T19:09:44.518940+00:00",
-      "finished_at": "2026-08-30T19:09:44.737984+00:00",
-      "official_count": 13,
-      "urgent_unconfirmed_count": 12,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T19:10:19.738341+00:00",
-      "finished_at": "2026-08-30T19:10:20.123050+00:00",
-      "official_count": 13,
-      "urgent_unconfirmed_count": 17,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T19:10:55.123424+00:00",
-      "finished_at": "2026-08-30T19:10:55.392636+00:00",
-      "official_count": 13,
-      "urgent_unconfirmed_count": 17,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T19:11:30.393050+00:00",
-      "finished_at": "2026-08-30T19:11:30.838827+00:00",
-      "official_count": 13,
-      "urgent_unconfirmed_count": 17,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-30T19:12:05.839245+00:00",
-      "finished_at": "2026-08-30T19:12:06.113845+00:00",
-      "official_count": 13,
-      "urgent_unconfirmed_count": 17,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-08-30T19:21:31.270229+00:00",
+      "finished_at": "2026-08-30T19:21:43.709757+00:00",
+      "official_count": 5,
+      "urgent_unconfirmed_count": 16,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T19:21:43.708991+00:00",
+          "match": "Portland Timbers II - Austin FC II",
+          "league": "Mls Next Pro",
+          "start_time": "30-08-2026 22:00",
+          "minutes_to_start": 38.3,
+          "match_market_id": "36356.3164",
+          "match_event_id": 16072409,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000007744,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "1bc13f2c65c00c6ef29f",
+          "current_xi_fingerprint": "145daea35fcbdb55d021",
+          "confirmed_at": "2026-08-30T19:21:43.395872+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-30T19:21:43.708991+00:00",
+          "match": "Portland Timbers II - Austin FC II",
+          "league": "Mls Next Pro",
+          "start_time": "30-08-2026 22:00",
+          "minutes_to_start": 38.3,
+          "match_market_id": "36356.3164",
+          "match_event_id": 16072409,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000007744,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "1bc13f2c65c00c6ef29f",
+          "current_xi_fingerprint": "145daea35fcbdb55d021",
+          "confirmed_at": "2026-08-30T19:21:43.395872+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T19:21:43.708991+00:00",
+      "match": "Portland Timbers II - Austin FC II",
+      "league": "Mls Next Pro",
+      "start_time": "30-08-2026 22:00",
+      "minutes_to_start": 38.3,
+      "match_market_id": "36356.3164",
+      "match_event_id": 16072409,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000007744,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "1bc13f2c65c00c6ef29f",
+      "current_xi_fingerprint": "145daea35fcbdb55d021",
+      "confirmed_at": "2026-08-30T19:21:43.395872+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-30T19:21:43.708991+00:00",
+      "match": "Portland Timbers II - Austin FC II",
+      "league": "Mls Next Pro",
+      "start_time": "30-08-2026 22:00",
+      "minutes_to_start": 38.3,
+      "match_market_id": "36356.3164",
+      "match_event_id": 16072409,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000007744,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "1bc13f2c65c00c6ef29f",
+      "current_xi_fingerprint": "145daea35fcbdb55d021",
+      "confirmed_at": "2026-08-30T19:21:43.395872+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "Academia Puerto Cabello B - Real Frontera FC",
       "match_market_id": "36357.12692",
       "match_event_id": 16077210,
-      "minutes_to_start": 17.9,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,7 +135,7 @@
       "match": "Atenas - Club Olimpo",
       "match_market_id": "36357.4588",
       "match_event_id": 16073896,
-      "minutes_to_start": 17.9,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5978483
@@ -110,7 +144,7 @@
       "match": "Deportivo Miranda - Monagas B",
       "match_market_id": "36357.12717",
       "match_event_id": 16077239,
-      "minutes_to_start": 17.9,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +153,7 @@
       "match": "Gimnastic de Tarragona - Zaragoza",
       "match_market_id": "36356.7120",
       "match_event_id": 16068605,
-      "minutes_to_start": 17.9,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5883623
@@ -128,7 +162,7 @@
       "match": "U. de Sucre - Integracion Del Norte San Juan FC",
       "match_market_id": "36357.4672",
       "match_event_id": 16073948,
-      "minutes_to_start": 17.9,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -137,7 +171,7 @@
       "match": "ABC - Uberlandia",
       "match_market_id": "36355.57249",
       "match_event_id": 16066210,
-      "minutes_to_start": 47.9,
+      "minutes_to_start": 38.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 1000019983
@@ -146,25 +180,16 @@
       "match": "Argentinos Juniors - Aldosivi",
       "match_market_id": "36351.10355",
       "match_event_id": 16044799,
-      "minutes_to_start": 47.9,
+      "minutes_to_start": 38.3,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5115963
     },
     {
-      "match": "Portland Timbers II - Austin FC II",
-      "match_market_id": "36356.3164",
-      "match_event_id": 16072409,
-      "minutes_to_start": 47.9,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000007744
-    },
-    {
       "match": "Racing de Cordoba - Colon",
       "match_market_id": "36331.410",
       "match_event_id": 16042406,
-      "minutes_to_start": 47.9,
+      "minutes_to_start": 38.3,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5113443
@@ -173,7 +198,7 @@
       "match": "Bentin Tacna Heroica - Santos FC Nasca",
       "match_market_id": "36357.4654",
       "match_event_id": 16073943,
-      "minutes_to_start": 62.9,
+      "minutes_to_start": 53.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -182,7 +207,7 @@
       "match": "Millonarios FC - CD Cortulua",
       "match_market_id": "36357.12688",
       "match_event_id": 16077198,
-      "minutes_to_start": 62.9,
+      "minutes_to_start": 53.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -191,7 +216,7 @@
       "match": "Universitario de Deportes - Club Alianza Lima",
       "match_market_id": "36351.16145",
       "match_event_id": 16075482,
-      "minutes_to_start": 62.9,
+      "minutes_to_start": 53.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -200,7 +225,7 @@
       "match": "Barquisimeto SC - Yaracuyanos",
       "match_market_id": "36356.3302",
       "match_event_id": 16077240,
-      "minutes_to_start": 77.9,
+      "minutes_to_start": 68.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -209,7 +234,7 @@
       "match": "Columbus Crew - New England Revolution",
       "match_market_id": "36351.260",
       "match_event_id": 16040648,
-      "minutes_to_start": 77.9,
+      "minutes_to_start": 68.3,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5071307
@@ -218,7 +243,7 @@
       "match": "Orense SC - CSD Macara",
       "match_market_id": "36351.1211",
       "match_event_id": 16044985,
-      "minutes_to_start": 77.9,
+      "minutes_to_start": 68.3,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000009084
@@ -227,7 +252,7 @@
       "match": "Sport Boys Association - Sporting Cristal",
       "match_market_id": "36351.2134",
       "match_event_id": 16041373,
-      "minutes_to_start": 77.9,
+      "minutes_to_start": 68.3,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000017216
@@ -236,11 +261,11 @@
       "match": "Trujillanos - Monagas",
       "match_market_id": "36357.5178",
       "match_event_id": 16074179,
-      "minutes_to_start": 77.9,
+      "minutes_to_start": 68.3,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000018889
     }
   ],
-  "target_count": 58
+  "target_count": 33
 }
