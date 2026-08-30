@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/build_information_move_feed.py'
       - 'scripts/build_market_xg_shift.py'
+      - 'scripts/materialize_information_move_fast_lookup.py'
       - '.github/workflows/build-information-move-feed.yml'
 
 permissions:
@@ -27,6 +28,8 @@ jobs:
           fetch-depth: 0
       - name: Build GoldBet TRUE OPEN and cross-book Information Move feed
         run: python scripts/build_information_move_feed.py
+      - name: Materialize fast per-fixture movement lookup
+        run: python scripts/materialize_information_move_fast_lookup.py
       - name: Build market-implied team xG shift
         run: python scripts/build_market_xg_shift.py
       - name: Validate compact movement feed
@@ -37,34 +40,38 @@ jobs:
           from pathlib import Path
 
           p = Path('feed/information-move-current.json')
+          i = Path('feed/information-move-index.json')
           x = Path('feed/market-xg-shift-current.json')
           d = json.loads(p.read_text(encoding='utf-8'))
+          idx = json.loads(i.read_text(encoding='utf-8'))
           xd = json.loads(x.read_text(encoding='utf-8'))
 
           assert d.get('schema_version') == 'radar-information-move-v4', d.get('schema_version')
           assert d.get('feed_mode') == 'COMPACT_OPERATIONAL', d.get('feed_mode')
           assert int(d.get('processed_fixture_count') or 0) > 0
           assert len(d.get('fixtures') or []) == int(d.get('processed_fixture_count') or 0)
+          assert int(idx.get('fixture_count') or 0) == len(idx.get('fixtures') or [])
           assert p.stat().st_size > 1000
           assert p.stat().st_size < 900000, f'Operational feed unexpectedly large: {p.stat().st_size} bytes'
           assert isinstance(xd.get('signals'), list)
           print({
               'movement_bytes': p.stat().st_size,
               'fixtures': d.get('processed_fixture_count'),
+              'fast_lookup_fixtures': idx.get('fixture_count'),
               'duration_seconds': (d.get('performance') or {}).get('duration_seconds'),
               'xg_fixtures': xd.get('fixture_count'),
               'xg_input': xd.get('input_source_file'),
           })
           PY
-      - name: Commit current movement and market-xG feeds
+      - name: Commit current movement, fast lookup and market-xG feeds
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'radar-information-move-bot'
           git config user.email 'radar-information-move-bot@users.noreply.github.com'
-          git add feed/information-move-current.json feed/market-xg-shift-current.json
+          git add feed/information-move-current.json feed/information-move-index.json feed/information-move-fixtures feed/market-xg-shift-current.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh Radar information move and market xG feeds'
+          git commit -m 'Refresh Radar information move, fast lookup and market xG feeds'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
