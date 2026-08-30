@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T00:52:30.185787+00:00",
+  "generated_at": "2026-08-30T01:02:12.967368+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 24,
+  "target_count": 23,
   "status_counts": {
-    "SOURCE_CONFIRMED": 3,
     "NOT_AVAILABLE": 13,
-    "REFERENCE_PREVIOUS_XI": 8
+    "SOURCE_CONFIRMED": 3,
+    "REFERENCE_PREVIOUS_XI": 7
   },
   "schedule_stats": [
     {
@@ -24,12 +24,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-30T00:52:30.185787+00:00",
+    "generated_at": "2026-08-30T01:02:12.967368+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 19,
+    "target_count": 9,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -40,36 +40,31 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "America - Puebla",
+        "minutes_to_start": 2.8,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Colorado Rapids - Real Salt Lake",
+        "minutes_to_start": 27.8,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "El Paso Locomotive FC - Loudoun United FC",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Colorado Rapids - Real Salt Lake",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "matches": [
-    {
-      "match": "Denver Summit FC - Chicago Red Stars",
-      "start_time": "30-08-2026 02:45",
-      "league": "NWSL Femminile",
-      "minutes_to_start": -7.5,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.826",
-      "confirmed_at": "2026-08-30T00:11:42.083270+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Alianza FC San Salvador - Atletico Balboa",
       "start_time": "30-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36355.22312",
       "confirmed_at": null,
@@ -81,7 +76,7 @@
       "match": "CD Mineros de Zacatecas - Tampico Madero",
       "start_time": "30-08-2026 03:00",
       "league": "Liga Premier Serie B",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.3813",
       "confirmed_at": null,
@@ -93,7 +88,7 @@
       "match": "Comunicaciones FC - Municipal",
       "start_time": "30-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.2868",
       "confirmed_at": null,
@@ -105,11 +100,11 @@
       "match": "El Paso Locomotive FC - Loudoun United FC",
       "start_time": "30-08-2026 03:00",
       "league": "NASL",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.586",
-      "confirmed_at": "2026-08-30T00:36:50.997912+00:00",
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T01:02:07.835289+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -117,7 +112,7 @@
       "match": "Ferrymead Bays - Dunedin City Royals",
       "start_time": "30-08-2026 03:00",
       "league": "Premiership",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.54974",
       "confirmed_at": null,
@@ -129,7 +124,7 @@
       "match": "Indigenas de Matagalpa - Rancho Santana FC",
       "start_time": "30-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.42970",
       "confirmed_at": null,
@@ -141,7 +136,7 @@
       "match": "Nelson Suburbs FC - Cashmere Technical",
       "start_time": "30-08-2026 03:00",
       "league": "Premiership",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.54971",
       "confirmed_at": null,
@@ -153,7 +148,7 @@
       "match": "Nomads United AFC - Selwyn United FC",
       "start_time": "30-08-2026 03:00",
       "league": "Premiership",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.54975",
       "confirmed_at": null,
@@ -165,7 +160,7 @@
       "match": "Northern AFC - Christchurch United FC",
       "start_time": "30-08-2026 03:00",
       "league": "Premiership",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.53764",
       "confirmed_at": null,
@@ -177,7 +172,7 @@
       "match": "Wanaka AFC - Coastal Spirit FC",
       "start_time": "30-08-2026 03:00",
       "league": "Premiership",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -2.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.54973",
       "confirmed_at": null,
@@ -189,11 +184,11 @@
       "match": "America - Puebla",
       "start_time": "30-08-2026 03:05",
       "league": "Primera Division",
-      "minutes_to_start": 12.5,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 2.8,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2309",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T01:02:12.967368+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -201,7 +196,7 @@
       "match": "Tigres UANL - CF Pachuca",
       "start_time": "30-08-2026 03:06",
       "league": "Liga Mx Femminile",
-      "minutes_to_start": 13.5,
+      "minutes_to_start": 3.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36356.28031",
       "confirmed_at": null,
@@ -213,7 +208,7 @@
       "match": "Alianza FC Valledupar - Nacional Medellin",
       "start_time": "30-08-2026 03:30",
       "league": "Primera A",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 27.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.2634",
       "confirmed_at": null,
@@ -225,11 +220,11 @@
       "match": "Colorado Rapids - Real Salt Lake",
       "start_time": "30-08-2026 03:30",
       "league": "MLS",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 27.8,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.261",
-      "confirmed_at": "2026-08-30T00:36:50.997912+00:00",
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T01:02:12.967368+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -237,7 +232,7 @@
       "match": "FC Motagua - Olancho FC",
       "start_time": "30-08-2026 03:30",
       "league": "Liga Nacional",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 27.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.4477",
       "confirmed_at": null,
@@ -249,7 +244,7 @@
       "match": "New Mexico United - San Antonio FC",
       "start_time": "30-08-2026 03:30",
       "league": "NASL",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 27.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.583",
       "confirmed_at": null,
@@ -261,7 +256,7 @@
       "match": "San Francisco FC - Plaza Amador",
       "start_time": "30-08-2026 03:30",
       "league": "Liga",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 27.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36355.60772",
       "confirmed_at": null,
@@ -273,7 +268,7 @@
       "match": "Monterey Bay FC - Sacramento Republic",
       "start_time": "30-08-2026 04:00",
       "league": "NASL",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 57.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.591",
       "confirmed_at": null,
@@ -285,7 +280,7 @@
       "match": "Perez Zeledon - Alajuelense",
       "start_time": "30-08-2026 04:00",
       "league": "Primera Division",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 57.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.2304",
       "confirmed_at": null,
@@ -297,7 +292,7 @@
       "match": "Las Vegas Lights - Charleston Battery",
       "start_time": "30-08-2026 04:30",
       "league": "NASL",
-      "minutes_to_start": 97.5,
+      "minutes_to_start": 87.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.590",
       "confirmed_at": null,
@@ -309,7 +304,7 @@
       "match": "Phoenix Rising - Indy Eleven",
       "start_time": "30-08-2026 04:30",
       "league": "NASL",
-      "minutes_to_start": 97.5,
+      "minutes_to_start": 87.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.582",
       "confirmed_at": null,
@@ -321,7 +316,7 @@
       "match": "Portland Timbers - Austin",
       "start_time": "30-08-2026 04:30",
       "league": "MLS",
-      "minutes_to_start": 97.5,
+      "minutes_to_start": 87.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.253",
       "confirmed_at": null,
@@ -333,7 +328,7 @@
       "match": "San Diego FC - LA Galaxy",
       "start_time": "30-08-2026 04:30",
       "league": "MLS",
-      "minutes_to_start": 97.5,
+      "minutes_to_start": 87.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.275",
       "confirmed_at": null,
