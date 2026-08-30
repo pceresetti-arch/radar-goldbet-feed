@@ -34,10 +34,11 @@ ITALY_PARAMS = {
     "geoIpSubdivisionCode": "IT",
 }
 ROME = ZoneInfo("Europe/Rome")
-MAX_HOURS = 12
-MAX_FIXTURES = 40
+MAX_HOURS = 18
+MAX_FIXTURES = 80
 MIN_BOOKS = 4
 MIN_CONSENSUS = 0.65
+PRIORITY_STANDARD_COUNT = 35
 
 
 def norm(s):
@@ -132,6 +133,35 @@ def identity_rows(item):
     return rows
 
 
+def fixture_priority(b):
+    """Prioritize Radar-quality fixtures before minor/reserve fixtures.
+
+    The BetFlag index already exposes coverage depth. Full-scan/player-prop
+    fixtures are normally the competitions where the Radar can complete the
+    deepest analysis; broad standard-market coverage is the second tier.
+    """
+    try:
+        standard_count = int(b.get("standard_count") or 0)
+    except Exception:
+        standard_count = 0
+    try:
+        player_count = int(b.get("player_count") or b.get("player_props_count") or 0)
+    except Exception:
+        player_count = 0
+    try:
+        player_quotes = int(b.get("player_quote_count") or b.get("player_props_count") or 0)
+    except Exception:
+        player_quotes = 0
+
+    if b.get("complete_for_full_scan") or player_count > 0 or player_quotes > 0:
+        tier = 0
+    elif standard_count >= PRIORITY_STANDARD_COUNT:
+        tier = 1
+    else:
+        tier = 2
+    return tier, -player_quotes, -standard_count
+
+
 def move_score(gb_pp, median_pp, ratio, n_books):
     # Score is intentionally conservative: movement cannot create a BET by itself.
     mag = min(40.0, max(0.0, gb_pp) * 8.0)
@@ -187,22 +217,29 @@ def main():
         if best:
             candidates.append((ev["start_ts"], best[0], ev, best[1]))
 
-    candidates.sort(key=lambda x: x[0])
+    candidate_fixture_count_before_cap = len(candidates)
+    candidates.sort(key=lambda x: (fixture_priority(x[3]), x[0]))
     candidates = candidates[:MAX_FIXTURES]
+    # Keep the output human-friendly after the priority selection.
+    candidates.sort(key=lambda x: x[0])
+
     fixtures_out = []
     all_signals = []
 
     for _, match_score, ev, bf_ev in candidates:
         params = dict(ITALY_PARAMS)
         params["eventId"] = ev["event_id"]
+        priority_tier = fixture_priority(bf_ev)[0]
         entry = {
             "flashscore_event_id": ev["event_id"],
             "betflag_event_id": bf_ev.get("match_event_id"),
             "match": bf_ev.get("match"),
+            "league": bf_ev.get("league"),
             "flashscore_match": f"{ev['home']} - {ev['away']}",
             "match_score": round(match_score, 3),
             "start_ts": ev["start_ts"],
             "start_time_utc": datetime.fromtimestamp(ev["start_ts"], tz=timezone.utc).isoformat(),
+            "priority_tier": priority_tier,
             "markets": [],
         }
         try:
@@ -291,6 +328,7 @@ def main():
             if likely:
                 all_signals.append({
                     "match": entry["match"],
+                    "league": entry.get("league"),
                     "betflag_event_id": entry["betflag_event_id"],
                     **{k: rec[k] for k in rec if k != "book_moves"},
                 })
@@ -300,7 +338,7 @@ def main():
 
     all_signals.sort(key=lambda x: -x["information_move_score"])
     out = {
-        "schema_version": "radar-information-move-v1",
+        "schema_version": "radar-information-move-v2",
         "generated_at": now.isoformat(),
         "source": "Flashscore/Diretta odds comparison historical opening + current",
         "primary_bookmaker": "GoldBet",
@@ -313,8 +351,12 @@ def main():
             "advantage_definition": "Radar model agrees + strong cross-book information move + BetFlag price lag + BetFlag exact price clears unchanged final gate",
             "min_books": MIN_BOOKS,
             "min_consensus_ratio": MIN_CONSENSUS,
+            "max_hours": MAX_HOURS,
+            "max_fixtures": MAX_FIXTURES,
+            "fixture_priority": "tier0=full scan/player coverage; tier1=standard_count>=35; tier2=remaining fixtures",
         },
         "betflag_index_generated_at": bf.get("generated_at"),
+        "candidate_fixture_count_before_cap": candidate_fixture_count_before_cap,
         "candidate_fixture_count": len(candidates),
         "processed_fixture_count": len(fixtures_out),
         "likely_information_move_count": len(all_signals),
@@ -324,6 +366,7 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(json.dumps({
+        "candidate_fixture_count_before_cap": candidate_fixture_count_before_cap,
         "processed_fixture_count": len(fixtures_out),
         "likely_information_move_count": len(all_signals),
         "top_signals": all_signals[:10],
