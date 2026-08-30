@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T08:16:02.233758+00:00",
+  "generated_at": "2026-08-30T08:25:49.973839+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -10,9 +10,9 @@
   ],
   "target_count": 49,
   "status_counts": {
-    "NOT_AVAILABLE": 41,
+    "NOT_AVAILABLE": 40,
     "LINEUP_PRESENT_UNCONFIRMED": 1,
-    "SOURCE_CONFIRMED": 2,
+    "SOURCE_CONFIRMED": 3,
     "REFERENCE_PREVIOUS_XI": 5
   },
   "schedule_stats": [
@@ -31,7 +31,7 @@
       "start_time": "30-08-2026 11:00",
       "start_utc": "2026-08-30T09:00:00+00:00",
       "league": "WE League Femm.",
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-30T08:00:25.065743+00:00",
@@ -593,10 +593,591 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-30T08:16:02.233758+00:00",
+        "polled_at": "2026-08-30T08:25:49.973839+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 1000015902,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36356.40264",
+      "match_event_id": 16070400,
+      "match": "Elfen Saitama - Kobe Leonessa",
+      "start_time": "30-08-2026 11:00",
+      "start_utc": "2026-08-30T09:00:00+00:00",
+      "league": "WE League Femm.",
+      "minutes_to_start": 34.2,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-30T08:25:49.973839+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000015899,
+        "home": "AS Elfen Saitama",
+        "away": "INAC Kobe Leonessa",
+        "league": "WE League",
+        "score": 0.8635,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapi",
+        "teams": [
+          {
+            "team_id": 614365,
+            "team_name": "AS Elfen Saitama",
+            "formation": "4-4-2",
+            "starters": [
+              {
+                "name": "Natsumi Asano",
+                "id": 1782389,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Maho Hirao",
+                "id": 1904950,
+                "shirt_number": "4",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Kokoro Otaka",
+                "id": 1819809,
+                "shirt_number": "25",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Kozue Setoguchi",
+                "id": 1819796,
+                "shirt_number": "5",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Shoko Miaki",
+                "id": 1904956,
+                "shirt_number": "32",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Yuki Seno",
+                "id": 1819840,
+                "shirt_number": "6",
+                "position_id": 72,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Sakurako Ohashi",
+                "id": 1904954,
+                "shirt_number": "35",
+                "position_id": 74,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Nanasa Ikuta",
+                "id": 1819657,
+                "shirt_number": "10",
+                "position_id": 76,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Hina Takahashi",
+                "id": 1822695,
+                "shirt_number": "18",
+                "position_id": 78,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Shoko Uemura",
+                "id": 1819655,
+                "shirt_number": "14",
+                "position_id": 104,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Yui Tanaka",
+                "id": 1819656,
+                "shirt_number": "8",
+                "position_id": 106,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Saion Yamada",
+                "id": 2150564,
+                "shirt_number": "51"
+              },
+              {
+                "name": "Miki Sakuma",
+                "id": 1819792,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Minori Kishi",
+                "id": 1819814,
+                "shirt_number": "20"
+              },
+              {
+                "name": "Yoshino Osone",
+                "id": 2150574,
+                "shirt_number": "24"
+              },
+              {
+                "name": "Asako Yamashita",
+                "id": 1938770,
+                "shirt_number": "29"
+              },
+              {
+                "name": "Miu Tochitani",
+                "id": 1819798,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Yuna Nakamura",
+                "id": 2150567,
+                "shirt_number": "36"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge"
+            ]
+          },
+          {
+            "team_id": 614364,
+            "team_name": "INAC Kobe Leonessa",
+            "formation": "4-3-3",
+            "starters": [
+              {
+                "name": "Momoko Tanaka",
+                "id": 1467482,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Maya Yamamoto",
+                "id": 1102239,
+                "shirt_number": "8",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Shiori Miyake",
+                "id": 1055854,
+                "shirt_number": "5",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Tamaki Okuma",
+                "id": 1819933,
+                "shirt_number": "25",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Natsume Kingetsu",
+                "id": 1819909,
+                "shirt_number": "18",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Riko Yoshida",
+                "id": 1782398,
+                "shirt_number": "9",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Kana Matsuura",
+                "id": 1941685,
+                "shirt_number": "30",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Ai Kuwahara",
+                "id": 1819907,
+                "shirt_number": "13",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Yui Narumiya",
+                "id": 1467481,
+                "shirt_number": "10",
+                "position_id": 103,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Ai Tsujisawa",
+                "id": 1620101,
+                "shirt_number": "29",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Azumi Manriki",
+                "id": 2150541,
+                "shirt_number": "22",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Mayu Funada",
+                "id": 1819938,
+                "shirt_number": "99"
+              },
+              {
+                "name": "Natsuki Matsuo",
+                "id": 2150548,
+                "shirt_number": "15"
+              },
+              {
+                "name": "Arisu Ota",
+                "id": 1819929,
+                "shirt_number": "20"
+              },
+              {
+                "name": "Chisato Minowa",
+                "id": 1819936,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Megumi Takase",
+                "id": 271528,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Ayaka Michigami",
+                "id": 1819931,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Mao Kubota",
+                "id": 1819932,
+                "shirt_number": "19"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge"
+            ]
+          }
+        ],
+        "xi_fingerprint": "5812c0d82970579cdea3",
+        "xi_name_fingerprint": "618b19298273035a4354",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "source_evidence": {
+        "polled_at": "2026-08-30T08:25:49.973839+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 1000015899,
           "http_status": 200
         },
         "sofascore": {
@@ -612,7 +1193,7 @@
       "start_time": "30-08-2026 11:00",
       "start_utc": "2026-08-30T09:00:00+00:00",
       "league": "J3 League",
-      "minutes_to_start": 44.0,
+      "minutes_to_start": 34.2,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-30T07:35:07.729381+00:00",
@@ -1194,7 +1775,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-30T08:16:02.233758+00:00",
+        "polled_at": "2026-08-30T08:25:49.973839+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5987121,
@@ -1209,12 +1790,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-30T08:16:02.233758+00:00",
+    "generated_at": "2026-08-30T08:25:49.973839+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 24,
+    "target_count": 25,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -1225,7 +1806,32 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Albirex Niigata - Mynavi Sendai",
+        "minutes_to_start": 34.2,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Elfen Saitama - Kobe Leonessa",
+        "minutes_to_start": 34.2,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Giravanz Kitakyushu - Matsumoto Yamaga",
+        "minutes_to_start": 34.2,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
   "watchdog_identity_repairs": [
     {
@@ -1239,5 +1845,5 @@
   ],
   "official_tactical_gate": true,
   "source_match_count": 49,
-  "official_match_count": 2
+  "official_match_count": 3
 }
