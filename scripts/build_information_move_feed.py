@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import re
 import statistics
 import unicodedata
@@ -13,6 +14,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 BETFLAG_INDEX = ROOT / "feed" / "betflag-fixtures-index.json"
 OUT = ROOT / "feed" / "information-move-current.json"
+DETAIL_WORK = ROOT / "feed" / ".information-move-detail-working.json"
 
 FLASH_FEED = "https://www.flashscore.com/x/feed/f_1_0_3_en_1"
 ODDS_URL = "https://global.ds.lsapp.eu/odds/pq_graphql"
@@ -38,6 +40,16 @@ REQUEST_TIMEOUT = (4, 12)
 MIN_BOOKS = 4
 MIN_CONSENSUS = 0.65
 PRIORITY_STANDARD_COUNT = 35
+
+
+def atomic_write_json(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    if not payload or payload == "{}":
+        raise RuntimeError(f"Refusing empty output for {path}")
+    tmp.write_text(payload, encoding="utf-8")
+    os.replace(tmp, path)
 
 
 def norm(s):
@@ -144,7 +156,6 @@ def fixture_priority(b):
         player_quotes = int(b.get("player_quote_count") or b.get("player_props_count") or 0)
     except Exception:
         player_quotes = 0
-
     if b.get("complete_for_full_scan") or player_count > 0 or player_quotes > 0:
         tier = 0
     elif standard_count >= PRIORITY_STANDARD_COUNT:
@@ -193,7 +204,6 @@ def process_candidate(candidate):
         "priority_tier": fixture_priority(bf_ev)[0],
         "markets": [],
     }
-
     try:
         rr = requests.get(ODDS_URL, params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
         entry["http_status"] = rr.status_code
@@ -282,9 +292,22 @@ def process_candidate(candidate):
                 "betflag_event_id": entry["betflag_event_id"],
                 **{k: rec[k] for k in rec if k != "book_moves"},
             })
-
     entry["markets"].sort(key=lambda x: -x["information_move_score"])
     return entry, signals
+
+
+def compact_fixture(fx):
+    keep = {
+        "flashscore_event_id", "betflag_event_id", "match", "league",
+        "match_score", "start_ts", "start_time_utc", "priority_tier",
+        "http_status", "error",
+    }
+    out = {k: v for k, v in fx.items() if k in keep}
+    out["markets"] = [
+        {k: v for k, v in m.items() if k != "book_moves"}
+        for m in (fx.get("markets") or [])
+    ]
+    return out
 
 
 def main():
@@ -300,8 +323,6 @@ def main():
     r.raise_for_status()
     flash = parse_flash_feed(r.text)
 
-    # Pre-normalize BetFlag identities once instead of redoing string cleanup
-    # for every Flashscore x BetFlag comparison.
     bf_identity = []
     for b in bf_fixtures:
         bh, ba = split_match(b.get("match"))
@@ -359,8 +380,8 @@ def main():
     finished = datetime.now(timezone.utc)
     duration_seconds = round((finished - started).total_seconds(), 3)
 
-    out = {
-        "schema_version": "radar-information-move-v3",
+    common = {
+        "schema_version": "radar-information-move-v4",
         "generated_at": finished.isoformat(),
         "source": "Flashscore/Diretta odds comparison historical opening + current",
         "primary_bookmaker": "GoldBet",
@@ -390,15 +411,28 @@ def main():
         "processed_fixture_count": len(fixtures_out),
         "likely_information_move_count": len(all_signals),
         "signals": all_signals,
-        "fixtures": fixtures_out,
     }
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+    if not fixtures_out:
+        raise RuntimeError("No movement fixtures produced; preserving previous current feed")
+
+    detail = dict(common)
+    detail["feed_mode"] = "WORKING_DETAIL_NOT_PUBLISHED"
+    detail["fixtures"] = fixtures_out
+    compact = dict(common)
+    compact["feed_mode"] = "COMPACT_OPERATIONAL"
+    compact["fixtures"] = [compact_fixture(x) for x in fixtures_out]
+
+    atomic_write_json(DETAIL_WORK, detail)
+    atomic_write_json(OUT, compact)
+
     print(json.dumps({
         "duration_seconds": duration_seconds,
         "candidate_fixture_count_before_cap": candidate_fixture_count_before_cap,
         "processed_fixture_count": len(fixtures_out),
         "likely_information_move_count": len(all_signals),
+        "operational_feed_bytes": OUT.stat().st_size,
+        "detail_work_bytes": DETAIL_WORK.stat().st_size,
         "top_signals": all_signals[:10],
     }, ensure_ascii=False, indent=2))
 
