@@ -1,11 +1,11 @@
 name: Build Radar deep-analysis readiness
 
 on:
+  # Event-driven is the primary path. This low-frequency cron is only a safety net.
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/30 * * * *'
   workflow_run:
     workflows:
-      - 'Refresh current lineups'
       - 'Enrich current lineups tactical'
       - 'Build player matchup context'
       - 'Radar BetFlag v7 live bridge'
@@ -21,7 +21,7 @@ permissions:
 
 concurrency:
   group: radar-deep-analysis-readiness
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
