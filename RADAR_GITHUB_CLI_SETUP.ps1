@@ -23,6 +23,19 @@ function Resolve-Gh {
     return $null
 }
 
+function Test-GhAuth([string]$GhPath) {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = $GhPath
+    $psi.Arguments = 'auth status --hostname github.com'
+    $psi.UseShellExecute = $false
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.CreateNoWindow = $true
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $p.WaitForExit()
+    return ($p.ExitCode -eq 0)
+}
+
 Write-Host '=== RADAR GITHUB CLI SETUP ==='
 $gh = Resolve-Gh
 
@@ -47,17 +60,19 @@ if (-not $gh) {
 
 Write-Host "GH: $gh"
 
-& $gh auth status --hostname github.com *> $null
-if ($LASTEXITCODE -ne 0) {
+if (-not (Test-GhAuth $gh)) {
     Write-Host 'GitHub authentication is required once. A browser/device login will open now.'
+    $oldEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     & $gh auth login --hostname github.com --git-protocol https --web
-    if ($LASTEXITCODE -ne 0) {
+    $loginCode = $LASTEXITCODE
+    $ErrorActionPreference = $oldEap
+    if ($loginCode -ne 0) {
         throw 'GitHub CLI authentication did not complete successfully.'
     }
 }
 
-& $gh auth status --hostname github.com *> $null
-if ($LASTEXITCODE -ne 0) {
+if (-not (Test-GhAuth $gh)) {
     throw 'GitHub CLI is installed but still not authenticated.'
 }
 
