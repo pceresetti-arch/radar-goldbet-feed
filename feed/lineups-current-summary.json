@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T01:40:34.900103+00:00",
+  "generated_at": "2026-08-30T01:53:20.663827+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,12 +8,12 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 13,
+  "target_count": 8,
   "status_counts": {
-    "NOT_AVAILABLE": 4,
-    "SOURCE_CONFIRMED": 3,
-    "REFERENCE_PREVIOUS_XI": 4,
-    "LINEUP_PRESENT_UNCONFIRMED": 2
+    "LINEUP_PRESENT_UNCONFIRMED": 2,
+    "SOURCE_CONFIRMED": 4,
+    "REFERENCE_PREVIOUS_XI": 1,
+    "NOT_AVAILABLE": 1
   },
   "schedule_stats": [
     {
@@ -25,12 +25,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-30T01:40:34.900103+00:00",
+    "generated_at": "2026-08-30T01:53:20.663827+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 6,
+    "target_count": 8,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -43,8 +43,32 @@
     },
     "changes": [
       {
+        "match": "Phoenix Rising - Indy Eleven",
+        "minutes_to_start": 36.7,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Perez Zeledon - Alajuelense",
+        "minutes_to_start": 6.7,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
         "match": "Portland Timbers - Austin",
-        "minutes_to_start": 49.4,
+        "minutes_to_start": 36.7,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "San Diego FC - LA Galaxy",
+        "minutes_to_start": 36.7,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -54,71 +78,11 @@
   },
   "matches": [
     {
-      "match": "Alianza FC Valledupar - Nacional Medellin",
-      "start_time": "30-08-2026 03:30",
-      "league": "Primera A",
-      "minutes_to_start": -10.6,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36351.2634",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Colorado Rapids - Real Salt Lake",
-      "start_time": "30-08-2026 03:30",
-      "league": "MLS",
-      "minutes_to_start": -10.6,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.261",
-      "confirmed_at": "2026-08-30T00:36:50.997912+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "FC Motagua - Olancho FC",
-      "start_time": "30-08-2026 03:30",
-      "league": "Liga Nacional",
-      "minutes_to_start": -10.6,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36351.4477",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "New Mexico United - San Antonio FC",
-      "start_time": "30-08-2026 03:30",
-      "league": "NASL",
-      "minutes_to_start": -10.6,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.583",
-      "confirmed_at": "2026-08-30T01:14:49.135540+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "San Francisco FC - Plaza Amador",
-      "start_time": "30-08-2026 03:30",
-      "league": "Liga",
-      "minutes_to_start": -10.6,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36355.60772",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
       "match": "Monterey Bay FC - Sacramento Republic",
       "start_time": "30-08-2026 04:00",
       "league": "NASL",
-      "minutes_to_start": 19.4,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 6.7,
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "match_market_id": "36351.591",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
@@ -129,11 +93,11 @@
       "match": "Perez Zeledon - Alajuelense",
       "start_time": "30-08-2026 04:00",
       "league": "Primera Division",
-      "minutes_to_start": 19.4,
-      "status": "LINEUP_PRESENT_UNCONFIRMED",
+      "minutes_to_start": 6.7,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2304",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -141,7 +105,7 @@
       "match": "Las Vegas Lights - Charleston Battery",
       "start_time": "30-08-2026 04:30",
       "league": "NASL",
-      "minutes_to_start": 49.4,
+      "minutes_to_start": 36.7,
       "status": "LINEUP_PRESENT_UNCONFIRMED",
       "match_market_id": "36351.590",
       "confirmed_at": null,
@@ -153,11 +117,11 @@
       "match": "Phoenix Rising - Indy Eleven",
       "start_time": "30-08-2026 04:30",
       "league": "NASL",
-      "minutes_to_start": 49.4,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 36.7,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.582",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -165,10 +129,10 @@
       "match": "Portland Timbers - Austin",
       "start_time": "30-08-2026 04:30",
       "league": "MLS",
-      "minutes_to_start": 49.4,
+      "minutes_to_start": 36.7,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.253",
-      "confirmed_at": "2026-08-30T01:40:34.900103+00:00",
+      "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
       "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
@@ -177,11 +141,11 @@
       "match": "San Diego FC - LA Galaxy",
       "start_time": "30-08-2026 04:30",
       "league": "MLS",
-      "minutes_to_start": 49.4,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 36.7,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.275",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-08-30T01:53:20.663827+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -189,7 +153,7 @@
       "match": "Club Santos Laguna - Tigres",
       "start_time": "30-08-2026 05:10",
       "league": "Primera Division",
-      "minutes_to_start": 89.4,
+      "minutes_to_start": 76.7,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36351.2315",
       "confirmed_at": null,
@@ -201,7 +165,7 @@
       "match": "FC Juarez - Cruz Azul",
       "start_time": "30-08-2026 05:10",
       "league": "Liga Mx Femminile",
-      "minutes_to_start": 89.4,
+      "minutes_to_start": 76.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.5258",
       "confirmed_at": null,
