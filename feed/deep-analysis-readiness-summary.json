@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-30T00:00:58.867469+00:00",
+  "generated_at": "2026-08-30T00:01:16.893212+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 3.8,
-    "tactical": 3.4,
-    "betflag_fixture_feed": 7.2,
-    "betflag_standard_source": 7.4,
-    "betflag_player_source": 7.3,
-    "player_context": 3.3
+    "lineups": 4.1,
+    "tactical": 3.7,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.5,
+    "player_context": 3.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,80 +36,11 @@
   "match_count": 36,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 26,
-    "READY_DEEP_ANALYSIS": 10
+    "WAIT_BETFLAG_FIXTURE_MAPPING": 5,
+    "READY_DEEP_ANALYSIS": 5
   },
-  "ready_count": 10,
+  "ready_count": 5,
   "ready_matches": [
-    {
-      "match_market_id": "36351.589",
-      "match": "Louisville City - Detroit City FC",
-      "league": "NASL",
-      "start_time": "30-08-2026 02:00",
-      "minutes_to_start": 2.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 26,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36351.1210",
-      "match": "Manta - Barcelona Guayaquil",
-      "league": "Serie A",
-      "start_time": "30-08-2026 02:00",
-      "minutes_to_start": 2.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 31,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36361.891",
-      "match": "Nublense - Dep. Concepcion",
-      "league": "Primera Division",
-      "start_time": "30-08-2026 02:00",
-      "minutes_to_start": 2.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
-      "betflag_standard_count": 35,
-      "player_count": 50,
-      "player_quote_count": 300,
-      "player_lane_ready": true,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36351.578",
-      "match": "Oakland Roots SC - Orange County SC",
-      "league": "NASL",
-      "start_time": "30-08-2026 02:00",
-      "minutes_to_start": 2.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 29,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36355.19025",
-      "match": "Union Omaha SC - NY Cosmos",
-      "league": "USL League One",
-      "start_time": "30-08-2026 02:00",
-      "minutes_to_start": 2.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 29,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
     {
       "match_market_id": "36351.391",
       "match": "CR Vasco da Gama RJ - Cruzeiro",
@@ -181,21 +112,8 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 2,
+  "player_lane_ready_count": 1,
   "player_lane_ready_matches": [
-    {
-      "match_market_id": "36361.891",
-      "match": "Nublense - Dep. Concepcion",
-      "league": "Primera Division",
-      "start_time": "30-08-2026 02:00",
-      "minutes_to_start": 2.8,
-      "player_lane_ready": true,
-      "player_market_bet_ready": true,
-      "player_count": 50,
-      "player_quote_count": 300,
-      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
-      "player_exact_price_required_at_decision_time": true
-    },
     {
       "match_market_id": "36351.391",
       "match": "CR Vasco da Gama RJ - Cruzeiro",
