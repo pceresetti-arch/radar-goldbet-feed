@@ -6,7 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "feed" / "information-move-current.json"
+PUBLIC_SRC = ROOT / "feed" / "information-move-current.json"
+DETAIL_SRC = ROOT / "feed" / ".information-move-detail-working.json"
 OUT = ROOT / "feed" / "market-xg-shift-current.json"
 
 MIN_BOOKS = 4
@@ -38,7 +39,6 @@ def poisson_probs(lam, max_goals=12):
     p = [math.exp(-lam)]
     for k in range(1, max_goals + 1):
         p.append(p[-1] * lam / k)
-    # absorb tiny tail into last bucket so the matrix sums ~1
     tail = max(0.0, 1.0 - sum(p))
     p[-1] += tail
     return p
@@ -68,7 +68,6 @@ def solve_xg(target_home, target_draw, target_away, target_over, total_line):
 
     def score(lh, la):
         h, d, a, o = model_probs(lh, la, total_line)
-        # Total market is especially useful for overall goal environment.
         err = (
             (h - target_home) ** 2
             + (d - target_draw) ** 2
@@ -143,7 +142,8 @@ def confidence(book_count, fit_rmse, move_strength):
 
 def main():
     now = datetime.now(timezone.utc)
-    data = json.loads(SRC.read_text(encoding="utf-8"))
+    src = DETAIL_SRC if DETAIL_SRC.exists() else PUBLIC_SRC
+    data = json.loads(src.read_text(encoding="utf-8"))
     out_rows = []
 
     for fx in data.get("fixtures") or []:
@@ -173,7 +173,6 @@ def main():
         total_lines.sort(key=lambda x: x[0])
         _, total_line, over_m, under_m = total_lines[0]
 
-        # Require meaningful cross-book breadth in all four legs.
         legs = [one_h, one_d, one_a, over_m, under_m]
         book_counts = [len(x.get("book_moves") or []) for x in legs]
         if min(book_counts) < MIN_BOOKS:
@@ -222,8 +221,6 @@ def main():
         fit_rmse = max(opening["fit_rmse"], current["fit_rmse"])
         conf = confidence(min(book_counts), fit_rmse, move_strength)
 
-        # Shrink market delta before it is allowed to alter Radar team xG.
-        # This preserves the independent model as the anchor and avoids double counting.
         weight = 0.50 * conf
         adj_h = clamp(dh * weight, -MAX_RADAR_ADJUSTMENT, MAX_RADAR_ADJUSTMENT)
         adj_a = clamp(da * weight, -MAX_RADAR_ADJUSTMENT, MAX_RADAR_ADJUSTMENT)
@@ -233,6 +230,7 @@ def main():
             "betflag_event_id": fx.get("betflag_event_id"),
             "start_time_utc": fx.get("start_time_utc"),
             "source": "cross-book opening/current consensus via Diretta/Flashscore",
+            "source_feed": src.name,
             "total_line_used": total_line,
             "book_count_floor": min(book_counts),
             "market_probabilities_opening": {
@@ -275,6 +273,7 @@ def main():
         "schema_version": "radar-market-xg-shift-v1",
         "generated_at": now.isoformat(),
         "input_generated_at": data.get("generated_at"),
+        "input_source_file": src.name,
         "definition": "Market-implied change in team scoring capacity derived from de-vigged cross-book 1X2 + nearest full-time O/U line.",
         "policy": {
             "raw_market_xg_replaces_radar_model": False,
@@ -288,6 +287,7 @@ def main():
     }
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(json.dumps({
+        "input_source_file": src.name,
         "fixture_count": len(out_rows),
         "top": [
             {
