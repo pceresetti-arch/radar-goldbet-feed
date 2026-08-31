@@ -64,8 +64,13 @@ def checkpoint_t30(rec):
             mins, price = float(mins), float(price)
         except (TypeError, ValueError):
             continue
-        if 25 <= mins <= 35:
-            candidates.append((abs(mins-30), mins, price, cp.get("captured_at"), f"checkpoint:{name}"))
+        target = cp.get("target_minutes")
+        is_t30 = str(name).upper().replace("_", "-") == "T-30" or target == 30
+        # Preserve the watcher checkpoint classification. A T-30 fallback can
+        # be slightly outside +/-5 minutes; exact distance and quality remain explicit.
+        if is_t30 and abs(mins-30) <= 10:
+            candidates.append((abs(mins-30), mins, price, cp.get("captured_at"),
+                               f"checkpoint:{name}:{cp.get('quality','UNCLASSIFIED')}"))
     for s in rec.get("snapshots") or []:
         try:
             mins, price = float(s["minutes_to_start"]), float(s["price"])
