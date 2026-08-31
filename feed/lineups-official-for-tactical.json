@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T13:33:05.851877+00:00",
+  "generated_at": "2026-08-31T13:45:22.202983+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 106,
+  "target_count": 108,
   "status_counts": {
-    "NOT_AVAILABLE": 94,
-    "SOURCE_CONFIRMED": 8,
-    "LINEUP_PRESENT_UNCONFIRMED": 4
+    "NOT_AVAILABLE": 96,
+    "SOURCE_CONFIRMED": 11,
+    "LINEUP_PRESENT_UNCONFIRMED": 1
   },
   "schedule_stats": [
     {
@@ -30,7 +30,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:20:36.309627+00:00",
@@ -614,10 +614,589 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5996702,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.42447",
+      "match_event_id": 16071979,
+      "match": "Boston United FC - Hornchurch",
+      "start_time": "31-08-2026 16:00",
+      "start_utc": "2026-08-31T14:00:00+00:00",
+      "league": "Conference National",
+      "minutes_to_start": 14.6,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-31T13:45:22.202983+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5906405,
+        "home": "Boston United",
+        "away": "Hornchurch",
+        "league": "National League",
+        "score": 1.0,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapiLegacyIntegration",
+        "teams": [
+          {
+            "team_id": 8646,
+            "team_name": "Boston United",
+            "formation": "5-3-2",
+            "starters": [
+              {
+                "name": "Louis Chadwick",
+                "id": 1239549,
+                "shirt_number": "13",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Connor Teale",
+                "id": 1187342,
+                "shirt_number": "4",
+                "position_id": 33,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.695,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.305,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Niall Canavan",
+                "id": 181243,
+                "shirt_number": "6",
+                "position_id": 35,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Terrell Agyemang",
+                "id": 1572367,
+                "shirt_number": "28",
+                "position_id": 37,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.305,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.695,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Sai Sachdev",
+                "id": 1412670,
+                "shirt_number": "2",
+                "position_id": 51,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.371,
+                  "y": 0.89,
+                  "height": 0.195,
+                  "width": 0.741
+                },
+                "vertical_layout": {
+                  "x": 0.11,
+                  "y": 0.371,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Lewis Shipley",
+                "id": 1213676,
+                "shirt_number": "3",
+                "position_id": 59,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.371,
+                  "y": 0.11,
+                  "height": 0.195,
+                  "width": 0.243
+                },
+                "vertical_layout": {
+                  "x": 0.89,
+                  "y": 0.371,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Jake Rooney",
+                "id": 1186461,
+                "shirt_number": "20",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.79,
+                  "height": 0.195,
+                  "width": 0.243
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Gavan Holohan",
+                "id": 279480,
+                "shirt_number": "8",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Lennon Wheeldon",
+                "id": 1413840,
+                "shirt_number": "18",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.21,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Kenneth Aboh",
+                "id": 1235112,
+                "shirt_number": "11",
+                "position_id": 104,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.7,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Tom Cursons",
+                "id": 1132836,
+                "shirt_number": "9",
+                "position_id": 106,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.3,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Luke Faxon",
+                "id": 1675657,
+                "shirt_number": "1"
+              },
+              {
+                "name": "George Ward",
+                "id": 1416631,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Kai Mauro",
+                "id": 1625681,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Ben Hammond",
+                "id": 1296761,
+                "shirt_number": "22"
+              },
+              {
+                "name": "Jack Holmes",
+                "id": 1132520,
+                "shirt_number": "7"
+              },
+              {
+                "name": "Connor McBride",
+                "id": 1099953,
+                "shirt_number": "10"
+              },
+              {
+                "name": "Lenell John-Lewis",
+                "id": 46379,
+                "shirt_number": "14"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "subs",
+              "averageStarterAge"
+            ]
+          },
+          {
+            "team_id": 4047,
+            "team_name": "Hornchurch",
+            "formation": "4-2-3-1",
+            "starters": [
+              {
+                "name": "Arthur Nasta",
+                "id": 1683821,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Joseph Kizzi",
+                "id": 912207,
+                "shirt_number": "12",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ryan Inniss",
+                "id": 314389,
+                "shirt_number": "3",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Frankie Edwards",
+                "id": 1701464,
+                "shirt_number": "22",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Sam Ling",
+                "id": 514805,
+                "shirt_number": "19",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Jack Powell",
+                "id": 522123,
+                "shirt_number": "4",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Tom Wraight",
+                "id": 708994,
+                "shirt_number": "8",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Dominic Poleon",
+                "id": 369753,
+                "shirt_number": "21",
+                "position_id": 83,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Henry Hearn",
+                "id": 1697359,
+                "shirt_number": "9",
+                "position_id": 85,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Miles Bracking",
+                "id": 1607331,
+                "shirt_number": "25",
+                "position_id": 87,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Josh Walker",
+                "id": 824070,
+                "shirt_number": "7",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Rhys Byrne",
+                "id": 1284094,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Thomas Dallison",
+                "id": 616930,
+                "shirt_number": "6"
+              },
+              {
+                "name": "Nathan Ferguson",
+                "id": 741026,
+                "shirt_number": "15"
+              },
+              {
+                "name": "Aaron Rowe",
+                "id": 1029054,
+                "shirt_number": "26"
+              },
+              {
+                "name": "Asher Yearwood",
+                "id": 1541823,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Charlie Pegrum",
+                "id": 1526548,
+                "shirt_number": "14"
+              },
+              {
+                "name": "Bobby Kelman",
+                "id": 2120220,
+                "shirt_number": "24"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "subs",
+              "averageStarterAge"
+            ]
+          }
+        ],
+        "xi_fingerprint": "139b62c7917eb2d23070",
+        "xi_name_fingerprint": "33d5505911ed853215e7",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "source_evidence": {
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 5906405,
           "http_status": 200
         },
         "sofascore": {
@@ -633,13 +1212,13 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:33:05.851877+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "613592ee49d73b311cff",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5906406,
@@ -1193,7 +1772,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906406,
@@ -1212,13 +1791,13 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:33:05.851877+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "a8cb09cc92f34ee06633",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5906407,
@@ -1772,7 +2351,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906407,
@@ -1791,13 +2370,13 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:33:05.851877+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "6fb92227f2ae79b9596e",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5906409,
@@ -2352,7 +2931,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906409,
@@ -2371,13 +2950,13 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:33:05.851877+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "cc7ac41c5b7fcf324ae6",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5906410,
@@ -2931,10 +3510,584 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906410,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.42774",
+      "match_event_id": 16072145,
+      "match": "Kidderminster Harriers FC - Barrow",
+      "start_time": "31-08-2026 16:00",
+      "start_utc": "2026-08-31T14:00:00+00:00",
+      "league": "Conference National",
+      "minutes_to_start": 14.6,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-31T13:45:22.202983+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5906411,
+        "home": "Kidderminster Harriers",
+        "away": "Barrow",
+        "league": "National League",
+        "score": 1.0,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapiLegacyIntegration",
+        "teams": [
+          {
+            "team_id": 10284,
+            "team_name": "Kidderminster Harriers",
+            "formation": "3-4-3",
+            "starters": [
+              {
+                "name": "Jack Wint",
+                "id": 1841917,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Angus MacDonald",
+                "id": 306069,
+                "shirt_number": "5",
+                "position_id": 33,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Richard Faakye",
+                "id": null,
+                "shirt_number": "6",
+                "position_id": 35,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "David Davis",
+                "id": 187189,
+                "shirt_number": "26",
+                "position_id": 37,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Max Brogan",
+                "id": 1327412,
+                "shirt_number": "7",
+                "position_id": 72,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ben Crompton",
+                "id": 1607249,
+                "shirt_number": "8",
+                "position_id": 74,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Reece Devine",
+                "id": 1098781,
+                "shirt_number": "33",
+                "position_id": 76,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Callum Stewart",
+                "id": 1526724,
+                "shirt_number": "28",
+                "position_id": 78,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Callum Dolan",
+                "id": 1078870,
+                "shirt_number": "10",
+                "position_id": 103,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Lewis Walker",
+                "id": 1038365,
+                "shirt_number": "9",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Levi Amantchi",
+                "id": 956877,
+                "shirt_number": "12",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Zach Willis",
+                "id": 1838063,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Reece Hall",
+                "id": 1203667,
+                "shirt_number": "2"
+              },
+              {
+                "name": "Cian Harries",
+                "id": 662323,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Cameron Hargreaves",
+                "id": 877747,
+                "shirt_number": "20"
+              },
+              {
+                "name": "Ethan Moore",
+                "id": 1902709,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Josh Bishop",
+                "id": null,
+                "shirt_number": "13"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "subs",
+              "averageStarterAge"
+            ]
+          },
+          {
+            "team_id": 6350,
+            "team_name": "Barrow",
+            "formation": "4-4-2",
+            "starters": [
+              {
+                "name": "Ben Winterbottom",
+                "id": 1078851,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Marcel Oakley",
+                "id": 1287372,
+                "shirt_number": "2",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Paul Kalambayi",
+                "id": 731264,
+                "shirt_number": "25",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Kennedy Digie",
+                "id": 606695,
+                "shirt_number": "6",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Danny Amos",
+                "id": 785396,
+                "shirt_number": "22",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "George Walker",
+                "id": 1601867,
+                "shirt_number": "11",
+                "position_id": 72,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Isaac Marriott",
+                "id": 1081016,
+                "shirt_number": "27",
+                "position_id": 74,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Michael Jordan Williams",
+                "id": 584836,
+                "shirt_number": "4",
+                "position_id": 76,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Keaton Ward",
+                "id": 1235611,
+                "shirt_number": "10",
+                "position_id": 78,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Oliver Crankshaw",
+                "id": 964372,
+                "shirt_number": "7",
+                "position_id": 104,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Innes Cameron",
+                "id": 814567,
+                "shirt_number": "18",
+                "position_id": 106,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Thierry Latty-Fairweather",
+                "id": 1194031,
+                "shirt_number": "36"
+              },
+              {
+                "name": "Xavier Benjamin",
+                "id": 1338984,
+                "shirt_number": "33"
+              },
+              {
+                "name": "Scott Smith",
+                "id": 1184470,
+                "shirt_number": "8"
+              },
+              {
+                "name": "Ben Whitfield",
+                "id": 520336,
+                "shirt_number": "34"
+              },
+              {
+                "name": "Rekeem Harper",
+                "id": 789579,
+                "shirt_number": "26"
+              },
+              {
+                "name": "Danny Rose",
+                "id": 261807,
+                "shirt_number": "32"
+              },
+              {
+                "name": "Alex Reid",
+                "id": 831749,
+                "shirt_number": "9"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "subs",
+              "averageStarterAge"
+            ]
+          }
+        ],
+        "xi_fingerprint": "a6df10a5181045e4cc40",
+        "xi_name_fingerprint": "ed7d15ad557c01be98b9",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "source_evidence": {
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 5906411,
           "http_status": 200
         },
         "sofascore": {
@@ -2950,13 +4103,13 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:33:05.851877+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "985ac0320afa6bffbc8a",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5906412,
@@ -2999,9 +4152,9 @@
                 }
               },
               {
-                "name": "Jevon Mills",
-                "id": 1315279,
-                "shirt_number": "5",
+                "name": "Tyrell Warren",
+                "id": 1077230,
+                "shirt_number": "23",
                 "position_id": 32,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -3018,9 +4171,9 @@
                 }
               },
               {
-                "name": "Alexander Whitmore",
-                "id": 696934,
-                "shirt_number": "6",
+                "name": "Craig Farquhar",
+                "id": 1457742,
+                "shirt_number": "16",
                 "position_id": 34,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -3037,9 +4190,9 @@
                 }
               },
               {
-                "name": "Craig Farquhar",
-                "id": 1457742,
-                "shirt_number": "16",
+                "name": "Alexander Whitmore",
+                "id": 696934,
+                "shirt_number": "6",
                 "position_id": 36,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -3056,9 +4209,9 @@
                 }
               },
               {
-                "name": "Tyrell Warren",
-                "id": 1077230,
-                "shirt_number": "23",
+                "name": "Jevon Mills",
+                "id": 1315279,
+                "shirt_number": "5",
                 "position_id": 38,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -3075,9 +4228,9 @@
                 }
               },
               {
-                "name": "Cameron Green",
-                "id": 877630,
-                "shirt_number": "3",
+                "name": "Joe Sbarra",
+                "id": 794462,
+                "shirt_number": "7",
                 "position_id": 72,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -3094,9 +4247,9 @@
                 }
               },
               {
-                "name": "Jamie Andrews",
-                "id": 1135681,
-                "shirt_number": "4",
+                "name": "Scott High",
+                "id": 1117779,
+                "shirt_number": "8",
                 "position_id": 74,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -3113,9 +4266,9 @@
                 }
               },
               {
-                "name": "Joe Sbarra",
-                "id": 794462,
-                "shirt_number": "7",
+                "name": "Jamie Andrews",
+                "id": 1135681,
+                "shirt_number": "4",
                 "position_id": 76,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -3132,9 +4285,9 @@
                 }
               },
               {
-                "name": "Scott High",
-                "id": 1117779,
-                "shirt_number": "8",
+                "name": "Cameron Green",
+                "id": 877630,
+                "shirt_number": "3",
                 "position_id": 78,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -3274,9 +4427,9 @@
                 }
               },
               {
-                "name": "Corey Whelan",
-                "id": 760732,
-                "shirt_number": "17",
+                "name": "Aaron Drewe",
+                "id": 1204534,
+                "shirt_number": "29",
                 "position_id": 34,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -3293,9 +4446,9 @@
                 }
               },
               {
-                "name": "Aaron Drewe",
-                "id": 1204534,
-                "shirt_number": "29",
+                "name": "Corey Whelan",
+                "id": 760732,
+                "shirt_number": "17",
                 "position_id": 36,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -3331,9 +4484,9 @@
                 }
               },
               {
-                "name": "Ethan Mitchell",
-                "id": 1609515,
-                "shirt_number": "4",
+                "name": "Theo Upton",
+                "id": 1825945,
+                "shirt_number": "18",
                 "position_id": 72,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -3369,9 +4522,9 @@
                 }
               },
               {
-                "name": "Theo Upton",
-                "id": 1825945,
-                "shirt_number": "18",
+                "name": "Ethan Mitchell",
+                "id": 1609515,
+                "shirt_number": "4",
                 "position_id": 76,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -3492,7 +4645,7 @@
             ]
           }
         ],
-        "xi_fingerprint": "985ac0320afa6bffbc8a",
+        "xi_fingerprint": "18b964dcef18a7c25c86",
         "xi_name_fingerprint": "23b0660250f9f903849e",
         "raw_keys": [
           "matchId",
@@ -3505,10 +4658,589 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906412,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.4724",
+      "match_event_id": 16069340,
+      "match": "Woking - Southend United",
+      "start_time": "31-08-2026 16:00",
+      "start_utc": "2026-08-31T14:00:00+00:00",
+      "league": "Conference National",
+      "minutes_to_start": 14.6,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-31T13:45:22.202983+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5906414,
+        "home": "Woking",
+        "away": "Southend",
+        "league": "National League",
+        "score": 1.0,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapiLegacyIntegration",
+        "teams": [
+          {
+            "team_id": 8345,
+            "team_name": "Woking",
+            "formation": "3-5-2",
+            "starters": [
+              {
+                "name": "William Jääskeläinen",
+                "id": 872933,
+                "shirt_number": "22",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Timi Odusina",
+                "id": 798655,
+                "shirt_number": "5",
+                "position_id": 33,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.79,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Chinwike Okoli",
+                "id": 1412672,
+                "shirt_number": "4",
+                "position_id": 35,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Shadrach Ogie",
+                "id": 1020552,
+                "shirt_number": "6",
+                "position_id": 37,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.21,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Matthew Ward",
+                "id": 1287058,
+                "shirt_number": "11",
+                "position_id": 71,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.89,
+                  "height": 0.195,
+                  "width": 0.773
+                },
+                "vertical_layout": {
+                  "x": 0.11,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Zico Asare",
+                "id": 982301,
+                "shirt_number": "2",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.695,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.305,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Tim Akinola",
+                "id": 997558,
+                "shirt_number": "23",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Roy Syla",
+                "id": 1075910,
+                "shirt_number": "8",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.305,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.695,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Anthony Georgiou",
+                "id": 862996,
+                "shirt_number": "30",
+                "position_id": 79,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.11,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.89,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Steven Turner",
+                "id": 25281,
+                "shirt_number": "26",
+                "position_id": 104,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.7,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Liam Dulson",
+                "id": 1658261,
+                "shirt_number": "18",
+                "position_id": 106,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.3,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Craig Ross",
+                "id": 359199,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Jaiden Putman",
+                "id": 1798731,
+                "shirt_number": "21"
+              },
+              {
+                "name": "Olatunji Akinola",
+                "id": 660315,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Jake Forster-Caskey",
+                "id": 201692,
+                "shirt_number": "25"
+              },
+              {
+                "name": "Harrison Sohna",
+                "id": 1101137,
+                "shirt_number": "7"
+              },
+              {
+                "name": "Aiden O'Brien",
+                "id": 279485,
+                "shirt_number": "10"
+              },
+              {
+                "name": "Taylan Harris",
+                "id": 1529865,
+                "shirt_number": "20"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "subs",
+              "averageStarterAge"
+            ]
+          },
+          {
+            "team_id": 8652,
+            "team_name": "Southend United",
+            "formation": "4-1-3-2",
+            "starters": [
+              {
+                "name": "Joseph Duncan",
+                "id": null,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Vontae Daley-Campbell",
+                "id": 1096324,
+                "shirt_number": "2",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ben Goodliffe",
+                "id": 784303,
+                "shirt_number": "6",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Rayan Oyebade",
+                "id": 1611564,
+                "shirt_number": "5",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Anthony Hartigan",
+                "id": 865172,
+                "shirt_number": "4",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Daniel Cox",
+                "id": 1311905,
+                "shirt_number": "20",
+                "position_id": 65,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Lewys Twamley",
+                "id": 1187243,
+                "shirt_number": "11",
+                "position_id": 83,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Oliver Coker",
+                "id": 1187295,
+                "shirt_number": "28",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Leon Chambers-Parillon",
+                "id": 1204816,
+                "shirt_number": "19",
+                "position_id": 87,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Harry Cardwell",
+                "id": 678292,
+                "shirt_number": "9",
+                "position_id": 104,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Josh Popoola",
+                "id": null,
+                "shirt_number": "23",
+                "position_id": 106,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Jack Sims",
+                "id": 956181,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Harry Taylor",
+                "id": 606366,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Tommy Backwell",
+                "id": 1575564,
+                "shirt_number": "22"
+              },
+              {
+                "name": "Darren Oldaker",
+                "id": 668421,
+                "shirt_number": "8"
+              },
+              {
+                "name": "Sahid Kamara",
+                "id": 1463325,
+                "shirt_number": "7"
+              },
+              {
+                "name": "Ryan Colclough",
+                "id": 391046,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Charley Kendall",
+                "id": 1201864,
+                "shirt_number": "24"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "subs",
+              "averageStarterAge"
+            ]
+          }
+        ],
+        "xi_fingerprint": "649e22951dcb3880bd05",
+        "xi_name_fingerprint": "d6b18462d95211b61226",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "source_evidence": {
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 5906414,
           "http_status": 200
         },
         "sofascore": {
@@ -3524,7 +5256,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:20:36.309627+00:00",
@@ -4074,7 +5806,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906415,
@@ -4093,13 +5825,13 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 26.9,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T13:33:05.851877+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "570e0957b8b69b99c5b6",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5906416,
@@ -4653,7 +6385,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T13:33:05.851877+00:00",
+        "polled_at": "2026-08-31T13:45:22.202983+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906416,
@@ -4668,12 +6400,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T13:33:05.851877+00:00",
+    "generated_at": "2026-08-31T13:45:22.202983+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 84,
+    "target_count": 89,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -4687,7 +6419,15 @@
     "changes": [
       {
         "match": "Asyut Petroleum - National Bank of Egypt SC",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Boston United FC - Hornchurch",
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4695,7 +6435,7 @@
       },
       {
         "match": "Carlisle - Scunthorpe",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4703,7 +6443,7 @@
       },
       {
         "match": "Eastleigh FC - Aldershot Town FC",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4711,7 +6451,7 @@
       },
       {
         "match": "Forest Green Rovers - Altrincham",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4719,7 +6459,15 @@
       },
       {
         "match": "Harrogate - Gateshead FC",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Kidderminster Harriers FC - Barrow",
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4727,15 +6475,15 @@
       },
       {
         "match": "Solihull Moors FC - AFC Fylde",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
         "xi_changed": true
       },
       {
-        "match": "Worthing - Boreham Wood FC",
-        "minutes_to_start": 26.9,
+        "match": "Woking - Southend United",
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4743,7 +6491,15 @@
       },
       {
         "match": "Yeovil Town - Tamworth",
-        "minutes_to_start": 26.9,
+        "minutes_to_start": 14.6,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Worthing - Boreham Wood FC",
+        "minutes_to_start": 14.6,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -4757,11 +6513,35 @@
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     },
     {
+      "match": "Carlisle - Scunthorpe",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Eastleigh FC - Aldershot Town FC",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Forest Green Rovers - Altrincham",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Harrogate - Gateshead FC",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Solihull Moors FC - AFC Fylde",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
       "match": "Worthing - Boreham Wood FC",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Yeovil Town - Tamworth",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     }
   ],
   "official_tactical_gate": true,
-  "source_match_count": 106,
-  "official_match_count": 8
+  "source_match_count": 108,
+  "official_match_count": 11
 }
