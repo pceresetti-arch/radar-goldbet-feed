@@ -36,6 +36,7 @@ def metrics(records):
     correct = []
     buckets = {}
     confusion = {truth: {pick: 0 for pick in OUTCOMES} for truth in OUTCOMES}
+    class_data = {outcome: {"prob_sum": 0.0, "obs_sum": 0, "sqerr_sum": 0.0, "bins": {}} for outcome in OUTCOMES}
     for row in records:
         y, probs = row["y"], row["probs"]
         brier.append(sum((p - (1.0 if k == y else 0.0)) ** 2 for k, p in enumerate(probs)))
@@ -43,6 +44,19 @@ def metrics(records):
         pick = max(range(3), key=lambda k: probs[k])
         correct.append(int(pick == y))
         confusion[OUTCOMES[y]][OUTCOMES[pick]] += 1
+        for k, outcome in enumerate(OUTCOMES):
+            observed = int(k == y)
+            p = probs[k]
+            d = class_data[outcome]
+            d["prob_sum"] += p
+            d["obs_sum"] += observed
+            d["sqerr_sum"] += (p - observed) ** 2
+            lo_class = math.floor(p * 10) / 10
+            key_class = f"{lo_class:.1f}-{min(1.0, lo_class + 0.1):.1f}"
+            cb = d["bins"].setdefault(key_class, {"n": 0, "prob_sum": 0.0, "events": 0})
+            cb["n"] += 1
+            cb["prob_sum"] += p
+            cb["events"] += observed
         confidence = probs[pick]
         lo = math.floor(confidence * 10) / 10
         key = f"{lo:.1f}-{min(1.0, lo + 0.1):.1f}"
@@ -57,6 +71,26 @@ def metrics(records):
         hit_rate = b["hits"] / b["n"]
         ece += (b["n"] / n) * abs(hit_rate - mean_conf)
         calibration[key] = {"n": b["n"], "mean_confidence": mean_conf, "hit_rate": hit_rate}
+    classwise = {}
+    for outcome, d in class_data.items():
+        reliability = {}
+        class_ece = 0.0
+        for key, b in sorted(d["bins"].items()):
+            mean_p = b["prob_sum"] / b["n"]
+            event_rate = b["events"] / b["n"]
+            class_ece += (b["n"] / n) * abs(event_rate - mean_p)
+            reliability[key] = {"n": b["n"], "mean_probability": mean_p, "event_rate": event_rate}
+        observed_rate = d["obs_sum"] / n
+        mean_probability = d["prob_sum"] / n
+        classwise[outcome] = {
+            "observed_rate": observed_rate,
+            "mean_probability": mean_probability,
+            "mean_probability_minus_observed": mean_probability - observed_rate,
+            "one_vs_rest_brier": d["sqerr_sum"] / n,
+            "ece_0_1_bins": class_ece,
+            "reliability": reliability
+        }
+    argmax_counts = {outcome: sum(confusion[truth][outcome] for truth in OUTCOMES) for outcome in OUTCOMES}
     return {
         "n": n,
         "multiclass_brier_sum_mean": sum(brier) / n,
@@ -64,7 +98,10 @@ def metrics(records):
         "top_pick_accuracy": sum(correct) / n,
         "top_pick_ece_0_1_bins": ece,
         "top_pick_calibration": calibration,
-        "confusion_truth_by_pick": confusion
+        "confusion_truth_by_pick": confusion,
+        "argmax_pick_counts": argmax_counts,
+        "argmax_never_selected_classes": [outcome for outcome, count in argmax_counts.items() if count == 0],
+        "classwise_probability_calibration": classwise
     }
 
 def loss_vectors(records):
