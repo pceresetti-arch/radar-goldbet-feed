@@ -1,0 +1,182 @@
+{
+  "schema_version": "radar-primeira-eredivisie-recovery-v1",
+  "generated_at": "2026-08-31T15:48:38Z",
+  "status": "RECOVERED_AGGREGATE_AND_METHOD_EVIDENCE_RAW_V1_47_ROWS_MISSING",
+  "recovered_from": {
+    "package_families": [
+      "Backtest_Master_Radar_v1_105_0",
+      "Backtest_Master_Radar_v1_106_0",
+      "Backtest_Master_Radar_v1_107_0",
+      "Backtest_Master_Radar_v1_108_0",
+      "Backtest_Master_Radar_v1_109_0",
+      "Backtest_Master_Radar_v1_110_0"
+    ],
+    "register": "BACKTEST_MASTER_REGISTER.md sections v1.47.0, v1.77.0 and v1.84.0",
+    "synthesis_result": "results/primeira_eredivisie_two_holdout_roi_synthesis_v1_77_0.json",
+    "synthesis_code": "primeira_eredivisie_two_holdout_roi_synthesis_v1_77_0.py",
+    "precision_result": "results/primeira_eredivisie_roi_precision_budget_v1_84_0.json"
+  },
+  "integrity": {
+    "identical_synthesis_json_copies": 5,
+    "synthesis_json_sha256": "17a6ab21ab2636072b011e294a3bc3b59cf2e8dfda51e90d9002b9926774f5a4",
+    "identical_synthesis_code_copies": 5,
+    "synthesis_code_sha256": "2f125e0771b952a9313b6b0700c74a888fbcb836bdcf245b353097252b1fbef2",
+    "note": "The repeated package copies are byte-identical. They establish preservation of the published aggregate, not independent statistical replication."
+  },
+  "sample": {
+    "leagues": [
+      "Primeira Liga",
+      "Eredivisie"
+    ],
+    "holdouts": [
+      {
+        "season": "2024/25",
+        "fixtures": 612
+      },
+      {
+        "season": "2025/26",
+        "fixtures": 612
+      }
+    ],
+    "total_fixture_equivalent": 1224
+  },
+  "provenance": {
+    "source_class": "EXTERNAL_CROSS_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC",
+    "signal_bookmaker": "Bet365",
+    "confirmation": "de-vigged market average increase >= 0.5 percentage points",
+    "signal_thresholds_pp": [
+      1,
+      2,
+      3
+    ],
+    "markets": [
+      "1X2",
+      "OU_2_5"
+    ],
+    "selection_time": "CLOSE",
+    "early_price_status": "OBSERVED_EARLY_PRICE_NOT_GOLDBET_TRUE_OPEN",
+    "close_status": "PUBLISHED_AGGREGATE_CLOSE_SEMANTICS_RAW_TIMESTAMPS_NOT_RECOVERED",
+    "goldbet_true_open": false,
+    "pinnacle_used": false
+  },
+  "published_cells": [
+    {
+      "market": "1X2",
+      "threshold_pp": 1,
+      "roi_early_2024_25": 0.0726,
+      "roi_early_2025_26": -0.0379,
+      "clv_2024_25": 0.1135,
+      "clv_2025_26": 0.1087,
+      "roi_close_2024_25": -0.0391,
+      "roi_close_2025_26": -0.1282
+    },
+    {
+      "market": "1X2",
+      "threshold_pp": 2,
+      "roi_early_2024_25": 0.0875,
+      "roi_early_2025_26": 0.0067,
+      "clv_2024_25": 0.1366,
+      "clv_2025_26": 0.1316,
+      "roi_close_2024_25": -0.0487,
+      "roi_close_2025_26": -0.1039
+    },
+    {
+      "market": "1X2",
+      "threshold_pp": 3,
+      "roi_early_2024_25": 0.1276,
+      "roi_early_2025_26": 0.002,
+      "clv_2024_25": 0.1531,
+      "clv_2025_26": 0.1522,
+      "roi_close_2024_25": -0.0221,
+      "roi_close_2025_26": -0.1188
+    },
+    {
+      "market": "OU_2_5",
+      "threshold_pp": 1,
+      "roi_early_2024_25": -0.0193,
+      "roi_early_2025_26": 0.0514,
+      "clv_2024_25": 0.0679,
+      "clv_2025_26": 0.0664,
+      "roi_close_2024_25": -0.0831,
+      "roi_close_2025_26": -0.0132
+    },
+    {
+      "market": "OU_2_5",
+      "threshold_pp": 2,
+      "roi_early_2024_25": 0.0331,
+      "roi_early_2025_26": 0.0642,
+      "clv_2024_25": 0.0835,
+      "clv_2025_26": 0.0808,
+      "roi_close_2024_25": -0.0469,
+      "roi_close_2025_26": -0.0142
+    },
+    {
+      "market": "OU_2_5",
+      "threshold_pp": 3,
+      "roi_early_2024_25": 0.0473,
+      "roi_early_2025_26": 0.092,
+      "clv_2024_25": 0.1,
+      "clv_2025_26": 0.1002,
+      "roi_close_2024_25": -0.0485,
+      "roi_close_2025_26": -0.0058
+    }
+  ],
+  "pooled_roi": {
+    "1X2_1pp": {
+      "estimate": 0.0161883,
+      "ci95": [
+        -0.0762683,
+        0.1086449
+      ]
+    },
+    "1X2_2pp": {
+      "estimate": 0.0449366,
+      "ci95": [
+        -0.0657831,
+        0.1556563
+      ]
+    },
+    "1X2_3pp": {
+      "estimate": 0.0597898,
+      "ci95": [
+        -0.0629172,
+        0.1824967
+      ]
+    },
+    "OU_2_5_1pp": {
+      "estimate": 0.0148349,
+      "ci95": [
+        -0.0519747,
+        0.0816446
+      ]
+    },
+    "OU_2_5_2pp": {
+      "estimate": 0.0483582,
+      "ci95": [
+        -0.0307566,
+        0.127473
+      ]
+    },
+    "OU_2_5_3pp": {
+      "estimate": 0.0686835,
+      "ci95": [
+        -0.0309486,
+        0.1683156
+      ]
+    }
+  },
+  "correction": {
+    "previous_statement": "+13.6% CLV and +9.2% ROI were presented as one 1X2 >=2pp result.",
+    "corrected_statement": "+13.66% CLV belongs to 1X2 >=2pp in 2024/25; +9.20% early ROI belongs to OU 2.5 >=3pp in 2025/26. The 1X2 >=2pp early ROI was +8.75% in 2024/25 and +0.67% in 2025/26.",
+    "material": true
+  },
+  "limitations": [
+    "The v1.47 row-level input dataset and its raw OPEN/CLOSE timestamps were not recovered.",
+    "The v1.77 synthesis code consumes published rounded bootstrap intervals rather than match-level rows.",
+    "Selection requires later CLOSE movement, so early-price ROI is hindsight-diagnostic and not an executable OPEN or T-30 rule.",
+    "Thresholds are nested and league results are heterogeneous.",
+    "No cell has a robust positive interval across both intact holdouts; Holm-adjusted promotion remains rejected."
+  ],
+  "decision": "PRESERVE_AS_REPRODUCIBLE_AGGREGATE_DIAGNOSTIC; DO_NOT_CLASSIFY_AS_GOLDBET_TRUE_OPEN; DO_NOT_PROMOTE_THRESHOLD_OR_STAKE",
+  "next_required_artifact": "Recover v1.47 match-level inputs/code with bookmaker fields and raw timestamps, then re-run from rows and bind hashes."
+}
