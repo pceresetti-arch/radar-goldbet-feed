@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T14:51:51.410691+00:00",
+  "generated_at": "2026-08-31T15:04:34.209616+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 42,
+  "target_count": 57,
   "status_counts": {
     "SOURCE_CONFIRMED": 1,
-    "NOT_AVAILABLE": 32,
-    "REFERENCE_PREVIOUS_XI": 9
+    "NOT_AVAILABLE": 41,
+    "REFERENCE_PREVIOUS_XI": 15
   },
   "schedule_stats": [
     {
@@ -30,7 +30,7 @@
       "start_time": "31-08-2026 17:00",
       "start_utc": "2026-08-31T15:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 8.1,
+      "minutes_to_start": -4.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T14:23:38.220899+00:00",
@@ -64,7 +64,7 @@
                 "id": 644819,
                 "shirt_number": "94",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -352,7 +352,7 @@
                 "id": 1711275,
                 "shirt_number": "71",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -627,7 +627,6 @@
           }
         ],
         "xi_fingerprint": "bcef1aab645d69bf0ae4",
-        "xi_name_fingerprint": "4ba2c40e7e2e4f41e390",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -637,29 +636,17 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-08-31T14:51:51.410691+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5909137,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     }
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T14:51:51.410691+00:00",
+    "generated_at": "2026-08-31T15:04:34.209616+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 38,
+    "target_count": 31,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -672,13 +659,7 @@
     },
     "changes": []
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Bukovyna Chernivtsi - Dynamo Kiev",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "official_tactical_gate": true,
-  "source_match_count": 42,
+  "source_match_count": 57,
   "official_match_count": 1
 }
