@@ -1,0 +1,128 @@
+{
+  "schema_version": "radar-primeira-eredivisie-row-recovery-v2",
+  "generated_at": "2026-08-31T19:30:37Z",
+  "status": "1X2_ROW_LEVEL_RECOVERED_AND_REPLICATED_OU_REMAINS_AGGREGATE_ONLY",
+  "source_artifact": {
+    "name": "results/diagnostic_signals_v1_5_0.csv.gz",
+    "copies_checked": 5,
+    "compressed_bytes": 5423104,
+    "sha256": "cd7eaa423fa34ddaf35781ef59892848cb5d0e3abc78b1bca244a5f7893a2b58",
+    "gzip_eof": false,
+    "classification": "CORRUPT_TRUNCATED_CONTAINER_WITH_VERIFIED_COMPLETE_PREFIX",
+    "note": "All five archived copies terminate at the same byte and fail gzip EOF validation. The complete CSV prefix is readable; the target 1X2 block precedes the truncation, while O/U does not."
+  },
+  "recovered_subset": {
+    "leagues": [
+      "Primeira Liga",
+      "Eredivisie"
+    ],
+    "league_codes": [
+      "P1",
+      "N1"
+    ],
+    "seasons": [
+      "2425",
+      "2526"
+    ],
+    "market": "1X2",
+    "selection_rows": 3672,
+    "unique_matches": 1224,
+    "matches_per_season": 612,
+    "rows_per_season": 1836,
+    "expected_selections_per_match": 3,
+    "selection_sets_valid": true,
+    "three_rows_per_match": true,
+    "missing_required_cells": 0,
+    "canonical_csv_sha256": "774c93e87cabdd0170ab4d89def1a50adf41656e399aa3d86b7f9f5c223fbdd4"
+  },
+  "frozen_rule": {
+    "signal_bookmaker": "Bet365",
+    "price_pair": "early pre-closing snapshot to CLOSE",
+    "probability_move": "Bet365 de-vigged increase",
+    "thresholds_pp": [
+      1,
+      2,
+      3
+    ],
+    "confirmation": "de-vigged market-average increase >=0.5pp",
+    "selection_uses_close": true,
+    "executable_open_rule": false,
+    "goldbet_true_open": false
+  },
+  "replication": [
+    {
+      "season": "2425",
+      "threshold_pp": 1,
+      "n": 544,
+      "matches": 445,
+      "roi_early": 0.07262867647058824,
+      "clv_ratio": 0.11354807880974228,
+      "roi_close": -0.0390625
+    },
+    {
+      "season": "2425",
+      "threshold_pp": 2,
+      "n": 363,
+      "matches": 326,
+      "roi_early": 0.0874931129476584,
+      "clv_ratio": 0.13655929638522285,
+      "roi_close": -0.04870523415977961
+    },
+    {
+      "season": "2425",
+      "threshold_pp": 3,
+      "n": 215,
+      "matches": 205,
+      "roi_early": 0.12758139534883722,
+      "clv_ratio": 0.15310088732262675,
+      "roi_close": -0.022139534883720956
+    },
+    {
+      "season": "2526",
+      "threshold_pp": 1,
+      "n": 510,
+      "matches": 437,
+      "roi_early": -0.037941176470588235,
+      "clv_ratio": 0.10872859902744979,
+      "roi_close": -0.1281764705882353
+    },
+    {
+      "season": "2526",
+      "threshold_pp": 2,
+      "n": 333,
+      "matches": 310,
+      "roi_early": 0.006726726726726722,
+      "clv_ratio": 0.1316359136281814,
+      "roi_close": -0.10387387387387388
+    },
+    {
+      "season": "2526",
+      "threshold_pp": 3,
+      "n": 226,
+      "matches": 218,
+      "roi_early": 0.002035398230088507,
+      "clv_ratio": 0.15219801578113482,
+      "roi_close": -0.11884955752212391
+    }
+  ],
+  "replication_assessment": {
+    "point_estimates": "MATCH_PUBLISHED_V1_47_VALUES_AT_REPORTED_PRECISION",
+    "bootstrap_intervals": "RECOMPUTED_INTERVALS_ARE_CLOSE_BUT_NOT_BYTE_IDENTICAL_TO_PUBLISHED_INTERVALS",
+    "likely_reason": "The preserved v1.77 synthesis stores rounded published intervals, while the exact v1.47 bootstrap implementation/state is not present.",
+    "threshold_promotion": false
+  },
+  "incomplete_market": {
+    "market": "OU_2_5",
+    "row_level_recovery": false,
+    "reason": "The gzip truncation occurs during earlier O/U rows before the target seasons; no complete P1/N1 2425/2526 O/U block exists in the readable prefix.",
+    "retained_evidence": "feed/historical/open-close/primeira-eredivisie-recovered-v1.json"
+  },
+  "decision": "UPGRADE_1X2_TO_ROW_LEVEL_REPLICATED_DIAGNOSTIC; KEEP_OU_AGGREGATE_ONLY; NO_OPERATIONAL_PROMOTION",
+  "limitations": [
+    "The containing gzip is corrupt and must remain quarantined even though the target 1X2 prefix passes completeness gates.",
+    "Original Football-Data source CSV files and raw bookmaker timestamps are not bundled.",
+    "Early is explicitly a pre-closing snapshot, not TRUE OPEN.",
+    "Selection depends on CLOSE; early ROI is hindsight-diagnostic.",
+    "No 1X2 threshold replicates profitable ROI across the two holdouts and ROI at CLOSE is negative in all six cells."
+  ]
+}
