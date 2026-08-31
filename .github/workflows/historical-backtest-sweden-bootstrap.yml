@@ -2,6 +2,10 @@ name: Historical Backtest Sweden Bootstrap
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-backtest-sweden-bootstrap.yml'
+      - 'tools/historical_ingest_sweden.py'
 
 permissions:
   contents: write
