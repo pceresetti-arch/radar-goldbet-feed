@@ -1,0 +1,147 @@
+{
+  "schema_version": "radar-historical-backtest-ledger-v1",
+  "generated_at": "2026-08-31T08:28:18+00:00",
+  "local_timezone": "Europe/Rome",
+  "status": "INITIAL_INVENTORY_COMPLETE_DATASET_NOT_YET_ELIGIBLE",
+  "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
+  "anti_hindsight_controls": {
+    "use_post_kickoff_information_for_feature_construction": false,
+    "reconstruct_missing_prices": false,
+    "reconstruct_missing_lineups_or_timestamps": false,
+    "same_bookmaker_primary_signal": true,
+    "temporal_split_required": true,
+    "freeze_before_holdout": true
+  },
+  "source_of_truth": {
+    "master": {
+      "path": "RADAR_UNICO_MASTER.md",
+      "sha": "8983c056b389bf227849b3a120039a8a4f18b3d9"
+    },
+    "project_state": {
+      "path": "feed/radar-project-state.json",
+      "sha": "c918a8cd9b297ded0b97572a5cc52ef7a998fef3"
+    },
+    "mms_rule": {
+      "path": "RADAR_MMS_PRIMARY_RULE.md",
+      "sha": "3bd7e1f39ea9d63ad080e606e074e8a8589c86fe"
+    },
+    "movement_contract": {
+      "path": "RADAR_ODDS_MOVEMENT_CONTRACT.md",
+      "sha": "9cf9f9a31a8b40f8b862af01f7cc2d0c374994b0"
+    },
+    "market_confirmation_contract": {
+      "path": "RADAR_MARKET_CONFIRMATION_MODEL.md",
+      "sha": "e2b0ff8aaee0a2e8274af5d4897acbae48d6d223"
+    }
+  },
+  "historical_perimeter": {
+    "priority_order": [
+      "Sweden",
+      "Norway",
+      "other Radar leagues with sufficient verified coverage"
+    ],
+    "requested_historical_seasons": 4,
+    "season_labels": null,
+    "season_label_status": "NOT_PRESENT_IN_CURRENT_REPOSITORY_DO_NOT_INFER",
+    "required_split": "chronological development then frozen temporal holdout"
+  },
+  "repository_inventory": {
+    "eligible_multi_season_fixture_results_rows": 0,
+    "eligible_multi_season_same_book_open_close_rows": 0,
+    "eligible_multi_season_intermediate_or_t30_rows": 0,
+    "eligible_multi_season_pre_match_xi_rows": 0,
+    "eligible_multi_season_player_prop_rows": 0,
+    "note": "No repository file currently provides a joinable Sweden/Norway multi-season table with fixture identity, kickoff, pre-match features, outcomes and comparable same-book prices."
+  },
+  "excluded_or_quarantined_sources": [
+    {
+      "path": "feed/radar-mms-primary-signals.json",
+      "sha": "f8bc9ebbbf06b60a9bdb405fd93e2f0802d4b409",
+      "generated_at": "2026-08-29T22:51:11.654016+00:00",
+      "observed_signal_count": 276,
+      "sweden_norway_signal_count": 1,
+      "sweden_norway_detail": "Allsvenskan: Halmstads - Kalmar FF, 1X2 ACTIVE_DROP, TRUE OPEN 3.65 to current 3.35.",
+      "status": "PROSPECTIVE_2026_NOT_HISTORICAL_BACKTEST_ELIGIBLE",
+      "reason": "Recent prospective snapshot; no multi-season coverage and no authoritative outcome/close join in the file."
+    },
+    {
+      "path": "feed/oddspapi-malmo-historical-player-proof.json",
+      "sha": "c09340589570906570963292ca07fa8d4e3c5722",
+      "generated_at": "2026-08-24T18:11:00.620726+00:00",
+      "fixture_count": 1,
+      "market_count": 35,
+      "nonzero_player_entries": 0,
+      "status": "DIAGNOSTIC_ONLY",
+      "reason": "Single fixture proof; no scorer markets, no nonzero player identities and insufficient sample for player-prop backtesting."
+    },
+    {
+      "path": "feed/backtest-master-audit-latest.json",
+      "sha": "44d6bfed3556e32af5a42f0236db668a857e752e",
+      "generated_at": "2026-08-26T21:34:07+00:00",
+      "status": "TECHNICAL_AUDIT_ONLY",
+      "reason": "Documents missing outcome joins and absent de-vigged development/holdout data; it is not a multi-season historical dataset."
+    }
+  ],
+  "work_completed_this_cycle": [
+    "Enumerated the complete repository tree and searched for historical, season, league, Elo, OOS, holdout, results and OPEN/CLOSE assets.",
+    "Classified recent 2026 movement feeds as prospective snapshots rather than historical evidence.",
+    "Confirmed that the Malmo historical proof cannot support player-prop inference.",
+    "Created the persistent historical ledger so subsequent cycles resume from a verified boundary instead of restarting."
+  ],
+  "metrics": {
+    "brier": "NOT_CALCULABLE",
+    "log_loss": "NOT_CALCULABLE",
+    "calibration": "NOT_CALCULABLE",
+    "clv": "NOT_CALCULABLE",
+    "roi_yield": "NOT_CALCULABLE",
+    "drawdown": "NOT_CALCULABLE",
+    "reason": "No eligible joined multi-season sample exists in the current repository."
+  },
+  "next_increment": {
+    "priority": "Acquire and persist a source manifest for Sweden first, then Norway.",
+    "minimum_required_fields": [
+      "competition",
+      "season",
+      "fixture_id",
+      "kickoff_utc",
+      "home_team",
+      "away_team",
+      "home_score",
+      "away_score",
+      "result_source",
+      "result_observed_after_kickoff",
+      "bookmaker",
+      "market",
+      "line",
+      "selection",
+      "open_price",
+      "open_timestamp",
+      "close_price",
+      "close_timestamp",
+      "price_source",
+      "source_reliability"
+    ],
+    "optional_only_when_verified": [
+      "intermediate_price",
+      "intermediate_timestamp",
+      "t30_price",
+      "t30_timestamp",
+      "official_xi",
+      "xi_published_at",
+      "xi_fingerprint",
+      "predicted_role",
+      "player_market",
+      "player_selection",
+      "player_price",
+      "player_price_timestamp"
+    ],
+    "acceptance_gate": "Do not construct model features until fixture identity, kickoff, outcome and price timestamps can be joined without ambiguity.",
+    "first_model_block_after_acceptance": "Pre-match structural baseline plus same-book OPEN to CLOSE movement; development/holdout split frozen before evaluation."
+  },
+  "rule_decisions": {
+    "promoted_rules": [],
+    "rejected_rules": [],
+    "operational_changes": [],
+    "note": "No threshold or model change is justified from this inventory."
+  }
+}
