@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v5",
-  "generated_at": "2026-08-31T11:33:03.700Z",
+  "schema_version": "radar-historical-backtest-ledger-v6",
+  "generated_at": "2026-08-31T13:18:15.087Z",
   "local_timezone": "Europe/Rome",
-  "status": "SWEDEN_NORWAY_STRUCTURAL_OOS_COMPLETED_MARKET_BENCHMARK_DOMINATES_NORWAY",
+  "status": "SWEDEN_NORWAY_POOLED_OOS_COMPLETED_RESEARCH_ELO_BASELINE_RETAINED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -67,7 +67,9 @@
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
     "total_external_market_close_benchmark_rows": 1920,
-    "total_structural_oos_holdout_rows": 480
+    "total_structural_oos_holdout_rows": 480,
+    "pooled_sweden_norway_holdout_rows": 480,
+    "cross_league_classwise_calibration_rows": 480
   },
   "quarantined_evidence": [
     {
@@ -116,7 +118,14 @@
     "Excluded six genuine promotion/relegation playoff fixtures, yielding 960 regular Eliteserien rows.",
     "Replicated the Sweden v1 feature specification and fixed hyperparameters on Norway: 2022-2024 development (720), untouched 2025 holdout (240).",
     "Norway structural variants beat the development-prior baseline, while external de-vigged closing odds significantly beat all structural variants.",
-    "Across Sweden and Norway, no reliable incremental OOS benefit from the full form/venue/opponent-quality bundle beyond Elo was established."
+    "Across Sweden and Norway, no reliable incremental OOS benefit from the full form/venue/opponent-quality bundle beyond Elo was established.",
+    "Completed frozen pooled Sweden-Norway comparison on 480 untouched 2025 holdout fixtures with no holdout retuning.",
+    "Confirmed pooled ELO_ONLY improvement over development priors: Brier gain 0.05956 and log-loss gain 0.08185; stratified paired 95% intervals exclude zero.",
+    "Confirmed pooled external closing-market superiority over ELO_ONLY and ELO_PLUS_FORM; paired Brier/log-loss intervals exclude zero.",
+    "Confirmed no reliable pooled increment from form or the full structural bundle beyond Elo.",
+    "Measured significant market-benchmark predictability drift: external closing loss is higher in Sweden than Norway; 95% independent-bootstrap intervals exclude zero for Brier and log-loss.",
+    "Audited draw probabilities: no system top-picks D, but ELO_ONLY mean draw probability 21.65% closely matches the 20.63% observed rate.",
+    "Hardened the cross-league publisher so generated evidence is rebased and committed quickly instead of rerunning the expensive bootstrap during every push race."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -279,6 +288,116 @@
         },
         "limitation": "Paired match bootstrap remains diagnostic; closing is an external near-kickoff benchmark, not a GoldBet TRUE OPEN signal or executable historical strategy."
       }
+    },
+    "cross_league_sweden_norway_oos_2025": {
+      "report": "feed/historical/cross-league/sweden-norway-oos-comparison-v1.json",
+      "sample": {
+        "leagues": 2,
+        "holdout_per_league": 240,
+        "pooled": 480
+      },
+      "pooled": {
+        "development_prior": {
+          "brier": 0.6388155864197531,
+          "log_loss": 1.0549348148649083,
+          "accuracy": 0.44375
+        },
+        "elo_only": {
+          "brier": 0.5792575693767251,
+          "log_loss": 0.9730885668071122,
+          "accuracy": 0.5375,
+          "top_pick_ece": 0.03363528030868359
+        },
+        "elo_plus_form": {
+          "brier": 0.5782015764713627,
+          "log_loss": 0.9713837633782118,
+          "accuracy": 0.5458333333333333,
+          "top_pick_ece": 0.027098451391180594
+        },
+        "full_structural": {
+          "brier": 0.5804894768064887,
+          "log_loss": 0.9754431364636656,
+          "accuracy": 0.5416666666666666,
+          "top_pick_ece": 0.05132216112845
+        },
+        "external_market_close": {
+          "brier": 0.5609213302214283,
+          "log_loss": 0.9493136986361446,
+          "accuracy": 0.5729166666666666,
+          "top_pick_ece": 0.05179336893248401
+        }
+      },
+      "paired_decisions": {
+        "elo_vs_prior": {
+          "brier_gain": 0.059558017043027996,
+          "brier_ci95": [
+            0.038770140647542146,
+            0.08026874702575783
+          ],
+          "log_loss_gain": 0.0818462480577961,
+          "log_loss_ci95": [
+            0.05323480712714302,
+            0.10976372405269616
+          ]
+        },
+        "form_vs_elo": {
+          "brier_gain": 0.001055992905362469,
+          "brier_ci95": [
+            -0.0029929915200886227,
+            0.005010365560084549
+          ],
+          "log_loss_gain": 0.001704803428900436,
+          "log_loss_ci95": [
+            -0.004099980633920865,
+            0.007356866705828544
+          ]
+        },
+        "full_vs_elo": {
+          "brier_gain": -0.001231907429763438,
+          "brier_ci95": [
+            -0.006488071475131905,
+            0.004082014709949646
+          ],
+          "log_loss_gain": -0.0023545696565533706,
+          "log_loss_ci95": [
+            -0.010380947368402605,
+            0.005660190953725061
+          ]
+        },
+        "market_vs_elo": {
+          "brier_gain": 0.018336239155296762,
+          "brier_ci95": [
+            0.0057832592628503975,
+            0.030603501330527545
+          ],
+          "log_loss_gain": 0.023774868170967727,
+          "log_loss_ci95": [
+            0.00531665093394017,
+            0.04174194285646536
+          ]
+        }
+      },
+      "draw_diagnostic": {
+        "observed_rate": 0.20625,
+        "elo_only_mean_probability": 0.21654584453444795,
+        "elo_plus_form_mean_probability": 0.2173765541669634,
+        "external_market_mean_probability": 0.24095001498952245,
+        "argmax_draw_picks_all_systems": 0,
+        "interpretation": "Draw probability level is broadly calibrated for Elo variants; zero argmax selections do not imply zero draw probability. Accuracy must not substitute probabilistic calibration."
+      },
+      "league_drift": {
+        "external_market_sweden_minus_norway_brier": 0.059880006364356864,
+        "brier_ci95": [
+          0.005226690908298304,
+          0.11463148109332466
+        ],
+        "external_market_sweden_minus_norway_log_loss": 0.08468744520110139,
+        "log_loss_ci95": [
+          0.0074230230089925575,
+          0.1615473694051115
+        ],
+        "interpretation": "The 2025 Sweden market benchmark is materially harder/less predictable than Norway; no causal league explanation is claimed."
+      }
     }
   },
   "ablation_plan": {
@@ -296,17 +415,21 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Freeze Sweden and Norway v1; build a pooled cross-league error/drift comparison without retuning either holdout.",
-    "market_lane": "Quantify calibration drift by league and confidence band; retain closing odds as external benchmark only.",
-    "expansion_lane": "After the frozen cross-league comparison, acquire the next Radar league with comparable four-season coverage.",
+    "priority": "Acquire and profile Denmark as the next comparable four-season Radar league, preserving Sweden/Norway v1 specifications and identity gates.",
+    "cross_league_lane": "Keep Sweden/Norway holdouts frozen; no further parameter or confidence-threshold tuning.",
+    "market_lane": "Retain external closing odds as a benchmark only and segment results by league.",
     "mms_lane": "GoldBet historical TRUE OPEN remains unavailable; no OPEN-to-CLOSE or threshold test is authorized."
   },
   "rule_decisions": {
-    "promoted_rules": [],
+    "promoted_rules": [
+      "RESEARCH_ONLY: retain ELO_ONLY as the structural historical benchmark for subsequent leagues; it improves naive priors on Sweden, Norway and the pooled frozen holdout. This is not an operational betting rule."
+    ],
     "rejected_rules": [
       "Sweden v1: reject the claim that prior-five form, goal balance, venue PPG and opponent-quality features add a reliable OOS gain beyond Elo; paired 2025 intervals include zero.",
       "Cross-league Sweden+Norway v1: reject promotion of the full prior-five form/goal-balance/venue/opponent-quality bundle beyond Elo; neither 2025 holdout provides a reliable paired improvement.",
-      "Norway v1: reject any claim that a structure-only 1X2 model matches the information in the external closing market; the closing benchmark has significantly lower Brier and log-loss."
+      "Norway v1: reject any claim that a structure-only 1X2 model matches the information in the external closing market; the closing benchmark has significantly lower Brier and log-loss.",
+      "Pooled Sweden+Norway: reject promotion of prior-five form as an incremental module beyond Elo; paired intervals include zero.",
+      "Pooled Sweden+Norway: reject the full structural bundle as an improvement over Elo; point estimates are worse and paired intervals include zero."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -317,8 +440,11 @@
       "External average closing odds accepted only as de-vigged market benchmark.",
       "Paired match-bootstrap uncertainty added as a diagnostic after the frozen one-shot holdout evaluation; model and hyperparameters were not changed.",
       "Team identity canonicalization is now an eligibility gate: league-season team counts and schedules must be reconciled before any OOS metric is accepted.",
-      "Superseded OOS reports caused by identity errors must remain explicitly quarantined rather than silently overwritten."
+      "Superseded OOS reports caused by identity errors must remain explicitly quarantined rather than silently overwritten.",
+      "Classwise probability calibration is mandatory when an outcome is never the argmax; top-pick accuracy alone cannot diagnose probabilistic failure.",
+      "League-specific drift must be reported before pooling closing-market benchmarks.",
+      "Expensive historical evidence generation is separated from fast race-safe publication to avoid interference from operational feed commits."
     ],
-    "note": "No operational betting rule is promoted. External closing dominance is a benchmark finding, not a tradable GoldBet edge."
+    "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
 }
