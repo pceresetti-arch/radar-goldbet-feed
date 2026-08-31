@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v13",
-  "generated_at": "2026-08-31T22:40:19.530Z",
+  "schema_version": "radar-historical-source-manifest-v14",
+  "generated_at": "2026-08-31T23:40:37.332Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_TRUE_OPEN_OBSERVED_CURRENT_JOINABILITY_AUDITED",
+  "status": "GOLDBET_EXACT_OUTCOME_T30_PILOT_COMPLETE",
   "priority": [
     "Sweden",
     "Norway",
@@ -336,6 +336,39 @@
         "Signal selection uses CLOSE, so early ROI is hindsight-diagnostic.",
         "All bootstrap ROI intervals include zero; no threshold is promoted."
       ]
+    },
+    {
+      "name": "GoldBet movement-state exact outcome T-30 pilot",
+      "path": "feed/historical/open-close/goldbet-t30-outcome-pilot-v1.json",
+      "source_class": "GOLDBET_SAME_BOOK_TRUE_OPEN_TO_T30_EXACT_ID_PILOT",
+      "status": "ACCEPTED_DIAGNOSTIC_ONLY_SAMPLE_INSUFFICIENT",
+      "bookmaker": "GoldBet",
+      "bookmaker_id": 188,
+      "events_in_movement_state": 5,
+      "exact_outcome_events": 5,
+      "events_with_t30": 3,
+      "t30_selection_rows": 43,
+      "t30_quality": {
+        "GOOD": 13,
+        "FALLBACK": 30
+      },
+      "role": [
+        "EXACT_FLASHSCORE_EVENT_ID_OUTCOME_JOIN",
+        "TRUE_OPEN_TO_T30_DIAGNOSTIC",
+        "OUTCOME_RESOLVER_PROOF"
+      ],
+      "forbidden_role": [
+        "CERTIFIED_CLOSE",
+        "MULTI_SEASON_OOS",
+        "THRESHOLD_PROMOTION",
+        "INDEPENDENT_SELECTION_ROW_INFERENCE"
+      ],
+      "quality_notes": [
+        "Pre-match prices are frozen before final outcomes are attached.",
+        "No post-kickoff snapshot is used.",
+        "Two fixtures use T-30 checkpoints classified FALLBACK and one uses GOOD; quality is never collapsed.",
+        "Only two fixtures generate >=1pp shortening signals and multiple rows are correlated markets/lines."
+      ]
     }
   ],
   "required_blocks": {
@@ -401,7 +434,7 @@
         "close_timestamp",
         "price_source"
       ],
-      "note": "GoldBet has 642 exact TRUE OPEN events and 9,188 exact observed-current rows, all observed before kickoff. The observations are not certified final closes; median lead time is 958.76 minutes. The 608 primary drops >=0.20 remain diagnostic."
+      "note": "GoldBet has 642 exact TRUE OPEN events and 9,188 exact observed-current rows, all before kickoff. A five-event movement-state pilot now proves exact-ID outcome joins and three-event T-30 coverage, but no observation is certified as final CLOSE."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_3912_ROWS",
@@ -409,8 +442,15 @@
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK"
     },
     "intermediate_t30": {
-      "status": "OPTIONAL_UNTIL_REAL_SNAPSHOTS_EXIST",
-      "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
+      "status": "PARTIAL_EXACT_PILOT_3_EVENTS_43_ROWS_NOT_MULTI_SEASON",
+      "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps. Preserve checkpoint distance and GOOD/FALLBACK quality.",
+      "report": "feed/historical/open-close/goldbet-t30-outcome-pilot-v1.json",
+      "coverage": {
+        "events": 3,
+        "selection_rows": 43,
+        "good_rows": 13,
+        "fallback_rows": 30
+      }
     },
     "pre_match_structural": {
       "status": "FOUR_LEAGUE_OOS_COMPLETE_978_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
