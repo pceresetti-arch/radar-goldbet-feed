@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v11",
-  "generated_at": "2026-08-31T20:41:54.824874+00:00",
+  "schema_version": "radar-historical-backtest-ledger-v12",
+  "generated_at": "2026-08-31T21:36:14.830Z",
   "local_timezone": "Europe/Rome",
-  "status": "PRIMEIRA_EREDIVISIE_CLEAN_SOURCE_1X2_OU_FULLY_REPLICATED",
+  "status": "NETHERLANDS_FOUR_SEASON_STRUCTURAL_OOS_COMPLETE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,8 +66,8 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 2688,
-    "total_structural_oos_holdout_rows": 672,
+    "total_external_market_close_benchmark_rows": 3912,
+    "total_structural_oos_holdout_rows": 978,
     "pooled_sweden_norway_holdout_rows": 480,
     "cross_league_classwise_calibration_rows": 480,
     "eligible_denmark_regular_fixture_rows": 768,
@@ -100,7 +100,13 @@
     "clean_primeira_eredivisie_1x2_rows": 3672,
     "clean_primeira_eredivisie_ou25_rows": 2448,
     "clean_primeira_eredivisie_replicated_cells": 12,
-    "clean_primeira_eredivisie_status": "CLEAN_SOURCE_HASHED_BOTH_MARKETS_ROW_LEVEL_REPLICATED"
+    "clean_primeira_eredivisie_status": "CLEAN_SOURCE_HASHED_BOTH_MARKETS_ROW_LEVEL_REPLICATED",
+    "eligible_netherlands_regular_fixture_rows": 1224,
+    "netherlands_development_rows": 918,
+    "netherlands_holdout_rows": 306,
+    "netherlands_source_files": 4,
+    "netherlands_missing_avg_close_triplets": 0,
+    "total_structural_regular_fixture_rows": 3912
   },
   "quarantined_evidence": [
     {
@@ -177,7 +183,12 @@
     "Fetched and persisted four clean Football-Data source CSVs for Primeira Liga and Eredivisie 2024/25-2025/26 with per-file SHA-256 and exactly 306 fixtures per league-season.",
     "Rebuilt 6,120 row-level market selections across 1,224 unique matches: 3,672 1X2 and 2,448 O/U 2.5 rows.",
     "Replicated all twelve frozen season-market-threshold cells from clean source; ROI early, CLV and ROI at CLOSE match the published v1.47 values within rounding.",
-    "Removed the truncated gzip as a dependency for Primeira/Eredivisie inference; it remains quarantined only as historical provenance."
+    "Removed the truncated gzip as a dependency for Primeira/Eredivisie inference; it remains quarantined only as historical provenance.",
+    "Fetched four official Football-Data Eredivisie season files for 2022/2023-2025/2026; each contains exactly 306 fixtures and is bound by SHA-256.",
+    "Frozen Netherlands temporal split before evaluation: 2022/2023-2024/2025 development (918), untouched 2025/2026 holdout (306).",
+    "Verified 18 clubs and 34 matches per club in every frozen season, zero duplicate fixture keys and zero missing average closing triplets.",
+    "Replicated the unchanged Sweden/Norway structural specification on Netherlands; Elo significantly beats the development prior, while form and the full bundle do not improve Elo.",
+    "External de-vigged closing odds have better point estimates than Elo in Netherlands, but the paired Brier and log-loss intervals versus Elo include zero."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -603,6 +614,91 @@
         "all_point_estimates_match_published_rounding": true,
         "threshold_promotion": false
       }
+    },
+    "netherlands_structural_oos_2025_2026": {
+      "report": "feed/historical/netherlands/structural-oos-v1.json",
+      "sample": {
+        "development": 918,
+        "holdout": 306,
+        "regular_total": 1224,
+        "source_files": 4
+      },
+      "development_prior": {
+        "brier": 0.6480793237168981,
+        "log_loss": 1.0719267465183415,
+        "accuracy": 0.4444444444444444
+      },
+      "external_market_close": {
+        "brier": 0.5819709995128844,
+        "log_loss": 0.9788572055659097,
+        "accuracy": 0.5326797385620915
+      },
+      "elo_only": {
+        "brier": 0.5945065027313481,
+        "log_loss": 1.0001348943105184,
+        "accuracy": 0.4934640522875817
+      },
+      "elo_plus_form": {
+        "brier": 0.5968125947852119,
+        "log_loss": 1.0042423667246179,
+        "accuracy": 0.4934640522875817
+      },
+      "full_structural": {
+        "brier": 0.5974417635929181,
+        "log_loss": 1.008336616514334,
+        "accuracy": 0.4803921568627451
+      },
+      "paired_decisions": {
+        "elo_vs_prior": {
+          "brier_gain": 0.05357282098555099,
+          "brier_ci95": [
+            0.020207650924809473,
+            0.08633626746954644
+          ],
+          "log_loss_gain": 0.07179185220782312,
+          "log_loss_ci95": [
+            0.020212716893654514,
+            0.12114138277254038
+          ]
+        },
+        "market_vs_elo": {
+          "brier_gain": 0.012535503218464177,
+          "brier_ci95": [
+            -0.004259468462629012,
+            0.02903488505660385
+          ],
+          "log_loss_gain": 0.021277688744608583,
+          "log_loss_ci95": [
+            -0.004859684850313679,
+            0.04745822957302019
+          ]
+        },
+        "form_vs_elo": {
+          "brier_gain": -0.0023060920538635664,
+          "brier_ci95": [
+            -0.009181844791667738,
+            0.004588108297677879
+          ],
+          "log_loss_gain": -0.0041074724140988785,
+          "log_loss_ci95": [
+            -0.015374114829051872,
+            0.007107732511697661
+          ]
+        },
+        "full_vs_elo": {
+          "brier_gain": -0.002935260861570957,
+          "brier_ci95": [
+            -0.012073672511099608,
+            0.006461244009736459
+          ],
+          "log_loss_gain": -0.008201722203815981,
+          "log_loss_ci95": [
+            -0.02344123603786683,
+            0.0071706424589943005
+          ]
+        }
+      },
+      "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_REJECTED; MARKET_POINT_BETTER_NOT_CONCLUSIVE_VS_ELO; NO_OPERATIONAL_PROMOTION"
     }
   },
   "ablation_plan": {
@@ -620,10 +716,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "With Primeira/Eredivisie clean-source recovery complete, move to exact GoldBet TRUE_OPEN-to-last-pre-kickoff-close-to-outcome joins and continue the structural lane with Eredivisie under a frozen four-season split.",
-    "structural_lane": "Keep Sweden, Norway and Denmark holdouts frozen; Netherlands acquisition follows after the OPEN provenance correction is stabilized.",
-    "market_lane": "Retain the recovered Bet365 early-to-CLOSE block as a fully reproducible external diagnostic. GoldBet MMS remains a separate same-book lane.",
-    "mms_lane": "No Primeira/Eredivisie threshold is promoted. The next valid MMS test must use certified GoldBet TRUE OPEN plus an observed same-book close and exact outcome join."
+    "priority": "With Netherlands four-season structural OOS complete, prioritize exact GoldBet TRUE_OPEN-to-last-pre-kickoff-close-to-outcome joins.",
+    "structural_lane": "Keep Sweden, Norway, Denmark and Netherlands holdouts frozen; the next structural expansion must use the same unchanged specification and a new league holdout.",
+    "market_lane": "Retain Football-Data closes only as external benchmarks and the Primeira/Eredivisie early-to-CLOSE block only as a hindsight diagnostic.",
+    "mms_lane": "No threshold is promoted. The next valid primary MMS test requires certified GoldBet TRUE OPEN, exact same-book last pre-kickoff close and exact outcome join."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -635,7 +731,8 @@
       "Norway v1: reject any claim that a structure-only 1X2 model matches the information in the external closing market; the closing benchmark has significantly lower Brier and log-loss.",
       "Pooled Sweden+Norway: reject promotion of prior-five form as an incremental module beyond Elo; paired intervals include zero.",
       "Pooled Sweden+Norway: reject the full structural bundle as an improvement over Elo; point estimates are worse and paired intervals include zero.",
-      "Primeira Liga+Eredivisie v1.47/v1.77: reject promotion of every 1X2 and O/U 2.5 threshold; all pooled early-ROI intervals include zero, results are league-heterogeneous, and selection is CLOSE-conditioned."
+      "Primeira Liga+Eredivisie v1.47/v1.77: reject promotion of every 1X2 and O/U 2.5 threshold; all pooled early-ROI intervals include zero, results are league-heterogeneous, and selection is CLOSE-conditioned.",
+      "Netherlands v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both have worse point estimates and paired intervals include zero."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -652,7 +749,8 @@
       "Expensive historical evidence generation is separated from fast race-safe publication to avoid interference from operational feed commits.",
       "Archived aggregate evidence is recoverable and hashable, but cannot be labelled row-level reproducible until the original match inputs and raw timestamps are recovered.",
       "A complete target subset may be recovered from a truncated container only when expected row counts, selection sets, missingness and a canonical subset hash are recorded; the corrupt parent remains quarantined.",
-      "Clean immutable source CSV snapshots with SHA-256 supersede truncated intermediates; both 1X2 and O/U are now reproducible from source rows."
+      "Clean immutable source CSV snapshots with SHA-256 supersede truncated intermediates; both 1X2 and O/U are now reproducible from source rows.",
+      "European season-file acquisition may replace a missing country-level consolidated CSV only when each immutable league-season file is separately hashed, row-count gated and normalized with unchanged provenance labels."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
