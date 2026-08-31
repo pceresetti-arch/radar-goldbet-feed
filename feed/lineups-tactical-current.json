@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-08-31T15:53:15.913176+00:00",
-  "source_lineup_generated_at": "2026-08-31T15:52:51.138303+00:00",
+  "generated_at": "2026-08-31T16:06:03.762657+00:00",
+  "source_lineup_generated_at": "2026-08-31T16:05:37.624196+00:00",
   "source_strategy": "FotMob XI + provider tactical layout; deterministic role/zone enrichment",
   "method_version": "tactical-position-v1",
-  "match_count": 8,
+  "match_count": 10,
   "positioning_status_counts": {
-    "PROVIDER_TACTICAL_CONFIRMED": 8
+    "PROVIDER_TACTICAL_CONFIRMED": 10
   },
   "matches": [
     {
@@ -15,7 +15,7 @@
       "start_time": "31-08-2026 18:00",
       "start_utc": "2026-08-31T16:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 7.1,
+      "minutes_to_start": -5.6,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -27,7 +27,7 @@
         "time_delta_min": 0.0
       },
       "positioning_status": "PROVIDER_TACTICAL_CONFIRMED",
-      "positioning_confidence": 0.86,
+      "positioning_confidence": 0.94,
       "provider_source": "enetpulse",
       "lineup_type": "standard",
       "coordinate_semantics": {
@@ -40,8 +40,8 @@
           "team_id": 46474,
           "team_name": "Dunav Ruse",
           "side": "HOME",
-          "listed_formation": "5-3-1-1",
-          "detected_shape": "5-3-1-1",
+          "listed_formation": "3-5-2",
+          "detected_shape": "3-5-2",
           "shape_match": true,
           "coordinate_coverage": 1.0,
           "starters": [
@@ -50,17 +50,17 @@
               "id": 401277,
               "shirt_number": "33",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
                 "height": 0.195,
-                "width": 0.192
+                "width": 0.2
               },
               "vertical_layout": {
                 "x": 0.5,
                 "y": 0.1,
-                "height": 0.192,
+                "height": 0.2,
                 "width": 1
               },
               "tactical_x": 0.5,
@@ -79,57 +79,110 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
-              "name": "Kyriakos Antoniou",
-              "id": 900761,
-              "shirt_number": "5",
+              "name": "Jose Cabarcas",
+              "id": 1363230,
+              "shirt_number": "4",
               "position_id": 33,
               "usual_position_id": 1,
               "horizontal_layout": {
-                "x": 0.292,
-                "y": 0.695,
+                "x": 0.357,
+                "y": 0.79,
                 "height": 0.195,
-                "width": 0.213
+                "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.305,
-                "y": 0.292,
-                "height": 0.192,
-                "width": 0.195
+                "x": 0.21,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.29
               },
-              "tactical_x": 0.305,
-              "tactical_y": 0.292,
+              "tactical_x": 0.21,
+              "tactical_y": 0.357,
               "coordinate_source": "vertical_layout",
               "tactical_side": "LEFT",
               "tactical_lane": "LEFT_HALFSPACE",
               "tactical_depth": "DEFENSIVE_LINE",
-              "common_pitch_x": 0.305,
-              "common_pitch_y": 0.292,
+              "common_pitch_x": 0.21,
+              "common_pitch_y": 0.357,
               "formation_line": 1,
-              "line_size": 5,
-              "line_slot": 2,
+              "line_size": 3,
+              "line_slot": 1,
               "role_code": "LCB",
               "role_family": "CB",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Caue Caruso",
-                  "id": 1437938,
-                  "role_code": "RCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.0991
-                },
-                {
                   "name": "Spas Delev",
                   "id": 169287,
-                  "role_code": "RM",
-                  "role_family": "WM",
-                  "zone_distance": 0.2448
+                  "role_code": "RAM",
+                  "role_family": "AM",
+                  "zone_distance": 0.0725
+                },
+                {
+                  "name": "Krasimir Stanoev",
+                  "id": 551803,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.1993
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Kyriakos Antoniou",
+              "id": 900761,
+              "shirt_number": "5",
+              "position_id": 35,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.5,
+                "height": 0.195,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.357,
+              "formation_line": 1,
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "CB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dimitar Kostadinov",
+                  "id": 862123,
+                  "role_code": "AM",
+                  "role_family": "AM",
+                  "zone_distance": 0.035
+                },
+                {
+                  "name": "Georgi Minchev",
+                  "id": 513527,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.227
                 }
               ],
               "usual_position_group": "DEF",
@@ -140,49 +193,49 @@
               "name": "Stoyan Predev",
               "id": 276477,
               "shirt_number": "22",
-              "position_id": 35,
+              "position_id": 37,
               "usual_position_id": 1,
               "horizontal_layout": {
-                "x": 0.292,
-                "y": 0.5,
+                "x": 0.357,
+                "y": 0.21,
                 "height": 0.195,
-                "width": 0.192
+                "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.5,
-                "y": 0.292,
-                "height": 0.192,
-                "width": 0.195
+                "x": 0.79,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.29
               },
-              "tactical_x": 0.5,
-              "tactical_y": 0.292,
+              "tactical_x": 0.79,
+              "tactical_y": 0.357,
               "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
               "tactical_depth": "DEFENSIVE_LINE",
-              "common_pitch_x": 0.5,
-              "common_pitch_y": 0.292,
+              "common_pitch_x": 0.79,
+              "common_pitch_y": 0.357,
               "formation_line": 1,
-              "line_size": 5,
+              "line_size": 3,
               "line_slot": 3,
-              "role_code": "CB",
+              "role_code": "RCB",
               "role_family": "CB",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Dimitar Kostadinov",
-                  "id": 862123,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.1714
-                },
-                {
                   "name": "Caue Caruso",
                   "id": 1437938,
-                  "role_code": "RCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.1714
+                  "role_code": "LAM",
+                  "role_family": "AM",
+                  "zone_distance": 0.0736
+                },
+                {
+                  "name": "Krasimir Miloshev",
+                  "id": 941524,
+                  "role_code": "LDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.1993
                 }
               ],
               "usual_position_group": "DEF",
@@ -193,82 +246,29 @@
               "name": "Mario Dilchovski",
               "id": 1156881,
               "shirt_number": "2",
-              "position_id": 37,
+              "position_id": 71,
               "usual_position_id": 1,
               "horizontal_layout": {
-                "x": 0.292,
-                "y": 0.305,
-                "height": 0.195,
-                "width": 0.213
-              },
-              "vertical_layout": {
-                "x": 0.695,
-                "y": 0.292,
-                "height": 0.192,
-                "width": 0.195
-              },
-              "tactical_x": 0.695,
-              "tactical_y": 0.292,
-              "coordinate_source": "vertical_layout",
-              "tactical_side": "RIGHT",
-              "tactical_lane": "RIGHT_HALFSPACE",
-              "tactical_depth": "DEFENSIVE_LINE",
-              "common_pitch_x": 0.695,
-              "common_pitch_y": 0.292,
-              "formation_line": 1,
-              "line_size": 5,
-              "line_slot": 4,
-              "role_code": "RCB",
-              "role_family": "CB",
-              "role_inference_confidence": 0.94,
-              "role_source": "provider_layout+listed_formation",
-              "direct_opponents": [
-                {
-                  "name": "Dimitar Kostadinov",
-                  "id": 862123,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.0991
-                },
-                {
-                  "name": "Krasimir Stanoev",
-                  "id": 551803,
-                  "role_code": "LM",
-                  "role_family": "WM",
-                  "zone_distance": 0.2448
-                }
-              ],
-              "usual_position_group": "DEF",
-              "role_vs_usual": "ALIGNED",
-              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
-            },
-            {
-              "name": "Jose Cabarcas",
-              "id": 1363230,
-              "shirt_number": "4",
-              "position_id": 51,
-              "usual_position_id": 1,
-              "horizontal_layout": {
-                "x": 0.306,
+                "x": 0.613,
                 "y": 0.89,
                 "height": 0.195,
-                "width": 0.613
+                "width": 0.773
               },
               "vertical_layout": {
                 "x": 0.11,
-                "y": 0.306,
-                "height": 0.192,
+                "y": 0.613,
+                "height": 0.2,
                 "width": 0.195
               },
               "tactical_x": 0.11,
-              "tactical_y": 0.306,
+              "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
               "tactical_side": "LEFT",
               "tactical_lane": "LEFT_WIDE",
-              "tactical_depth": "DEFENSIVE_LINE",
+              "tactical_depth": "MIDFIELD_LINE",
               "common_pitch_x": 0.11,
-              "common_pitch_y": 0.306,
-              "formation_line": 1,
+              "common_pitch_y": 0.613,
+              "formation_line": 2,
               "line_size": 5,
               "line_slot": 1,
               "role_code": "LWB",
@@ -277,18 +277,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Spas Delev",
-                  "id": 169287,
-                  "role_code": "RM",
-                  "role_family": "WM",
-                  "zone_distance": 0.0258
+                  "name": "Angel Lyaskov",
+                  "id": 887752,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.0971
                 },
                 {
-                  "name": "Caue Caruso",
-                  "id": 1437938,
-                  "role_code": "RCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.3581
+                  "name": "Krasimir Stanoev",
+                  "id": 551803,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.2746
                 }
               ],
               "usual_position_group": "DEF",
@@ -299,102 +299,102 @@
               "name": "Stefan Gavrilov",
               "id": 1169089,
               "shirt_number": "24",
-              "position_id": 59,
-              "usual_position_id": 2,
-              "horizontal_layout": {
-                "x": 0.306,
-                "y": 0.11,
-                "height": 0.195,
-                "width": 0.199
-              },
-              "vertical_layout": {
-                "x": 0.89,
-                "y": 0.306,
-                "height": 0.192,
-                "width": 0.195
-              },
-              "tactical_x": 0.89,
-              "tactical_y": 0.306,
-              "coordinate_source": "vertical_layout",
-              "tactical_side": "RIGHT",
-              "tactical_lane": "RIGHT_WIDE",
-              "tactical_depth": "DEFENSIVE_LINE",
-              "common_pitch_x": 0.89,
-              "common_pitch_y": 0.306,
-              "formation_line": 1,
-              "line_size": 5,
-              "line_slot": 5,
-              "role_code": "RWB",
-              "role_family": "WB",
-              "role_inference_confidence": 0.94,
-              "role_source": "provider_layout+listed_formation",
-              "direct_opponents": [
-                {
-                  "name": "Krasimir Stanoev",
-                  "id": 551803,
-                  "role_code": "LM",
-                  "role_family": "WM",
-                  "zone_distance": 0.0258
-                },
-                {
-                  "name": "Dimitar Kostadinov",
-                  "id": 862123,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.3581
-                }
-              ],
-              "usual_position_group": "MID",
-              "role_vs_usual": "FLEX_ROLE_ALIGNED",
-              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
-            },
-            {
-              "name": "Radoslav Apostolov",
-              "id": 730068,
-              "shirt_number": "14",
               "position_id": 73,
               "usual_position_id": 2,
               "horizontal_layout": {
-                "x": 0.505,
-                "y": 0.79,
+                "x": 0.613,
+                "y": 0.695,
                 "height": 0.195,
-                "width": 0.199
+                "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.21,
-                "y": 0.505,
-                "height": 0.192,
-                "width": 0.29
+                "x": 0.305,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.195
               },
-              "tactical_x": 0.21,
-              "tactical_y": 0.505,
+              "tactical_x": 0.305,
+              "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
               "tactical_side": "LEFT",
               "tactical_lane": "LEFT_HALFSPACE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.21,
-              "common_pitch_y": 0.505,
+              "common_pitch_x": 0.305,
+              "common_pitch_y": 0.613,
               "formation_line": 2,
-              "line_size": 3,
-              "line_slot": 1,
+              "line_size": 5,
+              "line_slot": 2,
               "role_code": "LCM",
               "role_family": "CM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Spas Delev",
-                  "id": 169287,
-                  "role_code": "RM",
-                  "role_family": "WM",
-                  "zone_distance": 0.216
+                  "name": "Krasimir Stanoev",
+                  "id": 551803,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.0982
                 },
                 {
-                  "name": "Angel Lyaskov",
-                  "id": 887752,
-                  "role_code": "RB",
-                  "role_family": "FB",
-                  "zone_distance": 0.2332
+                  "name": "Kaloyan Kostov",
+                  "id": 1508056,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.134
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Radoslav Apostolov",
+              "id": 730068,
+              "shirt_number": "14",
+              "position_id": 75,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.5,
+                "height": 0.195,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.195
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.613,
+              "formation_line": 2,
+              "line_size": 5,
+              "line_slot": 3,
+              "role_code": "CM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Reyan Daskalov",
+                  "id": 528293,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.1937
+                },
+                {
+                  "name": "Kaloyan Kostov",
+                  "id": 1508056,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.1937
                 }
               ],
               "usual_position_group": "MID",
@@ -405,32 +405,32 @@
               "name": "Vladan Vidakovic",
               "id": 1072308,
               "shirt_number": "44",
-              "position_id": 75,
+              "position_id": 77,
               "usual_position_id": 2,
               "horizontal_layout": {
-                "x": 0.485,
-                "y": 0.5,
+                "x": 0.613,
+                "y": 0.305,
                 "height": 0.195,
-                "width": 0.192
+                "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.5,
-                "y": 0.485,
-                "height": 0.192,
-                "width": 0.29
+                "x": 0.695,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.195
               },
-              "tactical_x": 0.5,
-              "tactical_y": 0.485,
+              "tactical_x": 0.695,
+              "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.5,
-              "common_pitch_y": 0.485,
+              "common_pitch_x": 0.695,
+              "common_pitch_y": 0.613,
               "formation_line": 2,
-              "line_size": 3,
-              "line_slot": 2,
-              "role_code": "CM",
+              "line_size": 5,
+              "line_slot": 4,
+              "role_code": "RCM",
               "role_family": "CM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
@@ -438,16 +438,16 @@
                 {
                   "name": "Krasimir Miloshev",
                   "id": 941524,
-                  "role_code": "MID",
-                  "role_family": "MID",
-                  "zone_distance": 0.03
+                  "role_code": "LDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.0982
                 },
                 {
-                  "name": "Dimitar Kostadinov",
-                  "id": 862123,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.2346
+                  "name": "Reyan Daskalov",
+                  "id": 528293,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.134
                 }
               ],
               "usual_position_group": "MID",
@@ -458,138 +458,138 @@
               "name": "Dimitar Todorov",
               "id": 1135791,
               "shirt_number": "88",
-              "position_id": 77,
+              "position_id": 79,
               "usual_position_id": 1,
               "horizontal_layout": {
-                "x": 0.505,
-                "y": 0.21,
+                "x": 0.613,
+                "y": 0.11,
                 "height": 0.195,
-                "width": 0.213
+                "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.79,
-                "y": 0.505,
-                "height": 0.192,
-                "width": 0.29
+                "x": 0.89,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.195
               },
-              "tactical_x": 0.79,
-              "tactical_y": 0.505,
+              "tactical_x": 0.89,
+              "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
               "tactical_side": "RIGHT",
-              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_lane": "RIGHT_WIDE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.79,
-              "common_pitch_y": 0.505,
+              "common_pitch_x": 0.89,
+              "common_pitch_y": 0.613,
               "formation_line": 2,
-              "line_size": 3,
-              "line_slot": 3,
-              "role_code": "RCM",
-              "role_family": "CM",
+              "line_size": 5,
+              "line_slot": 5,
+              "role_code": "RWB",
+              "role_family": "WB",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
-                {
-                  "name": "Krasimir Stanoev",
-                  "id": 551803,
-                  "role_code": "LM",
-                  "role_family": "WM",
-                  "zone_distance": 0.216
-                },
                 {
                   "name": "Eiro",
                   "id": 1437506,
                   "role_code": "LB",
                   "role_family": "FB",
-                  "zone_distance": 0.2332
-                }
-              ],
-              "usual_position_group": "DEF",
-              "role_vs_usual": "OUT_OF_USUAL_LINE",
-              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
-            },
-            {
-              "name": "Ibrahim Keita",
-              "id": 522129,
-              "shirt_number": "18",
-              "position_id": 95,
-              "usual_position_id": 3,
-              "horizontal_layout": {
-                "x": 0.678,
-                "y": 0.5,
-                "height": 0.195,
-                "width": 0.192
-              },
-              "vertical_layout": {
-                "x": 0.5,
-                "y": 0.678,
-                "height": 0.192,
-                "width": 1
-              },
-              "tactical_x": 0.5,
-              "tactical_y": 0.678,
-              "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
-              "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.5,
-              "common_pitch_y": 0.678,
-              "formation_line": 3,
-              "line_size": 1,
-              "line_slot": 1,
-              "role_code": "MID",
-              "role_family": "MID",
-              "role_inference_confidence": 0.94,
-              "role_source": "provider_layout+listed_formation",
-              "direct_opponents": [
+                  "zone_distance": 0.0971
+                },
                 {
                   "name": "Krasimir Miloshev",
                   "id": 941524,
-                  "role_code": "MID",
-                  "role_family": "MID",
-                  "zone_distance": 0.163
-                },
-                {
-                  "name": "Reyan Daskalov",
-                  "id": 528293,
-                  "role_code": "LCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.1714
+                  "role_code": "LDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.2746
                 }
               ],
-              "usual_position_group": "FWD",
-              "role_vs_usual": "OUT_OF_USUAL_LINE",
+              "usual_position_group": "DEF",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
               "name": "Alex Valino",
               "id": 1102702,
               "shirt_number": "9",
-              "position_id": 115,
+              "position_id": 104,
               "usual_position_id": 3,
               "horizontal_layout": {
                 "x": 0.87,
-                "y": 0.5,
+                "y": 0.7,
                 "height": 0.195,
-                "width": 0.192
+                "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.5,
+                "x": 0.3,
                 "y": 0.87,
-                "height": 0.192,
-                "width": 1
+                "height": 0.2,
+                "width": 0.4
               },
-              "tactical_x": 0.5,
+              "tactical_x": 0.3,
               "tactical_y": 0.87,
               "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
               "tactical_depth": "ATTACKING_LINE",
-              "common_pitch_x": 0.5,
+              "common_pitch_x": 0.3,
               "common_pitch_y": 0.87,
-              "formation_line": 4,
-              "line_size": 1,
+              "formation_line": 3,
+              "line_size": 2,
               "line_slot": 1,
-              "role_code": "ST",
+              "role_code": "LST",
+              "role_family": "ST",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Kaloyan Kostov",
+                  "id": 1508056,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.191
+                },
+                {
+                  "name": "Angel Lyaskov",
+                  "id": 887752,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.2865
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Ibrahim Keita",
+              "id": 522129,
+              "shirt_number": "18",
+              "position_id": 106,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.3,
+                "height": 0.195,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.7,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.4
+              },
+              "tactical_x": 0.7,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.7,
+              "common_pitch_y": 0.87,
+              "formation_line": 3,
+              "line_size": 2,
+              "line_slot": 2,
+              "role_code": "RST",
               "role_family": "ST",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
@@ -599,14 +599,14 @@
                   "id": 528293,
                   "role_code": "LCB",
                   "role_family": "CB",
-                  "zone_distance": 0.2339
+                  "zone_distance": 0.191
                 },
                 {
-                  "name": "Kaloyan Kostov",
-                  "id": 1508056,
-                  "role_code": "RCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.2339
+                  "name": "Eiro",
+                  "id": 1437506,
+                  "role_code": "LB",
+                  "role_family": "FB",
+                  "zone_distance": 0.2865
                 }
               ],
               "usual_position_group": "FWD",
@@ -657,34 +657,17 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 6,
-            "FLEX_ROLE_ALIGNED": 2,
-            "OUT_OF_USUAL_LINE": 2
+            "ALIGNED": 9,
+            "FLEX_ROLE_ALIGNED": 2
           },
-          "out_of_usual_line": [
-            {
-              "id": 1135791,
-              "name": "Dimitar Todorov",
-              "role_code": "RCM",
-              "role_family": "CM",
-              "usual_position_group": "DEF"
-            },
-            {
-              "id": 522129,
-              "name": "Ibrahim Keita",
-              "role_code": "MID",
-              "role_family": "MID",
-              "usual_position_group": "FWD"
-            }
-          ]
+          "out_of_usual_line": []
         },
         {
           "team_id": 10128,
           "team_name": "PFC Lokomotiv Sofia 1929",
           "side": "AWAY",
-          "listed_formation": "4-1-4-1",
-          "detected_shape": "4-1-4-1",
+          "listed_formation": "4-2-3-1",
+          "detected_shape": "4-2-3-1",
           "shape_match": true,
           "coordinate_coverage": 1.0,
           "starters": [
@@ -693,7 +676,7 @@
               "id": 361706,
               "shirt_number": "24",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -722,8 +705,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -736,7 +719,7 @@
                 "x": 0.292,
                 "y": 0.875,
                 "height": 0.25,
-                "width": 0.385
+                "width": 0.192
               },
               "vertical_layout": {
                 "x": 0.125,
@@ -763,16 +746,16 @@
                 {
                   "name": "Dimitar Todorov",
                   "id": 1135791,
-                  "role_code": "RCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.2332
-                },
-                {
-                  "name": "Stefan Gavrilov",
-                  "id": 1169089,
                   "role_code": "RWB",
                   "role_family": "WB",
-                  "zone_distance": 0.4025
+                  "zone_distance": 0.0971
+                },
+                {
+                  "name": "Vladan Vidakovic",
+                  "id": 1072308,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2609
                 }
               ],
               "usual_position_group": "DEF",
@@ -814,18 +797,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Ibrahim Keita",
-                  "id": 522129,
-                  "role_code": "MID",
-                  "role_family": "MID",
-                  "zone_distance": 0.1714
+                  "name": "Vladan Vidakovic",
+                  "id": 1072308,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.134
                 },
                 {
-                  "name": "Alex Valino",
-                  "id": 1102702,
-                  "role_code": "ST",
+                  "name": "Ibrahim Keita",
+                  "id": 522129,
+                  "role_code": "RST",
                   "role_family": "ST",
-                  "zone_distance": 0.2339
+                  "zone_distance": 0.191
                 }
               ],
               "usual_position_group": "DEF",
@@ -842,7 +825,7 @@
                 "x": 0.292,
                 "y": 0.375,
                 "height": 0.25,
-                "width": 0.385
+                "width": 0.192
               },
               "vertical_layout": {
                 "x": 0.625,
@@ -867,18 +850,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Ibrahim Keita",
-                  "id": 522129,
-                  "role_code": "MID",
-                  "role_family": "MID",
-                  "zone_distance": 0.1714
+                  "name": "Stefan Gavrilov",
+                  "id": 1169089,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.134
                 },
                 {
                   "name": "Alex Valino",
                   "id": 1102702,
-                  "role_code": "ST",
+                  "role_code": "LST",
                   "role_family": "ST",
-                  "zone_distance": 0.2339
+                  "zone_distance": 0.191
                 }
               ],
               "usual_position_group": "DEF",
@@ -920,18 +903,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Radoslav Apostolov",
-                  "id": 730068,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.2332
-                },
-                {
-                  "name": "Jose Cabarcas",
-                  "id": 1363230,
+                  "name": "Mario Dilchovski",
+                  "id": 1156881,
                   "role_code": "LWB",
                   "role_family": "WB",
-                  "zone_distance": 0.4025
+                  "zone_distance": 0.0971
+                },
+                {
+                  "name": "Stefan Gavrilov",
+                  "id": 1169089,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2609
                 }
               ],
               "usual_position_group": "DEF",
@@ -942,49 +925,49 @@
               "name": "Krasimir Miloshev",
               "id": 941524,
               "shirt_number": "26",
-              "position_id": 65,
+              "position_id": 64,
               "usual_position_id": 2,
               "horizontal_layout": {
                 "x": 0.485,
-                "y": 0.5,
+                "y": 0.7,
                 "height": 0.25,
                 "width": 0.192
               },
               "vertical_layout": {
-                "x": 0.5,
+                "x": 0.3,
                 "y": 0.485,
                 "height": 0.192,
-                "width": 1
+                "width": 0.4
               },
-              "tactical_x": 0.5,
+              "tactical_x": 0.3,
               "tactical_y": 0.485,
               "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.5,
+              "common_pitch_x": 0.7,
               "common_pitch_y": 0.515,
               "formation_line": 2,
-              "line_size": 1,
+              "line_size": 2,
               "line_slot": 1,
-              "role_code": "MID",
-              "role_family": "MID",
+              "role_code": "LDM",
+              "role_family": "DM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
                   "name": "Vladan Vidakovic",
                   "id": 1072308,
-                  "role_code": "CM",
+                  "role_code": "RCM",
                   "role_family": "CM",
-                  "zone_distance": 0.03
+                  "zone_distance": 0.0982
                 },
                 {
-                  "name": "Ibrahim Keita",
-                  "id": 522129,
-                  "role_code": "MID",
-                  "role_family": "MID",
-                  "zone_distance": 0.163
+                  "name": "Stoyan Predev",
+                  "id": 276477,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.1993
                 }
               ],
               "usual_position_group": "MID",
@@ -995,102 +978,49 @@
               "name": "Krasimir Stanoev",
               "id": 551803,
               "shirt_number": "31",
-              "position_id": 82,
+              "position_id": 66,
               "usual_position_id": 2,
               "horizontal_layout": {
-                "x": 0.678,
-                "y": 0.875,
+                "x": 0.485,
+                "y": 0.3,
                 "height": 0.25,
-                "width": 0.385
+                "width": 0.192
               },
               "vertical_layout": {
-                "x": 0.125,
-                "y": 0.678,
+                "x": 0.7,
+                "y": 0.485,
                 "height": 0.192,
-                "width": 0.25
+                "width": 0.4
               },
-              "tactical_x": 0.125,
-              "tactical_y": 0.678,
+              "tactical_x": 0.7,
+              "tactical_y": 0.485,
               "coordinate_source": "vertical_layout",
-              "tactical_side": "LEFT",
-              "tactical_lane": "LEFT_WIDE",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.875,
-              "common_pitch_y": 0.322,
-              "formation_line": 3,
-              "line_size": 4,
-              "line_slot": 1,
-              "role_code": "LM",
-              "role_family": "WM",
+              "common_pitch_x": 0.3,
+              "common_pitch_y": 0.515,
+              "formation_line": 2,
+              "line_size": 2,
+              "line_slot": 2,
+              "role_code": "RDM",
+              "role_family": "DM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
                   "name": "Stefan Gavrilov",
                   "id": 1169089,
-                  "role_code": "RWB",
-                  "role_family": "WB",
-                  "zone_distance": 0.0258
-                },
-                {
-                  "name": "Dimitar Todorov",
-                  "id": 1135791,
-                  "role_code": "RCM",
+                  "role_code": "LCM",
                   "role_family": "CM",
-                  "zone_distance": 0.216
-                }
-              ],
-              "usual_position_group": "MID",
-              "role_vs_usual": "FLEX_ROLE_ALIGNED",
-              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
-            },
-            {
-              "name": "Dimitar Kostadinov",
-              "id": 862123,
-              "shirt_number": "20",
-              "position_id": 84,
-              "usual_position_id": 2,
-              "horizontal_layout": {
-                "x": 0.678,
-                "y": 0.625,
-                "height": 0.25,
-                "width": 0.193
-              },
-              "vertical_layout": {
-                "x": 0.375,
-                "y": 0.678,
-                "height": 0.192,
-                "width": 0.25
-              },
-              "tactical_x": 0.375,
-              "tactical_y": 0.678,
-              "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "LEFT_HALFSPACE",
-              "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.625,
-              "common_pitch_y": 0.322,
-              "formation_line": 3,
-              "line_size": 4,
-              "line_slot": 2,
-              "role_code": "LCM",
-              "role_family": "CM",
-              "role_inference_confidence": 0.94,
-              "role_source": "provider_layout+listed_formation",
-              "direct_opponents": [
-                {
-                  "name": "Mario Dilchovski",
-                  "id": 1156881,
-                  "role_code": "RCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.0991
+                  "zone_distance": 0.0982
                 },
                 {
-                  "name": "Stoyan Predev",
-                  "id": 276477,
-                  "role_code": "CB",
+                  "name": "Jose Cabarcas",
+                  "id": 1363230,
+                  "role_code": "LCB",
                   "role_family": "CB",
-                  "zone_distance": 0.1714
+                  "zone_distance": 0.1993
                 }
               ],
               "usual_position_group": "MID",
@@ -1101,102 +1031,155 @@
               "name": "Caue Caruso",
               "id": 1437938,
               "shirt_number": "77",
-              "position_id": 86,
+              "position_id": 83,
               "usual_position_id": 3,
               "horizontal_layout": {
                 "x": 0.678,
-                "y": 0.375,
+                "y": 0.837,
                 "height": 0.25,
-                "width": 0.385
+                "width": 0.193
               },
               "vertical_layout": {
-                "x": 0.625,
+                "x": 0.162,
                 "y": 0.678,
                 "height": 0.192,
-                "width": 0.25
+                "width": 0.325
               },
-              "tactical_x": 0.625,
+              "tactical_x": 0.162,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.838,
+              "common_pitch_y": 0.322,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 1,
+              "role_code": "LAM",
+              "role_family": "AM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Stoyan Predev",
+                  "id": 276477,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.0736
+                },
+                {
+                  "name": "Dimitar Todorov",
+                  "id": 1135791,
+                  "role_code": "RWB",
+                  "role_family": "WB",
+                  "zone_distance": 0.2993
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Dimitar Kostadinov",
+              "id": 862123,
+              "shirt_number": "20",
+              "position_id": 85,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.337
+              },
+              "tactical_x": 0.5,
               "tactical_y": 0.678,
               "coordinate_source": "vertical_layout",
               "tactical_side": "CENTRE",
-              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_lane": "CENTRAL",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.375,
+              "common_pitch_x": 0.5,
               "common_pitch_y": 0.322,
               "formation_line": 3,
-              "line_size": 4,
-              "line_slot": 3,
-              "role_code": "RCM",
-              "role_family": "CM",
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "AM",
+              "role_family": "AM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
                   "name": "Kyriakos Antoniou",
                   "id": 900761,
-                  "role_code": "LCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.0991
-                },
-                {
-                  "name": "Stoyan Predev",
-                  "id": 276477,
                   "role_code": "CB",
                   "role_family": "CB",
-                  "zone_distance": 0.1714
+                  "zone_distance": 0.035
+                },
+                {
+                  "name": "Radoslav Apostolov",
+                  "id": 730068,
+                  "role_code": "CM",
+                  "role_family": "CM",
+                  "zone_distance": 0.291
                 }
               ],
-              "usual_position_group": "FWD",
-              "role_vs_usual": "OUT_OF_USUAL_LINE",
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
               "name": "Spas Delev",
               "id": 169287,
               "shirt_number": "7",
-              "position_id": 88,
+              "position_id": 87,
               "usual_position_id": 3,
               "horizontal_layout": {
                 "x": 0.678,
-                "y": 0.125,
+                "y": 0.163,
                 "height": 0.25,
                 "width": 0.385
               },
               "vertical_layout": {
-                "x": 0.875,
+                "x": 0.837,
                 "y": 0.678,
                 "height": 0.192,
-                "width": 0.25
+                "width": 0.325
               },
-              "tactical_x": 0.875,
+              "tactical_x": 0.837,
               "tactical_y": 0.678,
               "coordinate_source": "vertical_layout",
               "tactical_side": "RIGHT",
               "tactical_lane": "RIGHT_WIDE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.125,
+              "common_pitch_x": 0.163,
               "common_pitch_y": 0.322,
               "formation_line": 3,
-              "line_size": 4,
-              "line_slot": 4,
-              "role_code": "RM",
-              "role_family": "WM",
+              "line_size": 3,
+              "line_slot": 3,
+              "role_code": "RAM",
+              "role_family": "AM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
                   "name": "Jose Cabarcas",
                   "id": 1363230,
-                  "role_code": "LWB",
-                  "role_family": "WB",
-                  "zone_distance": 0.0258
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.0725
                 },
                 {
-                  "name": "Radoslav Apostolov",
-                  "id": 730068,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.216
+                  "name": "Mario Dilchovski",
+                  "id": 1156881,
+                  "role_code": "LWB",
+                  "role_family": "WB",
+                  "zone_distance": 0.2997
                 }
               ],
               "usual_position_group": "FWD",
@@ -1210,25 +1193,25 @@
               "position_id": 115,
               "usual_position_id": 3,
               "horizontal_layout": {
-                "x": 0.89,
+                "x": 0.87,
                 "y": 0.5,
                 "height": 0.25,
-                "width": 0.212
+                "width": 0.192
               },
               "vertical_layout": {
                 "x": 0.5,
-                "y": 0.89,
+                "y": 0.87,
                 "height": 0.192,
                 "width": 1
               },
               "tactical_x": 0.5,
-              "tactical_y": 0.89,
+              "tactical_y": 0.87,
               "coordinate_source": "vertical_layout",
               "tactical_side": "CENTRE",
               "tactical_lane": "CENTRAL",
               "tactical_depth": "ATTACKING_LINE",
               "common_pitch_x": 0.5,
-              "common_pitch_y": 0.11,
+              "common_pitch_y": 0.13,
               "formation_line": 4,
               "line_size": 1,
               "line_slot": 1,
@@ -1238,18 +1221,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Stoyan Predev",
-                  "id": 276477,
+                  "name": "Kyriakos Antoniou",
+                  "id": 900761,
                   "role_code": "CB",
                   "role_family": "CB",
-                  "zone_distance": 0.182
+                  "zone_distance": 0.227
                 },
                 {
-                  "name": "Mario Dilchovski",
-                  "id": 1156881,
-                  "role_code": "RCB",
+                  "name": "Jose Cabarcas",
+                  "id": 1363230,
+                  "role_code": "LCB",
                   "role_family": "CB",
-                  "zone_distance": 0.32
+                  "zone_distance": 0.4525
                 }
               ],
               "usual_position_group": "FWD",
@@ -1305,33 +1288,20 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 7,
-            "FLEX_ROLE_ALIGNED": 2,
-            "OUT_OF_USUAL_LINE": 1
+            "ALIGNED": 8,
+            "FLEX_ROLE_ALIGNED": 3
           },
-          "out_of_usual_line": [
-            {
-              "id": 1437938,
-              "name": "Caue Caruso",
-              "role_code": "RCM",
-              "role_family": "CM",
-              "usual_position_group": "FWD"
-            }
-          ]
+          "out_of_usual_line": []
         }
       ],
       "warnings": [
-        "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data.",
-        "Multiple starters are outside their provider usual broad position; verify tactical graphic/role before strong spatial conclusions."
+        "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 13,
-        "FLEX_ROLE_ALIGNED": 4,
-        "OUT_OF_USUAL_LINE": 3
+        "ALIGNED": 17,
+        "FLEX_ROLE_ALIGNED": 5
       },
-      "out_of_usual_line_count": 3
+      "out_of_usual_line_count": 0
     },
     {
       "match_market_id": "36361.669",
@@ -1340,7 +1310,7 @@
       "start_time": "31-08-2026 18:00",
       "start_utc": "2026-08-31T16:00:00+00:00",
       "league": "Veikkausliiga",
-      "minutes_to_start": 7.1,
+      "minutes_to_start": -5.6,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -1375,7 +1345,7 @@
               "id": 267187,
               "shirt_number": "1",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -1404,8 +1374,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -1987,8 +1957,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 8,
+            "ALIGNED": 9,
             "FLEX_ROLE_ALIGNED": 2
           },
           "out_of_usual_line": []
@@ -2007,7 +1976,7 @@
               "id": 1250148,
               "shirt_number": "1",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -2036,8 +2005,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -2614,8 +2583,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 7,
+            "ALIGNED": 8,
             "OUT_OF_USUAL_LINE": 1,
             "FLEX_ROLE_ALIGNED": 2
           },
@@ -2634,8 +2602,7 @@
         "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 15,
+        "ALIGNED": 17,
         "FLEX_ROLE_ALIGNED": 4,
         "OUT_OF_USUAL_LINE": 1
       },
@@ -2648,7 +2615,7 @@
       "start_time": "31-08-2026 18:00",
       "start_utc": "2026-08-31T16:00:00+00:00",
       "league": "Veikkausliiga",
-      "minutes_to_start": 7.1,
+      "minutes_to_start": -5.6,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -2683,7 +2650,7 @@
               "id": 1734086,
               "shirt_number": "1",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -2712,8 +2679,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -3295,8 +3262,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 7,
+            "ALIGNED": 8,
             "FLEX_ROLE_ALIGNED": 3
           },
           "out_of_usual_line": []
@@ -3315,7 +3281,7 @@
               "id": 500501,
               "shirt_number": "1",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -3344,8 +3310,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -3927,8 +3893,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 6,
+            "ALIGNED": 7,
             "OUT_OF_USUAL_LINE": 1,
             "FLEX_ROLE_ALIGNED": 3
           },
@@ -3947,8 +3912,7 @@
         "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 13,
+        "ALIGNED": 15,
         "FLEX_ROLE_ALIGNED": 6,
         "OUT_OF_USUAL_LINE": 1
       },
@@ -3961,7 +3925,7 @@
       "start_time": "31-08-2026 18:00",
       "start_utc": "2026-08-31T16:00:00+00:00",
       "league": "Veikkausliiga",
-      "minutes_to_start": 7.1,
+      "minutes_to_start": -5.6,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -3996,7 +3960,7 @@
               "id": 1508341,
               "shirt_number": "12",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -4025,8 +3989,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -4608,8 +4572,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 5,
+            "ALIGNED": 6,
             "FLEX_ROLE_ALIGNED": 4,
             "OUT_OF_USUAL_LINE": 1
           },
@@ -4637,7 +4600,7 @@
               "id": 1070860,
               "shirt_number": "44",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -4666,8 +4629,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -5249,8 +5212,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 8,
+            "ALIGNED": 9,
             "FLEX_ROLE_ALIGNED": 2
           },
           "out_of_usual_line": []
@@ -5260,8 +5222,7 @@
         "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 13,
+        "ALIGNED": 15,
         "FLEX_ROLE_ALIGNED": 6,
         "OUT_OF_USUAL_LINE": 1
       },
@@ -5274,7 +5235,7 @@
       "start_time": "31-08-2026 18:05",
       "start_utc": "2026-08-31T16:05:00+00:00",
       "league": "Division 1",
-      "minutes_to_start": 12.1,
+      "minutes_to_start": -0.6,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -5309,7 +5270,7 @@
               "id": 625425,
               "shirt_number": "17",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -5338,8 +5299,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -5906,8 +5867,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 7,
+            "ALIGNED": 8,
             "FLEX_ROLE_ALIGNED": 3
           },
           "out_of_usual_line": []
@@ -5926,7 +5886,7 @@
               "id": 1054106,
               "shirt_number": "17",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -5955,8 +5915,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -6538,8 +6498,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 6,
+            "ALIGNED": 7,
             "FLEX_ROLE_ALIGNED": 4
           },
           "out_of_usual_line": []
@@ -6549,8 +6508,7 @@
         "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 13,
+        "ALIGNED": 15,
         "FLEX_ROLE_ALIGNED": 7
       },
       "out_of_usual_line_count": 0
@@ -6562,7 +6520,7 @@
       "start_time": "31-08-2026 18:05",
       "start_utc": "2026-08-31T16:05:00+00:00",
       "league": "Division 1",
-      "minutes_to_start": 12.1,
+      "minutes_to_start": -0.6,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -6597,7 +6555,7 @@
               "id": null,
               "shirt_number": "77",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -6626,8 +6584,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -7209,8 +7167,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 8,
+            "ALIGNED": 9,
             "FLEX_ROLE_ALIGNED": 2
           },
           "out_of_usual_line": []
@@ -7229,7 +7186,7 @@
               "id": 822182,
               "shirt_number": "1",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -7258,8 +7215,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -7841,8 +7798,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 7,
+            "ALIGNED": 8,
             "FLEX_ROLE_ALIGNED": 3
           },
           "out_of_usual_line": []
@@ -7852,8 +7808,7 @@
         "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 15,
+        "ALIGNED": 17,
         "FLEX_ROLE_ALIGNED": 5
       },
       "out_of_usual_line_count": 0
@@ -7865,7 +7820,7 @@
       "start_time": "31-08-2026 18:30",
       "start_utc": "2026-08-31T16:30:00+00:00",
       "league": "Super League",
-      "minutes_to_start": 37.1,
+      "minutes_to_start": 24.4,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -7878,7 +7833,7 @@
       },
       "positioning_status": "PROVIDER_TACTICAL_CONFIRMED",
       "positioning_confidence": 0.94,
-      "provider_source": "optaSdapiLegacyIntegration",
+      "provider_source": "enetpulse",
       "lineup_type": "standard",
       "coordinate_semantics": {
         "provider_vertical_x": "lateral 0=left, 1=right from team perspective",
@@ -8471,19 +8426,9 @@
               "shirt_number": "55"
             },
             {
-              "name": "Konstantinos Goumas",
-              "id": 1575953,
-              "shirt_number": "20"
-            },
-            {
-              "name": "Panagiotis Simelidis",
-              "id": 625626,
-              "shirt_number": "31"
-            },
-            {
-              "name": "Georgios Manthatis",
-              "id": 719056,
-              "shirt_number": "14"
+              "name": "Christos Papadopoulos",
+              "id": 1585812,
+              "shirt_number": "74"
             },
             {
               "name": "Georgios Nikas",
@@ -8491,9 +8436,9 @@
               "shirt_number": "8"
             },
             {
-              "name": "Lamarana Jallow",
-              "id": 1596720,
-              "shirt_number": "19"
+              "name": "Georgios Vrakas",
+              "id": 1187008,
+              "shirt_number": "77"
             },
             {
               "name": "Juan Bauza",
@@ -8501,14 +8446,19 @@
               "shirt_number": "7"
             },
             {
-              "name": "Christos Papadopoulos",
-              "id": 1585812,
-              "shirt_number": "74"
+              "name": "Konstantinos Goumas",
+              "id": 1575953,
+              "shirt_number": "20"
             },
             {
-              "name": "Mahamadou Balde",
-              "id": 1792870,
-              "shirt_number": "21"
+              "name": "Lamarana Jallow",
+              "id": 1596720,
+              "shirt_number": "19"
+            },
+            {
+              "name": "Panagiotis Simelidis",
+              "id": 625626,
+              "shirt_number": "31"
             },
             {
               "name": "David Cobnan",
@@ -8516,14 +8466,19 @@
               "shirt_number": "99"
             },
             {
-              "name": "Georgios Vrakas",
-              "id": 1187008,
-              "shirt_number": "77"
+              "name": "Georgios Manthatis",
+              "id": 719056,
+              "shirt_number": "14"
             },
             {
               "name": "Gregorio Rodríguez",
               "id": 1366607,
               "shirt_number": "27"
+            },
+            {
+              "name": "Mahamadou Balde",
+              "id": 1792870,
+              "shirt_number": "21"
             }
           ],
           "role_sanity_counts": {
@@ -9122,19 +9077,14 @@
           ],
           "bench": [
             {
-              "name": "Lucas Abraham Chávez",
-              "id": 736344,
-              "shirt_number": "12"
-            },
-            {
               "name": "Kostas Kotsaris",
               "id": 560841,
               "shirt_number": "70"
             },
             {
-              "name": "Georgios Katris",
-              "id": 1613657,
-              "shirt_number": "3"
+              "name": "Lucas Abraham Chávez",
+              "id": 736344,
+              "shirt_number": "12"
             },
             {
               "name": "Erik Palmer-Brown",
@@ -9142,14 +9092,9 @@
               "shirt_number": "14"
             },
             {
-              "name": "Panagiotis Biniaris",
-              "id": 2097464,
-              "shirt_number": "44"
-            },
-            {
-              "name": "Facundo Pellistri",
-              "id": 1073402,
-              "shirt_number": "28"
+              "name": "Georgios Katris",
+              "id": 1613657,
+              "shirt_number": "3"
             },
             {
               "name": "Adriano Jagusic",
@@ -9162,9 +9107,19 @@
               "shirt_number": "26"
             },
             {
+              "name": "Panagiotis Biniaris",
+              "id": 2097464,
+              "shirt_number": "44"
+            },
+            {
               "name": "Sotiris Kontouris",
               "id": 1526975,
               "shirt_number": "18"
+            },
+            {
+              "name": "Cyriel Dessers",
+              "id": 526230,
+              "shirt_number": "9"
             },
             {
               "name": "Elmin Rastoder",
@@ -9172,9 +9127,9 @@
               "shirt_number": "74"
             },
             {
-              "name": "Cyriel Dessers",
-              "id": 526230,
-              "shirt_number": "9"
+              "name": "Facundo Pellistri",
+              "id": 1073402,
+              "shirt_number": "28"
             },
             {
               "name": "Georgios Kyriopoulos",
@@ -9202,13 +9157,1331 @@
       "out_of_usual_line_count": 1
     },
     {
+      "match_market_id": "36471.981",
+      "match_event_id": 16059940,
+      "match": "Hajduk Spalato - Lokomotiva Zagreb",
+      "start_time": "31-08-2026 18:30",
+      "start_utc": "2026-08-31T16:30:00+00:00",
+      "league": "1.HNL",
+      "minutes_to_start": 24.4,
+      "status": "SOURCE_CONFIRMED",
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5765960,
+        "home": "Hajduk Split",
+        "away": "NK Lokomotiva",
+        "league": "HNL",
+        "score": 0.6093,
+        "time_delta_min": 0.0
+      },
+      "positioning_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "positioning_confidence": 0.94,
+      "provider_source": "optaSdapiLegacyIntegration",
+      "lineup_type": "standard",
+      "coordinate_semantics": {
+        "provider_vertical_x": "lateral 0=left, 1=right from team perspective",
+        "provider_vertical_y": "depth 0=own goal, 1=opponent goal from team perspective",
+        "common_pitch": "away x/y mirrored so both teams share one physical-pitch frame"
+      },
+      "teams": [
+        {
+          "team_id": 10154,
+          "team_name": "Hajduk Split",
+          "side": "HOME",
+          "listed_formation": "4-2-3-1",
+          "detected_shape": "4-2-3-1",
+          "shape_match": true,
+          "coordinate_coverage": 1.0,
+          "starters": [
+            {
+              "name": "Toni Silic",
+              "id": 1510855,
+              "shirt_number": "33",
+              "position_id": 11,
+              "usual_position_id": null,
+              "horizontal_layout": {
+                "x": 0.1,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.1,
+                "height": 0.192,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.1,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "GOALKEEPER",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.1,
+              "formation_line": 0,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "GK",
+              "role_family": "GK",
+              "role_inference_confidence": 0.99,
+              "role_source": "provider_layout",
+              "direct_opponents": [],
+              "usual_position_group": "UNKNOWN",
+              "role_vs_usual": "UNKNOWN",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Mathieu Acapandié",
+              "id": 1438316,
+              "shirt_number": "22",
+              "position_id": 32,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.875,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.125,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.125,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.125,
+              "common_pitch_y": 0.292,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 1,
+              "role_code": "LB",
+              "role_family": "FB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dominik Thaqi",
+                  "id": 1701794,
+                  "role_code": "RM",
+                  "role_family": "WM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Jakov-Anton Vasilj",
+                  "id": 1270127,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.3388
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Dario Maresic",
+              "id": 764741,
+              "shirt_number": "15",
+              "position_id": 34,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.625,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.375,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.375,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.375,
+              "common_pitch_y": 0.292,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 2,
+              "role_code": "LCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Jakov-Anton Vasilj",
+                  "id": 1270127,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Noel Djurkovic",
+                  "id": 1678859,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2482
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Ron Raçi",
+              "id": 1768687,
+              "shirt_number": "14",
+              "position_id": 36,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.375,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.625,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.625,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.625,
+              "common_pitch_y": 0.292,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 3,
+              "role_code": "RCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Pavle Smiljanic",
+                  "id": 1875856,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Noel Djurkovic",
+                  "id": 1678859,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2482
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Simun Hrgovic",
+              "id": 1466684,
+              "shirt_number": "32",
+              "position_id": 38,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.125,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.875,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.875,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_WIDE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.875,
+              "common_pitch_y": 0.292,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 4,
+              "role_code": "RB",
+              "role_family": "FB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dusan Vukovic",
+                  "id": 1649995,
+                  "role_code": "LM",
+                  "role_family": "WM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Pavle Smiljanic",
+                  "id": 1875856,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.3388
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Alberto del Moral",
+              "id": 1202029,
+              "shirt_number": "20",
+              "position_id": 64,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.485,
+                "y": 0.7,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.3,
+                "y": 0.485,
+                "height": 0.192,
+                "width": 0.4
+              },
+              "tactical_x": 0.3,
+              "tactical_y": 0.485,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.3,
+              "common_pitch_y": 0.485,
+              "formation_line": 2,
+              "line_size": 2,
+              "line_slot": 1,
+              "role_code": "LDM",
+              "role_family": "DM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Jakov-Anton Vasilj",
+                  "id": 1270127,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.1919
+                },
+                {
+                  "name": "Thanasis Triantafyllou",
+                  "id": 1352689,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2449
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Adrion Pajaziti",
+              "id": 1130562,
+              "shirt_number": "4",
+              "position_id": 66,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.485,
+                "y": 0.3,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.7,
+                "y": 0.485,
+                "height": 0.192,
+                "width": 0.4
+              },
+              "tactical_x": 0.7,
+              "tactical_y": 0.485,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.7,
+              "common_pitch_y": 0.485,
+              "formation_line": 2,
+              "line_size": 2,
+              "line_slot": 2,
+              "role_code": "RDM",
+              "role_family": "DM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Pavle Smiljanic",
+                  "id": 1875856,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.1919
+                },
+                {
+                  "name": "Teodor Kralevski",
+                  "id": 1835474,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2449
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Andjelo Sutalo",
+              "id": 1699550,
+              "shirt_number": "16",
+              "position_id": 83,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.837,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.162,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.325
+              },
+              "tactical_x": 0.162,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.162,
+              "common_pitch_y": 0.678,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 1,
+              "role_code": "LAM",
+              "role_family": "AM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Kristijan Cabrajic",
+                  "id": 1663533,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.0583
+                },
+                {
+                  "name": "Thanasis Triantafyllou",
+                  "id": 1352689,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2891
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Dalisson de Almeida",
+              "id": 1120854,
+              "shirt_number": "9",
+              "position_id": 85,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.337
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.678,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "AM",
+              "role_family": "AM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Matija Subotic",
+                  "id": 1710216,
+                  "role_code": "MID",
+                  "role_family": "MID",
+                  "zone_distance": 0.163
+                },
+                {
+                  "name": "Teodor Kralevski",
+                  "id": 1835474,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.1714
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Marin Soticek",
+              "id": 1510950,
+              "shirt_number": "23",
+              "position_id": 87,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.163,
+                "height": 0.25,
+                "width": 0.193
+              },
+              "vertical_layout": {
+                "x": 0.837,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.325
+              },
+              "tactical_x": 0.837,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.837,
+              "common_pitch_y": 0.678,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 3,
+              "role_code": "RAM",
+              "role_family": "AM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Fran Karacic",
+                  "id": 653965,
+                  "role_code": "LB",
+                  "role_family": "FB",
+                  "zone_distance": 0.0594
+                },
+                {
+                  "name": "Teodor Kralevski",
+                  "id": 1835474,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2878
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Michele Sego",
+              "id": 921593,
+              "shirt_number": "11",
+              "position_id": 115,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.87,
+                "height": 0.192,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.87,
+              "formation_line": 4,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "ST",
+              "role_family": "ST",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Teodor Kralevski",
+                  "id": 1835474,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2339
+                },
+                {
+                  "name": "Thanasis Triantafyllou",
+                  "id": 1352689,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2339
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Dante Stipica",
+              "id": 202511,
+              "shirt_number": "44"
+            },
+            {
+              "name": "Davyd Fesyuk",
+              "id": 1743976,
+              "shirt_number": "99"
+            },
+            {
+              "name": "Dario Melnjak",
+              "id": 460004,
+              "shirt_number": "17"
+            },
+            {
+              "name": "Dennis Hadzikadunic",
+              "id": 797797,
+              "shirt_number": "6"
+            },
+            {
+              "name": "Luka Hodak",
+              "id": 1644097,
+              "shirt_number": "38"
+            },
+            {
+              "name": "Roko Gabric",
+              "id": 1876648,
+              "shirt_number": "3"
+            },
+            {
+              "name": "Marino Skelin",
+              "id": 1667424,
+              "shirt_number": "36"
+            },
+            {
+              "name": "Adam Guram",
+              "id": 1950758,
+              "shirt_number": "26"
+            },
+            {
+              "name": "Ethnik Brruti",
+              "id": 1657862,
+              "shirt_number": "19"
+            },
+            {
+              "name": "Marko Livaja",
+              "id": 206242,
+              "shirt_number": "10"
+            },
+            {
+              "name": "Abdoulie Sanyang",
+              "id": 1080763,
+              "shirt_number": "7"
+            }
+          ],
+          "role_sanity_counts": {
+            "UNKNOWN": 1,
+            "ALIGNED": 7,
+            "FLEX_ROLE_ALIGNED": 3
+          },
+          "out_of_usual_line": []
+        },
+        {
+          "team_id": 175388,
+          "team_name": "NK Lokomotiva",
+          "side": "AWAY",
+          "listed_formation": "4-1-4-1",
+          "detected_shape": "4-1-4-1",
+          "shape_match": true,
+          "coordinate_coverage": 1.0,
+          "starters": [
+            {
+              "name": "Josip Posavec",
+              "id": 655544,
+              "shirt_number": "12",
+              "position_id": 11,
+              "usual_position_id": null,
+              "horizontal_layout": {
+                "x": 0.1,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.1,
+                "height": 0.192,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.1,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "GOALKEEPER",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.9,
+              "formation_line": 0,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "GK",
+              "role_family": "GK",
+              "role_inference_confidence": 0.99,
+              "role_source": "provider_layout",
+              "direct_opponents": [],
+              "usual_position_group": "UNKNOWN",
+              "role_vs_usual": "UNKNOWN",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Fran Karacic",
+              "id": 653965,
+              "shirt_number": "99",
+              "position_id": 32,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.875,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.125,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.125,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.875,
+              "common_pitch_y": 0.708,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 1,
+              "role_code": "LB",
+              "role_family": "FB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Marin Soticek",
+                  "id": 1510950,
+                  "role_code": "RAM",
+                  "role_family": "AM",
+                  "zone_distance": 0.0594
+                },
+                {
+                  "name": "Adrion Pajaziti",
+                  "id": 1130562,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.3249
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Teodor Kralevski",
+              "id": 1835474,
+              "shirt_number": "21",
+              "position_id": 34,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.625,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.375,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.375,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.625,
+              "common_pitch_y": 0.708,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 2,
+              "role_code": "LCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dalisson de Almeida",
+                  "id": 1120854,
+                  "role_code": "AM",
+                  "role_family": "AM",
+                  "zone_distance": 0.1714
+                },
+                {
+                  "name": "Michele Sego",
+                  "id": 921593,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2339
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Thanasis Triantafyllou",
+              "id": 1352689,
+              "shirt_number": "4",
+              "position_id": 36,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.375,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.625,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.625,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.375,
+              "common_pitch_y": 0.708,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 3,
+              "role_code": "RCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dalisson de Almeida",
+                  "id": 1120854,
+                  "role_code": "AM",
+                  "role_family": "AM",
+                  "zone_distance": 0.1714
+                },
+                {
+                  "name": "Michele Sego",
+                  "id": 921593,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2339
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Kristijan Cabrajic",
+              "id": 1663533,
+              "shirt_number": "20",
+              "position_id": 38,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.292,
+                "y": 0.125,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.875,
+                "y": 0.292,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.875,
+              "tactical_y": 0.292,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_WIDE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.125,
+              "common_pitch_y": 0.708,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 4,
+              "role_code": "RB",
+              "role_family": "FB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Andjelo Sutalo",
+                  "id": 1699550,
+                  "role_code": "LAM",
+                  "role_family": "AM",
+                  "zone_distance": 0.0583
+                },
+                {
+                  "name": "Alberto del Moral",
+                  "id": 1202029,
+                  "role_code": "LDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.3249
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Matija Subotic",
+              "id": 1710216,
+              "shirt_number": "19",
+              "position_id": 65,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.485,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.192
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.485,
+                "height": 0.192,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.485,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.515,
+              "formation_line": 2,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "MID",
+              "role_family": "MID",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dalisson de Almeida",
+                  "id": 1120854,
+                  "role_code": "AM",
+                  "role_family": "AM",
+                  "zone_distance": 0.163
+                },
+                {
+                  "name": "Adrion Pajaziti",
+                  "id": 1130562,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.2717
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Dusan Vukovic",
+              "id": 1649995,
+              "shirt_number": "7",
+              "position_id": 82,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.875,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.125,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.125,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.875,
+              "common_pitch_y": 0.322,
+              "formation_line": 3,
+              "line_size": 4,
+              "line_slot": 1,
+              "role_code": "LM",
+              "role_family": "WM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Simun Hrgovic",
+                  "id": 1466684,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Adrion Pajaziti",
+                  "id": 1130562,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.287
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Pavle Smiljanic",
+              "id": 1875856,
+              "shirt_number": "25",
+              "position_id": 84,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.625,
+                "height": 0.25,
+                "width": 0.193
+              },
+              "vertical_layout": {
+                "x": 0.375,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.375,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.625,
+              "common_pitch_y": 0.322,
+              "formation_line": 3,
+              "line_size": 4,
+              "line_slot": 2,
+              "role_code": "LCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Ron Raçi",
+                  "id": 1768687,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Adrion Pajaziti",
+                  "id": 1130562,
+                  "role_code": "RDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.1919
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Jakov-Anton Vasilj",
+              "id": 1270127,
+              "shirt_number": "29",
+              "position_id": 86,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.375,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.625,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.625,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.375,
+              "common_pitch_y": 0.322,
+              "formation_line": 3,
+              "line_size": 4,
+              "line_slot": 3,
+              "role_code": "RCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dario Maresic",
+                  "id": 764741,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Alberto del Moral",
+                  "id": 1202029,
+                  "role_code": "LDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.1919
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Dominik Thaqi",
+              "id": 1701794,
+              "shirt_number": "15",
+              "position_id": 88,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.678,
+                "y": 0.125,
+                "height": 0.25,
+                "width": 0.385
+              },
+              "vertical_layout": {
+                "x": 0.875,
+                "y": 0.678,
+                "height": 0.192,
+                "width": 0.25
+              },
+              "tactical_x": 0.875,
+              "tactical_y": 0.678,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.125,
+              "common_pitch_y": 0.322,
+              "formation_line": 3,
+              "line_size": 4,
+              "line_slot": 4,
+              "role_code": "RM",
+              "role_family": "WM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Mathieu Acapandié",
+                  "id": 1438316,
+                  "role_code": "LB",
+                  "role_family": "FB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Alberto del Moral",
+                  "id": 1202029,
+                  "role_code": "LDM",
+                  "role_family": "DM",
+                  "zone_distance": 0.287
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Noel Djurkovic",
+              "id": 1678859,
+              "shirt_number": "28",
+              "position_id": 115,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.89,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.212
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.89,
+                "height": 0.192,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.89,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.11,
+              "formation_line": 4,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "ST",
+              "role_family": "ST",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Dario Maresic",
+                  "id": 764741,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2482
+                },
+                {
+                  "name": "Ron Raçi",
+                  "id": 1768687,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2482
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Luka Savatovic",
+              "id": 1511001,
+              "shirt_number": "32"
+            },
+            {
+              "name": "Jakov Gurlica",
+              "id": 1508367,
+              "shirt_number": "98"
+            },
+            {
+              "name": "Noa Godec",
+              "id": 1798007,
+              "shirt_number": "27"
+            },
+            {
+              "name": "Ivan Katić",
+              "id": 1714788,
+              "shirt_number": "24"
+            },
+            {
+              "name": "Dardan Morina",
+              "id": 1518959,
+              "shirt_number": "26"
+            },
+            {
+              "name": "Marcel Lorber",
+              "id": 1388757,
+              "shirt_number": "14"
+            },
+            {
+              "name": "Duje Reic",
+              "id": 1839694,
+              "shirt_number": "30"
+            },
+            {
+              "name": "Feta Fetai",
+              "id": 1516458,
+              "shirt_number": "6"
+            },
+            {
+              "name": "Mate Antunovic",
+              "id": 1417096,
+              "shirt_number": "22"
+            },
+            {
+              "name": "Kayke",
+              "id": 2140735,
+              "shirt_number": "16"
+            }
+          ],
+          "role_sanity_counts": {
+            "UNKNOWN": 1,
+            "ALIGNED": 8,
+            "FLEX_ROLE_ALIGNED": 2
+          },
+          "out_of_usual_line": []
+        }
+      ],
+      "warnings": [
+        "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
+      ],
+      "role_sanity_counts": {
+        "UNKNOWN": 2,
+        "ALIGNED": 15,
+        "FLEX_ROLE_ALIGNED": 5
+      },
+      "out_of_usual_line_count": 0
+    },
+    {
       "match_market_id": "36351.2143",
       "match_event_id": 16037214,
       "match": "Lecce - Roma",
       "start_time": "31-08-2026 18:30",
       "start_utc": "2026-08-31T16:30:00+00:00",
       "league": "Serie A",
-      "minutes_to_start": 37.1,
+      "minutes_to_start": 24.4,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -10538,13 +11811,1341 @@
         "FLEX_ROLE_ALIGNED": 6
       },
       "out_of_usual_line_count": 0
+    },
+    {
+      "match_market_id": "36351.2726",
+      "match_event_id": 16052213,
+      "match": "Rapid Bucarest - Universitatea Craiova",
+      "start_time": "31-08-2026 19:30",
+      "start_utc": "2026-08-31T17:30:00+00:00",
+      "league": "Liga I",
+      "minutes_to_start": 84.4,
+      "status": "SOURCE_CONFIRMED",
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5853484,
+        "home": "Rapid București",
+        "away": "Universitatea Craiova",
+        "league": "Superliga",
+        "score": 0.842,
+        "time_delta_min": 0.0
+      },
+      "positioning_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "positioning_confidence": 0.94,
+      "provider_source": "optaSdapiLegacyIntegration",
+      "lineup_type": "standard",
+      "coordinate_semantics": {
+        "provider_vertical_x": "lateral 0=left, 1=right from team perspective",
+        "provider_vertical_y": "depth 0=own goal, 1=opponent goal from team perspective",
+        "common_pitch": "away x/y mirrored so both teams share one physical-pitch frame"
+      },
+      "teams": [
+        {
+          "team_id": 9738,
+          "team_name": "Rapid București",
+          "side": "HOME",
+          "listed_formation": "4-3-3",
+          "detected_shape": "4-3-3",
+          "shape_match": true,
+          "coordinate_coverage": 1.0,
+          "starters": [
+            {
+              "name": "Mihai Aioani",
+              "id": 943864,
+              "shirt_number": "16",
+              "position_id": 11,
+              "usual_position_id": null,
+              "horizontal_layout": {
+                "x": 0.1,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.2
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.1,
+                "height": 0.2,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.1,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "GOALKEEPER",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.1,
+              "formation_line": 0,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "GK",
+              "role_family": "GK",
+              "role_inference_confidence": 0.99,
+              "role_source": "provider_layout",
+              "direct_opponents": [],
+              "usual_position_group": "UNKNOWN",
+              "role_vs_usual": "UNKNOWN",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Razvan Onea",
+              "id": 1087648,
+              "shirt_number": "19",
+              "position_id": 32,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.875,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.125,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.125,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.125,
+              "common_pitch_y": 0.357,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 1,
+              "role_code": "LB",
+              "role_family": "FB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Nicusor Bancu",
+                  "id": 559954,
+                  "role_code": "RWB",
+                  "role_family": "WB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Stefan Baiaram",
+                  "id": 1068880,
+                  "role_code": "RW",
+                  "role_family": "W",
+                  "zone_distance": 0.2544
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Alexandru Pascanu",
+              "id": 789488,
+              "shirt_number": "5",
+              "position_id": 34,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.625,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.375,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.375,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.375,
+              "common_pitch_y": 0.357,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 2,
+              "role_code": "LCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Alexandru Cicâldau",
+                  "id": 770163,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Assad Al Hamlawi",
+                  "id": 1134292,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2829
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Lars Kramer",
+              "id": 890260,
+              "shirt_number": "6",
+              "position_id": 36,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.375,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.625,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.625,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.625,
+              "common_pitch_y": 0.357,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 3,
+              "role_code": "RCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Tudor Baluta",
+                  "id": 862022,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Assad Al Hamlawi",
+                  "id": 1134292,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2829
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Robert Salceanu",
+              "id": 1181263,
+              "shirt_number": "21",
+              "position_id": 38,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.125,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.875,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.875,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_WIDE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.875,
+              "common_pitch_y": 0.357,
+              "formation_line": 1,
+              "line_size": 4,
+              "line_slot": 4,
+              "role_code": "RB",
+              "role_family": "FB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Carlos Mora",
+                  "id": 1202707,
+                  "role_code": "LWB",
+                  "role_family": "WB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "David Matei",
+                  "id": 1451610,
+                  "role_code": "LW",
+                  "role_family": "W",
+                  "zone_distance": 0.2544
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Constantin Grameni",
+              "id": 1160381,
+              "shirt_number": "8",
+              "position_id": 73,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.79,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.21,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.21,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.21,
+              "common_pitch_y": 0.613,
+              "formation_line": 2,
+              "line_size": 3,
+              "line_slot": 1,
+              "role_code": "LCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Vladimir Screciu",
+                  "id": 833603,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Nicusor Bancu",
+                  "id": 559954,
+                  "role_code": "RWB",
+                  "role_family": "WB",
+                  "zone_distance": 0.2535
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Catalin Vulturar",
+              "id": 1026406,
+              "shirt_number": "15",
+              "position_id": 75,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.613,
+              "formation_line": 2,
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "CM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Nikola Stevanovic",
+                  "id": 1057949,
+                  "role_code": "CB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Tudor Baluta",
+                  "id": 862022,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2821
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Chec Bebel Doumbia",
+              "id": 1869843,
+              "shirt_number": "44",
+              "position_id": 77,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.21,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.79,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.79,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.79,
+              "common_pitch_y": 0.613,
+              "formation_line": 2,
+              "line_size": 3,
+              "line_slot": 3,
+              "role_code": "RCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Oleksandr Romanchuk",
+                  "id": 890946,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Carlos Mora",
+                  "id": 1202707,
+                  "role_code": "LWB",
+                  "role_family": "WB",
+                  "zone_distance": 0.2535
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Olimpiu Morutan",
+              "id": 837879,
+              "shirt_number": "80",
+              "position_id": 103,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.79,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.21,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.21,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.21,
+              "common_pitch_y": 0.87,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 1,
+              "role_code": "LW",
+              "role_family": "W",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Vladimir Screciu",
+                  "id": 833603,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.227
+                },
+                {
+                  "name": "Nikola Stevanovic",
+                  "id": 1057949,
+                  "role_code": "CB",
+                  "role_family": "CB",
+                  "zone_distance": 0.4525
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Filip Stojilkovic",
+              "id": 1079080,
+              "shirt_number": "9",
+              "position_id": 105,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.87,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "ST",
+              "role_family": "ST",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Nikola Stevanovic",
+                  "id": 1057949,
+                  "role_code": "CB",
+                  "role_family": "CB",
+                  "zone_distance": 0.227
+                },
+                {
+                  "name": "Oleksandr Romanchuk",
+                  "id": 890946,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.4525
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Alex Dobre",
+              "id": 790727,
+              "shirt_number": "29",
+              "position_id": 107,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.21,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.79,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.79,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.79,
+              "common_pitch_y": 0.87,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 3,
+              "role_code": "RW",
+              "role_family": "W",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Oleksandr Romanchuk",
+                  "id": 890946,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.227
+                },
+                {
+                  "name": "Nikola Stevanovic",
+                  "id": 1057949,
+                  "role_code": "CB",
+                  "role_family": "CB",
+                  "zone_distance": 0.4525
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Bogdan Ungureanu",
+              "id": 1395733,
+              "shirt_number": "99"
+            },
+            {
+              "name": "Latif Ouedraogo",
+              "id": 1948559,
+              "shirt_number": "66"
+            },
+            {
+              "name": "Alin Kumer",
+              "id": 1693590,
+              "shirt_number": "42"
+            },
+            {
+              "name": "Cristian Manea",
+              "id": 574845,
+              "shirt_number": "23"
+            },
+            {
+              "name": "Denis Ciobotariu",
+              "id": 943868,
+              "shirt_number": "13"
+            },
+            {
+              "name": "Rares Pop",
+              "id": 1362633,
+              "shirt_number": "55"
+            },
+            {
+              "name": "Vladan Bubanja",
+              "id": 857708,
+              "shirt_number": "22"
+            },
+            {
+              "name": "Omar El Sawy",
+              "id": 1400766,
+              "shirt_number": "88"
+            },
+            {
+              "name": "Jason Kodor",
+              "id": 2076651,
+              "shirt_number": "77"
+            },
+            {
+              "name": "Timotej Jambor",
+              "id": 1179249,
+              "shirt_number": "90"
+            },
+            {
+              "name": "Mohammed Kamara",
+              "id": 1012204,
+              "shirt_number": "7"
+            },
+            {
+              "name": "Eric Tape",
+              "id": null,
+              "shirt_number": "79"
+            }
+          ],
+          "role_sanity_counts": {
+            "UNKNOWN": 1,
+            "ALIGNED": 8,
+            "FLEX_ROLE_ALIGNED": 2
+          },
+          "out_of_usual_line": []
+        },
+        {
+          "team_id": 480286,
+          "team_name": "Universitatea Craiova",
+          "side": "AWAY",
+          "listed_formation": "3-4-3",
+          "detected_shape": "3-4-3",
+          "shape_match": true,
+          "coordinate_coverage": 1.0,
+          "starters": [
+            {
+              "name": "Laurentiu Popescu",
+              "id": 853796,
+              "shirt_number": "21",
+              "position_id": 11,
+              "usual_position_id": null,
+              "horizontal_layout": {
+                "x": 0.1,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.2
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.1,
+                "height": 0.2,
+                "width": 1
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.1,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "GOALKEEPER",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.9,
+              "formation_line": 0,
+              "line_size": 1,
+              "line_slot": 1,
+              "role_code": "GK",
+              "role_family": "GK",
+              "role_inference_confidence": 0.99,
+              "role_source": "provider_layout",
+              "direct_opponents": [],
+              "usual_position_group": "UNKNOWN",
+              "role_vs_usual": "UNKNOWN",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Oleksandr Romanchuk",
+              "id": 890946,
+              "shirt_number": "3",
+              "position_id": 33,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.79,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.21,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.21,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.79,
+              "common_pitch_y": 0.643,
+              "formation_line": 1,
+              "line_size": 3,
+              "line_slot": 1,
+              "role_code": "LCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Chec Bebel Doumbia",
+                  "id": 1869843,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Alex Dobre",
+                  "id": 790727,
+                  "role_code": "RW",
+                  "role_family": "W",
+                  "zone_distance": 0.227
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Nikola Stevanovic",
+              "id": 1057949,
+              "shirt_number": "24",
+              "position_id": 35,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.643,
+              "formation_line": 1,
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "CB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Catalin Vulturar",
+                  "id": 1026406,
+                  "role_code": "CM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Filip Stojilkovic",
+                  "id": 1079080,
+                  "role_code": "ST",
+                  "role_family": "ST",
+                  "zone_distance": 0.227
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Vladimir Screciu",
+              "id": 833603,
+              "shirt_number": "6",
+              "position_id": 37,
+              "usual_position_id": 1,
+              "horizontal_layout": {
+                "x": 0.357,
+                "y": 0.21,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.79,
+                "y": 0.357,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.79,
+              "tactical_y": 0.357,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "DEFENSIVE_LINE",
+              "common_pitch_x": 0.21,
+              "common_pitch_y": 0.643,
+              "formation_line": 1,
+              "line_size": 3,
+              "line_slot": 3,
+              "role_code": "RCB",
+              "role_family": "CB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Constantin Grameni",
+                  "id": 1160381,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Olimpiu Morutan",
+                  "id": 837879,
+                  "role_code": "LW",
+                  "role_family": "W",
+                  "zone_distance": 0.227
+                }
+              ],
+              "usual_position_group": "DEF",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Carlos Mora",
+              "id": 1202707,
+              "shirt_number": "17",
+              "position_id": 72,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.875,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.125,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.125,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.875,
+              "common_pitch_y": 0.387,
+              "formation_line": 2,
+              "line_size": 4,
+              "line_slot": 1,
+              "role_code": "LWB",
+              "role_family": "WB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Robert Salceanu",
+                  "id": 1181263,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Chec Bebel Doumbia",
+                  "id": 1869843,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2535
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Tudor Baluta",
+              "id": 862022,
+              "shirt_number": "8",
+              "position_id": 74,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.625,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.375,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.375,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.625,
+              "common_pitch_y": 0.387,
+              "formation_line": 2,
+              "line_size": 4,
+              "line_slot": 2,
+              "role_code": "LCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Lars Kramer",
+                  "id": 890260,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Catalin Vulturar",
+                  "id": 1026406,
+                  "role_code": "CM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2821
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Alexandru Cicâldau",
+              "id": 770163,
+              "shirt_number": "20",
+              "position_id": 76,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.375,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.625,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.625,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.375,
+              "common_pitch_y": 0.387,
+              "formation_line": 2,
+              "line_size": 4,
+              "line_slot": 3,
+              "role_code": "RCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Alexandru Pascanu",
+                  "id": 789488,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Catalin Vulturar",
+                  "id": 1026406,
+                  "role_code": "CM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2821
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Nicusor Bancu",
+              "id": 559954,
+              "shirt_number": "11",
+              "position_id": 78,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.125,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.875,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.875,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_WIDE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.125,
+              "common_pitch_y": 0.387,
+              "formation_line": 2,
+              "line_size": 4,
+              "line_slot": 4,
+              "role_code": "RWB",
+              "role_family": "WB",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Razvan Onea",
+                  "id": 1087648,
+                  "role_code": "LB",
+                  "role_family": "FB",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Constantin Grameni",
+                  "id": 1160381,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.2535
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "David Matei",
+              "id": 1451610,
+              "shirt_number": "30",
+              "position_id": 103,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.79,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.21,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.21,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "LEFT",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.79,
+              "common_pitch_y": 0.13,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 1,
+              "role_code": "LW",
+              "role_family": "W",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Robert Salceanu",
+                  "id": 1181263,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.2544
+                },
+                {
+                  "name": "Lars Kramer",
+                  "id": 890260,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.318
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Assad Al Hamlawi",
+              "id": 1134292,
+              "shirt_number": "9",
+              "position_id": 105,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.5,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.5,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.5,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "CENTRAL",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.5,
+              "common_pitch_y": 0.13,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 2,
+              "role_code": "ST",
+              "role_family": "ST",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Alexandru Pascanu",
+                  "id": 789488,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2829
+                },
+                {
+                  "name": "Lars Kramer",
+                  "id": 890260,
+                  "role_code": "RCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.2829
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Stefan Baiaram",
+              "id": 1068880,
+              "shirt_number": "10",
+              "position_id": 107,
+              "usual_position_id": 3,
+              "horizontal_layout": {
+                "x": 0.87,
+                "y": 0.21,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.79,
+                "y": 0.87,
+                "height": 0.2,
+                "width": 0.29
+              },
+              "tactical_x": 0.79,
+              "tactical_y": 0.87,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_depth": "ATTACKING_LINE",
+              "common_pitch_x": 0.21,
+              "common_pitch_y": 0.13,
+              "formation_line": 3,
+              "line_size": 3,
+              "line_slot": 3,
+              "role_code": "RW",
+              "role_family": "W",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
+                {
+                  "name": "Razvan Onea",
+                  "id": 1087648,
+                  "role_code": "LB",
+                  "role_family": "FB",
+                  "zone_distance": 0.2544
+                },
+                {
+                  "name": "Alexandru Pascanu",
+                  "id": 789488,
+                  "role_code": "LCB",
+                  "role_family": "CB",
+                  "zone_distance": 0.318
+                }
+              ],
+              "usual_position_group": "FWD",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Razvan Sava",
+              "id": 1132319,
+              "shirt_number": "90"
+            },
+            {
+              "name": "Alexandru Maxim",
+              "id": 1425712,
+              "shirt_number": "1"
+            },
+            {
+              "name": "Ronaldo Webster",
+              "id": 1529853,
+              "shirt_number": "31"
+            },
+            {
+              "name": "Heri Tavares",
+              "id": 776583,
+              "shirt_number": "19"
+            },
+            {
+              "name": "Luca Basceanu",
+              "id": 1506576,
+              "shirt_number": "29"
+            },
+            {
+              "name": "Alexandru Cretu",
+              "id": 351043,
+              "shirt_number": "4"
+            },
+            {
+              "name": "Teles",
+              "id": 816239,
+              "shirt_number": "23"
+            },
+            {
+              "name": "Mihnea Radulescu",
+              "id": 1419963,
+              "shirt_number": "18"
+            },
+            {
+              "name": "Monday Etim",
+              "id": 847613,
+              "shirt_number": "12"
+            },
+            {
+              "name": "Steven Nsimba",
+              "id": 1387304,
+              "shirt_number": "7"
+            },
+            {
+              "name": "Simon Elisor",
+              "id": 1178330,
+              "shirt_number": "22"
+            }
+          ],
+          "role_sanity_counts": {
+            "UNKNOWN": 1,
+            "ALIGNED": 6,
+            "FLEX_ROLE_ALIGNED": 4
+          },
+          "out_of_usual_line": []
+        }
+      ],
+      "warnings": [
+        "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
+      ],
+      "role_sanity_counts": {
+        "UNKNOWN": 2,
+        "ALIGNED": 14,
+        "FLEX_ROLE_ALIGNED": 6
+      },
+      "out_of_usual_line_count": 0
     }
   ],
   "role_sanity_method": "usual-position-v1",
   "role_sanity_counts": {
-    "UNKNOWN": 16,
-    "ALIGNED": 111,
-    "FLEX_ROLE_ALIGNED": 42,
-    "OUT_OF_USUAL_LINE": 7
+    "ALIGNED": 154,
+    "FLEX_ROLE_ALIGNED": 54,
+    "OUT_OF_USUAL_LINE": 4,
+    "UNKNOWN": 8
   }
 }
