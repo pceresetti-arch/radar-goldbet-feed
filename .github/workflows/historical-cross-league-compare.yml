@@ -1,0 +1,49 @@
+name: Historical Cross League Compare
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-cross-league-compare.yml'
+      - 'tools/historical_compare_sweden_norway.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-cross-league-compare
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compare frozen Sweden and Norway holdouts
+        run: python tools/historical_compare_sweden_norway.py
+      - name: Commit cross-league evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python tools/historical_compare_sweden_norway.py
+            git add feed/historical/cross-league
+            if git diff --cached --quiet; then
+              echo "No comparison changes"
+              exit 0
+            fi
+            git commit -m "Update Sweden Norway cross-league OOS comparison"
+            if git push; then
+              exit 0
+            fi
+            echo "Push raced with another workflow; regenerating from latest main attempt ${attempt}/5"
+            sleep $((attempt * 2))
+          done
+          echo "Unable to publish cross-league evidence after bounded retries"
+          exit 1
