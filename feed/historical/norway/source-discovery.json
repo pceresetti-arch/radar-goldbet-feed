@@ -1,0 +1,194 @@
+{
+  "schema_version": "radar-historical-norway-source-discovery-v1",
+  "generated_at": "2026-08-31T11:25:25.254273+00:00",
+  "source": "Football-Data.co.uk",
+  "source_page": "https://www.football-data.co.uk/norway.php",
+  "classification": "HISTORICAL_BASELINE_CANDIDATE_NOT_GOLDBET",
+  "anti_hindsight_note": "This source may support historical results/market benchmark only. It must never be relabelled GoldBet or TRUE_OPEN_GOLDBET.",
+  "page_fetch": {
+    "http_status": 200,
+    "sha256": "8c98a992faa3a6b4fee537f7be487f1ef1c2ed161766d00d34d8fef74dfeb7f5",
+    "bytes": 32608
+  },
+  "discovered_files": [
+    {
+      "url": "https://www.football-data.co.uk/new/NOR.csv",
+      "anchor_text": "",
+      "season_tokens": [],
+      "download_status": "FETCHED",
+      "http_status": 200,
+      "sha256": "22edff434a6b32daf94d6644e21c0281f44935a2e069e8c70ae6475b36e07a6b",
+      "bytes": 409808,
+      "csv_profile": {
+        "rows_including_header": 3519,
+        "data_rows": 3518,
+        "columns": [
+          "Country",
+          "League",
+          "Season",
+          "Date",
+          "Time",
+          "Home",
+          "Away",
+          "HG",
+          "AG",
+          "Res",
+          "PSCH",
+          "PSCD",
+          "PSCA",
+          "MaxCH",
+          "MaxCD",
+          "MaxCA",
+          "AvgCH",
+          "AvgCD",
+          "AvgCA",
+          "BFECH",
+          "BFECD",
+          "BFECA",
+          "B365CH",
+          "B365CD",
+          "B365CA"
+        ],
+        "season_counts": {
+          "2012": 242,
+          "2013": 242,
+          "2014": 242,
+          "2015": 242,
+          "2016": 242,
+          "2017": 242,
+          "2018": 241,
+          "2019": 242,
+          "2020": 240,
+          "2021": 241,
+          "2022": 242,
+          "2023": 242,
+          "2024": 242,
+          "2025": 240,
+          "2026": 136
+        },
+        "league_counts": {
+          "Eliteserien": 3518
+        },
+        "date_min": "2012-03-23",
+        "date_max": "2026-08-16",
+        "unparsed_date_rows": 0,
+        "missing_required": {
+          "Country": 0,
+          "League": 0,
+          "Season": 0,
+          "Date": 0,
+          "Home": 0,
+          "Away": 0,
+          "HG": 0,
+          "AG": 0,
+          "Res": 0
+        },
+        "duplicate_fixture_keys": 0,
+        "invalid_or_inconsistent_result_rows": 0,
+        "odds_quality": {
+          "PSCH": {
+            "valid": 3346,
+            "missing": 172,
+            "invalid_or_nonpositive": 0
+          },
+          "PSCD": {
+            "valid": 3346,
+            "missing": 172,
+            "invalid_or_nonpositive": 0
+          },
+          "PSCA": {
+            "valid": 3346,
+            "missing": 172,
+            "invalid_or_nonpositive": 0
+          },
+          "MaxCH": {
+            "valid": 3518,
+            "missing": 0,
+            "invalid_or_nonpositive": 0
+          },
+          "MaxCD": {
+            "valid": 3518,
+            "missing": 0,
+            "invalid_or_nonpositive": 0
+          },
+          "MaxCA": {
+            "valid": 3518,
+            "missing": 0,
+            "invalid_or_nonpositive": 0
+          },
+          "AvgCH": {
+            "valid": 3518,
+            "missing": 0,
+            "invalid_or_nonpositive": 0
+          },
+          "AvgCD": {
+            "valid": 3518,
+            "missing": 0,
+            "invalid_or_nonpositive": 0
+          },
+          "AvgCA": {
+            "valid": 3518,
+            "missing": 0,
+            "invalid_or_nonpositive": 0
+          },
+          "BFECH": {
+            "valid": 484,
+            "missing": 3034,
+            "invalid_or_nonpositive": 0
+          },
+          "BFECD": {
+            "valid": 484,
+            "missing": 3034,
+            "invalid_or_nonpositive": 0
+          },
+          "BFECA": {
+            "valid": 484,
+            "missing": 3034,
+            "invalid_or_nonpositive": 0
+          },
+          "B365CH": {
+            "valid": 237,
+            "missing": 3281,
+            "invalid_or_nonpositive": 0
+          },
+          "B365CD": {
+            "valid": 237,
+            "missing": 3281,
+            "invalid_or_nonpositive": 0
+          },
+          "B365CA": {
+            "valid": 237,
+            "missing": 3281,
+            "invalid_or_nonpositive": 0
+          }
+        }
+      },
+      "persisted_snapshot": "feed/historical/norway/football-data-NOR.csv"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "discovered_csv_count": 1,
+    "fetched_csv_count": 1,
+    "season_tokens_verified_from_source": [
+      "2012",
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "2026"
+    ],
+    "structural_baseline_candidate_rows": 3518,
+    "goldbet_same_book_open_close_eligible": false,
+    "modeling_allowed_from_this_discovery_alone": false
+  }
+}
