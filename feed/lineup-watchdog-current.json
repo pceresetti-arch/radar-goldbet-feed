@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-31T01:06:22.241236+00:00",
+  "generated_at": "2026-08-31T01:15:52.450842+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,82 +21,116 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-31T01:03:22.159111+00:00",
-      "finished_at": "2026-08-31T01:03:26.029274+00:00",
-      "official_count": 2,
+      "started_at": "2026-08-31T01:15:49.823257+00:00",
+      "finished_at": "2026-08-31T01:15:52.450830+00:00",
+      "official_count": 3,
       "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T01:04:01.029414+00:00",
-      "finished_at": "2026-08-31T01:04:01.267958+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T01:04:36.268172+00:00",
-      "finished_at": "2026-08-31T01:04:36.572110+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T01:05:11.572299+00:00",
-      "finished_at": "2026-08-31T01:05:11.760607+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T01:05:46.760788+00:00",
-      "finished_at": "2026-08-31T01:05:47.063426+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T01:06:22.063623+00:00",
-      "finished_at": "2026-08-31T01:06:22.241161+00:00",
-      "official_count": 2,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-31T01:15:52.450721+00:00",
+          "match": "Monterrey - San Luis",
+          "league": "Primera Division",
+          "start_time": "31-08-2026 04:10",
+          "minutes_to_start": 54.1,
+          "match_market_id": "36361.3020",
+          "match_event_id": 16041340,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000014552,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "f047927932fba1438e50",
+          "current_xi_fingerprint": "88f516bed19a06aca000",
+          "confirmed_at": "2026-08-31T01:15:52.208709+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-31T01:15:52.450721+00:00",
+          "match": "Monterrey - San Luis",
+          "league": "Primera Division",
+          "start_time": "31-08-2026 04:10",
+          "minutes_to_start": 54.1,
+          "match_market_id": "36361.3020",
+          "match_event_id": 16041340,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000014552,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "f047927932fba1438e50",
+          "current_xi_fingerprint": "88f516bed19a06aca000",
+          "confirmed_at": "2026-08-31T01:15:52.208709+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
+  "observed_events": [
     {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-31T01:15:52.450721+00:00",
       "match": "Monterrey - San Luis",
+      "league": "Primera Division",
+      "start_time": "31-08-2026 04:10",
+      "minutes_to_start": 54.1,
       "match_market_id": "36361.3020",
       "match_event_id": 16041340,
-      "minutes_to_start": 63.6,
-      "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
-      "fotmob_match_id": 1000014552
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000014552,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "f047927932fba1438e50",
+      "current_xi_fingerprint": "88f516bed19a06aca000",
+      "confirmed_at": "2026-08-31T01:15:52.208709+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
     }
   ],
-  "target_count": 6
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-31T01:15:52.450721+00:00",
+      "match": "Monterrey - San Luis",
+      "league": "Primera Division",
+      "start_time": "31-08-2026 04:10",
+      "minutes_to_start": 54.1,
+      "match_market_id": "36361.3020",
+      "match_event_id": 16041340,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000014552,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "f047927932fba1438e50",
+      "current_xi_fingerprint": "88f516bed19a06aca000",
+      "confirmed_at": "2026-08-31T01:15:52.208709+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "San Jose Earthquakes II - Los Angeles FC 2",
+      "match_market_id": "36361.43899",
+      "match_event_id": 16072414,
+      "minutes_to_start": 74.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007747
+    }
+  ],
+  "target_count": 4
 }
