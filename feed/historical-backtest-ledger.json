@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v2",
-  "generated_at": "2026-08-31T08:34:00+00:00",
+  "schema_version": "radar-historical-backtest-ledger-v3",
+  "generated_at": "2026-08-31T09:36:21+00:00",
   "local_timezone": "Europe/Rome",
-  "status": "CONTRACT_AND_SOURCE_GATES_HARDENED_DATASET_NOT_YET_ELIGIBLE",
+  "status": "SWEDEN_FOUR_SEASON_BASELINE_COMPLETED_HOLDOUT_BENCHMARK_READY",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -28,20 +28,36 @@
     "market_confirmation_contract": "RADAR_MARKET_CONFIRMATION_MODEL.md"
   },
   "historical_perimeter": {
-    "priority_order": ["Sweden", "Norway", "other Radar leagues with sufficient verified coverage"],
+    "priority_order": [
+      "Sweden",
+      "Norway",
+      "other Radar leagues with sufficient verified coverage"
+    ],
     "requested_historical_seasons": 4,
-    "season_labels": null,
-    "season_label_status": "NOT_YET_VERIFIED_DO_NOT_INFER",
+    "season_labels": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "season_label_status": "VERIFIED_FROM_FOOTBALL_DATA_SOURCE_AND_FROZEN",
     "required_split": "chronological development then frozen temporal holdout"
   },
   "repository_inventory": {
-    "eligible_multi_season_fixture_results_rows": 0,
+    "eligible_sweden_regular_fixture_rows": 960,
+    "development_rows": 720,
+    "holdout_rows": 240,
+    "excluded_cross_division_playoff_rows": 4,
+    "eligible_external_market_close_benchmark_rows": 960,
     "eligible_multi_season_same_book_open_close_rows": 0,
     "eligible_multi_season_intermediate_or_t30_rows": 0,
     "eligible_multi_season_pre_match_xi_rows": 0,
     "eligible_multi_season_player_prop_rows": 0,
-    "modeling_allowed": false,
-    "note": "No repository file currently provides a joinable Sweden/Norway multi-season table with fixture identity, kickoff, pre-match features, authoritative outcomes and comparable same-book prices."
+    "kickoff_utc_verified_rows": 0,
+    "structural_modeling_allowed": true,
+    "external_close_benchmark_allowed": true,
+    "primary_goldbet_mms_allowed": false,
+    "note": "Four completed Allsvenskan regular seasons are normalized. Source kickoff time has no documented timezone, so UTC is not inferred and rolling features must use strictly prior dates."
   },
   "quarantined_evidence": [
     {
@@ -66,16 +82,31 @@
     "Created a machine-readable source manifest with acceptance gates and missing-block states.",
     "Hardened TRUE OPEN/FIRST_SEEN distinction for historical MMS tests.",
     "Hardened temporal development/holdout freeze and post-kickoff outcome-join boundary.",
-    "Blocked model metrics and threshold tuning until a verified Sweden multi-season source block exists."
+    "Blocked model metrics and threshold tuning until a verified Sweden multi-season source block exists.",
+    "Materialized Football-Data Sweden snapshot with 3,526 source rows across 2012-2026.",
+    "Profiled zero missing required fields, zero duplicate fixture keys, zero inconsistent outcomes and zero unparsed dates.",
+    "Frozen latest four completed seasons 2022-2025 before holdout evaluation.",
+    "Excluded four cross-division promotion/relegation playoff rows, yielding 960 regular-season fixtures.",
+    "Frozen temporal split: 2022-2024 development (720), 2025 holdout (240).",
+    "Established de-vigged external average closing-market holdout benchmark without relabelling it GoldBet.",
+    "Made historical workflow commit regeneration safe against concurrent operational pushes."
   ],
   "metrics": {
-    "brier": "NOT_CALCULABLE",
-    "log_loss": "NOT_CALCULABLE",
-    "calibration": "NOT_CALCULABLE",
-    "clv": "NOT_CALCULABLE",
-    "roi_yield": "NOT_CALCULABLE",
-    "drawdown": "NOT_CALCULABLE",
-    "reason": "No eligible joined multi-season sample exists in the current repository."
+    "holdout_n": 240,
+    "development_prior_baseline": {
+      "multiclass_brier_sum_mean": 0.6533333333333335,
+      "log_loss": 1.075408209421105,
+      "top_pick_accuracy": 0.4
+    },
+    "devigged_external_average_close_benchmark": {
+      "multiclass_brier_sum_mean": 0.5908613334036062,
+      "log_loss": 0.9916574212366954,
+      "top_pick_accuracy": 0.5416666666666666,
+      "average_overround": 1.0732361473719394
+    },
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
   },
   "ablation_plan": {
     "paired_same_sample_required": true,
@@ -92,20 +123,22 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Sweden source acquisition first, Norway second.",
-    "minimum_acceptance": "verified fixture identity + kickoff + authoritative outcome + same-book pre-match price timestamp",
-    "mms_acceptance": "same-book same-event same-market same-period same-line same-selection real OPEN/CLOSE timestamps",
-    "first_model_block_after_acceptance": "Pre-match structural baseline plus same-book OPEN to CLOSE movement; freeze chronological development/holdout before tuning."
+    "priority": "Build Sweden strictly-prior-date structural features (Elo/form/home-away/opponent quality) on the frozen 2022-2024 development sample, freeze parameters, then score the untouched 2025 holdout.",
+    "market_lane": "Keep external closing 1X2 benchmark separate; do not tune on 2025.",
+    "mms_lane": "GoldBet historical TRUE OPEN remains unavailable; no OPEN-to-CLOSE or threshold test is authorized.",
+    "after_sweden_structural": "Acquire and profile Norway under the same contract."
   },
   "rule_decisions": {
     "promoted_rules": [],
     "rejected_rules": [],
     "operational_changes": [],
     "historical_method_changes": [
-      "Dedicated historical contract introduced.",
-      "Source manifest and explicit acceptance gate introduced.",
-      "Outcome join formally restricted to post-freeze evaluation."
+      "Structural fixture eligibility separated from market-price eligibility.",
+      "Latest four completed Allsvenskan seasons frozen as 2022-2025.",
+      "Cross-division playoffs excluded from regular-season comparability.",
+      "2025 frozen as temporal holdout.",
+      "External average closing odds accepted only as de-vigged market benchmark."
     ],
-    "note": "No betting threshold or operational Radar rule is changed by this historical cleanup."
+    "note": "No betting threshold or operational Radar rule is promoted."
   }
 }
