@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T18:26:08.018161+00:00",
+  "generated_at": "2026-08-31T18:26:29.086269+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.8,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 2.2,
-    "betflag_standard_source": 2.4,
-    "betflag_player_source": 2.3,
-    "player_context": 3.0
+    "lineups": 1.1,
+    "tactical": 0.7,
+    "betflag_fixture_feed": 2.5,
+    "betflag_standard_source": 2.8,
+    "betflag_player_source": 2.7,
+    "player_context": 0.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -48,11 +48,11 @@
       "start_time": "31-08-2026 20:30",
       "minutes_to_start": 4.6,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 42,
       "player_quote_count": 639,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -62,11 +62,11 @@
       "start_time": "31-08-2026 20:30",
       "minutes_to_start": 4.6,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 46,
       "player_quote_count": 776,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -76,11 +76,11 @@
       "start_time": "31-08-2026 20:45",
       "minutes_to_start": 19.6,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 45,
       "player_quote_count": 1391,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -90,11 +90,11 @@
       "start_time": "31-08-2026 20:45",
       "minutes_to_start": 19.6,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 36,
       "player_quote_count": 216,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -154,6 +154,59 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "player_lane_ready_count": 4,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36351.3938",
+      "match": "Amedspor - Trabzonspor",
+      "league": "Super Lig",
+      "start_time": "31-08-2026 20:30",
+      "minutes_to_start": 4.6,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 42,
+      "player_quote_count": 639,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.3940",
+      "match": "Besiktas - Corum FK",
+      "league": "Super Lig",
+      "start_time": "31-08-2026 20:30",
+      "minutes_to_start": 4.6,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 46,
+      "player_quote_count": 776,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.2147",
+      "match": "Atalanta - Bologna",
+      "league": "Serie A",
+      "start_time": "31-08-2026 20:45",
+      "minutes_to_start": 19.6,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 45,
+      "player_quote_count": 1391,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36361.4289",
+      "match": "Digione - Saint-Étienne",
+      "league": "Ligue 2",
+      "start_time": "31-08-2026 20:45",
+      "minutes_to_start": 19.6,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 36,
+      "player_quote_count": 216,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
