@@ -2,6 +2,7 @@
 import csv
 import json
 import math
+import random
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -135,6 +136,46 @@ def train(train_rows, width):
                 weights[k][j] -= LEARNING_RATE * (grad[k][j] / n + penalty)
     return weights
 
+def predict(rows, weights):
+    return [
+        {"y": y, "probs": softmax([sum(wj * xj for wj, xj in zip(w, x)) for w in weights])}
+        for x, y in rows
+    ]
+
+def loss_vectors(records):
+    return {
+        "brier": [
+            sum((p - (1.0 if k == row["y"] else 0.0)) ** 2 for k, p in enumerate(row["probs"]))
+            for row in records
+        ],
+        "log_loss": [-math.log(max(row["probs"][row["y"]], 1e-15)) for row in records]
+    }
+
+def paired_bootstrap(model_records, comparator_records, seed, draws=10000):
+    model_losses = loss_vectors(model_records)
+    comparator_losses = loss_vectors(comparator_records)
+    n = len(model_records)
+    rng = random.Random(seed)
+    samples = {"brier": [], "log_loss": []}
+    for _ in range(draws):
+        idx = [rng.randrange(n) for _ in range(n)]
+        for metric in samples:
+            samples[metric].append(sum(
+                comparator_losses[metric][i] - model_losses[metric][i] for i in idx
+            ) / n)
+    result = {}
+    for metric, values in samples.items():
+        values.sort()
+        point = sum(
+            comparator_losses[metric][i] - model_losses[metric][i] for i in range(n)
+        ) / n
+        result[metric] = {
+            "comparator_minus_model_point": point,
+            "ci95_percentile": [values[int(0.025 * draws)], values[int(0.975 * draws) - 1]],
+            "bootstrap_probability_model_better": sum(v > 0 for v in values) / draws
+        }
+    return result
+
 def evaluate(rows, weights):
     brier = logloss = 0.0
     correct = 0
@@ -179,6 +220,7 @@ def main():
         "FULL_STRUCTURAL": ["elo_diff", "form_ppg_diff", "goal_balance_diff", "venue_ppg_diff", "opponent_elo_diff"]
     }
     results = {}
+    holdout_predictions = {}
     for name, names in feature_sets.items():
         train_rows, test_rows, means, scales = prepare(dev, holdout, names)
         weights = train(train_rows, len(names) + 1)
@@ -190,6 +232,27 @@ def main():
             "weights_by_outcome": {OUTCOMES[k]: weights[k] for k in range(3)},
             "holdout_metrics": evaluate(test_rows, weights)
         }
+        holdout_predictions[name] = predict(test_rows, weights)
+
+    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
+    priors = [baseline["development_outcome_prior"][outcome] for outcome in OUTCOMES]
+    prior_records = [{"y": OUTCOMES.index(r["result"]), "probs": priors} for r in holdout]
+    market_records = []
+    for r in holdout:
+        inverse = [1.0 / float(r["avg_close_home"]), 1.0 / float(r["avg_close_draw"]), 1.0 / float(r["avg_close_away"])]
+        total = sum(inverse)
+        market_records.append({"y": OUTCOMES.index(r["result"]), "probs": [v / total for v in inverse]})
+    uncertainty = {}
+    seed = 20260831
+    for offset, name in enumerate(feature_sets):
+        uncertainty[name] = {
+            "vs_development_prior": paired_bootstrap(holdout_predictions[name], prior_records, seed + offset * 10),
+            "vs_external_market_close": paired_bootstrap(holdout_predictions[name], market_records, seed + offset * 10 + 1)
+        }
+    uncertainty["incremental_vs_elo_only"] = {
+        "ELO_PLUS_FORM": paired_bootstrap(holdout_predictions["ELO_PLUS_FORM"], holdout_predictions["ELO_ONLY"], seed + 101),
+        "FULL_STRUCTURAL": paired_bootstrap(holdout_predictions["FULL_STRUCTURAL"], holdout_predictions["ELO_ONLY"], seed + 102)
+    }
 
     feature_fields = list(rows[0].keys()) + [
         "home_elo_pre", "away_elo_pre", "elo_diff", "form_ppg_diff", "goal_balance_diff",
@@ -202,7 +265,6 @@ def main():
         for row in featured:
             writer.writerow({k: "" if row.get(k) is None else row.get(k, "") for k in feature_fields})
 
-    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
     report = {
         "schema_version": "radar-historical-sweden-structural-oos-v1",
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -228,6 +290,14 @@ def main():
         },
         "sample": {"development": len(dev), "holdout": len(holdout)},
         "ablation_same_holdout": results,
+        "paired_match_bootstrap": {
+            "draws": 10000,
+            "seed": seed,
+            "unit": "match",
+            "interpretation": "Diagnostic paired uncertainty on the frozen 2025 holdout; single-season dependence and lack of league replication prevent operational promotion.",
+            "positive_comparator_minus_model_means_model_better": True,
+            "comparisons": uncertainty
+        },
         "references": {
             "development_prior_baseline": baseline["holdout_metrics"]["development_prior_baseline"],
             "devigged_external_average_close_benchmark": baseline["holdout_metrics"]["devigged_average_market_close_benchmark"]
