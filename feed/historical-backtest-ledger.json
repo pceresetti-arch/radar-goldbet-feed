@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v6",
-  "generated_at": "2026-08-31T13:18:15.087Z",
+  "schema_version": "radar-historical-backtest-ledger-v7",
+  "generated_at": "2026-08-31T13:54:16.385Z",
   "local_timezone": "Europe/Rome",
-  "status": "SWEDEN_NORWAY_POOLED_OOS_COMPLETED_RESEARCH_ELO_BASELINE_RETAINED",
+  "status": "DENMARK_FOUR_SEASON_OOS_COMPLETED_NO_STRUCTURAL_RULE_PROMOTION",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,10 +66,15 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 1920,
-    "total_structural_oos_holdout_rows": 480,
+    "total_external_market_close_benchmark_rows": 2688,
+    "total_structural_oos_holdout_rows": 672,
     "pooled_sweden_norway_holdout_rows": 480,
-    "cross_league_classwise_calibration_rows": 480
+    "cross_league_classwise_calibration_rows": 480,
+    "eligible_denmark_regular_fixture_rows": 768,
+    "denmark_development_rows": 576,
+    "denmark_holdout_rows": 192,
+    "denmark_excluded_postseason_european_playoff_rows": 2,
+    "total_sweden_norway_denmark_regular_fixture_rows": 2688
   },
   "quarantined_evidence": [
     {
@@ -125,7 +130,12 @@
     "Confirmed no reliable pooled increment from form or the full structural bundle beyond Elo.",
     "Measured significant market-benchmark predictability drift: external closing loss is higher in Sweden than Norway; 95% independent-bootstrap intervals exclude zero for Brier and log-loss.",
     "Audited draw probabilities: no system top-picks D, but ELO_ONLY mean draw probability 21.65% closely matches the 20.63% observed rate.",
-    "Hardened the cross-league publisher so generated evidence is rebased and committed quickly instead of rerunning the expensive bootstrap during every push race."
+    "Hardened the cross-league publisher so generated evidence is rebased and committed quickly instead of rerunning the expensive bootstrap during every push race.",
+    "Acquired and profiled Football-Data Denmark with 2,980 Superliga rows across 2012/2013-2026/2027; zero missing required fields, duplicates, inconsistent outcomes or unparsed dates.",
+    "Frozen the latest four completed Denmark seasons 2022/2023-2025/2026 before evaluation: development 576 and untouched holdout 192.",
+    "Applied a source-structure gate of 12 clubs and 32 league matches per club; excluded two chronologically subsequent European playoff fixtures without using their outcomes.",
+    "Denmark external de-vigged closing odds significantly beat ELO_ONLY on the frozen holdout; ELO_ONLY did not robustly beat the development prior.",
+    "No reliable Denmark increment from form or the full structural bundle beyond Elo; no rule promoted."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -398,6 +408,91 @@
         ],
         "interpretation": "The 2025 Sweden market benchmark is materially harder/less predictable than Norway; no causal league explanation is claimed."
       }
+    },
+    "denmark_structural_oos_2025_2026": {
+      "report": "feed/historical/denmark/structural-oos-v1.json",
+      "sample": {
+        "development": 576,
+        "holdout": 192,
+        "regular_total": 768,
+        "excluded_postseason_playoffs": 2
+      },
+      "development_prior": {
+        "brier": 0.6527416087962963,
+        "log_loss": 1.0774914430422673,
+        "accuracy": 0.4166666666666667
+      },
+      "external_market_close": {
+        "brier": 0.6114793315981354,
+        "log_loss": 1.0212784472780638,
+        "accuracy": 0.53125
+      },
+      "elo_only": {
+        "brier": 0.6322465493300865,
+        "log_loss": 1.0511654502923082,
+        "accuracy": 0.4739583333333333
+      },
+      "elo_plus_form": {
+        "brier": 0.6272012757578583,
+        "log_loss": 1.045106417759256,
+        "accuracy": 0.5
+      },
+      "full_structural": {
+        "brier": 0.6259760733661424,
+        "log_loss": 1.0437499919267965,
+        "accuracy": 0.5
+      },
+      "paired_decisions": {
+        "elo_vs_prior": {
+          "brier_gain": 0.02049505946621004,
+          "brier_ci95": [
+            -0.009123492933858132,
+            0.04943455930209459
+          ],
+          "log_loss_gain": 0.026325992749957543,
+          "log_loss_ci95": [
+            -0.017760912375553526,
+            0.06895201259579613
+          ]
+        },
+        "market_vs_elo": {
+          "brier_gain": 0.020767217731950827,
+          "brier_ci95": [
+            0.0015984733909161352,
+            0.04054489810767188
+          ],
+          "log_loss_gain": 0.029887003014245503,
+          "log_loss_ci95": [
+            0.0019071280836569207,
+            0.05872760581869685
+          ]
+        },
+        "form_vs_elo": {
+          "brier_gain": 0.005045273572228003,
+          "brier_ci95": [
+            -0.001384858527112675,
+            0.011194401756218537
+          ],
+          "log_loss_gain": 0.006059032533053048,
+          "log_loss_ci95": [
+            -0.0036419101508914087,
+            0.015384778885640117
+          ]
+        },
+        "full_vs_elo": {
+          "brier_gain": 0.0062704759639440775,
+          "brier_ci95": [
+            -0.005517688638810907,
+            0.017910518495872448
+          ],
+          "log_loss_gain": 0.0074154583655120475,
+          "log_loss_ci95": [
+            -0.00938667001736278,
+            0.02401505277006184
+          ]
+        }
+      },
+      "decision": "NO_STRUCTURAL_OR_INCREMENTAL_RULE_PROMOTION; EXTERNAL_CLOSE_REMAINS_NON_GOLDBET_BENCHMARK"
     }
   },
   "ablation_plan": {
@@ -415,9 +510,9 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Acquire and profile Denmark as the next comparable four-season Radar league, preserving Sweden/Norway v1 specifications and identity gates.",
-    "cross_league_lane": "Keep Sweden/Norway holdouts frozen; no further parameter or confidence-threshold tuning.",
-    "market_lane": "Retain external closing odds as a benchmark only and segment results by league.",
+    "priority": "Acquire and profile Netherlands Eredivisie as the next four-season Radar league, preserving frozen specifications and identity/format gates.",
+    "cross_league_lane": "Keep Sweden, Norway and Denmark holdouts frozen; extend pooled comparison only after the new league report is independently materialized.",
+    "market_lane": "Retain external closing odds as source-labelled benchmark only and continue league drift reporting.",
     "mms_lane": "GoldBet historical TRUE OPEN remains unavailable; no OPEN-to-CLOSE or threshold test is authorized."
   },
   "rule_decisions": {
