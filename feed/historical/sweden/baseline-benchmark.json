@@ -1,0 +1,145 @@
+{
+  "schema_version": "radar-historical-sweden-baseline-v1",
+  "generated_at": "2026-08-31T09:36:21.374947+00:00",
+  "source_snapshot": "feed/historical/sweden/football-data-SWE.csv",
+  "normalized_dataset": "feed/historical/sweden/allsvenskan-2022-2025-regular.csv",
+  "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022-2025; regular 16-team Allsvenskan only; cross-division playoffs excluded.",
+  "seasons": [
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "split": {
+    "development": [
+      "2022",
+      "2023",
+      "2024"
+    ],
+    "holdout": [
+      "2025"
+    ]
+  },
+  "sample": {
+    "source_selected_rows": 964,
+    "regular_rows": 960,
+    "development_rows": 720,
+    "holdout_rows": 240,
+    "excluded_playoff_rows": 4,
+    "excluded": [
+      {
+        "season": "2022",
+        "date": "10/11/2022",
+        "home": "Oster",
+        "away": "Varberg",
+        "reason": "PROMOTION_RELEGATION_PLAYOFF_OUTSIDE_16_TEAM_REGULAR_SEASON"
+      },
+      {
+        "season": "2022",
+        "date": "13/11/2022",
+        "home": "Varberg",
+        "away": "Oster",
+        "reason": "PROMOTION_RELEGATION_PLAYOFF_OUTSIDE_16_TEAM_REGULAR_SEASON"
+      },
+      {
+        "season": "2024",
+        "date": "21/11/2024",
+        "home": "Landskrona",
+        "away": "Varnamo",
+        "reason": "PROMOTION_RELEGATION_PLAYOFF_OUTSIDE_16_TEAM_REGULAR_SEASON"
+      },
+      {
+        "season": "2024",
+        "date": "24/11/2024",
+        "home": "Varnamo",
+        "away": "Landskrona",
+        "reason": "PROMOTION_RELEGATION_PLAYOFF_OUTSIDE_16_TEAM_REGULAR_SEASON"
+      }
+    ],
+    "regular_team_counts": {
+      "2022": 16,
+      "2023": 16,
+      "2024": 16,
+      "2025": 16
+    }
+  },
+  "data_quality": {
+    "normalized_duplicate_fixture_keys": 0,
+    "missing_avg_close_triplets": 0,
+    "kickoff_utc_verified_rows": 0,
+    "kickoff_policy": "No UTC conversion is performed because the source documents Time as kickoff time but does not state timezone. Rolling structural features must use strictly prior source dates, excluding same-date information."
+  },
+  "development_outcome_prior": {
+    "H": 0.45416666666666666,
+    "D": 0.22083333333333333,
+    "A": 0.325
+  },
+  "holdout_metrics": {
+    "development_prior_baseline": {
+      "n": 240,
+      "multiclass_brier_sum_mean": 0.6533333333333335,
+      "multiclass_brier_class_mean": 0.21777777777777782,
+      "log_loss": 1.075408209421105,
+      "top_pick_accuracy": 0.4,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 240,
+          "hits": 96,
+          "mean_confidence": 0.45416666666666594,
+          "hit_rate": 0.4
+        }
+      }
+    },
+    "devigged_average_market_close_benchmark": {
+      "n": 240,
+      "multiclass_brier_sum_mean": 0.5908613334036062,
+      "multiclass_brier_class_mean": 0.1969537778012021,
+      "log_loss": 0.9916574212366954,
+      "top_pick_accuracy": 0.5416666666666666,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 40,
+          "hits": 19,
+          "mean_confidence": 0.3830862750644629,
+          "hit_rate": 0.475
+        },
+        "0.4-0.5": {
+          "n": 98,
+          "hits": 46,
+          "mean_confidence": 0.4456320017945229,
+          "hit_rate": 0.46938775510204084
+        },
+        "0.5-0.6": {
+          "n": 63,
+          "hits": 41,
+          "mean_confidence": 0.5518028068130287,
+          "hit_rate": 0.6507936507936508
+        },
+        "0.6-0.7": {
+          "n": 28,
+          "hits": 15,
+          "mean_confidence": 0.646649318947066,
+          "hit_rate": 0.5357142857142857
+        },
+        "0.7-0.8": {
+          "n": 11,
+          "hits": 9,
+          "mean_confidence": 0.7493096727824539,
+          "hit_rate": 0.8181818181818182
+        }
+      }
+    },
+    "average_market_close_overround": 1.0732361473719394
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "mms": {
+    "goldbet_primary_eligible": false,
+    "open_to_close_eligible": false,
+    "reason": "Only external closing 1X2 benchmark odds are present; no GoldBet TRUE OPEN or same-book OPEN series."
+  },
+  "rule_decision": "BENCHMARK_ONLY_NO_OPERATIONAL_PROMOTION"
+}
