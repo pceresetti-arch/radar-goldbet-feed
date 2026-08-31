@@ -1,0 +1,135 @@
+{
+  "schema_version": "radar-historical-denmark-baseline-v1",
+  "generated_at": "2026-08-31T13:51:49.117905+00:00",
+  "source_snapshot": "feed/historical/denmark/football-data-DNK.csv",
+  "normalized_dataset": "feed/historical/denmark/superliga-2022-2026-regular.csv",
+  "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022/2023-2025/2026; 12-team Superliga with 32 league matches per club; post-season European playoffs excluded chronologically after the 32-match cap.",
+  "seasons": [
+    "2022/2023",
+    "2023/2024",
+    "2024/2025",
+    "2025/2026"
+  ],
+  "split": {
+    "development": [
+      "2022/2023",
+      "2023/2024",
+      "2024/2025"
+    ],
+    "holdout": [
+      "2025/2026"
+    ]
+  },
+  "sample": {
+    "source_selected_rows": 770,
+    "regular_rows": 768,
+    "development_rows": 576,
+    "holdout_rows": 192,
+    "excluded_playoff_rows": 2,
+    "excluded": [
+      {
+        "season": "2022/2023",
+        "date": "09/06/2023",
+        "home": "Viborg",
+        "away": "Midtjylland",
+        "reason": "POST_SEASON_EUROPEAN_PLAYOFF_AFTER_32_LEAGUE_MATCHES"
+      },
+      {
+        "season": "2023/2024",
+        "date": "31/05/2024",
+        "home": "FC Copenhagen",
+        "away": "Randers FC",
+        "reason": "POST_SEASON_EUROPEAN_PLAYOFF_AFTER_32_LEAGUE_MATCHES"
+      }
+    ],
+    "regular_team_counts": {
+      "2022/2023": 12,
+      "2023/2024": 12,
+      "2024/2025": 12,
+      "2025/2026": 12
+    },
+    "team_alias_map": {},
+    "team_alias_field_corrections": 0,
+    "season_match_cap_per_team": 32
+  },
+  "data_quality": {
+    "normalized_duplicate_fixture_keys": 0,
+    "identity_integrity": "Each frozen season must contain exactly 12 clubs and 32 accepted league matches per club; any subsequent playoff row is excluded chronologically without using its result.",
+    "missing_avg_close_triplets": 0,
+    "kickoff_utc_verified_rows": 0,
+    "kickoff_policy": "No UTC conversion is performed because the source documents Time as kickoff time but does not state timezone. Rolling structural features must use strictly prior source dates, excluding same-date information."
+  },
+  "development_outcome_prior": {
+    "H": 0.4184027777777778,
+    "D": 0.2725694444444444,
+    "A": 0.3090277777777778
+  },
+  "holdout_metrics": {
+    "development_prior_baseline": {
+      "n": 192,
+      "multiclass_brier_sum_mean": 0.6527416087962963,
+      "multiclass_brier_class_mean": 0.21758053626543208,
+      "log_loss": 1.0774914430422673,
+      "top_pick_accuracy": 0.4166666666666667,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 192,
+          "hits": 80,
+          "mean_confidence": 0.418402777777777,
+          "hit_rate": 0.4166666666666667
+        }
+      }
+    },
+    "devigged_average_market_close_benchmark": {
+      "n": 192,
+      "multiclass_brier_sum_mean": 0.6114793315981354,
+      "multiclass_brier_class_mean": 0.20382644386604512,
+      "log_loss": 1.0212784472780638,
+      "top_pick_accuracy": 0.53125,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 21,
+          "hits": 9,
+          "mean_confidence": 0.3826318550973495,
+          "hit_rate": 0.42857142857142855
+        },
+        "0.4-0.5": {
+          "n": 80,
+          "hits": 40,
+          "mean_confidence": 0.44473808792360964,
+          "hit_rate": 0.5
+        },
+        "0.5-0.6": {
+          "n": 54,
+          "hits": 34,
+          "mean_confidence": 0.5461291653794773,
+          "hit_rate": 0.6296296296296297
+        },
+        "0.6-0.7": {
+          "n": 28,
+          "hits": 13,
+          "mean_confidence": 0.636900064102317,
+          "hit_rate": 0.4642857142857143
+        },
+        "0.7-0.8": {
+          "n": 9,
+          "hits": 6,
+          "mean_confidence": 0.7278285345460673,
+          "hit_rate": 0.6666666666666666
+        }
+      }
+    },
+    "average_market_close_overround": 1.0874326993319394
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "mms": {
+    "goldbet_primary_eligible": false,
+    "open_to_close_eligible": false,
+    "reason": "Only external closing 1X2 benchmark odds are present; no GoldBet TRUE OPEN or same-book OPEN series."
+  },
+  "rule_decision": "BENCHMARK_ONLY_NO_OPERATIONAL_PROMOTION"
+}
