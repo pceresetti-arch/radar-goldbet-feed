@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v4",
-  "generated_at": "2026-08-31T10:46:08.037Z",
+  "schema_version": "radar-historical-source-manifest-v5",
+  "generated_at": "2026-08-31T11:33:42.199Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SWEDEN_STRUCTURAL_OOS_COMPLETE_NORWAY_NEXT",
+  "status": "SWEDEN_NORWAY_FOUR_SEASON_STRUCTURAL_OOS_COMPLETE",
   "priority": [
     "Sweden",
     "Norway",
@@ -54,11 +54,50 @@
       "excluded_playoff_rows": 4,
       "structural_feature_dataset": "feed/historical/sweden/allsvenskan-2022-2025-features.csv",
       "structural_oos_report": "feed/historical/sweden/structural-oos-v1.json"
+    },
+    {
+      "name": "Football-Data.co.uk Norway",
+      "url": "https://www.football-data.co.uk/norway.php",
+      "league": "Eliteserien",
+      "declared_coverage": "historical full-time results and closing match odds for Norway",
+      "role": [
+        "FIXTURE_RESULT_BASELINE",
+        "MARKET_CLOSING_BENCHMARK",
+        "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS"
+      ],
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "discovery_workflow": ".github/workflows/historical-backtest-norway-bootstrap.yml",
+      "discovery_output": "feed/historical/norway/source-discovery.json",
+      "dataset_profile": "feed/historical/norway/dataset-profile.json",
+      "source_snapshot": "feed/historical/norway/football-data-NOR.csv",
+      "normalized_dataset": "feed/historical/norway/eliteserien-2022-2025-regular.csv",
+      "benchmark_output": "feed/historical/norway/baseline-benchmark.json",
+      "structural_feature_dataset": "feed/historical/norway/eliteserien-2022-2025-features.csv",
+      "structural_oos_report": "feed/historical/norway/structural-oos-v1.json",
+      "status": "ACCEPTED_NORWAY_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+      "quality_notes": [
+        "Ham-Kam and HamKam are one source identity and are canonicalized to HamKam before eligibility and features.",
+        "The first 930-row build is quarantined because the alias split removed 30 valid 2023 fixtures.",
+        "Six promotion/relegation playoff fixtures are excluded.",
+        "Use outcome columns only after pre-match feature freeze.",
+        "Closing odds are external market benchmarks and never GoldBet TRUE OPEN."
+      ],
+      "verified_source_rows": 3518,
+      "accepted_regular_rows": 960,
+      "development_rows": 720,
+      "holdout_rows": 240,
+      "excluded_playoff_rows": 6,
+      "team_alias_field_corrections": 50
     }
   ],
   "required_blocks": {
     "fixtures_results": {
-      "status": "ACCEPTED_SWEDEN_960_REGULAR_ROWS",
+      "status": "ACCEPTED_SWEDEN_AND_NORWAY_1920_REGULAR_ROWS",
       "required_fields": [
         "competition",
         "season",
@@ -99,7 +138,7 @@
       ]
     },
     "market_close_benchmark": {
-      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_960_ROWS",
+      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_1920_ROWS",
       "rule": "Benchmark market closing prices may support CLV/context only under their true bookmaker/source labels; they never substitute GoldBet TRUE OPEN.",
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK"
     },
@@ -108,7 +147,7 @@
       "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
     },
     "pre_match_structural": {
-      "status": "SWEDEN_COMPLETED_960_FEATURE_ROWS_240_FROZEN_HOLDOUT",
+      "status": "SWEDEN_AND_NORWAY_COMPLETED_1920_FEATURE_ROWS_480_FROZEN_HOLDOUT",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -116,7 +155,8 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Elo/structural variants beat the naive development prior; extra form/venue/opponent features show no reliable increment beyond Elo; no operational promotion."
+      "result": "Both leagues beat naive priors; Norway closing market significantly beats every structural variant; the full bundle has no reliable incremental gain beyond Elo in either league.",
+      "identity_gate": "Team alias and 16-team/240-match season integrity must pass before metrics are accepted."
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -139,12 +179,14 @@
     "primary_goldbet_mms_allowed": false,
     "structural_rule": "Only prior source dates may enter rolling features because source timezone is not documented.",
     "market_rule": "AvgCH/AvgCD/AvgCA are closing odds under the provider's documented C-column semantics; retain external benchmark class.",
-    "primary_mms_reason": "No GoldBet TRUE OPEN or same-book OPEN series exists."
+    "primary_mms_reason": "No GoldBet TRUE OPEN or same-book OPEN series exists.",
+    "identity_integrity_required": true
   },
   "next_source_block": {
-    "league": "Norway",
-    "goal": "Acquire and profile four completed seasons, freeze chronological development/holdout before evaluation, and replicate Sweden v1 structural specification without tuning on Sweden 2025.",
+    "league": "CROSS_LEAGUE_SWEDEN_NORWAY",
+    "goal": "Produce a frozen calibration/error/drift comparison across the two untouched 2025 holdouts without changing model specifications or thresholds.",
     "sweden_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
+    "norway_status": "FROZEN_V1_AFTER_HAMKAM_IDENTITY_CORRECTION_NO_FURTHER_HOLDOUT_TUNING",
     "goldbet_mms_status": "BLOCKED_NO_VERIFIED_HISTORICAL_TRUE_OPEN"
   }
 }
