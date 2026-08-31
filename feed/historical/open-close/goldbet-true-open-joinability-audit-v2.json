@@ -1,0 +1,116 @@
+{
+  "schema_version": "radar-goldbet-true-open-joinability-audit-v2",
+  "generated_at": "2026-08-31T22:39:05.821067+00:00",
+  "source": {
+    "path": "feed/diretta-goldbet-true-open-index.json",
+    "sha256": "a0f070fbf8b4c6386d8dde899510df77004895fea3d53eee4772f195af69d7cd",
+    "bytes": 3381740
+  },
+  "inventory": {
+    "events": 642,
+    "rows": 9188,
+    "rows_with_true_open_and_current": 9188,
+    "event_statuses": {
+      "TRUE_OPEN_CERTIFIED": 642
+    },
+    "bookmakers": {
+      "188:GoldBet": 642
+    },
+    "market_rows": {
+      "HOME_DRAW_AWAY": 1926,
+      "OVER_UNDER": 6010,
+      "BOTH_TEAMS_TO_SCORE": 1252
+    },
+    "selection_rows": {
+      "HOME_DRAW_AWAY:HOME": 642,
+      "HOME_DRAW_AWAY:DRAW": 642,
+      "HOME_DRAW_AWAY:AWAY": 642,
+      "OVER_UNDER:OVER": 3005,
+      "OVER_UNDER:UNDER": 3005,
+      "BOTH_TEAMS_TO_SCORE:YES": 626,
+      "BOTH_TEAMS_TO_SCORE:NO": 626
+    }
+  },
+  "timestamp_audit": {
+    "classification": {
+      "PRE_KICKOFF_OBSERVED_CURRENT": 642
+    },
+    "pre_kickoff_event_share": 1.0,
+    "minutes_before_kickoff": {
+      "p05": 117.70724795,
+      "p50": 958.7597730833334,
+      "p95": 1235.51608036,
+      "min": 5.8468140166666664,
+      "max": 1401.0622079166667
+    },
+    "start_time_min": "2026-08-24T23:30:00+00:00",
+    "start_time_max": "2026-08-29T21:30:00+00:00",
+    "observation_time_min": "2026-08-24T23:04:45.876947+00:00",
+    "observation_time_max": "2026-08-28T22:08:56.267525+00:00"
+  },
+  "identity_score_semantics": {
+    "fields": [
+      "home_score",
+      "away_score",
+      "match_score"
+    ],
+    "values": 1926,
+    "min": 0.4828,
+    "max": 1.0,
+    "fractional_values": 1153,
+    "interpretation": "Fixture/team fuzzy-match confidence fields, not final football scores. They are forbidden as outcomes."
+  },
+  "mms_observed_current_diagnostic": {
+    "primary_market_rows_with_prices": 4931,
+    "absolute_drop_ge_0_20_rows": 608,
+    "events_with_at_least_one_primary_drop": 342,
+    "classification": "TRUE_OPEN_TO_SINGLE_OBSERVED_CURRENT_SAME_BOOK_DIAGNOSTIC",
+    "not_close_reason": "The index stores one attempted/certified observation per event and does not certify it as the final last-pre-kickoff price.",
+    "active_drop_only": true,
+    "rebounded_after_drop_measurable": false
+  },
+  "joinability": {
+    "true_open_exact_identity": "AVAILABLE",
+    "observed_current_exact_identity": "AVAILABLE",
+    "observation_timestamp": "AVAILABLE_AT_EVENT_LEVEL",
+    "certified_last_pre_kickoff_close": "NOT_AVAILABLE",
+    "final_outcome": "NOT_AVAILABLE_IN_THIS_SOURCE",
+    "outcome_join_using_home_score_away_score": "FORBIDDEN_IDENTITY_CONFIDENCE_NOT_GOALS",
+    "clv": "NOT_CALCULABLE_WITHOUT_CERTIFIED_CLOSE",
+    "roi_brier_log_loss": "NOT_CALCULABLE_WITHOUT_OUTCOME_AND_EX_ANTE_SELECTION"
+  },
+  "quality": {
+    "missing": {},
+    "event_keys": [
+      "attempted_at",
+      "away_score",
+      "bookmaker",
+      "certified_at",
+      "event",
+      "event_id",
+      "flashscore_away",
+      "flashscore_event_id",
+      "flashscore_home",
+      "flashscore_tournament",
+      "home_score",
+      "league",
+      "match_score",
+      "menu_status",
+      "rows",
+      "source",
+      "start_time",
+      "status",
+      "time_diff_min"
+    ],
+    "row_keys": [
+      "change",
+      "diretta_current",
+      "line",
+      "market",
+      "period",
+      "selection",
+      "true_open"
+    ]
+  },
+  "decision": "DO_NOT_RELABEL_DIRETTA_CURRENT_AS_CLOSE; USE_ONLY_PRE_KICKOFF_ROWS_AS_OPEN_TO_OBSERVED_CURRENT_DIAGNOSTIC; ACQUIRE_CERTIFIED_LAST_PRE_KICKOFF_SNAPSHOT_AND_OUTCOME_SEPARATELY"
+}
