@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T15:35:20.724837+00:00",
+  "generated_at": "2026-08-31T15:39:02.342753+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 7.8,
-    "tactical": 7.3,
-    "betflag_fixture_feed": 4.0,
-    "betflag_standard_source": 4.1,
-    "betflag_player_source": 4.1,
-    "player_context": 7.3
+    "lineups": 11.5,
+    "tactical": 11.0,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.5,
+    "player_context": 11.0
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -1283,7 +1283,7 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/lyn-1896-fk-ii-sandefjord-2.json",
-      "betflag_standard_count": 14,
+      "betflag_standard_count": 8,
       "betflag_standard_current_fresh": true,
       "betflag_standard_ready": true,
       "player_count": 0,
@@ -2102,7 +2102,7 @@
       "betflag_standard_current_fresh": true,
       "betflag_standard_ready": true,
       "player_count": 40,
-      "player_quote_count": 1188,
+      "player_quote_count": 1190,
       "player_props_available": true,
       "player_props_ready": true,
       "player_context_available": false,
@@ -2353,7 +2353,7 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/copenaghen-soenderjyske.json",
-      "betflag_standard_count": 38,
+      "betflag_standard_count": 41,
       "betflag_standard_current_fresh": true,
       "betflag_standard_ready": true,
       "player_count": 47,
@@ -2690,10 +2690,11 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2708,11 +2709,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/rosenborg-2-byaesen.json",
-      "betflag_standard_count": 24,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
