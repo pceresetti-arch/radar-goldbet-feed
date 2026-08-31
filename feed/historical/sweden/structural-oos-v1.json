@@ -1,6 +1,6 @@
 {
   "schema_version": "radar-historical-sweden-structural-oos-v1",
-  "generated_at": "2026-08-31T10:40:07.371587+00:00",
+  "generated_at": "2026-08-31T10:43:55.264744+00:00",
   "dataset": "feed/historical/sweden/allsvenskan-2022-2025-regular.csv",
   "feature_dataset": "feed/historical/sweden/allsvenskan-2022-2025-features.csv",
   "anti_hindsight": {
@@ -285,6 +285,167 @@
             "hits": 9,
             "mean_confidence": 0.7379526665413726,
             "hit_rate": 0.75
+          }
+        }
+      }
+    }
+  },
+  "paired_match_bootstrap": {
+    "draws": 10000,
+    "seed": 20260831,
+    "unit": "match",
+    "interpretation": "Diagnostic paired uncertainty on the frozen 2025 holdout; single-season dependence and lack of league replication prevent operational promotion.",
+    "positive_comparator_minus_model_means_model_better": true,
+    "comparisons": {
+      "ELO_ONLY": {
+        "vs_development_prior": {
+          "brier": {
+            "comparator_minus_model_point": 0.05057968035286939,
+            "ci95_percentile": [
+              0.02140031628642621,
+              0.07904448423179065
+            ],
+            "bootstrap_probability_model_better": 0.9999
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.06922352609201438,
+            "ci95_percentile": [
+              0.029116219929296354,
+              0.10781144506541247
+            ],
+            "bootstrap_probability_model_better": 0.9998
+          }
+        },
+        "vs_external_market_close": {
+          "brier": {
+            "comparator_minus_model_point": -0.011892319576857203,
+            "ci95_percentile": [
+              -0.029788943832548834,
+              0.005876554735714954
+            ],
+            "bootstrap_probability_model_better": 0.0945
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.014527262092393784,
+            "ci95_percentile": [
+              -0.040598228393684814,
+              0.01156434875966945
+            ],
+            "bootstrap_probability_model_better": 0.1344
+          }
+        }
+      },
+      "ELO_PLUS_FORM": {
+        "vs_development_prior": {
+          "brier": {
+            "comparator_minus_model_point": 0.051246992418209444,
+            "ci95_percentile": [
+              0.023509516194103096,
+              0.07966355304908025
+            ],
+            "bootstrap_probability_model_better": 0.9996
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.06953109978041808,
+            "ci95_percentile": [
+              0.03187880572685927,
+              0.10777211027921263
+            ],
+            "bootstrap_probability_model_better": 0.9997
+          }
+        },
+        "vs_external_market_close": {
+          "brier": {
+            "comparator_minus_model_point": -0.011225007511517145,
+            "ci95_percentile": [
+              -0.028142090069483528,
+              0.006086895285856814
+            ],
+            "bootstrap_probability_model_better": 0.1005
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.01421968840399008,
+            "ci95_percentile": [
+              -0.03913460811597138,
+              0.011086834782451949
+            ],
+            "bootstrap_probability_model_better": 0.1376
+          }
+        }
+      },
+      "FULL_STRUCTURAL": {
+        "vs_development_prior": {
+          "brier": {
+            "comparator_minus_model_point": 0.05132746634081449,
+            "ci95_percentile": [
+              0.02309049250701539,
+              0.07985316738915961
+            ],
+            "bootstrap_probability_model_better": 0.9999
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.06912831895836893,
+            "ci95_percentile": [
+              0.0301490752243747,
+              0.10770513011017722
+            ],
+            "bootstrap_probability_model_better": 0.9999
+          }
+        },
+        "vs_external_market_close": {
+          "brier": {
+            "comparator_minus_model_point": -0.0111445335889121,
+            "ci95_percentile": [
+              -0.028543047194851654,
+              0.006545351764068133
+            ],
+            "bootstrap_probability_model_better": 0.1104
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.01462246922603923,
+            "ci95_percentile": [
+              -0.04043653361602231,
+              0.011333090262798155
+            ],
+            "bootstrap_probability_model_better": 0.1383
+          }
+        }
+      },
+      "incremental_vs_elo_only": {
+        "ELO_PLUS_FORM": {
+          "brier": {
+            "comparator_minus_model_point": 0.000667312065340057,
+            "ci95_percentile": [
+              -0.0030732727180965056,
+              0.0044847487475382425
+            ],
+            "bootstrap_probability_model_better": 0.6283
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.0003075736884037029,
+            "ci95_percentile": [
+              -0.005172753614863441,
+              0.005888357933479602
+            ],
+            "bootstrap_probability_model_better": 0.5441
+          }
+        },
+        "FULL_STRUCTURAL": {
+          "brier": {
+            "comparator_minus_model_point": 0.0007477859879451027,
+            "ci95_percentile": [
+              -0.004362907326604853,
+              0.005799929094160594
+            ],
+            "bootstrap_probability_model_better": 0.621
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -9.52071336454451e-05,
+            "ci95_percentile": [
+              -0.0077614465071409715,
+              0.007472082395789513
+            ],
+            "bootstrap_probability_model_better": 0.5009
           }
         }
       }
