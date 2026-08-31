@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T22:53:33.244851+00:00",
+  "generated_at": "2026-08-31T23:06:20.488301+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 9,
+  "target_count": 11,
   "status_counts": {
     "SOURCE_CONFIRMED": 2,
-    "NOT_AVAILABLE": 4,
+    "NOT_AVAILABLE": 6,
     "REFERENCE_PREVIOUS_XI": 3
   },
   "schedule_stats": [
@@ -35,7 +35,7 @@
       "start_time": "01-09-2026 01:00",
       "start_utc": "2026-08-31T23:00:00+00:00",
       "league": "Serie A",
-      "minutes_to_start": 6.4,
+      "minutes_to_start": -6.3,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T22:25:28.118133+00:00",
@@ -69,7 +69,7 @@
                 "id": 936701,
                 "shirt_number": "88",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -339,6 +339,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -358,7 +359,7 @@
                 "id": 1509085,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -628,6 +629,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -639,7 +641,6 @@
           }
         ],
         "xi_fingerprint": "0c34421ee75925b8ff89",
-        "xi_name_fingerprint": "255662fdbc7c6e47c624",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -649,19 +650,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-08-31T22:53:33.244851+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5103613,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.39073",
@@ -670,7 +659,7 @@
       "start_time": "01-09-2026 01:30",
       "start_utc": "2026-08-31T23:30:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 36.4,
+      "minutes_to_start": 23.7,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T22:25:28.118133+00:00",
@@ -1273,7 +1262,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T22:53:33.244851+00:00",
+        "polled_at": "2026-08-31T23:06:20.488301+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 1000018891,
@@ -1288,12 +1277,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T22:53:33.244851+00:00",
+    "generated_at": "2026-08-31T23:06:20.488301+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 7,
+    "target_count": 6,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -1312,15 +1301,11 @@
   },
   "watchdog_identity_repairs": [
     {
-      "match": "Clube do Remo - Coritiba",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
       "match": "Academia Puerto Cabello - Academia Anzoategui FC",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     }
   ],
   "official_tactical_gate": true,
-  "source_match_count": 9,
+  "source_match_count": 11,
   "official_match_count": 2
 }
