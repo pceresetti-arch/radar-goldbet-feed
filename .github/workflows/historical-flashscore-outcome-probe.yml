@@ -1,0 +1,43 @@
+name: Historical Flashscore Outcome Probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-flashscore-outcome-probe.yml'
+      - 'tools/historical_probe_flashscore_outcomes.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-flashscore-outcome-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/historical_probe_flashscore_outcomes.py
+      - run: cp feed/historical/open-close/flashscore-outcome-endpoint-probe-v1.json /tmp/outcome-probe.json
+      - name: Publish race-safe probe
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p feed/historical/open-close
+            cp /tmp/outcome-probe.json feed/historical/open-close/flashscore-outcome-endpoint-probe-v1.json
+            git add feed/historical/open-close/flashscore-outcome-endpoint-probe-v1.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Probe exact Flashscore outcome endpoints"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
