@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T18:50:38.933446+00:00",
+  "generated_at": "2026-08-31T19:06:44.135804+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 19,
+  "target_count": 17,
   "status_counts": {
-    "SOURCE_CONFIRMED": 8,
-    "NOT_AVAILABLE": 11
+    "NOT_AVAILABLE": 11,
+    "SOURCE_CONFIRMED": 6
   },
   "schedule_stats": [
     {
@@ -23,12 +23,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T18:50:38.933446+00:00",
+    "generated_at": "2026-08-31T19:06:44.135804+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 17,
+    "target_count": 7,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -39,87 +39,36 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Aston Villa - Arsenal",
-        "minutes_to_start": 9.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Celta Fortuna - Castellon",
-        "minutes_to_start": 39.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Sporting Braga - Vitoria Guimaraes",
-        "minutes_to_start": 24.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Barcellona - Rayo Vallecano",
-        "minutes_to_start": 39.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Benfica - Estoril Praia",
-        "minutes_to_start": 24.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "HNK Gorica - Rijeka",
-        "minutes_to_start": 9.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Aston Villa - Arsenal",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Benfica - Estoril Praia",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Sporting Braga - Vitoria Guimaraes",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Barcellona - Rayo Vallecano",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Celta Fortuna - Castellon",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
-    {
-      "match": "Atalanta - Bologna",
-      "start_time": "31-08-2026 20:45",
-      "league": "Serie A",
-      "minutes_to_start": -5.6,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36351.2147",
-      "confirmed_at": "2026-08-31T18:00:02.574537+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Digione - Saint-Étienne",
-      "start_time": "31-08-2026 20:45",
-      "league": "Ligue 2",
-      "minutes_to_start": -5.6,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.4289",
-      "confirmed_at": "2026-08-31T18:12:38.946417+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "AlbinoLeffe - Acd Ospitaletto",
       "start_time": "31-08-2026 21:00",
       "league": "Serie C - Girone A",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.12812",
       "confirmed_at": null,
@@ -131,11 +80,11 @@
       "match": "Aston Villa - Arsenal",
       "start_time": "31-08-2026 21:00",
       "league": "Premier League",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2493",
-      "confirmed_at": "2026-08-31T18:50:38.933446+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-08-31T18:00:02.574537+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -143,7 +92,7 @@
       "match": "Bangor FC Reserves - Linfield Swifts",
       "start_time": "31-08-2026 21:00",
       "league": "Development League",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.55092",
       "confirmed_at": null,
@@ -155,7 +104,7 @@
       "match": "Desenzano - Trento",
       "start_time": "31-08-2026 21:00",
       "league": "Serie C - Girone A",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.38158",
       "confirmed_at": null,
@@ -167,11 +116,11 @@
       "match": "HNK Gorica - Rijeka",
       "start_time": "31-08-2026 21:00",
       "league": "1.HNL",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2112",
-      "confirmed_at": "2026-08-31T18:50:38.933446+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-08-31T18:00:02.574537+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -179,7 +128,7 @@
       "match": "Paraguari AC - Resistencia",
       "start_time": "31-08-2026 21:00",
       "league": "Segunda Division",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.40037",
       "confirmed_at": null,
@@ -191,7 +140,7 @@
       "match": "Renate - Cittadella",
       "start_time": "31-08-2026 21:00",
       "league": "Serie C - Girone A",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.12799",
       "confirmed_at": null,
@@ -203,7 +152,7 @@
       "match": "San Antonio Bulo Bulo - Guabira Montero",
       "start_time": "31-08-2026 21:00",
       "league": "Bolivia Coppa",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.19264",
       "confirmed_at": null,
@@ -215,7 +164,7 @@
       "match": "Skenderbeu Korce - Dinamo Tirana",
       "start_time": "31-08-2026 21:00",
       "league": "Kategoria Superiore",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.4173",
       "confirmed_at": null,
@@ -227,7 +176,7 @@
       "match": "Treviso - Lecco",
       "start_time": "31-08-2026 21:00",
       "league": "Serie C - Girone A",
-      "minutes_to_start": 9.4,
+      "minutes_to_start": -6.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.12818",
       "confirmed_at": null,
@@ -239,11 +188,11 @@
       "match": "Benfica - Estoril Praia",
       "start_time": "31-08-2026 21:15",
       "league": "Primeira Liga",
-      "minutes_to_start": 24.4,
+      "minutes_to_start": 8.3,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.3173",
-      "confirmed_at": "2026-08-31T18:50:38.933446+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-08-31T18:25:21.705885+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -251,7 +200,7 @@
       "match": "Breidablik Kopavogur - Stjarnan Gardabaer",
       "start_time": "31-08-2026 21:15",
       "league": "Urvalsdeild",
-      "minutes_to_start": 24.4,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.1084",
       "confirmed_at": null,
@@ -263,11 +212,11 @@
       "match": "Sporting Braga - Vitoria Guimaraes",
       "start_time": "31-08-2026 21:15",
       "league": "Primeira Liga",
-      "minutes_to_start": 24.4,
+      "minutes_to_start": 8.3,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.3179",
-      "confirmed_at": "2026-08-31T18:50:38.933446+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-08-31T18:25:21.705885+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -275,7 +224,7 @@
       "match": "Teruel - Real Madrid Castilla",
       "start_time": "31-08-2026 21:15",
       "league": "Primera Federacion RFEF",
-      "minutes_to_start": 24.4,
+      "minutes_to_start": 8.3,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.4979",
       "confirmed_at": null,
@@ -287,11 +236,11 @@
       "match": "Barcellona - Rayo Vallecano",
       "start_time": "31-08-2026 21:30",
       "league": "Liga",
-      "minutes_to_start": 39.4,
+      "minutes_to_start": 23.3,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2885",
       "confirmed_at": "2026-08-31T18:50:38.933446+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -299,11 +248,11 @@
       "match": "Celta Fortuna - Castellon",
       "start_time": "31-08-2026 21:30",
       "league": "Liga Adelante",
-      "minutes_to_start": 39.4,
+      "minutes_to_start": 23.3,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.23746",
       "confirmed_at": "2026-08-31T18:50:38.933446+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -311,7 +260,7 @@
       "match": "Internacional de Bogota - CA Nacional Sa",
       "start_time": "31-08-2026 22:00",
       "league": "Liga Femenina",
-      "minutes_to_start": 69.4,
+      "minutes_to_start": 53.3,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.24042",
       "confirmed_at": null,
