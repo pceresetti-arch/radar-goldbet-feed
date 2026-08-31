@@ -1,100 +1,119 @@
 #!/usr/bin/env python3
 import hashlib
 import json
-from collections import Counter, defaultdict
+import math
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-SOURCE = Path("feed/diretta-goldbet-true-open-index.json")
-OUT = Path("feed/historical/open-close/goldbet-true-open-schema-audit-v1.json")
-TOKENS = ("open","close","closing","current","kickoff","start","timestamp","observed","outcome","result","score","event","fixture","bookmaker","market","selection","price","odd")
+SOURCE=Path("feed/diretta-goldbet-true-open-index.json")
+OUT=Path("feed/historical/open-close/goldbet-true-open-joinability-audit-v2.json")
 
-def norm_path(parts):
-    return ".".join("[]" if isinstance(p,int) else str(p) for p in parts)
+def dt(value):
+    if not value: return None
+    try:
+        return datetime.fromisoformat(str(value).replace("Z","+00:00"))
+    except Exception:
+        return None
 
-def walk(value, parts, depth, path_counts, type_counts, examples):
-    path=norm_path(parts)
-    path_counts[path]+=1
-    type_counts[(path,type(value).__name__)]+=1
-    if not isinstance(value,(dict,list)) and len(examples[path])<3:
-        examples[path].append(value)
-    if depth>=12:
-        return
-    if isinstance(value,dict):
-        for k,v in value.items():
-            walk(v,parts+[k],depth+1,path_counts,type_counts,examples)
-    elif isinstance(value,list):
-        for i,v in enumerate(value):
-            walk(v,parts+[i],depth+1,path_counts,type_counts,examples)
-
-def shape(value, depth=0):
-    if depth>=4:
-        return type(value).__name__
-    if isinstance(value,dict):
-        return {k:shape(v,depth+1) for k,v in list(value.items())[:40]}
-    if isinstance(value,list):
-        return {"type":"list","length":len(value),"first":shape(value[0],depth+1) if value else None}
-    return type(value).__name__
-
-def event_container(data):
-    if isinstance(data,dict):
-        for key in ("events","fixtures","matches","items","data"):
-            value=data.get(key)
-            if isinstance(value,(dict,list)):
-                return key,value
-    return None,None
+def percentile(xs,p):
+    if not xs: return None
+    ys=sorted(xs); pos=(len(ys)-1)*p; lo=int(math.floor(pos)); hi=int(math.ceil(pos))
+    return ys[lo] if lo==hi else ys[lo]+(ys[hi]-ys[lo])*(pos-lo)
 
 def main():
-    raw=SOURCE.read_bytes()
-    data=json.loads(raw)
-    path_counts=Counter()
-    type_counts=Counter()
-    examples=defaultdict(list)
-    walk(data,[],0,path_counts,type_counts,examples)
-    key,container=event_container(data)
-    if isinstance(container,list):
-        event_count=len(container)
-        sample=container[0] if container else None
-    elif isinstance(container,dict):
-        event_count=len(container)
-        sample=next(iter(container.values()),None)
-    else:
-        event_count=None
-        sample=None
-    relevant=[]
-    for path,count in path_counts.most_common():
-        low=path.lower()
-        if any(t in low for t in TOKENS):
-            relevant.append({
-                "path":path,
-                "count":count,
-                "types":sorted({typ for (p,typ),n in type_counts.items() if p==path}),
-                "examples":examples[path],
-            })
-    audit={
-        "schema_version":"radar-goldbet-true-open-schema-audit-v1",
-        "generated_at":datetime.now(timezone.utc).isoformat(),
-        "source":str(SOURCE),
-        "source_sha256":hashlib.sha256(raw).hexdigest(),
-        "source_bytes":len(raw),
-        "root_type":type(data).__name__,
-        "root_keys":list(data.keys()) if isinstance(data,dict) else None,
-        "detected_event_container":key,
-        "detected_event_count":event_count,
-        "structural_shape":shape(data),
-        "sample_event_shape":shape(sample),
-        "relevant_field_paths":relevant[:500],
-        "method":{
-            "read_only":True,
-            "no_price_reconstruction":True,
-            "no_close_inference":True,
-            "no_outcome_inference":True,
-            "purpose":"Discover exact persisted schema before any OPEN-to-close-to-outcome join."
-        }
+    raw=SOURCE.read_bytes(); data=json.loads(raw); events=data.get("events",{})
+    timing=Counter(); status=Counter(); bookmakers=Counter(); markets=Counter(); selections=Counter()
+    rows_total=rows_complete=primary_rows=primary_drops=0
+    primary_drop_events=set(); offsets=[]; start_times=[]; attempted_times=[]
+    identity_scores=[]; score_fractional=0; score_outside_goal_plausible=0
+    missing=Counter(); row_keys=Counter(); event_keys=Counter()
+    for event_key,e in events.items():
+        event_keys.update(e.keys()); status[str(e.get("status"))]+=1
+        bm=e.get("bookmaker") or {}; bookmakers[f"{bm.get('id')}:{bm.get('name')}"]+=1
+        st=dt(e.get("start_time")); at=dt(e.get("attempted_at") or e.get("certified_at"))
+        if st: start_times.append(st)
+        else: missing["start_time"]+=1
+        if at: attempted_times.append(at)
+        else: missing["observation_timestamp"]+=1
+        if st and at:
+            delta=(st-at).total_seconds()/60
+            offsets.append(delta)
+            if delta>0: timing["PRE_KICKOFF_OBSERVED_CURRENT"]+=1
+            elif delta==0: timing["AT_KICKOFF"]+=1
+            else: timing["POST_KICKOFF_INVALID_FOR_PREMATCH"]+=1
+        else: timing["UNPARSEABLE"]+=1
+        for key in ("home_score","away_score","match_score"):
+            v=e.get(key)
+            if isinstance(v,(int,float)):
+                identity_scores.append(v)
+                if abs(v-round(v))>1e-9: score_fractional+=1
+                if v>20 or v<0: score_outside_goal_plausible+=1
+        for r in e.get("rows") or []:
+            rows_total+=1; row_keys.update(r.keys())
+            market=str(r.get("market")); selection=str(r.get("selection"))
+            markets[market]+=1; selections[f"{market}:{selection}"]+=1
+            op=r.get("true_open"); cur=r.get("diretta_current")
+            if isinstance(op,(int,float)) and isinstance(cur,(int,float)):
+                rows_complete+=1
+                is_primary=(market=="HOME_DRAW_AWAY") or (market in ("OVER_UNDER","TOTAL_GOALS") and selection=="OVER" and r.get("period")=="full_time")
+                if is_primary:
+                    primary_rows+=1
+                    if op-cur>=0.20-1e-12:
+                        primary_drops+=1; primary_drop_events.add(event_key)
+            else: missing["row_true_open_or_current"]+=1
+    pre=sum(v for k,v in timing.items() if k=="PRE_KICKOFF_OBSERVED_CURRENT")
+    report={
+      "schema_version":"radar-goldbet-true-open-joinability-audit-v2",
+      "generated_at":datetime.now(timezone.utc).isoformat(),
+      "source":{"path":str(SOURCE),"sha256":hashlib.sha256(raw).hexdigest(),"bytes":len(raw)},
+      "inventory":{
+        "events":len(events),"rows":rows_total,"rows_with_true_open_and_current":rows_complete,
+        "event_statuses":dict(status),"bookmakers":dict(bookmakers),
+        "market_rows":dict(markets),"selection_rows":dict(selections)
+      },
+      "timestamp_audit":{
+        "classification":dict(timing),
+        "pre_kickoff_event_share":pre/len(events) if events else None,
+        "minutes_before_kickoff":{"p05":percentile(offsets,.05),"p50":percentile(offsets,.5),"p95":percentile(offsets,.95),"min":min(offsets) if offsets else None,"max":max(offsets) if offsets else None},
+        "start_time_min":min(start_times).isoformat() if start_times else None,
+        "start_time_max":max(start_times).isoformat() if start_times else None,
+        "observation_time_min":min(attempted_times).isoformat() if attempted_times else None,
+        "observation_time_max":max(attempted_times).isoformat() if attempted_times else None
+      },
+      "identity_score_semantics":{
+        "fields":["home_score","away_score","match_score"],
+        "values":len(identity_scores),
+        "min":min(identity_scores) if identity_scores else None,
+        "max":max(identity_scores) if identity_scores else None,
+        "fractional_values":score_fractional,
+        "interpretation":"Fixture/team fuzzy-match confidence fields, not final football scores. They are forbidden as outcomes."
+      },
+      "mms_observed_current_diagnostic":{
+        "primary_market_rows_with_prices":primary_rows,
+        "absolute_drop_ge_0_20_rows":primary_drops,
+        "events_with_at_least_one_primary_drop":len(primary_drop_events),
+        "classification":"TRUE_OPEN_TO_SINGLE_OBSERVED_CURRENT_SAME_BOOK_DIAGNOSTIC",
+        "not_close_reason":"The index stores one attempted/certified observation per event and does not certify it as the final last-pre-kickoff price.",
+        "active_drop_only":True,
+        "rebounded_after_drop_measurable":False
+      },
+      "joinability":{
+        "true_open_exact_identity":"AVAILABLE",
+        "observed_current_exact_identity":"AVAILABLE",
+        "observation_timestamp":"AVAILABLE_AT_EVENT_LEVEL",
+        "certified_last_pre_kickoff_close":"NOT_AVAILABLE",
+        "final_outcome":"NOT_AVAILABLE_IN_THIS_SOURCE",
+        "outcome_join_using_home_score_away_score":"FORBIDDEN_IDENTITY_CONFIDENCE_NOT_GOALS",
+        "clv":"NOT_CALCULABLE_WITHOUT_CERTIFIED_CLOSE",
+        "roi_brier_log_loss":"NOT_CALCULABLE_WITHOUT_OUTCOME_AND_EX_ANTE_SELECTION"
+      },
+      "quality":{"missing":dict(missing),"event_keys":sorted(event_keys),"row_keys":sorted(row_keys)},
+      "decision":"DO_NOT_RELABEL_DIRETTA_CURRENT_AS_CLOSE; USE_ONLY_PRE_KICKOFF_ROWS_AS_OPEN_TO_OBSERVED_CURRENT_DIAGNOSTIC; ACQUIRE_CERTIFIED_LAST_PRE_KICKOFF_SNAPSHOT_AND_OUTCOME_SEPARATELY"
     }
     OUT.parent.mkdir(parents=True,exist_ok=True)
-    OUT.write_text(json.dumps(audit,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    print(json.dumps({"bytes":len(raw),"root_keys":audit["root_keys"],"event_container":key,"event_count":event_count,"relevant_paths":len(relevant)},indent=2))
+    OUT.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    print(json.dumps({"events":len(events),"rows":rows_total,"timing":dict(timing),"primary_drops":primary_drops,"identity_score_range":[report["identity_score_semantics"]["min"],report["identity_score_semantics"]["max"]]},indent=2))
 
 if __name__=="__main__":
     main()
