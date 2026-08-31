@@ -26,7 +26,7 @@ jobs:
       - name: Audit persisted TRUE OPEN schema
         run: python tools/historical_audit_goldbet_true_open_join.py
       - name: Preserve audit
-        run: cp feed/historical/open-close/goldbet-true-open-schema-audit-v1.json /tmp/goldbet-audit.json
+        run: cp feed/historical/open-close/goldbet-true-open-joinability-audit-v2.json /tmp/goldbet-audit.json
       - name: Publish race-safe audit
         run: |
           git config user.name "radar-backtest-bot"
@@ -35,8 +35,8 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             mkdir -p feed/historical/open-close
-            cp /tmp/goldbet-audit.json feed/historical/open-close/goldbet-true-open-schema-audit-v1.json
-            git add feed/historical/open-close/goldbet-true-open-schema-audit-v1.json
+            cp /tmp/goldbet-audit.json feed/historical/open-close/goldbet-true-open-joinability-audit-v2.json
+            git add feed/historical/open-close/goldbet-true-open-joinability-audit-v2.json
             if git diff --cached --quiet; then exit 0; fi
             git commit -m "Audit GoldBet TRUE OPEN join schema"
             if git push; then exit 0; fi
