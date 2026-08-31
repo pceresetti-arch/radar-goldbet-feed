@@ -140,7 +140,7 @@ def main():
                 item.update({"download_status":"FETCHED","http_status":st,"sha256":sha256(raw),"bytes":len(raw)})
                 try:
                     item["csv_profile"]=inspect_csv(raw)
-                    if u.lower().endswith("/new/nor.csv"):
+                    if u.lower().endswith("/new/dnk.csv"):
                         raw_path=OUT/"football-data-DNK.csv"
                         raw_path.write_bytes(raw)
                         item["persisted_snapshot"]=str(raw_path)
