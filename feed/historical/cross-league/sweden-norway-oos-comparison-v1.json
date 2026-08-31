@@ -1,0 +1,994 @@
+{
+  "schema_version": "radar-historical-cross-league-sweden-norway-oos-v1",
+  "generated_at": "2026-08-31T13:03:35.905098+00:00",
+  "design": {
+    "leagues": [
+      "Sweden",
+      "Norway"
+    ],
+    "development_seasons": [
+      "2022",
+      "2023",
+      "2024"
+    ],
+    "holdout_seasons": [
+      "2025"
+    ],
+    "holdout_n_per_league": 240,
+    "pooled_holdout_n": 480,
+    "specification": "Sweden v1 feature sets and hyperparameters frozen before Norway evaluation.",
+    "holdout_retuning": false,
+    "same_date_results_used": false,
+    "closing_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK_NOT_GOLDBET"
+  },
+  "league_metrics": {
+    "Sweden": {
+      "ELO_ONLY": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.602753652980464,
+        "log_loss": 1.006184683329089,
+        "top_pick_accuracy": 0.5041666666666667,
+        "top_pick_ece_0_1_bins": 0.06534060097535802,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 16,
+            "mean_confidence": 0.3939933643745756,
+            "hit_rate": 0.4375
+          },
+          "0.4-0.5": {
+            "n": 97,
+            "mean_confidence": 0.44766554003073245,
+            "hit_rate": 0.3711340206185567
+          },
+          "0.5-0.6": {
+            "n": 74,
+            "mean_confidence": 0.5441161001672894,
+            "hit_rate": 0.6081081081081081
+          },
+          "0.6-0.7": {
+            "n": 40,
+            "mean_confidence": 0.6356824069450004,
+            "hit_rate": 0.575
+          },
+          "0.7-0.8": {
+            "n": 13,
+            "mean_confidence": 0.7385095526401939,
+            "hit_rate": 0.7692307692307693
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 80,
+            "D": 0,
+            "A": 16
+          },
+          "D": {
+            "H": 36,
+            "D": 0,
+            "A": 17
+          },
+          "A": {
+            "H": 50,
+            "D": 0,
+            "A": 41
+          }
+        }
+      },
+      "ELO_PLUS_FORM": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6020863409151239,
+        "log_loss": 1.0058771096406853,
+        "top_pick_accuracy": 0.5,
+        "top_pick_ece_0_1_bins": 0.05600836825600916,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 19,
+            "mean_confidence": 0.3905315079444356,
+            "hit_rate": 0.42105263157894735
+          },
+          "0.4-0.5": {
+            "n": 97,
+            "mean_confidence": 0.4489772866478082,
+            "hit_rate": 0.36082474226804123
+          },
+          "0.5-0.6": {
+            "n": 72,
+            "mean_confidence": 0.5456526562342351,
+            "hit_rate": 0.5972222222222222
+          },
+          "0.6-0.7": {
+            "n": 40,
+            "mean_confidence": 0.6354699171756448,
+            "hit_rate": 0.625
+          },
+          "0.7-0.8": {
+            "n": 12,
+            "mean_confidence": 0.7350412675509822,
+            "hit_rate": 0.75
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 81,
+            "D": 0,
+            "A": 15
+          },
+          "D": {
+            "H": 36,
+            "D": 0,
+            "A": 17
+          },
+          "A": {
+            "H": 52,
+            "D": 0,
+            "A": 39
+          }
+        }
+      },
+      "FULL_STRUCTURAL": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6020058669925189,
+        "log_loss": 1.0062798904627346,
+        "top_pick_accuracy": 0.49583333333333335,
+        "top_pick_ece_0_1_bins": 0.10091577018906295,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 16,
+            "mean_confidence": 0.3908332187030497,
+            "hit_rate": 0.5625
+          },
+          "0.4-0.5": {
+            "n": 100,
+            "mean_confidence": 0.4499365595446782,
+            "hit_rate": 0.3
+          },
+          "0.5-0.6": {
+            "n": 71,
+            "mean_confidence": 0.5439502572207918,
+            "hit_rate": 0.6197183098591549
+          },
+          "0.6-0.7": {
+            "n": 41,
+            "mean_confidence": 0.6352351060651519,
+            "hit_rate": 0.6585365853658537
+          },
+          "0.7-0.8": {
+            "n": 12,
+            "mean_confidence": 0.7379526665413726,
+            "hit_rate": 0.75
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 80,
+            "D": 0,
+            "A": 16
+          },
+          "D": {
+            "H": 34,
+            "D": 0,
+            "A": 19
+          },
+          "A": {
+            "H": 52,
+            "D": 0,
+            "A": 39
+          }
+        }
+      },
+      "DEVELOPMENT_PRIOR": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6533333333333334,
+        "log_loss": 1.0754082094211033,
+        "top_pick_accuracy": 0.4,
+        "top_pick_ece_0_1_bins": 0.05416666666666592,
+        "top_pick_calibration": {
+          "0.4-0.5": {
+            "n": 240,
+            "mean_confidence": 0.45416666666666594,
+            "hit_rate": 0.4
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 96,
+            "D": 0,
+            "A": 0
+          },
+          "D": {
+            "H": 53,
+            "D": 0,
+            "A": 0
+          },
+          "A": {
+            "H": 91,
+            "D": 0,
+            "A": 0
+          }
+        }
+      },
+      "EXTERNAL_MARKET_CLOSE": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.5908613334036068,
+        "log_loss": 0.9916574212366952,
+        "top_pick_accuracy": 0.5416666666666666,
+        "top_pick_ece_0_1_bins": 0.06710337717603454,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 40,
+            "mean_confidence": 0.3830862750644629,
+            "hit_rate": 0.475
+          },
+          "0.4-0.5": {
+            "n": 98,
+            "mean_confidence": 0.4456320017945229,
+            "hit_rate": 0.46938775510204084
+          },
+          "0.5-0.6": {
+            "n": 63,
+            "mean_confidence": 0.5518028068130287,
+            "hit_rate": 0.6507936507936508
+          },
+          "0.6-0.7": {
+            "n": 28,
+            "mean_confidence": 0.646649318947066,
+            "hit_rate": 0.5357142857142857
+          },
+          "0.7-0.8": {
+            "n": 11,
+            "mean_confidence": 0.7493096727824539,
+            "hit_rate": 0.8181818181818182
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 81,
+            "D": 0,
+            "A": 15
+          },
+          "D": {
+            "H": 32,
+            "D": 0,
+            "A": 21
+          },
+          "A": {
+            "H": 42,
+            "D": 0,
+            "A": 49
+          }
+        }
+      }
+    },
+    "Norway": {
+      "ELO_ONLY": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.5557614857729863,
+        "log_loss": 0.9399924502851355,
+        "top_pick_accuracy": 0.5708333333333333,
+        "top_pick_ece_0_1_bins": 0.040384011396600326,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 12,
+            "mean_confidence": 0.3928911273759088,
+            "hit_rate": 0.5
+          },
+          "0.4-0.5": {
+            "n": 97,
+            "mean_confidence": 0.4516784543015372,
+            "hit_rate": 0.4742268041237113
+          },
+          "0.5-0.6": {
+            "n": 73,
+            "mean_confidence": 0.5461272542421569,
+            "hit_rate": 0.547945205479452
+          },
+          "0.6-0.7": {
+            "n": 43,
+            "mean_confidence": 0.640713814175383,
+            "hit_rate": 0.7441860465116279
+          },
+          "0.7-0.8": {
+            "n": 13,
+            "mean_confidence": 0.7446337648659618,
+            "hit_rate": 0.8461538461538461
+          },
+          "0.8-0.9": {
+            "n": 2,
+            "mean_confidence": 0.8410555782897391,
+            "hit_rate": 1.0
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 96,
+            "D": 0,
+            "A": 21
+          },
+          "D": {
+            "H": 33,
+            "D": 0,
+            "A": 13
+          },
+          "A": {
+            "H": 36,
+            "D": 0,
+            "A": 41
+          }
+        }
+      },
+      "ELO_PLUS_FORM": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.5543168120276014,
+        "log_loss": 0.9368904171157383,
+        "top_pick_accuracy": 0.5916666666666667,
+        "top_pick_ece_0_1_bins": 0.06561180280202907,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 14,
+            "mean_confidence": 0.39291036295691734,
+            "hit_rate": 0.6428571428571429
+          },
+          "0.4-0.5": {
+            "n": 95,
+            "mean_confidence": 0.45218322429859975,
+            "hit_rate": 0.5263157894736842
+          },
+          "0.5-0.6": {
+            "n": 71,
+            "mean_confidence": 0.5440760818932743,
+            "hit_rate": 0.5352112676056338
+          },
+          "0.6-0.7": {
+            "n": 42,
+            "mean_confidence": 0.6394137936503765,
+            "hit_rate": 0.6904761904761905
+          },
+          "0.7-0.8": {
+            "n": 17,
+            "mean_confidence": 0.7472213261815158,
+            "hit_rate": 0.8823529411764706
+          },
+          "0.8-0.9": {
+            "n": 1,
+            "mean_confidence": 0.8662758737700968,
+            "hit_rate": 1.0
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 98,
+            "D": 0,
+            "A": 19
+          },
+          "D": {
+            "H": 32,
+            "D": 0,
+            "A": 14
+          },
+          "A": {
+            "H": 33,
+            "D": 0,
+            "A": 44
+          }
+        }
+      },
+      "FULL_STRUCTURAL": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.5589730866204583,
+        "log_loss": 0.9446063824645968,
+        "top_pick_accuracy": 0.5875,
+        "top_pick_ece_0_1_bins": 0.05501401479258974,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 20,
+            "mean_confidence": 0.38617006356426176,
+            "hit_rate": 0.45
+          },
+          "0.4-0.5": {
+            "n": 81,
+            "mean_confidence": 0.4519227712719714,
+            "hit_rate": 0.5308641975308642
+          },
+          "0.5-0.6": {
+            "n": 79,
+            "mean_confidence": 0.5413815433576851,
+            "hit_rate": 0.5443037974683544
+          },
+          "0.6-0.7": {
+            "n": 42,
+            "mean_confidence": 0.6469042685897719,
+            "hit_rate": 0.7142857142857143
+          },
+          "0.7-0.8": {
+            "n": 15,
+            "mean_confidence": 0.7317765704777148,
+            "hit_rate": 0.8666666666666667
+          },
+          "0.8-0.9": {
+            "n": 3,
+            "mean_confidence": 0.8505736474234289,
+            "hit_rate": 1.0
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 96,
+            "D": 0,
+            "A": 21
+          },
+          "D": {
+            "H": 31,
+            "D": 0,
+            "A": 15
+          },
+          "A": {
+            "H": 32,
+            "D": 0,
+            "A": 45
+          }
+        }
+      },
+      "DEVELOPMENT_PRIOR": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6242978395061729,
+        "log_loss": 1.0344614203087132,
+        "top_pick_accuracy": 0.4875,
+        "top_pick_ece_0_1_bins": 0.027777777777775292,
+        "top_pick_calibration": {
+          "0.4-0.5": {
+            "n": 240,
+            "mean_confidence": 0.4597222222222247,
+            "hit_rate": 0.4875
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 117,
+            "D": 0,
+            "A": 0
+          },
+          "D": {
+            "H": 46,
+            "D": 0,
+            "A": 0
+          },
+          "A": {
+            "H": 77,
+            "D": 0,
+            "A": 0
+          }
+        }
+      },
+      "EXTERNAL_MARKET_CLOSE": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.5309813270392499,
+        "log_loss": 0.9069699760355938,
+        "top_pick_accuracy": 0.6041666666666666,
+        "top_pick_ece_0_1_bins": 0.10581668564051232,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 32,
+            "mean_confidence": 0.38220458262910384,
+            "hit_rate": 0.4375
+          },
+          "0.4-0.5": {
+            "n": 77,
+            "mean_confidence": 0.44776238521819595,
+            "hit_rate": 0.5454545454545454
+          },
+          "0.5-0.6": {
+            "n": 55,
+            "mean_confidence": 0.5493421466122108,
+            "hit_rate": 0.45454545454545453
+          },
+          "0.6-0.7": {
+            "n": 46,
+            "mean_confidence": 0.6550798832639831,
+            "hit_rate": 0.8260869565217391
+          },
+          "0.7-0.8": {
+            "n": 22,
+            "mean_confidence": 0.7364490461142722,
+            "hit_rate": 0.8181818181818182
+          },
+          "0.8-0.9": {
+            "n": 7,
+            "mean_confidence": 0.8368425024151775,
+            "hit_rate": 1.0
+          },
+          "0.9-1.0": {
+            "n": 1,
+            "mean_confidence": 0.9161120424527721,
+            "hit_rate": 1.0
+          }
+        },
+        "confusion_truth_by_pick": {
+          "H": {
+            "H": 99,
+            "D": 0,
+            "A": 18
+          },
+          "D": {
+            "H": 29,
+            "D": 0,
+            "A": 17
+          },
+          "A": {
+            "H": 31,
+            "D": 0,
+            "A": 46
+          }
+        }
+      }
+    }
+  },
+  "pooled_metrics": {
+    "ELO_ONLY": {
+      "n": 480,
+      "multiclass_brier_sum_mean": 0.5792575693767251,
+      "log_loss": 0.9730885668071122,
+      "top_pick_accuracy": 0.5375,
+      "top_pick_ece_0_1_bins": 0.03363528030868359,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 28,
+          "mean_confidence": 0.3935209770894327,
+          "hit_rate": 0.4642857142857143
+        },
+        "0.4-0.5": {
+          "n": 194,
+          "mean_confidence": 0.44967199716613454,
+          "hit_rate": 0.422680412371134
+        },
+        "0.5-0.6": {
+          "n": 147,
+          "mean_confidence": 0.5451148365446046,
+          "hit_rate": 0.5782312925170068
+        },
+        "0.6-0.7": {
+          "n": 83,
+          "mean_confidence": 0.638289039606524,
+          "hit_rate": 0.6626506024096386
+        },
+        "0.7-0.8": {
+          "n": 26,
+          "mean_confidence": 0.741571658753078,
+          "hit_rate": 0.8076923076923077
+        },
+        "0.8-0.9": {
+          "n": 2,
+          "mean_confidence": 0.8410555782897391,
+          "hit_rate": 1.0
+        }
+      },
+      "confusion_truth_by_pick": {
+        "H": {
+          "H": 176,
+          "D": 0,
+          "A": 37
+        },
+        "D": {
+          "H": 69,
+          "D": 0,
+          "A": 30
+        },
+        "A": {
+          "H": 86,
+          "D": 0,
+          "A": 82
+        }
+      }
+    },
+    "ELO_PLUS_FORM": {
+      "n": 480,
+      "multiclass_brier_sum_mean": 0.5782015764713627,
+      "log_loss": 0.9713837633782118,
+      "top_pick_accuracy": 0.5458333333333333,
+      "top_pick_ece_0_1_bins": 0.027098451391180594,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 33,
+          "mean_confidence": 0.391540719161852,
+          "hit_rate": 0.5151515151515151
+        },
+        "0.4-0.5": {
+          "n": 192,
+          "mean_confidence": 0.45056355788127284,
+          "hit_rate": 0.4427083333333333
+        },
+        "0.5-0.6": {
+          "n": 143,
+          "mean_confidence": 0.5448698815614501,
+          "hit_rate": 0.5664335664335665
+        },
+        "0.6-0.7": {
+          "n": 82,
+          "mean_confidence": 0.6374899514675803,
+          "hit_rate": 0.6585365853658537
+        },
+        "0.7-0.8": {
+          "n": 29,
+          "mean_confidence": 0.7421813019206052,
+          "hit_rate": 0.8275862068965517
+        },
+        "0.8-0.9": {
+          "n": 1,
+          "mean_confidence": 0.8662758737700968,
+          "hit_rate": 1.0
+        }
+      },
+      "confusion_truth_by_pick": {
+        "H": {
+          "H": 179,
+          "D": 0,
+          "A": 34
+        },
+        "D": {
+          "H": 68,
+          "D": 0,
+          "A": 31
+        },
+        "A": {
+          "H": 85,
+          "D": 0,
+          "A": 83
+        }
+      }
+    },
+    "FULL_STRUCTURAL": {
+      "n": 480,
+      "multiclass_brier_sum_mean": 0.5804894768064887,
+      "log_loss": 0.9754431364636656,
+      "top_pick_accuracy": 0.5416666666666666,
+      "top_pick_ece_0_1_bins": 0.05132216112845,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 36,
+          "mean_confidence": 0.3882425769592786,
+          "hit_rate": 0.5
+        },
+        "0.4-0.5": {
+          "n": 181,
+          "mean_confidence": 0.4508254167265055,
+          "hit_rate": 0.40331491712707185
+        },
+        "0.5-0.6": {
+          "n": 150,
+          "mean_confidence": 0.5425974012528888,
+          "hit_rate": 0.58
+        },
+        "0.6-0.7": {
+          "n": 83,
+          "mean_confidence": 0.6411399834872488,
+          "hit_rate": 0.6867469879518072
+        },
+        "0.7-0.8": {
+          "n": 27,
+          "mean_confidence": 0.7345215020615631,
+          "hit_rate": 0.8148148148148148
+        },
+        "0.8-0.9": {
+          "n": 3,
+          "mean_confidence": 0.8505736474234289,
+          "hit_rate": 1.0
+        }
+      },
+      "confusion_truth_by_pick": {
+        "H": {
+          "H": 176,
+          "D": 0,
+          "A": 37
+        },
+        "D": {
+          "H": 65,
+          "D": 0,
+          "A": 34
+        },
+        "A": {
+          "H": 84,
+          "D": 0,
+          "A": 84
+        }
+      }
+    },
+    "DEVELOPMENT_PRIOR": {
+      "n": 480,
+      "multiclass_brier_sum_mean": 0.6388155864197531,
+      "log_loss": 1.0549348148649083,
+      "top_pick_accuracy": 0.44375,
+      "top_pick_ece_0_1_bins": 0.013194444444440012,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 480,
+          "mean_confidence": 0.45694444444444,
+          "hit_rate": 0.44375
+        }
+      },
+      "confusion_truth_by_pick": {
+        "H": {
+          "H": 213,
+          "D": 0,
+          "A": 0
+        },
+        "D": {
+          "H": 99,
+          "D": 0,
+          "A": 0
+        },
+        "A": {
+          "H": 168,
+          "D": 0,
+          "A": 0
+        }
+      }
+    },
+    "EXTERNAL_MARKET_CLOSE": {
+      "n": 480,
+      "multiclass_brier_sum_mean": 0.5609213302214283,
+      "log_loss": 0.9493136986361446,
+      "top_pick_accuracy": 0.5729166666666666,
+      "top_pick_ece_0_1_bins": 0.05179336893248401,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 72,
+          "mean_confidence": 0.3826944117598588,
+          "hit_rate": 0.4583333333333333
+        },
+        "0.4-0.5": {
+          "n": 175,
+          "mean_confidence": 0.44656937050093926,
+          "hit_rate": 0.5028571428571429
+        },
+        "0.5-0.6": {
+          "n": 118,
+          "mean_confidence": 0.5506558889228171,
+          "hit_rate": 0.559322033898305
+        },
+        "0.6-0.7": {
+          "n": 74,
+          "mean_confidence": 0.6518899400089332,
+          "hit_rate": 0.7162162162162162
+        },
+        "0.7-0.8": {
+          "n": 33,
+          "mean_confidence": 0.7407359216703328,
+          "hit_rate": 0.8181818181818182
+        },
+        "0.8-0.9": {
+          "n": 7,
+          "mean_confidence": 0.8368425024151775,
+          "hit_rate": 1.0
+        },
+        "0.9-1.0": {
+          "n": 1,
+          "mean_confidence": 0.9161120424527721,
+          "hit_rate": 1.0
+        }
+      },
+      "confusion_truth_by_pick": {
+        "H": {
+          "H": 180,
+          "D": 0,
+          "A": 33
+        },
+        "D": {
+          "H": 61,
+          "D": 0,
+          "A": 38
+        },
+        "A": {
+          "H": 73,
+          "D": 0,
+          "A": 95
+        }
+      }
+    }
+  },
+  "stratified_paired_bootstrap": {
+    "draws": 10000,
+    "seed": 20260831,
+    "positive_comparator_minus_model_means_model_better": true,
+    "comparisons": {
+      "ELO_ONLY_VS_DEVELOPMENT_PRIOR": {
+        "brier": {
+          "comparator_minus_model_point": 0.059558017043027996,
+          "ci95_percentile": [
+            0.038770140647542146,
+            0.08026874702575783
+          ],
+          "bootstrap_probability_model_better": 1.0
+        },
+        "log_loss": {
+          "comparator_minus_model_point": 0.0818462480577961,
+          "ci95_percentile": [
+            0.05323480712714302,
+            0.10976372405269616
+          ],
+          "bootstrap_probability_model_better": 1.0
+        }
+      },
+      "ELO_PLUS_FORM_VS_ELO_ONLY": {
+        "brier": {
+          "comparator_minus_model_point": 0.001055992905362469,
+          "ci95_percentile": [
+            -0.0029929915200886227,
+            0.005010365560084549
+          ],
+          "bootstrap_probability_model_better": 0.6945
+        },
+        "log_loss": {
+          "comparator_minus_model_point": 0.001704803428900436,
+          "ci95_percentile": [
+            -0.004099980633920865,
+            0.007356866705828544
+          ],
+          "bootstrap_probability_model_better": 0.7158
+        }
+      },
+      "FULL_STRUCTURAL_VS_ELO_ONLY": {
+        "brier": {
+          "comparator_minus_model_point": -0.001231907429763438,
+          "ci95_percentile": [
+            -0.006488071475131905,
+            0.004082014709949646
+          ],
+          "bootstrap_probability_model_better": 0.3306
+        },
+        "log_loss": {
+          "comparator_minus_model_point": -0.0023545696565533706,
+          "ci95_percentile": [
+            -0.010380947368402605,
+            0.005660190953725061
+          ],
+          "bootstrap_probability_model_better": 0.2915
+        }
+      },
+      "EXTERNAL_MARKET_CLOSE_VS_ELO_ONLY": {
+        "brier": {
+          "comparator_minus_model_point": 0.018336239155296762,
+          "ci95_percentile": [
+            0.0057832592628503975,
+            0.030603501330527545
+          ],
+          "bootstrap_probability_model_better": 0.9978
+        },
+        "log_loss": {
+          "comparator_minus_model_point": 0.023774868170967727,
+          "ci95_percentile": [
+            0.00531665093394017,
+            0.04174194285646536
+          ],
+          "bootstrap_probability_model_better": 0.9936
+        }
+      },
+      "EXTERNAL_MARKET_CLOSE_VS_ELO_PLUS_FORM": {
+        "brier": {
+          "comparator_minus_model_point": 0.017280246249934295,
+          "ci95_percentile": [
+            0.0056797450648806294,
+            0.029018081729923793
+          ],
+          "bootstrap_probability_model_better": 0.9979
+        },
+        "log_loss": {
+          "comparator_minus_model_point": 0.02207006474206729,
+          "ci95_percentile": [
+            0.004767131748389479,
+            0.03963175410174304
+          ],
+          "bootstrap_probability_model_better": 0.994
+        }
+      }
+    }
+  },
+  "league_drift_independent_bootstrap": {
+    "draws": 10000,
+    "interpretation": "Descriptive independent match bootstrap; league schedules induce dependence and no causal league claim is made.",
+    "models": {
+      "ELO_ONLY": {
+        "brier": {
+          "sweden_minus_norway_point": 0.046992167207477675,
+          "ci95_percentile": [
+            -0.008482810904931082,
+            0.10240392110752616
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        },
+        "log_loss": {
+          "sweden_minus_norway_point": 0.06619223304395361,
+          "ci95_percentile": [
+            -0.013233115616271052,
+            0.14361965056407622
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        }
+      },
+      "ELO_PLUS_FORM": {
+        "brier": {
+          "sweden_minus_norway_point": 0.047769528887522505,
+          "ci95_percentile": [
+            -0.0072889564505072,
+            0.10266528503608219
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        },
+        "log_loss": {
+          "sweden_minus_norway_point": 0.06898669252494705,
+          "ci95_percentile": [
+            -0.007298884410681716,
+            0.1451330482955454
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        }
+      },
+      "FULL_STRUCTURAL": {
+        "brier": {
+          "sweden_minus_norway_point": 0.0430327803720606,
+          "ci95_percentile": [
+            -0.01268212072205499,
+            0.09874703168803045
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        },
+        "log_loss": {
+          "sweden_minus_norway_point": 0.061673507998137755,
+          "ci95_percentile": [
+            -0.01639376884488597,
+            0.14020252294941338
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        }
+      },
+      "DEVELOPMENT_PRIOR": {
+        "brier": {
+          "sweden_minus_norway_point": 0.02903549382716053,
+          "ci95_percentile": [
+            -0.0045293209876542395,
+            0.06174382716049387
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        },
+        "log_loss": {
+          "sweden_minus_norway_point": 0.040946789112390025,
+          "ci95_percentile": [
+            -0.008402318793145902,
+            0.08970270606703767
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        }
+      },
+      "EXTERNAL_MARKET_CLOSE": {
+        "brier": {
+          "sweden_minus_norway_point": 0.059880006364356864,
+          "ci95_percentile": [
+            0.005226690908298304,
+            0.11463148109332466
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        },
+        "log_loss": {
+          "sweden_minus_norway_point": 0.08468744520110139,
+          "ci95_percentile": [
+            0.0074230230089925575,
+            0.1615473694051115
+          ],
+          "interpretation": "Positive means higher loss in Sweden."
+        }
+      }
+    }
+  },
+  "decisions": {
+    "elo_vs_naive_prior": "SUPPORTED_ON_BOTH_LEAGUES_AND_POOLED_HOLDOUT",
+    "form_increment_beyond_elo": "NOT_SUPPORTED_PAIRED_INTERVAL_INCLUDES_ZERO",
+    "full_structural_increment_beyond_elo": "REJECTED_NO_RELIABLE_GAIN",
+    "external_close_vs_structural": "BENCHMARK_SUPERIOR_POOLED_NOT_OPERATIONAL_EDGE",
+    "operational_promotion": false,
+    "mms_status": "NOT_TESTED_NO_GOLDBET_TRUE_OPEN"
+  },
+  "limitations": [
+    "Only two leagues and one holdout season per league.",
+    "Match bootstrap does not remove within-season schedule dependence.",
+    "External closing odds are near-kickoff benchmarks, not GoldBet TRUE OPEN or an executable historical strategy.",
+    "No XI, player props, T-30 or intermediate snapshots are reconstructed."
+  ]
+}
