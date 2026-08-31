@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-31T10:35:11.250376+00:00",
+  "generated_at": "2026-08-31T10:50:41.875576+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,15 +21,65 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
-      "mode": "FULL_DISCOVERY",
-      "started_at": "2026-08-31T10:35:09.782643+00:00",
-      "finished_at": "2026-08-31T10:35:11.250357+00:00",
+      "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
+      "started_at": "2026-08-31T10:47:42.699642+00:00",
+      "finished_at": "2026-08-31T10:47:45.237218+00:00",
       "official_count": 0,
-      "urgent_unconfirmed_count": 0,
+      "urgent_unconfirmed_count": 7,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-31T10:48:20.237327+00:00",
+      "finished_at": "2026-08-31T10:48:20.554023+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 7,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-31T10:48:55.554224+00:00",
+      "finished_at": "2026-08-31T10:48:55.888535+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 7,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-31T10:49:30.888772+00:00",
+      "finished_at": "2026-08-31T10:49:31.170153+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 7,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-31T10:50:06.170387+00:00",
+      "finished_at": "2026-08-31T10:50:06.617338+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 7,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-08-31T10:50:41.617540+00:00",
+      "finished_at": "2026-08-31T10:50:41.875486+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 7,
       "events": [],
       "actionable_events": []
     }
@@ -37,6 +87,70 @@
   "observed_events": [],
   "actionable_events": [],
   "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [],
-  "target_count": 6
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Bolton - Coventry City U21",
+      "match_market_id": "36362.4897",
+      "match_event_id": 16079690,
+      "minutes_to_start": 69.3,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Bournemouth - Middlesbrough U21",
+      "match_market_id": "36362.4900",
+      "match_event_id": 16079701,
+      "minutes_to_start": 69.3,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000019107
+    },
+    {
+      "match": "Brentford - Sunderland (R)",
+      "match_market_id": "36362.4899",
+      "match_event_id": 16079700,
+      "minutes_to_start": 69.3,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000019108
+    },
+    {
+      "match": "Chelsea - West Ham United",
+      "match_market_id": "36361.60416",
+      "match_event_id": 16077320,
+      "minutes_to_start": 69.3,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000019109
+    },
+    {
+      "match": "Derby County R. - West Bromwich",
+      "match_market_id": "36361.60203",
+      "match_event_id": 16077207,
+      "minutes_to_start": 69.3,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000019110
+    },
+    {
+      "match": "Persib Bandung - Manila Digger FC",
+      "match_market_id": "36362.19455",
+      "match_event_id": 16081247,
+      "minutes_to_start": 69.3,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 1000021300
+    },
+    {
+      "match": "Sardarapat FC - FC Syunik",
+      "match_market_id": "36362.3738",
+      "match_event_id": 16079413,
+      "minutes_to_start": 69.3,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5972954
+    }
+  ],
+  "target_count": 7
 }
