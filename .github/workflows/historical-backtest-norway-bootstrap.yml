@@ -1,0 +1,57 @@
+name: Historical Backtest Norway Bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-backtest-norway-bootstrap.yml'
+      - 'tools/historical_ingest_norway.py'
+      - 'tools/historical_build_norway_baseline.py'
+      - 'tools/historical_model_norway_structural.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-backtest-norway-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover and profile Norway historical source
+        run: python tools/historical_ingest_norway.py
+      - name: Build frozen Norway baseline
+        run: python tools/historical_build_norway_baseline.py
+      - name: Build Norway structural OOS model
+        run: python tools/historical_model_norway_structural.py
+      - name: Commit historical discovery evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python tools/historical_ingest_norway.py
+            python tools/historical_build_norway_baseline.py
+            python tools/historical_model_norway_structural.py
+            git add feed/historical/norway
+            if git diff --cached --quiet; then
+              echo "No discovery changes"
+              exit 0
+            fi
+            git commit -m "Update Norway historical source discovery"
+            if git push; then
+              exit 0
+            fi
+            echo "Push raced with another workflow; regenerating from latest main attempt ${attempt}/5"
+            sleep $((attempt * 2))
+          done
+          echo "Unable to publish discovery evidence after bounded retries"
+          exit 1
