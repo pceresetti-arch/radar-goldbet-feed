@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v3",
-  "generated_at": "2026-08-31T09:36:21+00:00",
+  "schema_version": "radar-historical-backtest-ledger-v4",
+  "generated_at": "2026-08-31T10:46:08.037Z",
   "local_timezone": "Europe/Rome",
-  "status": "SWEDEN_FOUR_SEASON_BASELINE_COMPLETED_HOLDOUT_BENCHMARK_READY",
+  "status": "SWEDEN_STRUCTURAL_OOS_COMPLETED_NO_OPERATIONAL_PROMOTION",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -57,7 +57,9 @@
     "structural_modeling_allowed": true,
     "external_close_benchmark_allowed": true,
     "primary_goldbet_mms_allowed": false,
-    "note": "Four completed Allsvenskan regular seasons are normalized. Source kickoff time has no documented timezone, so UTC is not inferred and rolling features must use strictly prior dates."
+    "note": "Four completed Allsvenskan regular seasons are normalized. Source kickoff time has no documented timezone, so UTC is not inferred and rolling features must use strictly prior dates.",
+    "strictly_prior_date_feature_rows": 960,
+    "structural_oos_holdout_rows": 240
   },
   "quarantined_evidence": [
     {
@@ -89,7 +91,12 @@
     "Excluded four cross-division promotion/relegation playoff rows, yielding 960 regular-season fixtures.",
     "Frozen temporal split: 2022-2024 development (720), 2025 holdout (240).",
     "Established de-vigged external average closing-market holdout benchmark without relabelling it GoldBet.",
-    "Made historical workflow commit regeneration safe against concurrent operational pushes."
+    "Made historical workflow commit regeneration safe against concurrent operational pushes.",
+    "Built leakage-safe Sweden pre-match features with date-batch updates: Elo, prior-five form/goal balance, home-away PPG and prior-opponent Elo.",
+    "Froze multinomial training on 2022-2024 and evaluated ELO_ONLY, ELO_PLUS_FORM and FULL_STRUCTURAL once on untouched 2025 holdout.",
+    "Added 10,000-draw paired match-bootstrap diagnostics without changing model parameters after holdout inspection.",
+    "Found a clear structural-model gain over the naive development prior, but no demonstrated gain over external de-vigged closing odds.",
+    "Found no reliable incremental benefit from form/goal balance/home-away/opponent-quality beyond Elo on the same holdout."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -106,7 +113,71 @@
     },
     "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
     "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
-    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "structural_oos_2025": {
+      "report": "feed/historical/sweden/structural-oos-v1.json",
+      "sample": {
+        "development": 720,
+        "holdout": 240
+      },
+      "elo_only": {
+        "multiclass_brier_sum_mean": 0.6027536529804638,
+        "log_loss": 1.0061846833290886,
+        "top_pick_accuracy": 0.5041666666666667
+      },
+      "elo_plus_form": {
+        "multiclass_brier_sum_mean": 0.6020863409151239,
+        "log_loss": 1.0058771096406853,
+        "top_pick_accuracy": 0.5
+      },
+      "full_structural": {
+        "multiclass_brier_sum_mean": 0.6020058669925188,
+        "log_loss": 1.0062798904627348,
+        "top_pick_accuracy": 0.49583333333333335
+      },
+      "paired_uncertainty_summary": {
+        "full_vs_development_prior": {
+          "brier_comparator_minus_model": 0.05132746634081449,
+          "brier_ci95": [
+            0.02309049250701539,
+            0.07985316738915961
+          ],
+          "log_loss_comparator_minus_model": 0.06912831895836893,
+          "log_loss_ci95": [
+            0.0301490752243747,
+            0.10770513011017722
+          ],
+          "interpretation": "FULL_STRUCTURAL improves the naive prior on this holdout; match-bootstrap intervals exclude zero."
+        },
+        "full_vs_external_market_close": {
+          "brier_comparator_minus_model": -0.0111445335889121,
+          "brier_ci95": [
+            -0.028543047194851654,
+            0.006545351764068133
+          ],
+          "log_loss_comparator_minus_model": -0.01462246922603923,
+          "log_loss_ci95": [
+            -0.04043653361602231,
+            0.011333090262798155
+          ],
+          "interpretation": "Point estimates favor external close; intervals cross zero, so neither superiority claim is established."
+        },
+        "incremental_full_vs_elo_only": {
+          "brier_elo_minus_full": 0.0007477859879451027,
+          "brier_ci95": [
+            -0.004362907326604853,
+            0.005799929094160594
+          ],
+          "log_loss_elo_minus_full": -0.0000952071336454451,
+          "log_loss_ci95": [
+            -0.0077614465071409715,
+            0.007472082395789513
+          ],
+          "interpretation": "No reliable incremental improvement beyond Elo."
+        },
+        "limitation": "Match-level diagnostic only; one league-season holdout and schedule dependence prevent operational promotion."
+      }
+    }
   },
   "ablation_plan": {
     "paired_same_sample_required": true,
@@ -123,22 +194,25 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Build Sweden strictly-prior-date structural features (Elo/form/home-away/opponent quality) on the frozen 2022-2024 development sample, freeze parameters, then score the untouched 2025 holdout.",
-    "market_lane": "Keep external closing 1X2 benchmark separate; do not tune on 2025.",
-    "mms_lane": "GoldBet historical TRUE OPEN remains unavailable; no OPEN-to-CLOSE or threshold test is authorized.",
-    "after_sweden_structural": "Acquire and profile Norway under the same contract."
+    "priority": "Acquire and profile Norway four-season regular-league block under the same historical contract.",
+    "market_lane": "Retain Sweden external closing odds as benchmark only; do not tune on 2025.",
+    "sweden_replication": "Freeze Sweden v1 unchanged and replicate the structural specification on a new league/season before reconsidering any module.",
+    "mms_lane": "GoldBet historical TRUE OPEN remains unavailable; no OPEN-to-CLOSE or threshold test is authorized."
   },
   "rule_decisions": {
     "promoted_rules": [],
-    "rejected_rules": [],
+    "rejected_rules": [
+      "Sweden v1: reject the claim that prior-five form, goal balance, venue PPG and opponent-quality features add a reliable OOS gain beyond Elo; paired 2025 intervals include zero."
+    ],
     "operational_changes": [],
     "historical_method_changes": [
       "Structural fixture eligibility separated from market-price eligibility.",
       "Latest four completed Allsvenskan seasons frozen as 2022-2025.",
       "Cross-division playoffs excluded from regular-season comparability.",
       "2025 frozen as temporal holdout.",
-      "External average closing odds accepted only as de-vigged market benchmark."
+      "External average closing odds accepted only as de-vigged market benchmark.",
+      "Paired match-bootstrap uncertainty added as a diagnostic after the frozen one-shot holdout evaluation; model and hyperparameters were not changed."
     ],
-    "note": "No betting threshold or operational Radar rule is promoted."
+    "note": "No betting threshold or operational Radar rule is promoted. Elo/structural evidence requires out-of-league or new-season replication."
   }
 }
