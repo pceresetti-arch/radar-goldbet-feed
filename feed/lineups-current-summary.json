@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T00:25:17.403866+00:00",
+  "generated_at": "2026-08-31T00:41:00.812443+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 6,
+  "target_count": 7,
   "status_counts": {
     "SOURCE_CONFIRMED": 1,
     "NOT_AVAILABLE": 2,
-    "REFERENCE_PREVIOUS_XI": 3
+    "REFERENCE_PREVIOUS_XI": 4
   },
   "schedule_stats": [
     {
@@ -24,12 +24,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T00:25:17.403866+00:00",
+    "generated_at": "2026-08-31T00:41:00.812443+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 5,
+    "target_count": 4,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -40,27 +40,18 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Independiente Rivadavia - Racing",
-        "minutes_to_start": 4.7,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
   "matches": [
     {
       "match": "Independiente Rivadavia - Racing",
       "start_time": "31-08-2026 02:30",
       "league": "Primera Division",
-      "minutes_to_start": 4.7,
+      "minutes_to_start": -11.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.10407",
       "confirmed_at": "2026-08-31T00:25:17.403866+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -68,7 +59,7 @@
       "match": "Unan Managua - Managua FC",
       "start_time": "31-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 34.7,
+      "minutes_to_start": 19.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.52982",
       "confirmed_at": null,
@@ -80,7 +71,7 @@
       "match": "Xelaju - Deportivo Mixco",
       "start_time": "31-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 34.7,
+      "minutes_to_start": 19.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.2870",
       "confirmed_at": null,
@@ -92,7 +83,7 @@
       "match": "Deportivo Cali - Bucaramanga",
       "start_time": "31-08-2026 03:20",
       "league": "Primera A",
-      "minutes_to_start": 54.7,
+      "minutes_to_start": 39.0,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.3428",
       "confirmed_at": null,
@@ -104,7 +95,7 @@
       "match": "Real Monarchs - Tacoma Defiance",
       "start_time": "31-08-2026 03:30",
       "league": "Mls Next Pro",
-      "minutes_to_start": 64.7,
+      "minutes_to_start": 49.0,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36356.3171",
       "confirmed_at": null,
@@ -116,12 +107,24 @@
       "match": "Monterrey - San Luis",
       "start_time": "31-08-2026 04:10",
       "league": "Primera Division",
-      "minutes_to_start": 104.7,
+      "minutes_to_start": 89.0,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.3020",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "San Jose Earthquakes II - Los Angeles FC 2",
+      "start_time": "31-08-2026 04:30",
+      "league": "Mls Next Pro",
+      "minutes_to_start": 109.0,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.43899",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
