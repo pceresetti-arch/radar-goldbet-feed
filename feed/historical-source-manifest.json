@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v10",
-  "generated_at": "2026-08-31T19:30:37Z",
+  "schema_version": "radar-historical-source-manifest-v11",
+  "generated_at": "2026-08-31T20:41:54.824874+00:00",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "PRIMEIRA_EREDIVISIE_1X2_ROW_LEVEL_REPLICATED_OU_AGGREGATE_ONLY",
+  "status": "PRIMEIRA_EREDIVISIE_CLEAN_SOURCE_1X2_OU_FULLY_REPLICATED",
   "priority": [
     "Sweden",
     "Norway",
@@ -179,7 +179,7 @@
       "name": "Recovered Primeira Liga/Eredivisie early-to-CLOSE aggregate",
       "path": "feed/historical/open-close/primeira-eredivisie-recovered-v1.json",
       "source_class": "EXTERNAL_CROSS_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC",
-      "status": "SUPERSEDED_BY_SPLIT_EVIDENCE_1X2_ROW_LEVEL_OU_AGGREGATE",
+      "status": "SUPERSEDED_FOR_INFERENCE_BY_CLEAN_SOURCE_RECOVERY",
       "leagues": [
         "Primeira Liga",
         "Eredivisie"
@@ -216,13 +216,14 @@
         "The earlier +13.6% CLV/+9.2% ROI shorthand conflated different cells and is corrected in the evidence file.",
         "The complete 1X2 prefix was recovered and replicated; O/U remains aggregate-only."
       ],
-      "row_level_evidence": "feed/historical/open-close/primeira-eredivisie-row-recovery-v2.json"
+      "row_level_evidence": "feed/historical/open-close/primeira-eredivisie-row-recovery-v2.json",
+      "superseded_by": "feed/historical/open-close/primeira-eredivisie-clean-source/report.json"
     },
     {
       "name": "Recovered Primeira Liga/Eredivisie 1X2 row-level prefix",
       "path": "feed/historical/open-close/primeira-eredivisie-row-recovery-v2.json",
       "source_class": "EXTERNAL_CROSS_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC",
-      "status": "1X2_ROW_LEVEL_REPLICATED_FROM_COMPLETE_PREFIX_PARENT_GZIP_QUARANTINED",
+      "status": "SUPERSEDED_FOR_INFERENCE_BY_CLEAN_SOURCE_RECOVERY",
       "unique_matches": 1224,
       "selection_rows": 3672,
       "missing_required_cells": 0,
@@ -245,6 +246,46 @@
         "Target subset completeness is proven by 612 matches per season and exact H/D/A selection triplets.",
         "Point estimates reproduce published v1.47 metrics; exact original bootstrap state is unavailable.",
         "Selection depends on CLOSE and is therefore hindsight-diagnostic."
+      ],
+      "superseded_by": "feed/historical/open-close/primeira-eredivisie-clean-source/report.json"
+    },
+    {
+      "name": "Football-Data clean Primeira Liga/Eredivisie 2024/25-2025/26 recovery",
+      "path": "feed/historical/open-close/primeira-eredivisie-clean-source/report.json",
+      "source_class": "FOOTBALL_DATA_OBSERVED_EARLY_TO_CLOSE_DIAGNOSTIC",
+      "status": "ACCEPTED_FULL_ROW_LEVEL_1X2_AND_OU_REPLICATION",
+      "leagues": [
+        "Primeira Liga",
+        "Eredivisie"
+      ],
+      "seasons": [
+        "2024/25",
+        "2025/26"
+      ],
+      "source_files": 4,
+      "source_fixtures": 1224,
+      "signal_rows": 6120,
+      "markets": [
+        "1X2",
+        "OU2.5"
+      ],
+      "role": [
+        "CLEAN_SOURCE_SNAPSHOT",
+        "ROW_LEVEL_MOVEMENT_DIAGNOSTIC",
+        "TWO_HOLDOUT_REPLICATION",
+        "CLV_ROI_UNCERTAINTY"
+      ],
+      "forbidden_role": [
+        "GOLDBET_TRUE_OPEN",
+        "EXECUTABLE_OPEN_RULE",
+        "OPEN_TO_T30"
+      ],
+      "quality_notes": [
+        "Each source file contains exactly 306 fixtures and is bound by SHA-256.",
+        "All twelve published ROI/CLV/CLOSE point-estimate cells reproduce within rounding.",
+        "Early odds are observed pre-closing snapshots, not TRUE OPEN.",
+        "Signal selection uses CLOSE, so early ROI is hindsight-diagnostic.",
+        "All bootstrap ROI intervals include zero; no threshold is promoted."
       ]
     }
   ],
@@ -301,7 +342,7 @@
         "close_timestamp",
         "price_source"
       ],
-      "note": "GoldBet has 642 certified TRUE OPEN events but its close/outcome join is pending. The recovered Primeira/Eredivisie 1X2 block is row-level Bet365 early-to-CLOSE with market-average confirmation; it is not GoldBet. O/U remains aggregate-only."
+      "note": "The Primeira/Eredivisie external Bet365 early-to-CLOSE diagnostic is fully rebuilt from clean source for 1X2 and O/U. It remains separate from GoldBet, whose 642 certified TRUE OPEN events still require exact same-book close/outcome joins."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_2688_ROWS",
@@ -351,11 +392,11 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "lane": "CLEAN_SOURCE_OR_COMPLETE_ARCHIVE_RECOVERY",
-    "goal": "Recover original Football-Data CSV inputs or a complete signals archive for O/U and exact v1.47 bootstrap reproduction; independently join GoldBet TRUE OPEN to exact closes and outcomes.",
-    "prior_claim_status": "1X2 recovered and replicated from rows; O/U preserved only as aggregate evidence.",
-    "structural_next": "Netherlands Eredivisie remains next after this recovery checkpoint.",
+    "lane": "GOLDBET_EXACT_OPEN_CLOSE_OUTCOME_JOIN",
+    "goal": "Join certified GoldBet TRUE OPEN to exact last-pre-kickoff same-book closes and outcomes; do not reuse the external Bet365 CLOSE-conditioned diagnostic as GoldBet evidence.",
+    "prior_claim_status": "Primeira/Eredivisie 1X2 and O/U fully recovered and replicated from clean source.",
+    "structural_next": "Build the four-season Eredivisie structural block with frozen chronological holdout.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
-    "historical_close_status": "EXTERNAL_1X2_ROW_LEVEL_DIAGNOSTIC_RECOVERED; GOLDBET_JOIN_PENDING"
+    "historical_close_status": "EXTERNAL_DIAGNOSTIC_COMPLETE; GOLDBET_EXACT_JOIN_PENDING"
   }
 }
