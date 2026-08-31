@@ -1,0 +1,59 @@
+{
+  "schema_version": "radar-historical-source-manifest-v1",
+  "generated_at": "2026-08-31T08:33:00+00:00",
+  "timezone": "Europe/Rome",
+  "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
+  "status": "SOURCE_ACQUISITION_REQUIRED",
+  "priority": [
+    "Sweden",
+    "Norway",
+    "other Radar leagues with sufficient verified coverage"
+  ],
+  "requested_historical_seasons": 4,
+  "season_labels": null,
+  "season_label_policy": "Do not infer labels until verified from source metadata.",
+  "required_blocks": {
+    "fixtures_results": {
+      "status": "MISSING_ELIGIBLE_MULTI_SEASON_SOURCE",
+      "required_fields": ["competition", "season", "fixture_id", "kickoff_utc", "home_team", "away_team", "home_score", "away_score", "result_source"]
+    },
+    "same_book_open_close": {
+      "status": "MISSING_ELIGIBLE_MULTI_SEASON_SOURCE",
+      "bookmaker_primary": "GoldBet",
+      "required_fields": ["fixture_id", "bookmaker", "market", "period", "line", "selection", "open_price", "open_timestamp", "close_price", "close_timestamp", "price_source"]
+    },
+    "intermediate_t30": {
+      "status": "OPTIONAL_UNTIL_REAL_SNAPSHOTS_EXIST",
+      "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
+    },
+    "pre_match_structural": {
+      "status": "MISSING_JOINABLE_MULTI_SEASON_SOURCE",
+      "candidate_features": ["pre_match_elo_or_structural_proxy", "form_pre_match", "home_away", "opponent_quality"]
+    },
+    "official_xi": {
+      "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE",
+      "required_if_used": ["fixture_id", "xi_published_at", "official_xi", "xi_fingerprint"]
+    },
+    "player_props": {
+      "status": "OPTIONAL_ONLY_WHEN_PRE_MATCH_PRICE_AND_IDENTITY_ARE_VERIFIABLE",
+      "required_if_used": ["fixture_id", "player_id", "market", "line", "selection", "price", "price_timestamp", "source_class"]
+    }
+  },
+  "quarantine_rules": [
+    "prospective 2026 snapshots are not multi-season historical evidence",
+    "FIRST_SEEN cannot substitute TRUE OPEN in primary MMS tests",
+    "single-fixture proofs cannot support threshold promotion",
+    "sources without unambiguous fixture identity or timestamps are excluded",
+    "post-kickoff facts are outcome/evaluation data only"
+  ],
+  "acceptance_gate": {
+    "minimum_join": "fixture identity + kickoff + authoritative outcome + same-book pre-match price timestamp",
+    "open_close_mms_join": "same bookmaker + same event + same market + same period + same line + same selection + real OPEN/CLOSE timestamps",
+    "modeling_allowed": false,
+    "reason": "No eligible multi-season Sweden/Norway joined source currently exists in repository."
+  },
+  "next_source_block": {
+    "league": "Sweden",
+    "goal": "Acquire the first verified multi-season fixture/results + same-book OPEN/CLOSE source block, then freeze a chronological development/holdout plan before model tuning."
+  }
+}
