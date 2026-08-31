@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T22:00:01.250810+00:00",
+  "generated_at": "2026-08-31T22:12:35.130371+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,2728 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 0,
-  "status_counts": {},
-  "schedule_stats": [],
+  "target_count": 9,
+  "status_counts": {
+    "NOT_AVAILABLE": 5,
+    "SOURCE_CONFIRMED": 2,
+    "REFERENCE_PREVIOUS_XI": 2
+  },
+  "schedule_stats": [
+    {
+      "date": "2026-08-31",
+      "status": 200,
+      "matches": 225
+    },
+    {
+      "date": "2026-09-01",
+      "status": 200,
+      "matches": 118
+    }
+  ],
   "source_errors": {},
-  "matches": []
+  "matches": [
+    {
+      "match_market_id": "36352.41954",
+      "match_event_id": 16080924,
+      "match": "Cruzeiro EC MG - SC Corinthians SP",
+      "start_time": "01-09-2026 00:15",
+      "start_utc": "2026-08-31T22:15:00+00:00",
+      "league": "Serie A Femminile",
+      "minutes_to_start": 2.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": null,
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": []
+      },
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": null,
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.897",
+      "match_event_id": 16052169,
+      "match": "La Calera - Deportes La Serena",
+      "start_time": "01-09-2026 00:15",
+      "start_utc": "2026-08-31T22:15:00+00:00",
+      "league": "Primera Division",
+      "minutes_to_start": 2.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-31T22:12:35.130371+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000013216,
+        "home": "Unión La Calera",
+        "away": "La Serena",
+        "league": "Primera División",
+        "score": 0.7785,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapi",
+        "teams": [
+          {
+            "team_id": 192435,
+            "team_name": "Unión La Calera",
+            "formation": "4-1-4-1",
+            "starters": [
+              {
+                "name": "Nicolás Avellaneda",
+                "id": 453859,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Christopher Díaz",
+                "id": 530987,
+                "shirt_number": "25",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Juan Salomoni",
+                "id": 1386009,
+                "shirt_number": "15",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Vicente Lavín",
+                "id": 1504805,
+                "shirt_number": "6",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Cristián Gutiérrez",
+                "id": 659462,
+                "shirt_number": "4",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Rodrigo Pérez",
+                "id": 1436129,
+                "shirt_number": "23",
+                "position_id": 65,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Sebastián Sáez",
+                "id": 29589,
+                "shirt_number": "11",
+                "position_id": 82,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Yerko Leiva",
+                "id": 530995,
+                "shirt_number": "8",
+                "position_id": 84,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Joaquín Soto",
+                "id": 1650703,
+                "shirt_number": "29",
+                "position_id": 86,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Bayron Oyarzo",
+                "id": 581918,
+                "shirt_number": "7",
+                "position_id": 88,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Francisco Pozzo",
+                "id": 1529266,
+                "shirt_number": "9",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.89,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.212
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.89,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Nelson Espinoza",
+                "id": 466160,
+                "shirt_number": "12"
+              },
+              {
+                "name": "Daniel Gutiérrez",
+                "id": 1243691,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Yonathan Andía",
+                "id": 919944,
+                "shirt_number": "2"
+              },
+              {
+                "name": "Carlo Villanueva",
+                "id": 812684,
+                "shirt_number": "14"
+              },
+              {
+                "name": "Camilo Moya",
+                "id": 688667,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Martín Hiriart",
+                "id": 1741912,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Nicolás Ferreyra",
+                "id": 1098461,
+                "shirt_number": "32"
+              },
+              {
+                "name": "Matías Campos López",
+                "id": 397527,
+                "shirt_number": "19"
+              },
+              {
+                "name": "Kevin Méndez",
+                "id": 612096,
+                "shirt_number": "10"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "unavailable",
+              "averageStarterAge",
+              "totalStarterMarketValue"
+            ]
+          },
+          {
+            "team_id": 1891,
+            "team_name": "La Serena",
+            "formation": "4-2-3-1",
+            "starters": [
+              {
+                "name": "José Tapia",
+                "id": 1340684,
+                "shirt_number": "31",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Bruno Gutiérrez",
+                "id": 1208396,
+                "shirt_number": "21",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ián Rasso",
+                "id": 1274382,
+                "shirt_number": "34",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Rafael Delgado",
+                "id": 467965,
+                "shirt_number": "33",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Fernando Dinamarca",
+                "id": 1717594,
+                "shirt_number": "26",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Francis Mac Allister",
+                "id": 751057,
+                "shirt_number": "4",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Matías Pinto",
+                "id": 1309240,
+                "shirt_number": "29",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Matías Marín",
+                "id": 828718,
+                "shirt_number": "23",
+                "position_id": 83,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Felipe Chamorro",
+                "id": 1180857,
+                "shirt_number": "14",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Jeisson Vargas",
+                "id": 603953,
+                "shirt_number": "10",
+                "position_id": 87,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Ángelo Henríquez",
+                "id": 306267,
+                "shirt_number": "9",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Ignacio Sáez",
+                "id": 1355291,
+                "shirt_number": "38"
+              },
+              {
+                "name": "Joaquín Gutiérrez",
+                "id": 1189595,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Lucas Alarcón",
+                "id": 950841,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Matías Pérez",
+                "id": 1766079,
+                "shirt_number": "3"
+              },
+              {
+                "name": "Yahir Salazar",
+                "id": 1418032,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Sebastián Díaz",
+                "id": 772038,
+                "shirt_number": "6"
+              },
+              {
+                "name": "Gonzalo Escalante",
+                "id": 434404,
+                "shirt_number": "8"
+              },
+              {
+                "name": "Joan Orellana",
+                "id": 1900111,
+                "shirt_number": "28"
+              },
+              {
+                "name": "Diego Rubio",
+                "id": 244377,
+                "shirt_number": "11"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "unavailable",
+              "averageStarterAge",
+              "totalStarterMarketValue"
+            ]
+          }
+        ],
+        "xi_fingerprint": "4040ef861f9af9891d35",
+        "xi_name_fingerprint": "2a787723d8e28dfb0f3b",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 1000013216,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.25087",
+      "match_event_id": 16058489,
+      "match": "Fortaleza - Operario PR",
+      "start_time": "01-09-2026 00:30",
+      "start_utc": "2026-08-31T22:30:00+00:00",
+      "league": "Serie B",
+      "minutes_to_start": 17.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-08-31T22:12:35.130371+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5190683,
+        "home": "Fortaleza",
+        "away": "Operário-PR",
+        "league": "Série B",
+        "score": 1.0,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapi",
+        "teams": [
+          {
+            "team_id": 8287,
+            "team_name": "Fortaleza",
+            "formation": "4-3-3",
+            "starters": [
+              {
+                "name": "João Ricardo",
+                "id": 498728,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Maílton",
+                "id": 1086537,
+                "shirt_number": "22",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Gazal",
+                "id": 1362665,
+                "shirt_number": "3",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Tomás Cardona",
+                "id": 616168,
+                "shirt_number": "6",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Maurício Mucuri",
+                "id": 1612209,
+                "shirt_number": "13",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Lucas Sasha",
+                "id": 202227,
+                "shirt_number": "88",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Pierre",
+                "id": 1320961,
+                "shirt_number": "5",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Rodriguinho",
+                "id": 1355637,
+                "shirt_number": "75",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Pedro Henrique",
+                "id": 304856,
+                "shirt_number": "16",
+                "position_id": 103,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Luiz Fernando",
+                "id": 751235,
+                "shirt_number": "32",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Juan Miritello",
+                "id": 1107747,
+                "shirt_number": "9",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Vinícius Silvestre",
+                "id": 535890,
+                "shirt_number": "25"
+              },
+              {
+                "name": "Luan Freitas",
+                "id": 1058316,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Ronald",
+                "id": 1462842,
+                "shirt_number": "8"
+              },
+              {
+                "name": "Ryan Gustavo",
+                "id": 1503651,
+                "shirt_number": "37"
+              },
+              {
+                "name": "Rodrigo",
+                "id": 1623466,
+                "shirt_number": "29"
+              },
+              {
+                "name": "Lucas Crispim",
+                "id": 575386,
+                "shirt_number": "10"
+              },
+              {
+                "name": "Paulo Baya",
+                "id": 1331904,
+                "shirt_number": "77"
+              },
+              {
+                "name": "Lucas Emanoel",
+                "id": 1766354,
+                "shirt_number": "19"
+              },
+              {
+                "name": "Nathan Fogaça",
+                "id": 951629,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Vitinho",
+                "id": 1256627,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Welliton",
+                "id": 1362434,
+                "shirt_number": "31"
+              },
+              {
+                "name": "Kaio Henrique",
+                "id": null,
+                "shirt_number": "12"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge",
+              "totalStarterMarketValue"
+            ]
+          },
+          {
+            "team_id": 197429,
+            "team_name": "Operário-PR",
+            "formation": "4-2-3-1",
+            "starters": [
+              {
+                "name": "Vágner",
+                "id": 128083,
+                "shirt_number": "33",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Maguinho",
+                "id": 755230,
+                "shirt_number": "26",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "José Cuenú",
+                "id": 1280824,
+                "shirt_number": "22",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Joseph",
+                "id": 1017101,
+                "shirt_number": "43",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Moraes",
+                "id": 930817,
+                "shirt_number": "6",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Matheus Trindade",
+                "id": 846028,
+                "shirt_number": "39",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Vinícius Diniz",
+                "id": 1526680,
+                "shirt_number": "20",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Hildeberto",
+                "id": 623984,
+                "shirt_number": "14",
+                "position_id": 83,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Ángel Torres",
+                "id": 1080516,
+                "shirt_number": "7",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Boschilia",
+                "id": 535938,
+                "shirt_number": "10",
+                "position_id": 87,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Pablo",
+                "id": 287902,
+                "shirt_number": "92",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Elias Curzel",
+                "id": 787369,
+                "shirt_number": "1"
+              },
+              {
+                "name": "Gabriel Feliciano",
+                "id": 1671532,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Klaus",
+                "id": 787400,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Miranda",
+                "id": 941735,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Índio",
+                "id": 1130080,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Juan Zuluaga",
+                "id": 466215,
+                "shirt_number": "8"
+              },
+              {
+                "name": "Neto Paraíba",
+                "id": 955583,
+                "shirt_number": "88"
+              },
+              {
+                "name": "Pedro Vilhena",
+                "id": 1118183,
+                "shirt_number": "30"
+              },
+              {
+                "name": "Aylon",
+                "id": 543787,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Caio Dantas",
+                "id": 1129860,
+                "shirt_number": "99"
+              },
+              {
+                "name": "Vinícius Mingotti",
+                "id": 1072282,
+                "shirt_number": "9"
+              },
+              {
+                "name": "Maxwell",
+                "id": 646352,
+                "shirt_number": "77"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge",
+              "totalStarterMarketValue"
+            ]
+          }
+        ],
+        "xi_fingerprint": "266afc3074560bb8a9fa",
+        "xi_name_fingerprint": "85766a07f1894f3db7b9",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 5190683,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.34692",
+      "match_event_id": 16069519,
+      "match": "UCV FC - Rayo Zuliano",
+      "start_time": "01-09-2026 00:30",
+      "start_utc": "2026-08-31T22:30:00+00:00",
+      "league": "Primera Division",
+      "minutes_to_start": 17.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": null,
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": []
+      },
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": null,
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36351.387",
+      "match_event_id": 16042492,
+      "match": "Clube do Remo - Coritiba",
+      "start_time": "01-09-2026 01:00",
+      "start_utc": "2026-08-31T23:00:00+00:00",
+      "league": "Serie A",
+      "minutes_to_start": 47.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "REFERENCE_PREVIOUS_XI",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5103613,
+        "home": "Remo",
+        "away": "Coritiba",
+        "league": "Série A",
+        "score": 0.7929,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": false,
+        "historical_reference": true,
+        "lineup_type": "lastStarting11",
+        "provider_source": "lastStartingLineups",
+        "teams": [
+          {
+            "team_id": 1626,
+            "team_name": "Remo",
+            "formation": "4-2-3-1",
+            "starters": [
+              {
+                "name": "Marcelo Rangel",
+                "id": 936701,
+                "shirt_number": "88",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Marcelinho",
+                "id": 1336663,
+                "shirt_number": "79",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Marllon",
+                "id": 319659,
+                "shirt_number": "13",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Duplexe Tchamba",
+                "id": 834641,
+                "shirt_number": "18",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Marlon",
+                "id": 670799,
+                "shirt_number": "6",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Zé Welison",
+                "id": 535944,
+                "shirt_number": "28",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Zé Ricardo",
+                "id": 951710,
+                "shirt_number": "55",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Yago Pikachu",
+                "id": 498595,
+                "shirt_number": "22",
+                "position_id": 83,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Vitor Bueno",
+                "id": 671705,
+                "shirt_number": "15",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Jája Silva",
+                "id": 1041427,
+                "shirt_number": "7",
+                "position_id": 87,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Gabriel Taliari",
+                "id": 940855,
+                "shirt_number": "19",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Ivan",
+                "id": 1927896,
+                "shirt_number": "97"
+              },
+              {
+                "name": "Ygor Vinhas",
+                "id": 1463088,
+                "shirt_number": "94"
+              },
+              {
+                "name": "Matheus Felipe",
+                "id": 1317541,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Léo Andrade",
+                "id": 882823,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Matheus Alexandre",
+                "id": 1247716,
+                "shirt_number": "2"
+              },
+              {
+                "name": "Zé Ivaldo",
+                "id": 769769,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Patrick",
+                "id": 576129,
+                "shirt_number": "8"
+              },
+              {
+                "name": "David Braga",
+                "id": 1471036,
+                "shirt_number": "26"
+              },
+              {
+                "name": "Leonel Picco",
+                "id": 1097836,
+                "shirt_number": "14"
+              },
+              {
+                "name": "Alef Manga",
+                "id": 964936,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Antonio Galeano",
+                "id": 887141,
+                "shirt_number": "21"
+              },
+              {
+                "name": "Gabriel Poveda",
+                "id": 981302,
+                "shirt_number": "9"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "unavailable",
+              "averageStarterAge",
+              "totalStarterMarketValue",
+              "lastMatch"
+            ]
+          },
+          {
+            "team_id": 9767,
+            "team_name": "Coritiba",
+            "formation": "4-2-3-1",
+            "starters": [
+              {
+                "name": "Pedro Morisco",
+                "id": 1509085,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "João Pedro Chermont",
+                "id": 1636512,
+                "shirt_number": "44",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Tiago Cóser",
+                "id": 1257285,
+                "shirt_number": "23",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Jacy",
+                "id": 858829,
+                "shirt_number": "55",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Bruno Melo",
+                "id": 789790,
+                "shirt_number": "26",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Thiago Santos",
+                "id": 655294,
+                "shirt_number": "21",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Sebastián Gómez",
+                "id": 927094,
+                "shirt_number": "19",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Joaquín Lavega",
+                "id": 1354491,
+                "shirt_number": "7",
+                "position_id": 83,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Josué",
+                "id": 163824,
+                "shirt_number": "10",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Breno Lopes",
+                "id": 1053847,
+                "shirt_number": "77",
+                "position_id": 87,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Pedro Rocha",
+                "id": 638652,
+                "shirt_number": "32",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Keiller",
+                "id": 750108,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Rodrigo Moledo",
+                "id": 184500,
+                "shirt_number": "4"
+              },
+              {
+                "name": "João Almeida",
+                "id": 1734201,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Lucas Taverna",
+                "id": 1764024,
+                "shirt_number": "86"
+              },
+              {
+                "name": "Felipe Jonatan",
+                "id": 941736,
+                "shirt_number": "6"
+              },
+              {
+                "name": "Maicon",
+                "id": 150041,
+                "shirt_number": "3"
+              },
+              {
+                "name": "Fernando Sobral",
+                "id": 950835,
+                "shirt_number": "88"
+              },
+              {
+                "name": "Tissi",
+                "id": 1927900,
+                "shirt_number": "50"
+              },
+              {
+                "name": "Paulo Roberto",
+                "id": 2096660,
+                "shirt_number": "18"
+              },
+              {
+                "name": "Rodrigo Rodrigues",
+                "id": 1085975,
+                "shirt_number": "99"
+              },
+              {
+                "name": "Renato Marques",
+                "id": 1476480,
+                "shirt_number": "78"
+              },
+              {
+                "name": "Fabinho",
+                "id": 1174682,
+                "shirt_number": "28"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "unavailable",
+              "averageStarterAge",
+              "totalStarterMarketValue",
+              "lastMatch"
+            ]
+          }
+        ],
+        "xi_fingerprint": "8a655de3db4110b91741",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 5103613,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.24842",
+      "match_event_id": 16083813,
+      "match": "Comercial FC SP - EC SAO BERNARDO SP",
+      "start_time": "01-09-2026 01:00",
+      "start_utc": "2026-08-31T23:00:00+00:00",
+      "league": "Paulista coppa",
+      "minutes_to_start": 47.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000020543,
+        "home": "Comercial SP",
+        "away": "EC São Bernardo",
+        "league": "Copa Paulista",
+        "score": 1.0,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 1000020543,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.39073",
+      "match_event_id": 16069707,
+      "match": "Academia Puerto Cabello - Academia Anzoategui FC",
+      "start_time": "01-09-2026 01:30",
+      "start_utc": "2026-08-31T23:30:00+00:00",
+      "league": "Primera Division",
+      "minutes_to_start": 77.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "REFERENCE_PREVIOUS_XI",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000018891,
+        "home": "Academia Puerto Cabello",
+        "away": "Anzoátegui FC",
+        "league": "Primera División",
+        "score": 0.8678,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": false,
+        "historical_reference": true,
+        "lineup_type": "lastStarting11",
+        "provider_source": "lastStartingLineups",
+        "teams": [
+          {
+            "team_id": 657277,
+            "team_name": "Academia Puerto Cabello",
+            "formation": "4-3-3",
+            "starters": [
+              {
+                "name": "Luis Romero",
+                "id": 423037,
+                "shirt_number": "55",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Jefre Vargas",
+                "id": 480103,
+                "shirt_number": "29",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Jiovany Ramos",
+                "id": 688448,
+                "shirt_number": "26",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Geremías Meléndez",
+                "id": 1277389,
+                "shirt_number": "44",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Gerónimo Bortagaray",
+                "id": 1031999,
+                "shirt_number": "14",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Júnior Moreno",
+                "id": 439179,
+                "shirt_number": "8",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Jhon Marchán",
+                "id": 840429,
+                "shirt_number": "20",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Gustavo González",
+                "id": 593211,
+                "shirt_number": "5",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Robinson Flores",
+                "id": 1037543,
+                "shirt_number": "70",
+                "position_id": 103,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Andrés Ponce",
+                "id": 583846,
+                "shirt_number": "9",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Jean Castillo",
+                "id": 1102750,
+                "shirt_number": "19",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Joel Graterol",
+                "id": 832403,
+                "shirt_number": "1"
+              },
+              {
+                "name": "David Rodríguez",
+                "id": 1955177,
+                "shirt_number": "33"
+              },
+              {
+                "name": "Luis Casiani",
+                "id": 1186364,
+                "shirt_number": "30"
+              },
+              {
+                "name": "Fabricio Baptista",
+                "id": 2035109,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Diego Osorio",
+                "id": 1732761,
+                "shirt_number": "28"
+              },
+              {
+                "name": "Harrison Contreras",
+                "id": 422774,
+                "shirt_number": "24"
+              },
+              {
+                "name": "Leander Pimentel",
+                "id": 1965126,
+                "shirt_number": "37"
+              },
+              {
+                "name": "Jose Tinoco",
+                "id": 2155993,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Edwuin Pernía",
+                "id": 847527,
+                "shirt_number": "11"
+              },
+              {
+                "name": "José Hernández",
+                "id": 882113,
+                "shirt_number": "31"
+              },
+              {
+                "name": "Luis Cova",
+                "id": null,
+                "shirt_number": "41"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge",
+              "totalStarterMarketValue",
+              "lastMatch"
+            ]
+          },
+          {
+            "team_id": 1349498,
+            "team_name": "Anzoátegui FC",
+            "formation": "4-2-3-1",
+            "starters": [
+              {
+                "name": "Josué Agüero",
+                "id": 2035391,
+                "shirt_number": "13",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "José Lovera",
+                "id": 1513201,
+                "shirt_number": "18",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Carlos Lujano",
+                "id": 243783,
+                "shirt_number": "3",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "David Guevara",
+                "id": 1261307,
+                "shirt_number": "22",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Juan Silgado",
+                "id": 1106073,
+                "shirt_number": "16",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Emerson Ruíz",
+                "id": 1130957,
+                "shirt_number": "8",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Leandro Fioravanti",
+                "id": 299082,
+                "shirt_number": "92",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "José Caraballo",
+                "id": 627581,
+                "shirt_number": "17",
+                "position_id": 83,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.837,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.162,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Carlos Cermeño",
+                "id": 589416,
+                "shirt_number": "24",
+                "position_id": 85,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.337
+                }
+              },
+              {
+                "name": "Jesús Castellano",
+                "id": 1339602,
+                "shirt_number": "20",
+                "position_id": 87,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.163,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.837,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.325
+                }
+              },
+              {
+                "name": "Charlis Ortíz",
+                "id": 149083,
+                "shirt_number": "9",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Wilbert Hernández",
+                "id": 1139094,
+                "shirt_number": "1"
+              },
+              {
+                "name": "Pablo Bonilla",
+                "id": 889539,
+                "shirt_number": "2"
+              },
+              {
+                "name": "Didier Bueno",
+                "id": 1350720,
+                "shirt_number": "14"
+              },
+              {
+                "name": "Abrahan Moreno",
+                "id": 1031620,
+                "shirt_number": "55"
+              },
+              {
+                "name": "Frannaicel Sinza",
+                "id": 2035394,
+                "shirt_number": "28"
+              },
+              {
+                "name": "Jhon Pacheco",
+                "id": 1206962,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Pablo Rojas",
+                "id": 671149,
+                "shirt_number": "70"
+              },
+              {
+                "name": "Aldry Contreras",
+                "id": 1308385,
+                "shirt_number": "10"
+              },
+              {
+                "name": "Guillermo Marín",
+                "id": 926463,
+                "shirt_number": "7"
+              },
+              {
+                "name": "Deivid Tegues",
+                "id": 1208537,
+                "shirt_number": "19"
+              },
+              {
+                "name": "Edanyilber Navas",
+                "id": 980262,
+                "shirt_number": "11"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge",
+              "lastMatch"
+            ]
+          }
+        ],
+        "xi_fingerprint": "ea3030f3dd5d0d5e4184",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-08-31T22:12:35.130371+00:00",
+        "fotmob": {
+          "provider": "FotMob",
+          "match_id": 1000018891,
+          "http_status": 200
+        },
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36351.928",
+      "match_event_id": 16067408,
+      "match": "CD Cobreloa Calama - San Marcos de Arica",
+      "start_time": "01-09-2026 02:00",
+      "start_utc": "2026-09-01T00:00:00+00:00",
+      "league": "Primera B",
+      "minutes_to_start": 107.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000007291,
+        "home": "Cobreloa",
+        "away": "San Marcos",
+        "league": "Primera B",
+        "score": 0.7372,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36361.16471",
+      "match_event_id": 16081119,
+      "match": "CD Real Tomayapo - Independiente Petrolero",
+      "start_time": "01-09-2026 02:00",
+      "start_utc": "2026-09-01T00:00:00+00:00",
+      "league": "Bolivia Coppa",
+      "minutes_to_start": 107.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": null,
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": []
+      },
+      "error": null
+    }
+  ],
+  "urgent_refresh": {
+    "schema": "radar-urgent-lineup-refresh-v1",
+    "generated_at": "2026-08-31T22:12:35.130371+00:00",
+    "window_minutes": [
+      0,
+      85.0
+    ],
+    "target_count": 7,
+    "sources": [
+      "FotMob",
+      "Sofascore"
+    ],
+    "schedule_meta": {
+      "2026-08-31": {
+        "provider": "Sofascore",
+        "error": "SCHEDULE_UNAVAILABLE"
+      }
+    },
+    "changes": [
+      {
+        "match": "La Calera - Deportes La Serena",
+        "minutes_to_start": 2.4,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      },
+      {
+        "match": "Fortaleza - Operario PR",
+        "minutes_to_start": 17.4,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
+  }
 }
