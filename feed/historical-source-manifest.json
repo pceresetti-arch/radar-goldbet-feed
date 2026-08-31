@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v7",
-  "generated_at": "2026-08-31T13:55:39.256Z",
+  "schema_version": "radar-historical-source-manifest-v8",
+  "generated_at": "2026-08-31T14:46:15.518Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SWEDEN_NORWAY_DENMARK_OOS_COMPLETE_NETHERLANDS_NEXT",
+  "status": "TRUE_OPEN_SOURCES_INVENTORIED_CLOSE_OUTCOME_JOIN_PENDING",
   "priority": [
     "Sweden",
     "Norway",
@@ -130,6 +130,50 @@
       "development_rows": 576,
       "holdout_rows": 192,
       "excluded_postseason_playoff_rows": 2
+    },
+    {
+      "name": "Diretta/Flashscore GoldBet TRUE OPEN index",
+      "path": "feed/diretta-goldbet-true-open-index.json",
+      "source_class": "GOLDBET_VIA_FLASHSCORE_HISTORICAL",
+      "bookmaker": "GoldBet",
+      "bookmaker_id": 188,
+      "status": "ACCEPTED_TRUE_OPEN_CERTIFIED_OBSERVED_CURRENT_NOT_CERTIFIED_CLOSE",
+      "certified_events": 642,
+      "market_rows": 9188,
+      "rows_with_open_current_change": 6132,
+      "role": [
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_MMS_INPUT",
+        "OPEN_TO_OBSERVED_CURRENT_RESEARCH"
+      ],
+      "forbidden_role": [
+        "CERTIFIED_CLOSE_WITHOUT_CLOSE_TIMESTAMP",
+        "MULTI_SEASON_OOS_WITHOUT_OUTCOME_JOIN",
+        "BETFLAG_SAME_BOOK"
+      ],
+      "provenance_audit": "feed/historical/open-close-provenance-audit-v1.json"
+    },
+    {
+      "name": "BetFlag continuous open-close watcher snapshot",
+      "path": "feed/betflag-open-close-watch.json",
+      "source_class": "BETFLAG_AAMS_DIRECT_WATCHER",
+      "status": "PARTIAL_OPEN_HISTORY_NO_CERTIFIED_CLOSE_IN_PERSISTED_SNAPSHOT",
+      "events": 392,
+      "quote_keys": 11166,
+      "open_radar_certified_quotes": 1802,
+      "first_seen_only_quotes": 9364,
+      "certified_close_quotes": 0,
+      "role": [
+        "OPEN_RADAR_CERTIFIED_BETFLAG",
+        "FIRST_SEEN_DIAGNOSTIC",
+        "MOVEMENT_SEQUENCE_RESEARCH"
+      ],
+      "forbidden_role": [
+        "TRUE_OPEN_BETFLAG_OFFICIAL",
+        "CLOSE_WITHOUT_LAST_PRE_KICKOFF_OBSERVATION",
+        "HISTORICAL_ROI_WITHOUT_OUTCOME_JOIN"
+      ],
+      "provenance_audit": "feed/historical/open-close-provenance-audit-v1.json"
     }
   ],
   "required_blocks": {
@@ -170,7 +214,7 @@
       }
     },
     "same_book_open_close": {
-      "status": "GOLDBET_HISTORICAL_SOURCE_STILL_MISSING",
+      "status": "TRUE_OPEN_AVAILABLE_CLOSE_AND_MULTI_SEASON_JOIN_PENDING",
       "bookmaker_primary": "GoldBet",
       "required_fields": [
         "fixture_id",
@@ -184,7 +228,8 @@
         "close_price",
         "close_timestamp",
         "price_source"
-      ]
+      ],
+      "note": "642 certified GoldBet TRUE OPEN events and 1,802 Radar-certified BetFlag openings exist. No observed current is relabelled CLOSE without a last pre-kickoff timestamp."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_2688_ROWS",
@@ -225,20 +270,20 @@
   "acceptance_gate": {
     "structural_baseline_modeling_allowed": true,
     "external_market_close_benchmark_allowed": true,
-    "primary_goldbet_mms_allowed": false,
+    "primary_goldbet_mms_allowed": true,
     "structural_rule": "Only prior source dates may enter rolling features because source timezone is not documented.",
     "market_rule": "AvgCH/AvgCD/AvgCA are closing odds under the provider's documented C-column semantics; retain external benchmark class.",
-    "primary_mms_reason": "No GoldBet TRUE OPEN or same-book OPEN series exists.",
+    "primary_mms_reason": "Certified GoldBet TRUE OPEN exists and may generate MMS signals. Historical ROI/CLV promotion still requires observed close and outcome joins.",
     "identity_integrity_required": true,
     "classwise_calibration_required": true,
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "league": "Netherlands",
-    "goal": "Acquire and profile the latest four completed Eredivisie seasons, reconcile identities and format, then apply the frozen research specification without tuning prior holdouts.",
-    "sweden_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
-    "norway_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
-    "denmark_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
-    "goldbet_mms_status": "BLOCKED_NO_VERIFIED_HISTORICAL_TRUE_OPEN"
+    "lane": "OPEN_CLOSE_PROVENANCE_RECOVERY",
+    "goal": "Recover the prior Primeira Liga/Eredivisie artifact and join certified 2026 TRUE OPEN to observed closes/outcomes using exact identities and timestamps only.",
+    "prior_claim_status": "612-match result preserved but unverified until its artifact is located.",
+    "structural_next": "Netherlands Eredivisie after provenance correction checkpoint.",
+    "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
+    "historical_close_status": "PENDING_VERIFIED_JOIN"
   }
 }
