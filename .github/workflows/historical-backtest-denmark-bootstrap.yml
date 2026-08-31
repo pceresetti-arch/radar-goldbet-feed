@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/historical-backtest-denmark-bootstrap.yml'
       - 'tools/historical_ingest_denmark.py'
+      - 'tools/historical_build_denmark_baseline.py'
+      - 'tools/historical_model_denmark_structural.py'
 
 permissions:
   contents: write
@@ -25,6 +27,10 @@ jobs:
           python-version: '3.12'
       - name: Discover and profile Denmark historical source
         run: python tools/historical_ingest_denmark.py
+      - name: Build frozen Denmark baseline
+        run: python tools/historical_build_denmark_baseline.py
+      - name: Build Denmark structural OOS model
+        run: python tools/historical_model_denmark_structural.py
       - name: Preserve generated evidence
         run: |
           rm -rf /tmp/denmark-history
