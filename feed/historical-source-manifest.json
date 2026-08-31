@@ -1,58 +1,126 @@
 {
-  "schema_version": "radar-historical-source-manifest-v2",
-  "generated_at": "2026-08-31T08:45:00+00:00",
+  "schema_version": "radar-historical-source-manifest-v3",
+  "generated_at": "2026-08-31T09:36:21+00:00",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SWEDEN_BASELINE_SOURCE_DISCOVERY_IN_PROGRESS",
-  "priority": ["Sweden", "Norway", "other Radar leagues with sufficient verified coverage"],
+  "status": "SWEDEN_BASELINE_ACCEPTED_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+  "priority": [
+    "Sweden",
+    "Norway",
+    "other Radar leagues with sufficient verified coverage"
+  ],
   "requested_historical_seasons": 4,
-  "season_labels": null,
-  "season_label_policy": "Do not infer labels until verified from source metadata or downloaded files.",
+  "season_labels": [
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "season_label_policy": "Latest four completed source seasons frozen before holdout evaluation.",
   "source_candidates": [
     {
       "name": "Football-Data.co.uk Sweden",
       "url": "https://www.football-data.co.uk/sweden.php",
       "league": "Allsvenskan",
       "declared_coverage": "historical full-time results and closing match odds for worldwide premier divisions, including Sweden",
-      "role": ["FIXTURE_RESULT_BASELINE", "MARKET_CLOSING_BENCHMARK", "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"],
-      "forbidden_role": ["GOLDBET_DIRECT", "TRUE_OPEN_GOLDBET", "PRIMARY_GOLDBET_MMS"],
+      "role": [
+        "FIXTURE_RESULT_BASELINE",
+        "MARKET_CLOSING_BENCHMARK",
+        "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS"
+      ],
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
       "discovery_workflow": ".github/workflows/historical-backtest-sweden-bootstrap.yml",
       "discovery_output": "feed/historical/sweden/source-discovery.json",
-      "status": "DISCOVERY_BOOTSTRAP_RUNNING",
+      "status": "ACCEPTED_FOR_STRUCTURAL_BASELINE_AND_EXTERNAL_CLOSE_BENCHMARK",
       "quality_notes": [
         "Use outcome columns only after pre-match feature freeze.",
         "Do not treat generic best/average/Pinnacle closing odds as GoldBet.",
         "Opening-to-closing analysis is allowed only for bookmaker/timestamp pairs explicitly present and verifiable in the downloaded schema.",
         "Pinnacle data after 2025-07-23 requires caution due to provider reliability warning; keep that period separately flagged."
-      ]
+      ],
+      "dataset_profile": "feed/historical/sweden/dataset-profile.json",
+      "source_snapshot": "feed/historical/sweden/football-data-SWE.csv",
+      "normalized_dataset": "feed/historical/sweden/allsvenskan-2022-2025-regular.csv",
+      "benchmark_output": "feed/historical/sweden/baseline-benchmark.json",
+      "verified_source_rows": 3526,
+      "accepted_regular_rows": 960,
+      "development_rows": 720,
+      "holdout_rows": 240,
+      "excluded_playoff_rows": 4
     }
   ],
   "required_blocks": {
     "fixtures_results": {
-      "status": "CANDIDATE_SOURCE_IDENTIFIED_AWAITING_SCHEMA_PROOF",
-      "required_fields": ["competition", "season", "fixture_id", "kickoff_utc", "home_team", "away_team", "home_score", "away_score", "result_source"]
+      "status": "ACCEPTED_SWEDEN_960_REGULAR_ROWS",
+      "required_fields": [
+        "competition",
+        "season",
+        "fixture_id",
+        "kickoff_utc",
+        "home_team",
+        "away_team",
+        "home_score",
+        "away_score",
+        "result_source"
+      ],
+      "split": {
+        "development": [
+          "2022",
+          "2023",
+          "2024"
+        ],
+        "holdout": [
+          "2025"
+        ]
+      }
     },
     "same_book_open_close": {
       "status": "GOLDBET_HISTORICAL_SOURCE_STILL_MISSING",
       "bookmaker_primary": "GoldBet",
-      "required_fields": ["fixture_id", "bookmaker", "market", "period", "line", "selection", "open_price", "open_timestamp", "close_price", "close_timestamp", "price_source"]
+      "required_fields": [
+        "fixture_id",
+        "bookmaker",
+        "market",
+        "period",
+        "line",
+        "selection",
+        "open_price",
+        "open_timestamp",
+        "close_price",
+        "close_timestamp",
+        "price_source"
+      ]
     },
     "market_close_benchmark": {
-      "status": "CANDIDATE_SOURCE_IDENTIFIED_AWAITING_SCHEMA_PROOF",
-      "rule": "Benchmark market closing prices may support CLV/context only under their true bookmaker/source labels; they never substitute GoldBet TRUE OPEN."
+      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_960_ROWS",
+      "rule": "Benchmark market closing prices may support CLV/context only under their true bookmaker/source labels; they never substitute GoldBet TRUE OPEN.",
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK"
     },
     "intermediate_t30": {
       "status": "OPTIONAL_UNTIL_REAL_SNAPSHOTS_EXIST",
       "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
     },
     "pre_match_structural": {
-      "status": "PARTIALLY_DERIVABLE_AFTER_FIXTURE_BASELINE_ACCEPTANCE",
-      "candidate_features": ["pre_match_elo_or_structural_proxy", "form_pre_match", "home_away", "opponent_quality"],
+      "status": "READY_FOR_STRICTLY_PRIOR_DATE_FEATURE_BUILD",
+      "candidate_features": [
+        "pre_match_elo_or_structural_proxy",
+        "form_pre_match",
+        "home_away",
+        "opponent_quality"
+      ],
       "anti_leakage": "Each rolling feature must use only prior fixtures in chronological order."
     },
-    "official_xi": {"status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"},
-    "player_props": {"status": "OPTIONAL_ONLY_WHEN_PRE_MATCH_PRICE_AND_IDENTITY_ARE_VERIFIABLE"}
+    "official_xi": {
+      "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
+    },
+    "player_props": {
+      "status": "OPTIONAL_ONLY_WHEN_PRE_MATCH_PRICE_AND_IDENTITY_ARE_VERIFIABLE"
+    }
   },
   "quarantine_rules": [
     "prospective 2026 snapshots are not multi-season historical evidence",
@@ -63,14 +131,15 @@
     "post-kickoff facts are outcome/evaluation data only"
   ],
   "acceptance_gate": {
-    "baseline_fixture_model": "verified fixture identity + kickoff/date order + authoritative outcome; all rolling features shifted strictly to prior matches",
-    "market_benchmark": "bookmaker/source identity and price semantics verified from schema/provider notes",
-    "primary_mms": "GoldBet same bookmaker + same event + market + period + line + selection + real TRUE OPEN and later observed timestamp",
-    "modeling_allowed": false,
-    "reason": "Sweden external baseline source is being profiled; GoldBet historical TRUE OPEN remains unavailable."
+    "structural_baseline_modeling_allowed": true,
+    "external_market_close_benchmark_allowed": true,
+    "primary_goldbet_mms_allowed": false,
+    "structural_rule": "Only prior source dates may enter rolling features because source timezone is not documented.",
+    "market_rule": "AvgCH/AvgCD/AvgCA are closing odds under the provider's documented C-column semantics; retain external benchmark class.",
+    "primary_mms_reason": "No GoldBet TRUE OPEN or same-book OPEN series exists."
   },
   "next_source_block": {
     "league": "Sweden",
-    "goal": "Validate discovered CSV schemas, verify four season labels from source, ingest fixture/result baseline, then freeze chronological development/holdout. Keep GoldBet MMS as a separate unavailable lane until a real source exists."
+    "goal": "Build and freeze strictly-prior-date Elo/form/home-away/opponent-quality features on 2022-2024, then evaluate once on untouched 2025 holdout. Norway follows after this structural block."
   }
 }
