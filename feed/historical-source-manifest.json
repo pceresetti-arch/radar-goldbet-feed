@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v6",
-  "generated_at": "2026-08-31T13:18:36.214Z",
+  "schema_version": "radar-historical-source-manifest-v7",
+  "generated_at": "2026-08-31T13:55:39.256Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SWEDEN_NORWAY_POOLED_OOS_COMPLETE_DENMARK_NEXT",
+  "status": "SWEDEN_NORWAY_DENMARK_OOS_COMPLETE_NETHERLANDS_NEXT",
   "priority": [
     "Sweden",
     "Norway",
@@ -93,11 +93,48 @@
       "holdout_rows": 240,
       "excluded_playoff_rows": 6,
       "team_alias_field_corrections": 50
+    },
+    {
+      "name": "Football-Data.co.uk Denmark",
+      "url": "https://www.football-data.co.uk/denmark.php",
+      "league": "Superliga",
+      "declared_coverage": "historical full-time results and closing match odds for Denmark",
+      "role": [
+        "FIXTURE_RESULT_BASELINE",
+        "MARKET_CLOSING_BENCHMARK",
+        "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS"
+      ],
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "discovery_workflow": ".github/workflows/historical-backtest-denmark-bootstrap.yml",
+      "discovery_output": "feed/historical/denmark/source-discovery.json",
+      "dataset_profile": "feed/historical/denmark/dataset-profile.json",
+      "source_snapshot": "feed/historical/denmark/football-data-DNK.csv",
+      "normalized_dataset": "feed/historical/denmark/superliga-2022-2026-regular.csv",
+      "benchmark_output": "feed/historical/denmark/baseline-benchmark.json",
+      "structural_feature_dataset": "feed/historical/denmark/superliga-2022-2026-features.csv",
+      "structural_oos_report": "feed/historical/denmark/structural-oos-v1.json",
+      "status": "ACCEPTED_DENMARK_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+      "quality_notes": [
+        "Frozen seasons 2022/2023-2025/2026 use 12 clubs and 32 accepted league matches per club.",
+        "Two chronologically subsequent European playoffs are excluded before evaluation.",
+        "Outcome columns are joined only after pre-match feature freeze.",
+        "Closing odds remain external benchmarks and never GoldBet TRUE OPEN."
+      ],
+      "verified_source_rows": 2980,
+      "accepted_regular_rows": 768,
+      "development_rows": 576,
+      "holdout_rows": 192,
+      "excluded_postseason_playoff_rows": 2
     }
   ],
   "required_blocks": {
     "fixtures_results": {
-      "status": "ACCEPTED_SWEDEN_AND_NORWAY_1920_REGULAR_ROWS",
+      "status": "ACCEPTED_SWEDEN_NORWAY_DENMARK_2688_REGULAR_ROWS",
       "required_fields": [
         "competition",
         "season",
@@ -110,14 +147,26 @@
         "result_source"
       ],
       "split": {
-        "development": [
-          "2022",
-          "2023",
-          "2024"
-        ],
-        "holdout": [
-          "2025"
-        ]
+        "Sweden_Norway": {
+          "development": [
+            "2022",
+            "2023",
+            "2024"
+          ],
+          "holdout": [
+            "2025"
+          ]
+        },
+        "Denmark": {
+          "development": [
+            "2022/2023",
+            "2023/2024",
+            "2024/2025"
+          ],
+          "holdout": [
+            "2025/2026"
+          ]
+        }
       }
     },
     "same_book_open_close": {
@@ -138,7 +187,7 @@
       ]
     },
     "market_close_benchmark": {
-      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_1920_ROWS",
+      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_2688_ROWS",
       "rule": "Benchmark market closing prices may support CLV/context only under their true bookmaker/source labels; they never substitute GoldBet TRUE OPEN.",
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK"
     },
@@ -147,7 +196,7 @@
       "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
     },
     "pre_match_structural": {
-      "status": "SWEDEN_NORWAY_POOLED_480_HOLDOUT_RESEARCH_ELO_BASELINE_ACCEPTED",
+      "status": "THREE_LEAGUE_OOS_COMPLETE_672_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -155,8 +204,8 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Elo retained as research baseline; form/full bundles rejected as reliable increments; external close superior pooled but remains non-GoldBet benchmark.",
-      "identity_gate": "Team alias and 16-team/240-match season integrity must pass before metrics are accepted."
+      "result": "Elo remains a research baseline from Sweden/Norway; Denmark did not independently establish Elo over its prior. Form/full bundles remain unpromoted; external close remains non-GoldBet.",
+      "identity_gate": "League-format-specific integrity required: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark."
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -185,11 +234,11 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "league": "Denmark",
-    "goal": "Acquire and profile the latest four completed Superliga seasons with fixture identity reconciliation before split; then apply the frozen Sweden/Norway research benchmark without tuning prior holdouts.",
+    "league": "Netherlands",
+    "goal": "Acquire and profile the latest four completed Eredivisie seasons, reconcile identities and format, then apply the frozen research specification without tuning prior holdouts.",
     "sweden_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
     "norway_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
-    "cross_league_report": "feed/historical/cross-league/sweden-norway-oos-comparison-v1.json",
+    "denmark_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
     "goldbet_mms_status": "BLOCKED_NO_VERIFIED_HISTORICAL_TRUE_OPEN"
   }
 }
