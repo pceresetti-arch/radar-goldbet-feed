@@ -180,7 +180,7 @@ def main():
             "identity_join": "EXACT_FLASHSCORE_EVENT_ID",
             "bookmaker": "GoldBet", "same_bookmaker": True,
             "opening": "TRUE_OPEN_CERTIFIED",
-            "t30_definition": "persisted pre-kickoff checkpoint/snapshot, 25-35 minutes before scheduled start",
+            "t30_definition": "persisted T-30 checkpoint within +/-10 minutes (quality retained), otherwise snapshot within +/-5 minutes",
             "outcome_join_order": "price features frozen before outcome attachment",
             "post_kickoff_prices_used": False,
             "limitations": [
