@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v5",
-  "generated_at": "2026-08-31T11:33:42.199Z",
+  "schema_version": "radar-historical-source-manifest-v6",
+  "generated_at": "2026-08-31T13:18:36.214Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SWEDEN_NORWAY_FOUR_SEASON_STRUCTURAL_OOS_COMPLETE",
+  "status": "SWEDEN_NORWAY_POOLED_OOS_COMPLETE_DENMARK_NEXT",
   "priority": [
     "Sweden",
     "Norway",
@@ -147,7 +147,7 @@
       "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
     },
     "pre_match_structural": {
-      "status": "SWEDEN_AND_NORWAY_COMPLETED_1920_FEATURE_ROWS_480_FROZEN_HOLDOUT",
+      "status": "SWEDEN_NORWAY_POOLED_480_HOLDOUT_RESEARCH_ELO_BASELINE_ACCEPTED",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -155,7 +155,7 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Both leagues beat naive priors; Norway closing market significantly beats every structural variant; the full bundle has no reliable incremental gain beyond Elo in either league.",
+      "result": "Elo retained as research baseline; form/full bundles rejected as reliable increments; external close superior pooled but remains non-GoldBet benchmark.",
       "identity_gate": "Team alias and 16-team/240-match season integrity must pass before metrics are accepted."
     },
     "official_xi": {
@@ -180,13 +180,16 @@
     "structural_rule": "Only prior source dates may enter rolling features because source timezone is not documented.",
     "market_rule": "AvgCH/AvgCD/AvgCA are closing odds under the provider's documented C-column semantics; retain external benchmark class.",
     "primary_mms_reason": "No GoldBet TRUE OPEN or same-book OPEN series exists.",
-    "identity_integrity_required": true
+    "identity_integrity_required": true,
+    "classwise_calibration_required": true,
+    "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "league": "CROSS_LEAGUE_SWEDEN_NORWAY",
-    "goal": "Produce a frozen calibration/error/drift comparison across the two untouched 2025 holdouts without changing model specifications or thresholds.",
+    "league": "Denmark",
+    "goal": "Acquire and profile the latest four completed Superliga seasons with fixture identity reconciliation before split; then apply the frozen Sweden/Norway research benchmark without tuning prior holdouts.",
     "sweden_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
-    "norway_status": "FROZEN_V1_AFTER_HAMKAM_IDENTITY_CORRECTION_NO_FURTHER_HOLDOUT_TUNING",
+    "norway_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
+    "cross_league_report": "feed/historical/cross-league/sweden-norway-oos-comparison-v1.json",
     "goldbet_mms_status": "BLOCKED_NO_VERIFIED_HISTORICAL_TRUE_OPEN"
   }
 }
