@@ -1,0 +1,463 @@
+{
+  "schema_version": "radar-goldbet-t30-outcome-pilot-v1",
+  "generated_at": "2026-08-31T23:33:03.222054+00:00",
+  "methodology": {
+    "identity_join": "EXACT_FLASHSCORE_EVENT_ID",
+    "bookmaker": "GoldBet",
+    "same_bookmaker": true,
+    "opening": "TRUE_OPEN_CERTIFIED",
+    "t30_definition": "persisted pre-kickoff checkpoint/snapshot, 25-35 minutes before scheduled start",
+    "outcome_join_order": "price features frozen before outcome attachment",
+    "post_kickoff_prices_used": false,
+    "limitations": [
+      "Only fixtures present in the persisted movement-state archive are eligible.",
+      "This pilot is too small for threshold inference, calibration, or promotion.",
+      "T-30 is an observed checkpoint, not a certified final close."
+    ]
+  },
+  "source_state": {
+    "path": "feed/goldbet-diretta-movement-state.json",
+    "sha256": "c1b405b3d2085f25272361839e5481361a35a9416cc9f42f204b509b310cffee",
+    "record_count": 73,
+    "event_count": 5
+  },
+  "coverage": {
+    "exact_outcomes": 5,
+    "outcome_failures": 0,
+    "events_with_eligible_t30_rows": 1,
+    "eligible_t30_selection_rows": 13
+  },
+  "events": [
+    {
+      "event": "Al Nassr - Al Taawon",
+      "start_time": "2026-08-28T18:00:00+00:00",
+      "tournament": "SAUDI ARABIA: Saudi Professional League",
+      "flashscore_event_id": "nBKFhJHO",
+      "outcome": {
+        "home_goals": 2,
+        "away_goals": 1,
+        "periods": [
+          {
+            "period": "1st Half",
+            "home": 1,
+            "away": 1
+          },
+          {
+            "period": "2nd Half",
+            "home": 1,
+            "away": 0
+          }
+        ],
+        "endpoint": "https://www.flashscore.com/x/feed/df_sui_1_nBKFhJHO",
+        "raw_sha256": "e4c32bd53597fc70231809b6353504049ade3bcb5e8d8ab34d59aba8995ce759"
+      },
+      "t30_record_count": 0
+    },
+    {
+      "event": "Al Khaleej - Al Hilal",
+      "start_time": "2026-08-28T18:00:00+00:00",
+      "tournament": "SAUDI ARABIA: Saudi Professional League",
+      "flashscore_event_id": "xz0PCM2t",
+      "outcome": {
+        "home_goals": 1,
+        "away_goals": 5,
+        "periods": [
+          {
+            "period": "1st Half",
+            "home": 1,
+            "away": 5
+          },
+          {
+            "period": "2nd Half",
+            "home": 0,
+            "away": 0
+          }
+        ],
+        "endpoint": "https://www.flashscore.com/x/feed/df_sui_1_xz0PCM2t",
+        "raw_sha256": "f65140de8b50be73e82c5819a521af14091f50335cef9e7f6dcb10f222700069"
+      },
+      "t30_record_count": 0
+    },
+    {
+      "event": "Nautico - Athletic Club",
+      "start_time": "2026-08-28T23:30:00+00:00",
+      "tournament": "BRAZIL: Serie B",
+      "flashscore_event_id": "zwWBNcPE",
+      "outcome": {
+        "home_goals": 2,
+        "away_goals": 1,
+        "periods": [
+          {
+            "period": "1st Half",
+            "home": 0,
+            "away": 1
+          },
+          {
+            "period": "2nd Half",
+            "home": 2,
+            "away": 0
+          }
+        ],
+        "endpoint": "https://www.flashscore.com/x/feed/df_sui_1_zwWBNcPE",
+        "raw_sha256": "7996067447653b489e8d32667c1576a9d14160d8f904ff25e3dc4c20f248fa6c"
+      },
+      "t30_record_count": 0
+    },
+    {
+      "event": "Novorizontino - Sport Recife",
+      "start_time": "2026-08-28T23:30:00+00:00",
+      "tournament": "BRAZIL: Serie B",
+      "flashscore_event_id": "bJepmHm2",
+      "outcome": {
+        "home_goals": 2,
+        "away_goals": 1,
+        "periods": [
+          {
+            "period": "1st Half",
+            "home": 1,
+            "away": 0
+          },
+          {
+            "period": "2nd Half",
+            "home": 1,
+            "away": 1
+          }
+        ],
+        "endpoint": "https://www.flashscore.com/x/feed/df_sui_1_bJepmHm2",
+        "raw_sha256": "279d197bff6376b1719cc8866b2ae655628c79f15f21d9323ed0cf4b2c7124c7"
+      },
+      "t30_record_count": 0
+    },
+    {
+      "event": "Tecnico U. - Dep. Cuenca",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "tournament": "ECUADOR: Liga Pro",
+      "flashscore_event_id": "6mqEOeZF",
+      "outcome": {
+        "home_goals": 3,
+        "away_goals": 1,
+        "periods": [
+          {
+            "period": "1st Half",
+            "home": 2,
+            "away": 1
+          },
+          {
+            "period": "2nd Half",
+            "home": 1,
+            "away": 0
+          }
+        ],
+        "endpoint": "https://www.flashscore.com/x/feed/df_sui_1_6mqEOeZF",
+        "raw_sha256": "c9efa9770f2a23a92eff4fd980405f311a8ba31e272bf5c6a73abc3f15289c83"
+      },
+      "t30_record_count": 13
+    }
+  ],
+  "outcome_failures": [],
+  "threshold_diagnostics": [
+    {
+      "shortening_threshold_pp": 1.0,
+      "selection_rows": 0,
+      "fixture_count": 0,
+      "wins": 0,
+      "hit_rate": null,
+      "flat_stake_roi_at_t30": null,
+      "decision": "DIAGNOSTIC_ONLY_TINY_SAMPLE_NO_PROMOTION"
+    },
+    {
+      "shortening_threshold_pp": 2.0,
+      "selection_rows": 0,
+      "fixture_count": 0,
+      "wins": 0,
+      "hit_rate": null,
+      "flat_stake_roi_at_t30": null,
+      "decision": "DIAGNOSTIC_ONLY_TINY_SAMPLE_NO_PROMOTION"
+    },
+    {
+      "shortening_threshold_pp": 3.0,
+      "selection_rows": 0,
+      "fixture_count": 0,
+      "wins": 0,
+      "hit_rate": null,
+      "flat_stake_roi_at_t30": null,
+      "decision": "DIAGNOSTIC_ONLY_TINY_SAMPLE_NO_PROMOTION"
+    }
+  ],
+  "rows": [
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "HOME_DRAW_AWAY",
+      "period": "full_time",
+      "line": null,
+      "selection": "HOME",
+      "true_open_price": 2.35,
+      "t30_price": 2.3,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.38901527,
+      "t30_devig_probability": 0.39307312,
+      "movement_probability_pp": 0.405784,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": true
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "HOME_DRAW_AWAY",
+      "period": "full_time",
+      "line": null,
+      "selection": "DRAW",
+      "true_open_price": 2.85,
+      "t30_price": 2.75,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.32076698,
+      "t30_devig_probability": 0.32875206,
+      "movement_probability_pp": 0.798508,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "HOME_DRAW_AWAY",
+      "period": "full_time",
+      "line": null,
+      "selection": "AWAY",
+      "true_open_price": 3.15,
+      "t30_price": 3.25,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.29021774,
+      "t30_devig_probability": 0.27817482,
+      "movement_probability_pp": -1.204292,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 0.5,
+      "selection": "OVER",
+      "true_open_price": 1.06,
+      "t30_price": 1.06,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.84434655,
+      "t30_devig_probability": 0.84985836,
+      "movement_probability_pp": 0.551181,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": true
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 0.5,
+      "selection": "UNDER",
+      "true_open_price": 5.75,
+      "t30_price": 6.0,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.15565345,
+      "t30_devig_probability": 0.15014164,
+      "movement_probability_pp": -0.551181,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 1.5,
+      "selection": "OVER",
+      "true_open_price": 1.45,
+      "t30_price": 1.43,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.63291139,
+      "t30_devig_probability": 0.64070352,
+      "movement_probability_pp": 0.779213,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": true
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 1.5,
+      "selection": "UNDER",
+      "true_open_price": 2.5,
+      "t30_price": 2.55,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.36708861,
+      "t30_devig_probability": 0.35929648,
+      "movement_probability_pp": -0.779213,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 2.5,
+      "selection": "OVER",
+      "true_open_price": 2.45,
+      "t30_price": 2.4,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.37179487,
+      "t30_devig_probability": 0.37984496,
+      "movement_probability_pp": 0.805009,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": true
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 2.5,
+      "selection": "UNDER",
+      "true_open_price": 1.45,
+      "t30_price": 1.47,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.62820513,
+      "t30_devig_probability": 0.62015504,
+      "movement_probability_pp": -0.805009,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 3.5,
+      "selection": "OVER",
+      "true_open_price": 4.65,
+      "t30_price": 4.45,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.19550173,
+      "t30_devig_probability": 0.2039356,
+      "movement_probability_pp": 0.843387,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": true
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "line": 3.5,
+      "selection": "UNDER",
+      "true_open_price": 1.13,
+      "t30_price": 1.14,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.80449827,
+      "t30_devig_probability": 0.7960644,
+      "movement_probability_pp": -0.843387,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "BOTH_TEAMS_TO_SCORE",
+      "period": "full_time",
+      "line": null,
+      "selection": "YES",
+      "true_open_price": 2.05,
+      "t30_price": 2.0,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.44293478,
+      "t30_devig_probability": 0.45205479,
+      "movement_probability_pp": 0.912001,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": true
+    },
+    {
+      "flashscore_event_id": "6mqEOeZF",
+      "event": "Tecnico U. - Dep. Cuenca",
+      "tournament": "ECUADOR: Liga Pro",
+      "start_time": "2026-08-29T00:00:00+00:00",
+      "market": "BOTH_TEAMS_TO_SCORE",
+      "period": "full_time",
+      "line": null,
+      "selection": "NO",
+      "true_open_price": 1.63,
+      "t30_price": 1.65,
+      "t30_minutes_to_start": 28.05,
+      "t30_captured_at": "2026-08-28T23:31:57.123966+00:00",
+      "t30_source": "checkpoint:T-30",
+      "open_devig_probability": 0.55706522,
+      "t30_devig_probability": 0.54794521,
+      "movement_probability_pp": -0.912001,
+      "home_goals": 3,
+      "away_goals": 1,
+      "won": false
+    }
+  ],
+  "decision": "NO_RULE_PROMOTED_SAMPLE_INSUFFICIENT"
+}
