@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T11:05:24.802446+00:00",
+  "generated_at": "2026-08-31T11:06:16.500577+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 2.3,
-    "tactical": 2.0,
-    "betflag_fixture_feed": 6.9,
-    "betflag_standard_source": 7.0,
-    "betflag_player_source": 7.0,
-    "player_context": 1.9
+    "lineups": 3.2,
+    "tactical": 2.8,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.5,
+    "betflag_player_source": 0.4,
+    "player_context": 2.8
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -104,10 +104,11 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -122,11 +123,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/brentford-sunderland-r.json",
-      "betflag_standard_count": 24,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
