@@ -34,5 +34,15 @@ jobs:
             echo "No discovery changes"
           else
             git commit -m "Update Sweden historical source discovery"
-            git push
+            for attempt in 1 2 3 4 5; do
+              if git push; then
+                exit 0
+              fi
+              echo "Push raced with another workflow; rebasing attempt ${attempt}/5"
+              git fetch origin main
+              git rebase origin/main
+              sleep $((attempt * 2))
+            done
+            echo "Unable to publish discovery evidence after bounded retries"
+            exit 1
           fi
