@@ -176,10 +176,11 @@ def main():
                           and x["move_pp"]>=threshold and x["avg_move_pp"]>=AVG_CONFIRM_PP]
                 metrics=score(selected)
                 published=PUBLISHED[(season,market,threshold)]
+                key_map={"roi_early":"roi_early","clv_ratio":"clv","roi_close":"roi_close"}
                 comparison={
-                  key:{"recomputed":metrics[key],"published_rounded":published[key],
-                       "absolute_difference":abs(metrics[key]-published[key])}
-                  for key in ["roi_early","clv_ratio","roi_close"]
+                  metric_key:{"recomputed":metrics[metric_key],"published_rounded":published[published_key],
+                              "absolute_difference":abs(metrics[metric_key]-published[published_key])}
+                  for metric_key,published_key in key_map.items()
                 }
                 cells.append({"season":season,"market":market,"threshold_pp":threshold,
                               **metrics,"published_comparison":comparison})
