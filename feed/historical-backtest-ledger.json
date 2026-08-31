@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v12",
-  "generated_at": "2026-08-31T21:36:14.830Z",
+  "schema_version": "radar-historical-backtest-ledger-v13",
+  "generated_at": "2026-08-31T22:40:04.612Z",
   "local_timezone": "Europe/Rome",
-  "status": "NETHERLANDS_FOUR_SEASON_STRUCTURAL_OOS_COMPLETE",
+  "status": "GOLDBET_TRUE_OPEN_OBSERVED_CURRENT_JOINABILITY_AUDITED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -106,7 +106,14 @@
     "netherlands_holdout_rows": 306,
     "netherlands_source_files": 4,
     "netherlands_missing_avg_close_triplets": 0,
-    "total_structural_regular_fixture_rows": 3912
+    "total_structural_regular_fixture_rows": 3912,
+    "goldbet_true_open_rows_with_exact_observed_current": 9188,
+    "goldbet_events_with_pre_kickoff_observed_current": 642,
+    "goldbet_primary_market_open_current_rows": 4931,
+    "goldbet_primary_drop_ge_0_20_rows": 608,
+    "goldbet_events_with_primary_drop_ge_0_20": 342,
+    "goldbet_certified_last_pre_kickoff_close_rows": 0,
+    "goldbet_outcome_joined_events": 0
   },
   "quarantined_evidence": [
     {
@@ -188,7 +195,11 @@
     "Frozen Netherlands temporal split before evaluation: 2022/2023-2024/2025 development (918), untouched 2025/2026 holdout (306).",
     "Verified 18 clubs and 34 matches per club in every frozen season, zero duplicate fixture keys and zero missing average closing triplets.",
     "Replicated the unchanged Sweden/Norway structural specification on Netherlands; Elo significantly beats the development prior, while form and the full bundle do not improve Elo.",
-    "External de-vigged closing odds have better point estimates than Elo in Netherlands, but the paired Brier and log-loss intervals versus Elo include zero."
+    "External de-vigged closing odds have better point estimates than Elo in Netherlands, but the paired Brier and log-loss intervals versus Elo include zero.",
+    "Audited all 642 GoldBet TRUE_OPEN_CERTIFIED events and 9,188 market rows directly from the persisted 3.38 MB index.",
+    "Verified that every stored diretta_current observation precedes kickoff, but timing ranges from 5.85 to 1,401 minutes before kickoff (median 958.76); therefore these observations are not certified closes.",
+    "Found 4,931 exact 1X2/FT Over primary-market TRUE OPEN-to-observed-current rows; 608 rows across 342 events show an active absolute drop of at least 0.20.",
+    "Proved that home_score, away_score and match_score are fuzzy fixture-identity confidence values (0.4828-1.0), not football outcomes; their use for settlement or outcome joining is forbidden."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -699,6 +710,34 @@
         }
       },
       "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_REJECTED; MARKET_POINT_BETTER_NOT_CONCLUSIVE_VS_ELO; NO_OPERATIONAL_PROMOTION"
+    },
+    "goldbet_true_open_joinability_v2": {
+      "report": "feed/historical/open-close/goldbet-true-open-joinability-audit-v2.json",
+      "source_sha256": "a0f070fbf8b4c6386d8dde899510df77004895fea3d53eee4772f195af69d7cd",
+      "events": 642,
+      "market_rows": 9188,
+      "timing": {
+        "pre_kickoff_events": 642,
+        "share": 1,
+        "minutes_before_kickoff_p50": 958.7597730833334,
+        "p05": 117.70724795,
+        "p95": 1235.51608036,
+        "min": 5.8468140166666664,
+        "max": 1401.0622079166667
+      },
+      "primary_mms_diagnostic": {
+        "rows": 4931,
+        "drop_ge_0_20_rows": 608,
+        "events_with_drop": 342,
+        "classification": "TRUE_OPEN_TO_SINGLE_OBSERVED_CURRENT_SAME_BOOK_DIAGNOSTIC"
+      },
+      "joinability": {
+        "certified_close": false,
+        "outcomes": false,
+        "clv": false,
+        "roi": false
+      },
+      "decision": "CURRENT_IS_NOT_CLOSE; OUTCOME-LIKE IDENTITY SCORES_FORBIDDEN"
     }
   },
   "ablation_plan": {
@@ -716,10 +755,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "With Netherlands four-season structural OOS complete, prioritize exact GoldBet TRUE_OPEN-to-last-pre-kickoff-close-to-outcome joins.",
-    "structural_lane": "Keep Sweden, Norway, Denmark and Netherlands holdouts frozen; the next structural expansion must use the same unchanged specification and a new league holdout.",
-    "market_lane": "Retain Football-Data closes only as external benchmarks and the Primeira/Eredivisie early-to-CLOSE block only as a hindsight diagnostic.",
-    "mms_lane": "No threshold is promoted. The next valid primary MMS test requires certified GoldBet TRUE OPEN, exact same-book last pre-kickoff close and exact outcome join."
+    "priority": "Acquire or materialize exact final outcomes for the 642 Flashscore event IDs and search persisted snapshots for a provable last GoldBet observation before each kickoff.",
+    "structural_lane": "Keep all four completed league holdouts frozen.",
+    "market_lane": "Use the 608 drops only as OPEN-to-observed-current diagnostics; never calculate CLV or ROI from them until certified close and outcome joins exist.",
+    "mms_lane": "Primary MMS evaluation remains pending exact same-book last-pre-kickoff close plus separately sourced final outcome."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -750,7 +789,9 @@
       "Archived aggregate evidence is recoverable and hashable, but cannot be labelled row-level reproducible until the original match inputs and raw timestamps are recovered.",
       "A complete target subset may be recovered from a truncated container only when expected row counts, selection sets, missingness and a canonical subset hash are recorded; the corrupt parent remains quarantined.",
       "Clean immutable source CSV snapshots with SHA-256 supersede truncated intermediates; both 1X2 and O/U are now reproducible from source rows.",
-      "European season-file acquisition may replace a missing country-level consolidated CSV only when each immutable league-season file is separately hashed, row-count gated and normalized with unchanged provenance labels."
+      "European season-file acquisition may replace a missing country-level consolidated CSV only when each immutable league-season file is separately hashed, row-count gated and normalized with unchanged provenance labels.",
+      "Fields named home_score/away_score/match_score in the Diretta index are identity-match confidence values, not final scores; outcome semantics require a separately documented result source.",
+      "A pre-kickoff current price is not a CLOSE unless it is proven to be the last valid same-book observation before kickoff; timing alone is insufficient."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
