@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T00:50:43.077243+00:00",
+  "generated_at": "2026-08-31T01:06:22.168681+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -24,12 +24,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T00:50:43.077243+00:00",
+    "generated_at": "2026-08-31T01:06:22.168681+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 5,
+    "target_count": 4,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -40,31 +40,24 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Real Monarchs - Tacoma Defiance",
-        "minutes_to_start": 39.3,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Deportivo Cali - Bucaramanga",
-        "minutes_to_start": 29.3,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Deportivo Cali - Bucaramanga",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Real Monarchs - Tacoma Defiance",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
     {
       "match": "Unan Managua - Managua FC",
       "start_time": "31-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 9.3,
+      "minutes_to_start": -6.4,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.52982",
       "confirmed_at": null,
@@ -76,7 +69,7 @@
       "match": "Xelaju - Deportivo Mixco",
       "start_time": "31-08-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 9.3,
+      "minutes_to_start": -6.4,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36351.2870",
       "confirmed_at": null,
@@ -88,11 +81,11 @@
       "match": "Deportivo Cali - Bucaramanga",
       "start_time": "31-08-2026 03:20",
       "league": "Primera A",
-      "minutes_to_start": 29.3,
+      "minutes_to_start": 13.6,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.3428",
       "confirmed_at": "2026-08-31T00:50:43.077243+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -100,11 +93,11 @@
       "match": "Real Monarchs - Tacoma Defiance",
       "start_time": "31-08-2026 03:30",
       "league": "Mls Next Pro",
-      "minutes_to_start": 39.3,
+      "minutes_to_start": 23.6,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36356.3171",
       "confirmed_at": "2026-08-31T00:50:43.077243+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -112,7 +105,7 @@
       "match": "Monterrey - San Luis",
       "start_time": "31-08-2026 04:10",
       "league": "Primera Division",
-      "minutes_to_start": 79.3,
+      "minutes_to_start": 63.6,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.3020",
       "confirmed_at": null,
@@ -124,7 +117,7 @@
       "match": "San Jose Earthquakes II - Los Angeles FC 2",
       "start_time": "31-08-2026 04:30",
       "league": "Mls Next Pro",
-      "minutes_to_start": 99.3,
+      "minutes_to_start": 83.6,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.43899",
       "confirmed_at": null,
