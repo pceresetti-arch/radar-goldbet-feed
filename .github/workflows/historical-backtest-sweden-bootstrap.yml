@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/historical-backtest-sweden-bootstrap.yml'
       - 'tools/historical_ingest_sweden.py'
+      - 'tools/historical_build_sweden_baseline.py'
 
 permissions:
   contents: write
@@ -25,6 +26,8 @@ jobs:
           python-version: '3.12'
       - name: Discover and profile Sweden historical source
         run: python tools/historical_ingest_sweden.py
+      - name: Build frozen Sweden baseline
+        run: python tools/historical_build_sweden_baseline.py
       - name: Commit historical discovery evidence
         run: |
           git config user.name "radar-backtest-bot"
@@ -33,6 +36,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python tools/historical_ingest_sweden.py
+            python tools/historical_build_sweden_baseline.py
             git add feed/historical/sweden
             if git diff --cached --quiet; then
               echo "No discovery changes"
