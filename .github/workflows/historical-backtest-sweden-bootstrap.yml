@@ -1,0 +1,34 @@
+name: Historical Backtest Sweden Bootstrap
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-backtest-sweden-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover and profile Sweden historical source
+        run: python tools/historical_ingest_sweden.py
+      - name: Commit historical discovery evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add feed/historical/sweden/source-discovery.json
+          if git diff --cached --quiet; then
+            echo "No discovery changes"
+          else
+            git commit -m "Update Sweden historical source discovery"
+            git push
+          fi
