@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v11",
-  "generated_at": "2026-08-31T20:41:54.824874+00:00",
+  "schema_version": "radar-historical-source-manifest-v12",
+  "generated_at": "2026-08-31T21:36:59.212Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "PRIMEIRA_EREDIVISIE_CLEAN_SOURCE_1X2_OU_FULLY_REPLICATED",
+  "status": "NETHERLANDS_FOUR_SEASON_STRUCTURAL_OOS_COMPLETE",
   "priority": [
     "Sweden",
     "Norway",
@@ -130,6 +130,43 @@
       "development_rows": 576,
       "holdout_rows": 192,
       "excluded_postseason_playoff_rows": 2
+    },
+    {
+      "name": "Football-Data.co.uk Netherlands season files",
+      "url": "https://www.football-data.co.uk/data.php",
+      "league": "Eredivisie",
+      "declared_coverage": "four official N1 season files, 2022/2023 through 2025/2026",
+      "role": [
+        "FIXTURE_RESULT_BASELINE",
+        "MARKET_CLOSING_BENCHMARK",
+        "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS"
+      ],
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "discovery_workflow": ".github/workflows/historical-backtest-netherlands-bootstrap.yml",
+      "dataset_profile": "feed/historical/netherlands/source-profile.json",
+      "source_snapshot": "feed/historical/netherlands/football-data-NLD.csv",
+      "normalized_dataset": "feed/historical/netherlands/eredivisie-2022-2026-regular.csv",
+      "benchmark_output": "feed/historical/netherlands/baseline-benchmark.json",
+      "structural_feature_dataset": "feed/historical/netherlands/eredivisie-2022-2026-features.csv",
+      "structural_oos_report": "feed/historical/netherlands/structural-oos-v1.json",
+      "status": "ACCEPTED_NETHERLANDS_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+      "quality_notes": [
+        "Four season files are separately preserved and bound by SHA-256; each contains exactly 306 fixtures.",
+        "Frozen seasons 2022/2023-2025/2026 contain exactly 18 clubs and 34 matches per club.",
+        "Outcome columns are joined only after the pre-match feature freeze and same-date results are excluded.",
+        "Closing odds remain external benchmarks and never GoldBet TRUE OPEN."
+      ],
+      "source_files": 4,
+      "verified_source_rows": 1224,
+      "accepted_regular_rows": 1224,
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "excluded_playoff_rows": 0
     },
     {
       "name": "Diretta/Flashscore GoldBet TRUE OPEN index",
@@ -291,7 +328,7 @@
   ],
   "required_blocks": {
     "fixtures_results": {
-      "status": "ACCEPTED_SWEDEN_NORWAY_DENMARK_2688_REGULAR_ROWS",
+      "status": "ACCEPTED_SWEDEN_NORWAY_DENMARK_NETHERLANDS_3912_REGULAR_ROWS",
       "required_fields": [
         "competition",
         "season",
@@ -323,6 +360,16 @@
           "holdout": [
             "2025/2026"
           ]
+        },
+        "Netherlands": {
+          "development": [
+            "2022/2023",
+            "2023/2024",
+            "2024/2025"
+          ],
+          "holdout": [
+            "2025/2026"
+          ]
         }
       }
     },
@@ -345,7 +392,7 @@
       "note": "The Primeira/Eredivisie external Bet365 early-to-CLOSE diagnostic is fully rebuilt from clean source for 1X2 and O/U. It remains separate from GoldBet, whose 642 certified TRUE OPEN events still require exact same-book close/outcome joins."
     },
     "market_close_benchmark": {
-      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_2688_ROWS",
+      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_3912_ROWS",
       "rule": "Benchmark market closing prices may support CLV/context only under their true bookmaker/source labels; they never substitute GoldBet TRUE OPEN.",
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK"
     },
@@ -354,7 +401,7 @@
       "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
     },
     "pre_match_structural": {
-      "status": "THREE_LEAGUE_OOS_COMPLETE_672_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
+      "status": "FOUR_LEAGUE_OOS_COMPLETE_978_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -362,8 +409,8 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Elo remains a research baseline from Sweden/Norway; Denmark did not independently establish Elo over its prior. Form/full bundles remain unpromoted; external close remains non-GoldBet.",
-      "identity_gate": "League-format-specific integrity required: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark."
+      "result": "Elo beats the development prior in Sweden, Norway and Netherlands, but not robustly in Denmark. Form/full bundles remain unpromoted in every league; external close remains non-GoldBet.",
+      "identity_gate": "League-format integrity required before metrics: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark; 18 teams/34 matches per club for Netherlands."
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -393,9 +440,9 @@
   },
   "next_source_block": {
     "lane": "GOLDBET_EXACT_OPEN_CLOSE_OUTCOME_JOIN",
-    "goal": "Join certified GoldBet TRUE OPEN to exact last-pre-kickoff same-book closes and outcomes; do not reuse the external Bet365 CLOSE-conditioned diagnostic as GoldBet evidence.",
-    "prior_claim_status": "Primeira/Eredivisie 1X2 and O/U fully recovered and replicated from clean source.",
-    "structural_next": "Build the four-season Eredivisie structural block with frozen chronological holdout.",
+    "goal": "Join certified GoldBet TRUE OPEN to exact last-pre-kickoff same-book closes and outcomes; do not reuse external closing benchmarks as GoldBet evidence.",
+    "prior_claim_status": "Primeira/Eredivisie 1X2 and O/U fully recovered; Eredivisie four-season structural OOS also complete under a separate frozen split.",
+    "structural_next": "Keep all four completed league holdouts frozen; expand only with the unchanged specification and a new independent league.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
     "historical_close_status": "EXTERNAL_DIAGNOSTIC_COMPLETE; GOLDBET_EXACT_JOIN_PENDING"
   }
