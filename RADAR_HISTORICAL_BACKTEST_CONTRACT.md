@@ -17,20 +17,28 @@ Costruire un backtest storico multi-stagione incrementale usando esclusivamente 
 
 Outcome e statistiche post-match possono essere uniti solo dopo il freeze delle feature pre-match e servono esclusivamente alla valutazione.
 
-## 3. Unità minima eleggibile
-Una fixture entra nel dataset storico soltanto se sono verificati senza ambiguità almeno:
+## 3. Unità minime eleggibili
+
+### 3.1 Baseline strutturale fixture
+Una fixture può entrare nel solo dataset strutturale se sono verificati senza ambiguità almeno:
 - competition;
 - season;
 - fixture_id stabile o chiave di join equivalente;
-- kickoff_utc;
+- match date e ordine temporale;
 - home_team e away_team;
-- outcome autorevole, unito ex post;
-- bookmaker;
-- market/line/selection;
-- almeno un prezzo pre-match osservato con timestamp e provenienza;
+- outcome autorevole, unito esclusivamente dopo il freeze delle feature;
 - source_reliability.
 
-Per OPEN→CLOSE/MMS sono inoltre richiesti OPEN e CLOSE realmente osservati sullo stesso bookmaker, stesso evento, mercato, periodo, linea e selezione.
+Se la fonte documenta l'orario di kickoff ma non il fuso, non si inventa `kickoff_utc`: l'orario resta `NOT_VERIFIED` e tutte le feature rolling usano esclusivamente partite con data anteriore, escludendo informazione della stessa data. L'assenza di una quota non impedisce l'uso nel solo baseline strutturale.
+
+### 3.2 Campione prezzi e MMS
+Una fixture entra in un test di mercato soltanto se sono verificati anche:
+- bookmaker/source class;
+- market/line/selection;
+- prezzo pre-match realmente osservato;
+- semantica del prezzo e provenienza.
+
+Per OPEN→CLOSE/MMS sono inoltre richiesti OPEN e CLOSE realmente osservati sullo stesso bookmaker, stesso evento, mercato, periodo, linea e selezione. Un closing benchmark esterno può essere valutato sotto la propria classe, ma non sostituisce GoldBet né il TRUE OPEN GoldBet.
 
 ## 4. TRUE OPEN e movimento
 MMS primario storico:
