@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v10",
-  "generated_at": "2026-08-31T19:30:37Z",
+  "schema_version": "radar-historical-backtest-ledger-v11",
+  "generated_at": "2026-08-31T20:41:54.824874+00:00",
   "local_timezone": "Europe/Rome",
-  "status": "PRIMEIRA_EREDIVISIE_1X2_ROW_LEVEL_REPLICATED_OU_AGGREGATE_ONLY",
+  "status": "PRIMEIRA_EREDIVISIE_CLEAN_SOURCE_1X2_OU_FULLY_REPLICATED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -92,7 +92,15 @@
     "recovered_primeira_eredivisie_1x2_unique_matches": 1224,
     "recovered_primeira_eredivisie_1x2_missing_required_cells": 0,
     "recovered_primeira_eredivisie_1x2_row_level_status": "COMPLETE_PREFIX_REPLICATED_FROM_TRUNCATED_CONTAINER",
-    "recovered_primeira_eredivisie_ou_row_level_status": "NOT_RECOVERED_TRUNCATION_PRECEDES_TARGET_BLOCK"
+    "recovered_primeira_eredivisie_ou_row_level_status": "NOT_RECOVERED_TRUNCATION_PRECEDES_TARGET_BLOCK",
+    "clean_primeira_eredivisie_source_files": 4,
+    "clean_primeira_eredivisie_source_fixtures": 1224,
+    "clean_primeira_eredivisie_unique_matches": 1224,
+    "clean_primeira_eredivisie_signal_rows": 6120,
+    "clean_primeira_eredivisie_1x2_rows": 3672,
+    "clean_primeira_eredivisie_ou25_rows": 2448,
+    "clean_primeira_eredivisie_replicated_cells": 12,
+    "clean_primeira_eredivisie_status": "CLEAN_SOURCE_HASHED_BOTH_MARKETS_ROW_LEVEL_REPLICATED"
   },
   "quarantined_evidence": [
     {
@@ -165,7 +173,11 @@
     "Found the archived diagnostic_signals_v1_5_0 row-level intermediate; all five copies are identically truncated and fail gzip EOF validation, so the container remains quarantined.",
     "Recovered the complete pre-truncation Primeira Liga/Eredivisie 1X2 subset: 3,672 selection rows, 1,224 matches, exactly H/D/A per match and zero missing required cells.",
     "Recomputed all six 1X2 threshold cells from rows; ROI early, CLV and ROI at CLOSE match the published v1.47 point estimates at reported precision.",
-    "Confirmed O/U row-level recovery is impossible from the archived prefix because truncation occurs before P1/N1 2024/25-2025/26 O/U rows."
+    "Confirmed O/U row-level recovery is impossible from the archived prefix because truncation occurs before P1/N1 2024/25-2025/26 O/U rows.",
+    "Fetched and persisted four clean Football-Data source CSVs for Primeira Liga and Eredivisie 2024/25-2025/26 with per-file SHA-256 and exactly 306 fixtures per league-season.",
+    "Rebuilt 6,120 row-level market selections across 1,224 unique matches: 3,672 1X2 and 2,448 O/U 2.5 rows.",
+    "Replicated all twelve frozen season-market-threshold cells from clean source; ROI early, CLV and ROI at CLOSE match the published v1.47 values within rounding.",
+    "Removed the truncated gzip as a dependency for Primeira/Eredivisie inference; it remains quarantined only as historical provenance."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -542,14 +554,18 @@
         "certified_close": 0
       },
       "prior_612_match_claim": {
-        "status": "1X2_ROW_LEVEL_RECOVERED_OU_AGGREGATE_ONLY",
-        "evidence": "feed/historical/open-close/primeira-eredivisie-recovered-v1.json",
+        "status": "FULL_1X2_AND_OU_ROW_LEVEL_RECOVERY_COMPLETE",
+        "evidence": "feed/historical/open-close/primeira-eredivisie-clean-source/report.json",
         "holdouts": 2,
         "fixtures_per_holdout": 612,
         "fixture_equivalent_total": 1224,
+        "markets": [
+          "1X2",
+          "OU2.5"
+        ],
+        "signal_rows": 6120,
         "metrics_promoted": false,
-        "reason": "The 1X2 rows and point metrics are recovered and replicated; O/U remains aggregate-only. Both remain CLOSE-conditioned external diagnostics, not GoldBet TRUE OPEN rules.",
-        "row_level_evidence": "feed/historical/open-close/primeira-eredivisie-row-recovery-v2.json"
+        "reason": "All published point estimates replicate from clean source, but selection uses later CLOSE information and every bootstrap ROI interval includes zero."
       }
     },
     "recovered_primeira_eredivisie_open_close": {
@@ -568,11 +584,24 @@
       "threshold_promotion": false,
       "row_level_recovery": {
         "report": "feed/historical/open-close/primeira-eredivisie-row-recovery-v2.json",
-        "1x2_status": "ROW_LEVEL_REPLICATED_FROM_COMPLETE_PREFIX",
+        "1x2_status": "ROW_LEVEL_REPLICATED_FROM_CLEAN_SOURCE",
         "1x2_selection_rows": 3672,
         "1x2_unique_matches": 1224,
         "1x2_canonical_sha256": "774c93e87cabdd0170ab4d89def1a50adf41656e399aa3d86b7f9f5c223fbdd4",
-        "ou_2_5_status": "AGGREGATE_ONLY"
+        "ou_2_5_status": "ROW_LEVEL_REPLICATED_FROM_CLEAN_SOURCE"
+      },
+      "clean_source_replication": {
+        "report": "feed/historical/open-close/primeira-eredivisie-clean-source/report.json",
+        "workflow_run": 33437401129,
+        "status": "CLEAN_SOURCE_FETCHED_AND_BOTH_MARKETS_REBUILT",
+        "source_files": 4,
+        "unique_matches": 1224,
+        "signal_rows": 6120,
+        "1x2_rows": 3672,
+        "ou_2_5_rows": 2448,
+        "replicated_cells": 12,
+        "all_point_estimates_match_published_rounding": true,
+        "threshold_promotion": false
       }
     }
   },
@@ -591,10 +620,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Recover clean original Football-Data CSV inputs or a complete diagnostic-signals archive to restore O/U rows and exact v1.47 bootstrap intervals; separately continue certified GoldBet TRUE_OPEN-to-close-to-outcome joins.",
+    "priority": "With Primeira/Eredivisie clean-source recovery complete, move to exact GoldBet TRUE_OPEN-to-last-pre-kickoff-close-to-outcome joins and continue the structural lane with Eredivisie under a frozen four-season split.",
     "structural_lane": "Keep Sweden, Norway and Denmark holdouts frozen; Netherlands acquisition follows after the OPEN provenance correction is stabilized.",
-    "market_lane": "1X2 Primeira/Eredivisie is now row-level replicated as an external CLOSE-conditioned diagnostic; O/U remains aggregate-only. Keep both separate from GoldBet and BetFlag histories.",
-    "mms_lane": "The prior 1,224-fixture aggregate is recovered but no threshold is robust or executable. GoldBet MMS requires its own certified same-book OPEN/CLOSE/outcome join."
+    "market_lane": "Retain the recovered Bet365 early-to-CLOSE block as a fully reproducible external diagnostic. GoldBet MMS remains a separate same-book lane.",
+    "mms_lane": "No Primeira/Eredivisie threshold is promoted. The next valid MMS test must use certified GoldBet TRUE OPEN plus an observed same-book close and exact outcome join."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -622,7 +651,8 @@
       "League-specific drift must be reported before pooling closing-market benchmarks.",
       "Expensive historical evidence generation is separated from fast race-safe publication to avoid interference from operational feed commits.",
       "Archived aggregate evidence is recoverable and hashable, but cannot be labelled row-level reproducible until the original match inputs and raw timestamps are recovered.",
-      "A complete target subset may be recovered from a truncated container only when expected row counts, selection sets, missingness and a canonical subset hash are recorded; the corrupt parent remains quarantined."
+      "A complete target subset may be recovered from a truncated container only when expected row counts, selection sets, missingness and a canonical subset hash are recorded; the corrupt parent remains quarantined.",
+      "Clean immutable source CSV snapshots with SHA-256 supersede truncated intermediates; both 1X2 and O/U are now reproducible from source rows."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
