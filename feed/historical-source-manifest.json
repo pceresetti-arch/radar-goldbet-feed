@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v3",
-  "generated_at": "2026-08-31T09:36:21+00:00",
+  "schema_version": "radar-historical-source-manifest-v4",
+  "generated_at": "2026-08-31T10:46:08.037Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SWEDEN_BASELINE_ACCEPTED_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+  "status": "SWEDEN_STRUCTURAL_OOS_COMPLETE_NORWAY_NEXT",
   "priority": [
     "Sweden",
     "Norway",
@@ -36,7 +36,7 @@
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
       "discovery_workflow": ".github/workflows/historical-backtest-sweden-bootstrap.yml",
       "discovery_output": "feed/historical/sweden/source-discovery.json",
-      "status": "ACCEPTED_FOR_STRUCTURAL_BASELINE_AND_EXTERNAL_CLOSE_BENCHMARK",
+      "status": "ACCEPTED_SWEDEN_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
       "quality_notes": [
         "Use outcome columns only after pre-match feature freeze.",
         "Do not treat generic best/average/Pinnacle closing odds as GoldBet.",
@@ -51,7 +51,9 @@
       "accepted_regular_rows": 960,
       "development_rows": 720,
       "holdout_rows": 240,
-      "excluded_playoff_rows": 4
+      "excluded_playoff_rows": 4,
+      "structural_feature_dataset": "feed/historical/sweden/allsvenskan-2022-2025-features.csv",
+      "structural_oos_report": "feed/historical/sweden/structural-oos-v1.json"
     }
   ],
   "required_blocks": {
@@ -106,14 +108,15 @@
       "rule": "Never derive T-30 from CLOSE or interpolate absent timestamps."
     },
     "pre_match_structural": {
-      "status": "READY_FOR_STRICTLY_PRIOR_DATE_FEATURE_BUILD",
+      "status": "SWEDEN_COMPLETED_960_FEATURE_ROWS_240_FROZEN_HOLDOUT",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
         "home_away",
         "opponent_quality"
       ],
-      "anti_leakage": "Each rolling feature must use only prior fixtures in chronological order."
+      "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
+      "result": "Elo/structural variants beat the naive development prior; extra form/venue/opponent features show no reliable increment beyond Elo; no operational promotion."
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -139,7 +142,9 @@
     "primary_mms_reason": "No GoldBet TRUE OPEN or same-book OPEN series exists."
   },
   "next_source_block": {
-    "league": "Sweden",
-    "goal": "Build and freeze strictly-prior-date Elo/form/home-away/opponent-quality features on 2022-2024, then evaluate once on untouched 2025 holdout. Norway follows after this structural block."
+    "league": "Norway",
+    "goal": "Acquire and profile four completed seasons, freeze chronological development/holdout before evaluation, and replicate Sweden v1 structural specification without tuning on Sweden 2025.",
+    "sweden_status": "FROZEN_V1_NO_FURTHER_HOLDOUT_TUNING",
+    "goldbet_mms_status": "BLOCKED_NO_VERIFIED_HISTORICAL_TRUE_OPEN"
   }
 }
