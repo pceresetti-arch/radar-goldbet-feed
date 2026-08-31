@@ -1,0 +1,82 @@
+{
+  "schema_version": "radar-historical-open-close-provenance-audit-v1",
+  "generated_at": "2026-08-31T14:45:12.761Z",
+  "local_timezone": "Europe/Rome",
+  "finding": "TRUE_OPEN_EXISTS_PREVIOUS_LEDGER_CLASSIFICATION_WAS_TOO_CATEGORICAL",
+  "anti_hindsight": "Inventory and provenance correction only. No close, outcome, ROI, CLV or decision is reconstructed.",
+  "sources": [
+    {
+      "path": "feed/diretta-goldbet-true-open-index.json",
+      "blob_sha": "6a5860afc4e6f64bad91f70b2362c8a246d92797",
+      "source": "Diretta/Flashscore ope2",
+      "bookmaker": "GoldBet",
+      "bookmaker_id": 188,
+      "source_class": "GOLDBET_VIA_FLASHSCORE_HISTORICAL",
+      "event_status": "TRUE_OPEN_CERTIFIED",
+      "certified_events": 642,
+      "market_rows": 9188,
+      "market_rows_with_open_current_change": 6132,
+      "markets": {
+        "HOME_DRAW_AWAY": 1926,
+        "OVER_UNDER": 6010,
+        "BOTH_TEAMS_TO_SCORE": 1252
+      },
+      "scheduled_date_range": [
+        "2026-08-25",
+        "2026-08-28"
+      ],
+      "eligibility": {
+        "true_open": true,
+        "observed_current": true,
+        "certified_close": false,
+        "outcome_joined": false,
+        "multi_season_historical_backtest": false,
+        "primary_mms_signal_generation": true,
+        "roi_clv_backtest": false
+      },
+      "note": "The dataset proves certified GoldBet TRUE OPEN and observed pre-match current values. It does not by itself prove that observed current equals final close."
+    },
+    {
+      "path": "feed/betflag-open-close-watch.json",
+      "blob_sha": "371f33b0b4642b5bd500039b885e21042682897b",
+      "source": "BetFlag/AAMS watcher",
+      "source_class": "BETFLAG_AAMS_DIRECT_WATCHER",
+      "events": 392,
+      "quote_keys": 11166,
+      "true_open_radar_certified_quotes": 1802,
+      "first_seen_only_quotes": 9364,
+      "changed_quote_keys": 4701,
+      "changes_total": 11739,
+      "close_quotes": 0,
+      "observed_range_utc": [
+        "2026-08-29T14:44:56.777195+00:00",
+        "2026-08-29T18:28:17.423732+00:00"
+      ],
+      "eligibility": {
+        "true_open_betflag_official": false,
+        "open_radar_certified": true,
+        "first_seen_diagnostic_only": true,
+        "certified_close": false,
+        "outcome_joined": false,
+        "roi_clv_backtest": false
+      },
+      "note": "Watcher policy is valid, but this persisted snapshot contains no last_pre_kickoff/close observations."
+    }
+  ],
+  "prior_claim_reconciliation": {
+    "claim": "612 Primeira Liga + Eredivisie 2024/25 OPEN-to-CLOSE sample with reported CLV/ROI",
+    "current_repository_artifact_status": "NOT_LOCATED_IN_CURRENT_DEFAULT_BRANCH_OR_SEARCHABLE_COMMIT_HISTORY",
+    "treatment": "PRESERVE_AS_UNVERIFIED_PRIOR_RESULT_PENDING_ARTIFACT_RECOVERY",
+    "forbidden_actions": [
+      "Do not erase the prior claim.",
+      "Do not copy its metrics into the active ledger as verified.",
+      "Do not relabel external or cross-book openings as GoldBet TRUE OPEN without provenance."
+    ]
+  },
+  "corrected_conclusions": [
+    "The repository does contain certified TRUE OPEN data.",
+    "The three-league structural backtest folder is not yet joined to an eligible multi-season OPEN-to-CLOSE/outcome dataset.",
+    "Primary MMS signal generation is possible on the 2026 certified GoldBet block, but historical ROI/CLV needs a verified close and outcome join.",
+    "BetFlag continuous-watch openings and GoldBet/Flashscore TRUE OPEN must remain separate provenance classes."
+  ]
+}
