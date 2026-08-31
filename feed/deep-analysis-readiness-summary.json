@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T17:23:08.623080+00:00",
+  "generated_at": "2026-08-31T17:23:37.750116+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.9,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 4.1,
-    "betflag_standard_source": 4.3,
-    "betflag_player_source": 4.2,
-    "player_context": 13.0
+    "lineups": 1.4,
+    "tactical": 0.9,
+    "betflag_fixture_feed": 4.6,
+    "betflag_standard_source": 4.8,
+    "betflag_player_source": 4.7,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -61,11 +61,11 @@
       "start_time": "31-08-2026 19:30",
       "minutes_to_start": 7.8,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 35,
       "player_count": 38,
       "player_quote_count": 1233,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -75,11 +75,11 @@
       "start_time": "31-08-2026 19:30",
       "minutes_to_start": 7.8,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 31,
       "player_count": 54,
       "player_quote_count": 216,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -103,11 +103,11 @@
       "start_time": "31-08-2026 20:15",
       "minutes_to_start": 52.8,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 31,
       "player_count": 41,
       "player_quote_count": 164,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -125,6 +125,46 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "player_lane_ready_count": 3,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36351.2883",
+      "match": "Osasuna - Getafe",
+      "league": "Liga",
+      "start_time": "31-08-2026 19:30",
+      "minutes_to_start": 7.8,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 38,
+      "player_quote_count": 1233,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.2726",
+      "match": "Rapid Bucarest - Universitatea Craiova",
+      "league": "Liga I",
+      "start_time": "31-08-2026 19:30",
+      "minutes_to_start": 7.8,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 54,
+      "player_quote_count": 216,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36361.17770",
+      "match": "FC Arda Kardzhali - POFC Botev Vratsa",
+      "league": "Premier League",
+      "start_time": "31-08-2026 20:15",
+      "minutes_to_start": 52.8,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 41,
+      "player_quote_count": 164,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
