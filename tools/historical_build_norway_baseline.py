@@ -14,6 +14,7 @@ REPORT = OUT / "baseline-benchmark.json"
 SEASONS = ["2022", "2023", "2024", "2025"]
 DEVELOPMENT = {"2022", "2023", "2024"}
 HOLDOUT = {"2025"}
+TEAM_ALIASES = {"Ham-Kam": "HamKam"}
 
 def iso_date(value):
     return datetime.strptime(value.strip(), "%d/%m/%Y").date().isoformat()
@@ -68,6 +69,16 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with RAW.open("r", encoding="utf-8-sig", newline="") as fh:
         source = list(csv.DictReader(fh))
+
+    alias_corrections = []
+    for row in source:
+        for side in ("Home", "Away"):
+            original = row.get(side, "")
+            canonical = TEAM_ALIASES.get(original, original)
+            row[f"_source_{side.lower()}"] = original
+            row[side] = canonical
+            if canonical != original:
+                alias_corrections.append({"side": side, "source": original, "canonical": canonical})
 
     selected = [r for r in source if r.get("Season") in SEASONS and r.get("League") == "Eliteserien"]
     appearances = {}
@@ -163,7 +174,7 @@ def main():
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_snapshot": str(RAW),
         "normalized_dataset": str(NORMALIZED),
-        "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022-2025; regular 16-team Eliteserien only; cross-division playoffs excluded.",
+        "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022-2025; source-verified Ham-Kam/HamKam alias canonicalized before model evaluation; regular 16-team Eliteserien only; cross-division playoffs excluded.",
         "seasons": SEASONS,
         "split": {"development": sorted(DEVELOPMENT), "holdout": sorted(HOLDOUT)},
         "sample": {
@@ -173,10 +184,13 @@ def main():
             "holdout_rows": len(holdout),
             "excluded_playoff_rows": len(excluded),
             "excluded": excluded,
-            "regular_team_counts": {s: len(regular_teams[s]) for s in SEASONS}
+            "regular_team_counts": {s: len(regular_teams[s]) for s in SEASONS},
+            "team_alias_map": TEAM_ALIASES,
+            "team_alias_field_corrections": len(alias_corrections)
         },
         "data_quality": {
             "normalized_duplicate_fixture_keys": len(normalized) - len({r["fixture_key"] for r in normalized}),
+            "identity_integrity": "Ham-Kam canonicalized to HamKam before regular-team detection; this fixes a source naming change, not an outcome-based exclusion.",
             "missing_avg_close_triplets": sum(not all(r[x] for x in ["avg_close_home", "avg_close_draw", "avg_close_away"]) for r in normalized),
             "kickoff_utc_verified_rows": 0,
             "kickoff_policy": "No UTC conversion is performed because the source documents Time as kickoff time but does not state timezone. Rolling structural features must use strictly prior source dates, excluding same-date information."
