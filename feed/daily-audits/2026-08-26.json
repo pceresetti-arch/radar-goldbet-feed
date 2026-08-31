@@ -1,16 +1,16 @@
 {
-  "schema_version": "radar-daily-technical-audit-v1",
+  "schema_version": "radar-daily-technical-audit-v2",
   "audit_date_local": "2026-08-26",
   "timezone": "Europe/Rome",
   "completed_at": "2026-08-27T00:31:50+02:00",
+  "reconciled_at": "2026-08-31T10:35:00+02:00",
   "scope": "Public technical repository only. Personal bankroll, receipts and private bet ledger intentionally excluded.",
   "anti_hindsight": true,
   "source_of_truth": "RADAR_UNICO_MASTER.md",
   "conclusions": {
     "contract_alignment": {
       "status": "PASS_AFTER_REPAIR",
-      "evidence_generated_at": "2026-08-26T21:39:50.111959+00:00",
-      "detail": "The regenerated readiness feed now names BetFlag/AAMS direct as the player-prop operational source and requires a unique fresh exact v7 proof at decision time. Legacy proxy policy is no longer used by the readiness generator."
+      "detail": "The regenerated readiness feed names BetFlag/AAMS direct as the player-prop operational source and requires a unique fresh exact v7 proof at decision time. Legacy proxy policy is not the current player decision path."
     },
     "data_readiness": {
       "status": "FAIL_STALE_INPUTS",
@@ -33,12 +33,7 @@
       "status": "FAIL_OPEN",
       "ledger_entries": 23,
       "outcomes_joined": 0,
-      "impact": [
-        "Brier unavailable",
-        "log-loss unavailable",
-        "calibration unavailable",
-        "player-context ablation unavailable"
-      ]
+      "impact": ["Brier unavailable", "log-loss unavailable", "calibration unavailable", "player-context ablation unavailable"]
     },
     "standard_goldbet": {
       "status": "FAIL_SOURCE_RATE_LIMIT",
@@ -64,18 +59,25 @@
     },
     "market_confirmation_model": {
       "status": "RESEARCH_SHADOW_MODE_NO_OPERATIONAL_WEIGHT"
+    },
+    "private_bet_reconciliation": {
+      "status": "OUT_OF_PUBLIC_REPO_REQUIRES_PRIVATE_REGISTER_RECONCILIATION",
+      "rule": "Never declare a complete daily personal stake, P/L or ROI from a partial subset of bets. The complete private placement manifest must be reconciled first.",
+      "public_repository_stores_personal_financial_rows": false
     }
   },
   "promotions": [],
   "rejections": [],
   "rule_changes": [
-    "BetFlag/AAMS direct v7 price path propagated successfully into generated readiness feed."
+    "BetFlag/AAMS direct v7 price path propagated into generated readiness feed.",
+    "Daily audit now explicitly blocks complete personal P/L/ROI claims until the private placement manifest is reconciled."
   ],
   "open_actions": [
     "Join authoritative outcomes without mutating immutable pre-match evidence.",
     "Instrument PRE-XI baseline, POST-XI dual lanes, origin labels and block latency.",
     "Recover GoldBet standard feed with bounded backoff and explicit last-known-good staleness.",
-    "Build development dataset and frozen temporal holdout before any MCI promotion."
+    "Build development dataset and frozen temporal holdout before any MCI promotion.",
+    "Keep private bet-ledger reconciliation separate from the public technical repository."
   ],
-  "personal_audit_note": "P/L and ROI for actual bets must be computed only in the private register from confirmed placements; this public file contains no personal financial data."
+  "personal_audit_note": "P/L and ROI for actual bets are valid only after reconciliation of the complete private register from confirmed placements; partial subsets must never be reported as the complete day."
 }
