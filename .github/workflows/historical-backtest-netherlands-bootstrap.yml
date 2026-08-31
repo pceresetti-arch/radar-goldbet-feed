@@ -1,0 +1,59 @@
+name: Historical Backtest Netherlands Bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-backtest-netherlands-bootstrap.yml'
+      - 'tools/historical_ingest_netherlands.py'
+      - 'tools/historical_build_netherlands_baseline.py'
+      - 'tools/historical_model_netherlands_structural.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-backtest-netherlands-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover and profile Netherlands historical source
+        run: python tools/historical_ingest_netherlands.py
+      - name: Build frozen Netherlands baseline
+        run: python tools/historical_build_netherlands_baseline.py
+      - name: Build Netherlands structural OOS model
+        run: python tools/historical_model_netherlands_structural.py
+      - name: Preserve generated evidence
+        run: |
+          rm -rf /tmp/netherlands-history
+          cp -R feed/historical/netherlands /tmp/netherlands-history
+      - name: Commit historical discovery evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/netherlands
+            mkdir -p feed/historical
+            cp -R /tmp/netherlands-history feed/historical/netherlands
+            git add feed/historical/netherlands
+            if git diff --cached --quiet; then
+              echo "No discovery changes"
+              exit 0
+            fi
+            git commit -m "Update Netherlands historical source discovery"
+            if git push; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          exit 1
