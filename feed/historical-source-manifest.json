@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v12",
-  "generated_at": "2026-08-31T21:36:59.212Z",
+  "schema_version": "radar-historical-source-manifest-v13",
+  "generated_at": "2026-08-31T22:40:19.530Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "NETHERLANDS_FOUR_SEASON_STRUCTURAL_OOS_COMPLETE",
+  "status": "GOLDBET_TRUE_OPEN_OBSERVED_CURRENT_JOINABILITY_AUDITED",
   "priority": [
     "Sweden",
     "Norway",
@@ -174,7 +174,7 @@
       "source_class": "GOLDBET_VIA_FLASHSCORE_HISTORICAL",
       "bookmaker": "GoldBet",
       "bookmaker_id": 188,
-      "status": "ACCEPTED_TRUE_OPEN_CERTIFIED_OBSERVED_CURRENT_NOT_CERTIFIED_CLOSE",
+      "status": "ACCEPTED_TRUE_OPEN_CERTIFIED_PREKICKOFF_OBSERVED_CURRENT_NOT_CLOSE",
       "certified_events": 642,
       "market_rows": 9188,
       "rows_with_open_current_change": 6132,
@@ -188,7 +188,19 @@
         "MULTI_SEASON_OOS_WITHOUT_OUTCOME_JOIN",
         "BETFLAG_SAME_BOOK"
       ],
-      "provenance_audit": "feed/historical/open-close-provenance-audit-v1.json"
+      "provenance_audit": "feed/historical/open-close-provenance-audit-v1.json",
+      "rows_with_exact_observed_current": 9188,
+      "pre_kickoff_observed_current_events": 642,
+      "primary_market_rows": 4931,
+      "primary_drop_ge_0_20_rows": 608,
+      "events_with_primary_drop_ge_0_20": 342,
+      "joinability_audit": "feed/historical/open-close/goldbet-true-open-joinability-audit-v2.json",
+      "quality_notes": [
+        "Every diretta_current observation is before kickoff, but the median lead time is 958.76 minutes and the range is 5.85-1,401.06 minutes.",
+        "diretta_current is a single observed price and is not certified as the last pre-kickoff close.",
+        "home_score, away_score and match_score are fuzzy identity confidence values, not final outcomes.",
+        "608 primary 1X2/FT Over rows show an active absolute drop >=0.20 across 342 events; they remain diagnostic until close and outcome joins exist."
+      ]
     },
     {
       "name": "BetFlag continuous open-close watcher snapshot",
@@ -374,7 +386,7 @@
       }
     },
     "same_book_open_close": {
-      "status": "TRUE_OPEN_AVAILABLE_CLOSE_AND_MULTI_SEASON_JOIN_PENDING",
+      "status": "TRUE_OPEN_AND_PREKICKOFF_OBSERVED_CURRENT_AVAILABLE_CERTIFIED_CLOSE_PENDING",
       "bookmaker_primary": "GoldBet",
       "required_fields": [
         "fixture_id",
@@ -389,7 +401,7 @@
         "close_timestamp",
         "price_source"
       ],
-      "note": "The Primeira/Eredivisie external Bet365 early-to-CLOSE diagnostic is fully rebuilt from clean source for 1X2 and O/U. It remains separate from GoldBet, whose 642 certified TRUE OPEN events still require exact same-book close/outcome joins."
+      "note": "GoldBet has 642 exact TRUE OPEN events and 9,188 exact observed-current rows, all observed before kickoff. The observations are not certified final closes; median lead time is 958.76 minutes. The 608 primary drops >=0.20 remain diagnostic."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_3912_ROWS",
@@ -439,11 +451,12 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "lane": "GOLDBET_EXACT_OPEN_CLOSE_OUTCOME_JOIN",
-    "goal": "Join certified GoldBet TRUE OPEN to exact last-pre-kickoff same-book closes and outcomes; do not reuse external closing benchmarks as GoldBet evidence.",
-    "prior_claim_status": "Primeira/Eredivisie 1X2 and O/U fully recovered; Eredivisie four-season structural OOS also complete under a separate frozen split.",
-    "structural_next": "Keep all four completed league holdouts frozen; expand only with the unchanged specification and a new independent league.",
+    "lane": "GOLDBET_EXACT_CLOSE_AND_OUTCOME_JOIN",
+    "goal": "Materialize separately sourced final outcomes for exact Flashscore event IDs and identify a provable last GoldBet pre-kickoff snapshot without relabelling the existing single current observation as CLOSE.",
+    "prior_claim_status": "TRUE OPEN and exact observed current verified for all 642 events; 608 primary drops across 342 events.",
+    "structural_next": "Hold all four league OOS blocks frozen.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
-    "historical_close_status": "EXTERNAL_DIAGNOSTIC_COMPLETE; GOLDBET_EXACT_JOIN_PENDING"
+    "historical_close_status": "NOT_CERTIFIED_SINGLE_OBSERVED_CURRENT_ONLY",
+    "outcome_status": "NOT_AVAILABLE_IDENTITY_CONFIDENCE_FIELDS_FORBIDDEN_AS_RESULTS"
   }
 }
