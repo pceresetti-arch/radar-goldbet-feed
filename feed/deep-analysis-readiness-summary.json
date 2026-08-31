@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T18:51:32.831179+00:00",
+  "generated_at": "2026-08-31T18:51:56.304119+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.9,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 6.3,
-    "betflag_standard_source": 6.5,
-    "betflag_player_source": 6.4,
-    "player_context": 10.1
+    "lineups": 1.3,
+    "tactical": 0.8,
+    "betflag_fixture_feed": 6.7,
+    "betflag_standard_source": 6.9,
+    "betflag_player_source": 6.8,
+    "player_context": 0.8
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -103,11 +103,11 @@
       "start_time": "31-08-2026 21:15",
       "minutes_to_start": 24.4,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 48,
       "player_quote_count": 833,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -117,11 +117,11 @@
       "start_time": "31-08-2026 21:15",
       "minutes_to_start": 24.4,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 38,
       "player_count": 56,
       "player_quote_count": 910,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -153,7 +153,7 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 1,
+  "player_lane_ready_count": 3,
   "player_lane_ready_matches": [
     {
       "match_market_id": "36351.2493",
@@ -165,6 +165,32 @@
       "player_market_bet_ready": true,
       "player_count": 42,
       "player_quote_count": 1320,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.3173",
+      "match": "Benfica - Estoril Praia",
+      "league": "Primeira Liga",
+      "start_time": "31-08-2026 21:15",
+      "minutes_to_start": 24.4,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 48,
+      "player_quote_count": 833,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
+    {
+      "match_market_id": "36351.3179",
+      "match": "Sporting Braga - Vitoria Guimaraes",
+      "league": "Primeira Liga",
+      "start_time": "31-08-2026 21:15",
+      "minutes_to_start": 24.4,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 56,
+      "player_quote_count": 910,
       "player_price_source_class": "BETFLAG_AAMS_DIRECT",
       "player_exact_price_required_at_decision_time": true
     }
