@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v4",
-  "generated_at": "2026-08-31T10:46:08.037Z",
+  "schema_version": "radar-historical-backtest-ledger-v5",
+  "generated_at": "2026-08-31T11:33:03.700Z",
   "local_timezone": "Europe/Rome",
-  "status": "SWEDEN_STRUCTURAL_OOS_COMPLETED_NO_OPERATIONAL_PROMOTION",
+  "status": "SWEDEN_NORWAY_STRUCTURAL_OOS_COMPLETED_MARKET_BENCHMARK_DOMINATES_NORWAY",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -59,7 +59,15 @@
     "primary_goldbet_mms_allowed": false,
     "note": "Four completed Allsvenskan regular seasons are normalized. Source kickoff time has no documented timezone, so UTC is not inferred and rolling features must use strictly prior dates.",
     "strictly_prior_date_feature_rows": 960,
-    "structural_oos_holdout_rows": 240
+    "structural_oos_holdout_rows": 240,
+    "eligible_norway_regular_fixture_rows": 960,
+    "norway_development_rows": 720,
+    "norway_holdout_rows": 240,
+    "norway_excluded_cross_division_playoff_rows": 6,
+    "norway_team_alias_field_corrections": 50,
+    "total_sweden_norway_regular_fixture_rows": 1920,
+    "total_external_market_close_benchmark_rows": 1920,
+    "total_structural_oos_holdout_rows": 480
   },
   "quarantined_evidence": [
     {
@@ -76,6 +84,11 @@
       "path": "feed/backtest-master-audit-latest.json",
       "classification": "TECHNICAL_AUDIT_ONLY",
       "reason": "Operational audit evidence is not a substitute for a frozen multi-season historical development/holdout dataset."
+    },
+    {
+      "path": "feed/historical/norway/structural-oos-v1.json@workflow-run-33386825923",
+      "classification": "SUPERSEDED_INVALID_FIXTURE_IDENTITY_SAMPLE",
+      "reason": "The first Norway build split Ham-Kam and HamKam, dropped 30 regular 2023 fixtures and produced a 15-team season. Its metrics are invalid and were replaced after identity correction."
     }
   ],
   "work_completed": [
@@ -96,7 +109,14 @@
     "Froze multinomial training on 2022-2024 and evaluated ELO_ONLY, ELO_PLUS_FORM and FULL_STRUCTURAL once on untouched 2025 holdout.",
     "Added 10,000-draw paired match-bootstrap diagnostics without changing model parameters after holdout inspection.",
     "Found a clear structural-model gain over the naive development prior, but no demonstrated gain over external de-vigged closing odds.",
-    "Found no reliable incremental benefit from form/goal balance/home-away/opponent-quality beyond Elo on the same holdout."
+    "Found no reliable incremental benefit from form/goal balance/home-away/opponent-quality beyond Elo on the same holdout.",
+    "Acquired and profiled Football-Data Norway with 3,518 Eliteserien rows across 2012-2026; zero missing required fixture/result fields, duplicates, inconsistent outcomes or unparsed dates.",
+    "Detected and quarantined an invalid first Norway sample caused by the same club being split as Ham-Kam and HamKam.",
+    "Canonicalized 50 Ham-Kam identity occurrences to HamKam before fixture eligibility and feature construction, restoring 16 teams and 240 regular matches in every 2022-2025 season.",
+    "Excluded six genuine promotion/relegation playoff fixtures, yielding 960 regular Eliteserien rows.",
+    "Replicated the Sweden v1 feature specification and fixed hyperparameters on Norway: 2022-2024 development (720), untouched 2025 holdout (240).",
+    "Norway structural variants beat the development-prior baseline, while external de-vigged closing odds significantly beat all structural variants.",
+    "Across Sweden and Norway, no reliable incremental OOS benefit from the full form/venue/opponent-quality bundle beyond Elo was established."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -177,6 +197,88 @@
         },
         "limitation": "Match-level diagnostic only; one league-season holdout and schedule dependence prevent operational promotion."
       }
+    },
+    "norway_structural_oos_2025": {
+      "report": "feed/historical/norway/structural-oos-v1.json",
+      "sample": {
+        "development": 720,
+        "holdout": 240,
+        "regular_total": 960,
+        "excluded_playoffs": 6
+      },
+      "data_correction": {
+        "alias_map": {
+          "Ham-Kam": "HamKam"
+        },
+        "field_corrections": 50,
+        "invalid_first_run_quarantined": true
+      },
+      "development_prior": {
+        "brier": 0.6242978395061737,
+        "log_loss": 1.0344614203087112,
+        "accuracy": 0.4875
+      },
+      "external_market_close": {
+        "brier": 0.5309813270392498,
+        "log_loss": 0.9069699760355935,
+        "accuracy": 0.6041666666666666
+      },
+      "elo_only": {
+        "brier": 0.5557614857729866,
+        "log_loss": 0.9399924502851353,
+        "accuracy": 0.5708333333333333
+      },
+      "elo_plus_form": {
+        "brier": 0.5543168120276017,
+        "log_loss": 0.9368904171157381,
+        "accuracy": 0.5916666666666667
+      },
+      "full_structural": {
+        "brier": 0.5589730866204583,
+        "log_loss": 0.944606382464597,
+        "accuracy": 0.5875
+      },
+      "paired_uncertainty_summary": {
+        "elo_plus_form_vs_prior": {
+          "brier_prior_minus_model": 0.06998102747857148,
+          "ci95": [
+            0.03965344845407367,
+            0.09992645765012767
+          ],
+          "log_loss_prior_minus_model": 0.09757100319297499,
+          "log_loss_ci95": [
+            0.056168250842021546,
+            0.13878084942301408
+          ]
+        },
+        "elo_plus_form_vs_market": {
+          "brier_market_minus_model": -0.023335484988351442,
+          "ci95": [
+            -0.03916078741393117,
+            -0.007071834395269749
+          ],
+          "log_loss_market_minus_model": -0.0299204410801445,
+          "log_loss_ci95": [
+            -0.05370161115395422,
+            -0.005425588432047846
+          ],
+          "interpretation": "Negative intervals exclude zero: the external closing benchmark has lower loss than the best structural variant on Norway 2025."
+        },
+        "full_vs_elo_only": {
+          "brier_elo_minus_full": -0.0032116008474719782,
+          "ci95": [
+            -0.012423741416843381,
+            0.005900510069214914
+          ],
+          "log_loss_elo_minus_full": -0.004613932179461296,
+          "log_loss_ci95": [
+            -0.018783651810204485,
+            0.009307687335362668
+          ],
+          "interpretation": "No reliable incremental gain from the full structural bundle."
+        },
+        "limitation": "Paired match bootstrap remains diagnostic; closing is an external near-kickoff benchmark, not a GoldBet TRUE OPEN signal or executable historical strategy."
+      }
     }
   },
   "ablation_plan": {
@@ -194,15 +296,17 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Acquire and profile Norway four-season regular-league block under the same historical contract.",
-    "market_lane": "Retain Sweden external closing odds as benchmark only; do not tune on 2025.",
-    "sweden_replication": "Freeze Sweden v1 unchanged and replicate the structural specification on a new league/season before reconsidering any module.",
+    "priority": "Freeze Sweden and Norway v1; build a pooled cross-league error/drift comparison without retuning either holdout.",
+    "market_lane": "Quantify calibration drift by league and confidence band; retain closing odds as external benchmark only.",
+    "expansion_lane": "After the frozen cross-league comparison, acquire the next Radar league with comparable four-season coverage.",
     "mms_lane": "GoldBet historical TRUE OPEN remains unavailable; no OPEN-to-CLOSE or threshold test is authorized."
   },
   "rule_decisions": {
     "promoted_rules": [],
     "rejected_rules": [
-      "Sweden v1: reject the claim that prior-five form, goal balance, venue PPG and opponent-quality features add a reliable OOS gain beyond Elo; paired 2025 intervals include zero."
+      "Sweden v1: reject the claim that prior-five form, goal balance, venue PPG and opponent-quality features add a reliable OOS gain beyond Elo; paired 2025 intervals include zero.",
+      "Cross-league Sweden+Norway v1: reject promotion of the full prior-five form/goal-balance/venue/opponent-quality bundle beyond Elo; neither 2025 holdout provides a reliable paired improvement.",
+      "Norway v1: reject any claim that a structure-only 1X2 model matches the information in the external closing market; the closing benchmark has significantly lower Brier and log-loss."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -211,8 +315,10 @@
       "Cross-division playoffs excluded from regular-season comparability.",
       "2025 frozen as temporal holdout.",
       "External average closing odds accepted only as de-vigged market benchmark.",
-      "Paired match-bootstrap uncertainty added as a diagnostic after the frozen one-shot holdout evaluation; model and hyperparameters were not changed."
+      "Paired match-bootstrap uncertainty added as a diagnostic after the frozen one-shot holdout evaluation; model and hyperparameters were not changed.",
+      "Team identity canonicalization is now an eligibility gate: league-season team counts and schedules must be reconciled before any OOS metric is accepted.",
+      "Superseded OOS reports caused by identity errors must remain explicitly quarantined rather than silently overwritten."
     ],
-    "note": "No betting threshold or operational Radar rule is promoted. Elo/structural evidence requires out-of-league or new-season replication."
+    "note": "No operational betting rule is promoted. External closing dominance is a benchmark finding, not a tradable GoldBet edge."
   }
 }
