@@ -1,0 +1,356 @@
+{
+  "schema_version": "radar-historical-sweden-structural-oos-v1",
+  "generated_at": "2026-08-31T10:40:07.371587+00:00",
+  "dataset": "feed/historical/sweden/allsvenskan-2022-2025-regular.csv",
+  "feature_dataset": "feed/historical/sweden/allsvenskan-2022-2025-features.csv",
+  "anti_hindsight": {
+    "outcomes_used_for_current_match_features": false,
+    "same_date_results_used": false,
+    "features_updated_after_complete_date_batch": true,
+    "development_seasons": [
+      "2022",
+      "2023",
+      "2024"
+    ],
+    "holdout_seasons": [
+      "2025"
+    ],
+    "holdout_used_for_training_or_tuning": false,
+    "missing_feature_imputation": "development mean only",
+    "hyperparameters": "fixed before holdout evaluation"
+  },
+  "feature_rules": {
+    "elo": {
+      "initial": 1500,
+      "k": 20.0,
+      "home_advantage": 60.0,
+      "season_mean_reversion": 0.5
+    },
+    "rolling_window_matches": 5,
+    "form": "points per game from prior five matches",
+    "goal_balance": "goals for minus against per prior match",
+    "home_away": "home team's prior home PPG minus away team's prior away PPG",
+    "opponent_quality": "mean pre-match Elo of prior five opponents"
+  },
+  "sample": {
+    "development": 720,
+    "holdout": 240
+  },
+  "ablation_same_holdout": {
+    "ELO_ONLY": {
+      "features": [
+        "elo_diff"
+      ],
+      "imputation": "DEVELOPMENT_MEAN_ONLY",
+      "standardization": {
+        "means": {
+          "elo_diff": 0.3911155306614559
+        },
+        "scales": {
+          "elo_diff": 64.28737227661989
+        }
+      },
+      "fixed_training": {
+        "l2": 0.01,
+        "learning_rate": 0.08,
+        "iterations": 1800
+      },
+      "weights_by_outcome": {
+        "H": [
+          0.35248053683920666,
+          0.3047229810276721
+        ],
+        "D": [
+          -0.3359481251990218,
+          0.03942235281396459
+        ],
+        "A": [
+          -0.016532411640188954,
+          -0.34414533384163964
+        ]
+      },
+      "holdout_metrics": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6027536529804638,
+        "multiclass_brier_class_mean": 0.20091788432682126,
+        "log_loss": 1.0061846833290886,
+        "top_pick_accuracy": 0.5041666666666667,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 16,
+            "hits": 7,
+            "mean_confidence": 0.3939933643745756,
+            "hit_rate": 0.4375
+          },
+          "0.4-0.5": {
+            "n": 97,
+            "hits": 36,
+            "mean_confidence": 0.44766554003073245,
+            "hit_rate": 0.3711340206185567
+          },
+          "0.5-0.6": {
+            "n": 74,
+            "hits": 45,
+            "mean_confidence": 0.5441161001672894,
+            "hit_rate": 0.6081081081081081
+          },
+          "0.6-0.7": {
+            "n": 40,
+            "hits": 23,
+            "mean_confidence": 0.6356824069450004,
+            "hit_rate": 0.575
+          },
+          "0.7-0.8": {
+            "n": 13,
+            "hits": 10,
+            "mean_confidence": 0.7385095526401939,
+            "hit_rate": 0.7692307692307693
+          }
+        }
+      }
+    },
+    "ELO_PLUS_FORM": {
+      "features": [
+        "elo_diff",
+        "form_ppg_diff",
+        "goal_balance_diff"
+      ],
+      "imputation": "DEVELOPMENT_MEAN_ONLY",
+      "standardization": {
+        "means": {
+          "elo_diff": 0.3911155306614559,
+          "form_ppg_diff": -0.049670433145009414,
+          "goal_balance_diff": -0.0681261770244821
+        },
+        "scales": {
+          "elo_diff": 64.28737227661989,
+          "form_ppg_diff": 0.9670030186236468,
+          "goal_balance_diff": 1.3794599770918523
+        }
+      },
+      "fixed_training": {
+        "l2": 0.01,
+        "learning_rate": 0.08,
+        "iterations": 1800
+      },
+      "weights_by_outcome": {
+        "H": [
+          0.35280433719847454,
+          0.30439944817712367,
+          -0.10638867776778052,
+          0.10634991587540864
+        ],
+        "D": [
+          -0.33618271281958395,
+          0.0034154129812771494,
+          0.07460064866389028,
+          -0.017405793122027686
+        ],
+        "A": [
+          -0.016621624378891833,
+          -0.30781486115840045,
+          0.0317880291038901,
+          -0.08894412275338101
+        ]
+      },
+      "holdout_metrics": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6020863409151239,
+        "multiclass_brier_class_mean": 0.200695446971708,
+        "log_loss": 1.0058771096406853,
+        "top_pick_accuracy": 0.5,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 19,
+            "hits": 8,
+            "mean_confidence": 0.3905315079444356,
+            "hit_rate": 0.42105263157894735
+          },
+          "0.4-0.5": {
+            "n": 97,
+            "hits": 35,
+            "mean_confidence": 0.4489772866478082,
+            "hit_rate": 0.36082474226804123
+          },
+          "0.5-0.6": {
+            "n": 72,
+            "hits": 43,
+            "mean_confidence": 0.5456526562342351,
+            "hit_rate": 0.5972222222222222
+          },
+          "0.6-0.7": {
+            "n": 40,
+            "hits": 25,
+            "mean_confidence": 0.6354699171756448,
+            "hit_rate": 0.625
+          },
+          "0.7-0.8": {
+            "n": 12,
+            "hits": 9,
+            "mean_confidence": 0.7350412675509822,
+            "hit_rate": 0.75
+          }
+        }
+      }
+    },
+    "FULL_STRUCTURAL": {
+      "features": [
+        "elo_diff",
+        "form_ppg_diff",
+        "goal_balance_diff",
+        "venue_ppg_diff",
+        "opponent_elo_diff"
+      ],
+      "imputation": "DEVELOPMENT_MEAN_ONLY",
+      "standardization": {
+        "means": {
+          "elo_diff": 0.3911155306614559,
+          "form_ppg_diff": -0.049670433145009414,
+          "goal_balance_diff": -0.0681261770244821,
+          "venue_ppg_diff": 0.38309386973180076,
+          "opponent_elo_diff": 0.3003690789731487
+        },
+        "scales": {
+          "elo_diff": 64.28737227661989,
+          "form_ppg_diff": 0.9670030186236468,
+          "goal_balance_diff": 1.3794599770918523,
+          "venue_ppg_diff": 0.9968172243056945,
+          "opponent_elo_diff": 24.74163246193785
+        }
+      },
+      "fixed_training": {
+        "l2": 0.01,
+        "learning_rate": 0.08,
+        "iterations": 1800
+      },
+      "weights_by_outcome": {
+        "H": [
+          0.35322684118110614,
+          0.3161282466822523,
+          -0.0957370229309746,
+          0.10910072375331067,
+          -0.03618714465333232,
+          0.025785163851028376
+        ],
+        "D": [
+          -0.3360228001115233,
+          -0.01299318354902458,
+          0.06663708116946092,
+          -0.015310292126488923,
+          0.034339118401200554,
+          0.02336444483233305
+        ],
+        "A": [
+          -0.017204041069584744,
+          -0.3031350631332283,
+          0.029099941761513592,
+          -0.09379043162682148,
+          0.0018480262521318135,
+          -0.049149608683361455
+        ]
+      },
+      "holdout_metrics": {
+        "n": 240,
+        "multiclass_brier_sum_mean": 0.6020058669925188,
+        "multiclass_brier_class_mean": 0.2006686223308396,
+        "log_loss": 1.0062798904627348,
+        "top_pick_accuracy": 0.49583333333333335,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 16,
+            "hits": 9,
+            "mean_confidence": 0.3908332187030497,
+            "hit_rate": 0.5625
+          },
+          "0.4-0.5": {
+            "n": 100,
+            "hits": 30,
+            "mean_confidence": 0.4499365595446782,
+            "hit_rate": 0.3
+          },
+          "0.5-0.6": {
+            "n": 71,
+            "hits": 44,
+            "mean_confidence": 0.5439502572207918,
+            "hit_rate": 0.6197183098591549
+          },
+          "0.6-0.7": {
+            "n": 41,
+            "hits": 27,
+            "mean_confidence": 0.6352351060651519,
+            "hit_rate": 0.6585365853658537
+          },
+          "0.7-0.8": {
+            "n": 12,
+            "hits": 9,
+            "mean_confidence": 0.7379526665413726,
+            "hit_rate": 0.75
+          }
+        }
+      }
+    }
+  },
+  "references": {
+    "development_prior_baseline": {
+      "n": 240,
+      "multiclass_brier_sum_mean": 0.6533333333333335,
+      "multiclass_brier_class_mean": 0.21777777777777782,
+      "log_loss": 1.075408209421105,
+      "top_pick_accuracy": 0.4,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 240,
+          "hits": 96,
+          "mean_confidence": 0.45416666666666594,
+          "hit_rate": 0.4
+        }
+      }
+    },
+    "devigged_external_average_close_benchmark": {
+      "n": 240,
+      "multiclass_brier_sum_mean": 0.5908613334036062,
+      "multiclass_brier_class_mean": 0.1969537778012021,
+      "log_loss": 0.9916574212366954,
+      "top_pick_accuracy": 0.5416666666666666,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 40,
+          "hits": 19,
+          "mean_confidence": 0.3830862750644629,
+          "hit_rate": 0.475
+        },
+        "0.4-0.5": {
+          "n": 98,
+          "hits": 46,
+          "mean_confidence": 0.4456320017945229,
+          "hit_rate": 0.46938775510204084
+        },
+        "0.5-0.6": {
+          "n": 63,
+          "hits": 41,
+          "mean_confidence": 0.5518028068130287,
+          "hit_rate": 0.6507936507936508
+        },
+        "0.6-0.7": {
+          "n": 28,
+          "hits": 15,
+          "mean_confidence": 0.646649318947066,
+          "hit_rate": 0.5357142857142857
+        },
+        "0.7-0.8": {
+          "n": 11,
+          "hits": 9,
+          "mean_confidence": 0.7493096727824539,
+          "hit_rate": 0.8181818181818182
+        }
+      }
+    }
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "promotion_gate": "NO_AUTOMATIC_PROMOTION_REQUIRES_ROBUST_IMPROVEMENT_AND_REPLICATION",
+  "mms": "NOT_TESTED_NO_GOLDBET_TRUE_OPEN"
+}
