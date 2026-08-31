@@ -1,0 +1,45 @@
+name: Historical GoldBet TRUE OPEN Join Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-goldbet-true-open-join-audit.yml'
+      - 'tools/historical_audit_goldbet_true_open_join.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-goldbet-true-open-join-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit persisted TRUE OPEN schema
+        run: python tools/historical_audit_goldbet_true_open_join.py
+      - name: Preserve audit
+        run: cp feed/historical/open-close/goldbet-true-open-schema-audit-v1.json /tmp/goldbet-audit.json
+      - name: Publish race-safe audit
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p feed/historical/open-close
+            cp /tmp/goldbet-audit.json feed/historical/open-close/goldbet-true-open-schema-audit-v1.json
+            git add feed/historical/open-close/goldbet-true-open-schema-audit-v1.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Audit GoldBet TRUE OPEN join schema"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
