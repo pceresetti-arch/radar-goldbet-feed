@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T12:57:59.087496+00:00",
+  "generated_at": "2026-08-31T13:10:33.957161+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,12 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 102,
+  "target_count": 109,
   "status_counts": {
-    "NOT_AVAILABLE": 89,
+    "NOT_AVAILABLE": 96,
     "SOURCE_CONFIRMED": 1,
-    "REFERENCE_PREVIOUS_XI": 12
+    "REFERENCE_PREVIOUS_XI": 9,
+    "LINEUP_PRESENT_UNCONFIRMED": 3
   },
   "schedule_stats": [
     {
@@ -30,7 +31,7 @@
       "start_time": "31-08-2026 15:00",
       "start_utc": "2026-08-31T13:00:00+00:00",
       "league": "Primera Division F.",
-      "minutes_to_start": 2.0,
+      "minutes_to_start": -10.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -46,15 +47,7 @@
         "historical_reference": false,
         "teams": []
       },
-      "error": null,
-      "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
-        "fotmob": null,
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.60607",
@@ -63,7 +56,7 @@
       "start_time": "31-08-2026 15:00",
       "start_utc": "2026-08-31T13:00:00+00:00",
       "league": "Premier League 2",
-      "minutes_to_start": 2.0,
+      "minutes_to_start": -10.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -79,15 +72,7 @@
         "historical_reference": false,
         "teams": []
       },
-      "error": null,
-      "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
-        "fotmob": null,
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.60606",
@@ -96,7 +81,7 @@
       "start_time": "31-08-2026 15:00",
       "start_utc": "2026-08-31T13:00:00+00:00",
       "league": "Premier League 2",
-      "minutes_to_start": 2.0,
+      "minutes_to_start": -10.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T12:29:49.810605+00:00",
@@ -130,7 +115,7 @@
                 "id": 1710985,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -375,6 +360,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -390,9 +376,9 @@
               {
                 "name": "Tyrese Warmington",
                 "id": 1859663,
-                "shirt_number": "1",
+                "shirt_number": "13",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -483,9 +469,9 @@
                 }
               },
               {
-                "name": "Alezandro Da Silva",
-                "id": 1859725,
-                "shirt_number": "8",
+                "name": "Cobi Maddox",
+                "id": 1813429,
+                "shirt_number": "6",
                 "position_id": 64,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -502,9 +488,9 @@
                 }
               },
               {
-                "name": "Cobi Maddox",
-                "id": 1813429,
-                "shirt_number": "6",
+                "name": "Alezandro Da Silva",
+                "id": 1859725,
+                "shirt_number": "8",
                 "position_id": 66,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -521,9 +507,9 @@
                 }
               },
               {
-                "name": "Finn McGreevy",
-                "id": 2133256,
-                "shirt_number": "11",
+                "name": "Salif Bamba",
+                "id": 1842683,
+                "shirt_number": "7",
                 "position_id": 83,
                 "usual_position_id": 3,
                 "horizontal_layout": {
@@ -559,9 +545,9 @@
                 }
               },
               {
-                "name": "Salif Bamba",
-                "id": 1842683,
-                "shirt_number": "7",
+                "name": "Finn McGreevy",
+                "id": 2133256,
+                "shirt_number": "11",
                 "position_id": 87,
                 "usual_position_id": 3,
                 "horizontal_layout": {
@@ -601,7 +587,7 @@
               {
                 "name": "Shea Birmingham",
                 "id": 1859723,
-                "shirt_number": "13"
+                "shirt_number": "1"
               },
               {
                 "name": "Junior Wilson",
@@ -627,6 +613,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -635,8 +622,7 @@
             ]
           }
         ],
-        "xi_fingerprint": "cad0369e633546311db1",
-        "xi_name_fingerprint": "0bd80cfe64630d219292",
+        "xi_fingerprint": "c0a681eb98e5fb268a20",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -646,19 +632,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 1000019112,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.59717",
@@ -667,7 +641,7 @@
       "start_time": "31-08-2026 15:00",
       "start_utc": "2026-08-31T13:00:00+00:00",
       "league": "1. Division Femminile",
-      "minutes_to_start": 2.0,
+      "minutes_to_start": -10.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -683,15 +657,7 @@
         "historical_reference": false,
         "teams": []
       },
-      "error": null,
-      "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
-        "fotmob": null,
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.61467",
@@ -700,7 +666,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -718,7 +684,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -733,7 +699,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -751,7 +717,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -766,7 +732,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -792,7 +758,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882064,
@@ -811,7 +777,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -837,7 +803,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882065,
@@ -856,7 +822,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -874,7 +840,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -889,7 +855,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -915,7 +881,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882066,
@@ -934,7 +900,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -952,7 +918,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -967,7 +933,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -993,7 +959,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882068,
@@ -1012,7 +978,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1030,7 +996,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1045,7 +1011,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1063,7 +1029,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1078,7 +1044,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1104,7 +1070,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882070,
@@ -1123,7 +1089,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1149,7 +1115,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882071,
@@ -1168,7 +1134,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1186,7 +1152,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1201,7 +1167,7 @@
       "start_time": "31-08-2026 15:30",
       "start_utc": "2026-08-31T13:30:00+00:00",
       "league": "Championship South",
-      "minutes_to_start": 32.0,
+      "minutes_to_start": 19.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1219,7 +1185,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1234,7 +1200,7 @@
       "start_time": "31-08-2026 15:40",
       "start_utc": "2026-08-31T13:40:00+00:00",
       "league": "Professional League",
-      "minutes_to_start": 42.0,
+      "minutes_to_start": 29.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1252,7 +1218,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1267,7 +1233,7 @@
       "start_time": "31-08-2026 15:45",
       "start_utc": "2026-08-31T13:45:00+00:00",
       "league": "Professional League",
-      "minutes_to_start": 47.0,
+      "minutes_to_start": 34.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1285,7 +1251,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1300,7 +1266,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1326,7 +1292,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949237,
@@ -1345,7 +1311,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Turchia U19",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1363,7 +1329,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1378,7 +1344,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1404,7 +1370,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953392,
@@ -1423,7 +1389,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1449,7 +1415,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5987503,
@@ -1468,7 +1434,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1486,7 +1452,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1501,7 +1467,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -2084,7 +2050,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5996702,
@@ -2103,7 +2069,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Primera Division F.",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2121,7 +2087,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -2136,7 +2102,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2162,7 +2128,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953854,
@@ -2181,7 +2147,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2207,7 +2173,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953855,
@@ -2226,7 +2192,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2252,7 +2218,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953393,
@@ -2271,7 +2237,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -2832,7 +2798,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906405,
@@ -2851,7 +2817,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2877,7 +2843,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907542,
@@ -2896,7 +2862,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2922,7 +2888,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953394,
@@ -2941,7 +2907,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2967,7 +2933,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907027,
@@ -2986,7 +2952,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3012,7 +2978,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5882067,
@@ -3031,9 +2997,9 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
-      "status": "REFERENCE_PREVIOUS_XI",
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "confirmed_at": null,
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
@@ -3051,223 +3017,113 @@
         "present": true,
         "complete_11v11": true,
         "confirmed": false,
-        "historical_reference": true,
-        "lineup_type": "lastStarting11",
-        "provider_source": "lastStartingLineups",
+        "historical_reference": false,
+        "lineup_type": "simple",
+        "provider_source": "enetpulse",
         "teams": [
           {
             "team_id": 10196,
             "team_name": "Carlisle United",
-            "formation": "4-3-2-1",
+            "formation": null,
             "starters": [
               {
                 "name": "Adam Desbois",
                 "id": 1089753,
                 "shirt_number": "1",
-                "position_id": 11,
+                "position_id": null,
                 "usual_position_id": 0,
-                "horizontal_layout": {
-                  "x": 0.1,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.1,
-                  "height": 0.192,
-                  "width": 1
-                }
-              },
-              {
-                "name": "Leo Duru",
-                "id": 1360350,
-                "shirt_number": "17",
-                "position_id": 32,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Tobias Mullarkey",
-                "id": 662353,
-                "shirt_number": "40",
-                "position_id": 34,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.625,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.375,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Brad Nicholson",
                 "id": 1081059,
                 "shirt_number": "15",
-                "position_id": 36,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.375,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.625,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Ryan Galvin",
-                "id": 1222142,
-                "shirt_number": "12",
-                "position_id": 38,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.125,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.875,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Miguel Azeez",
-                "id": 1086716,
-                "shirt_number": "6",
-                "position_id": 63,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Harvey Bunker",
-                "id": 1111415,
-                "shirt_number": "4",
-                "position_id": 65,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Jack Ellis",
                 "id": 1325817,
                 "shirt_number": "18",
-                "position_id": 67,
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Josh Williams",
+                "id": 1315308,
+                "shirt_number": "22",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Ryan Galvin",
+                "id": 1222142,
+                "shirt_number": "12",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Harvey Bunker",
+                "id": 1111415,
+                "shirt_number": "4",
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Miguel Azeez",
+                "id": 1086716,
+                "shirt_number": "6",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Stephen Wearne",
+                "id": 1201266,
+                "shirt_number": "20",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "David Ajiboye",
                 "id": 877681,
                 "shirt_number": "7",
-                "position_id": 84,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.7,
-                  "height": 0.25,
-                  "width": 0.193
-                },
-                "vertical_layout": {
-                  "x": 0.3,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.4
-                }
-              },
-              {
-                "name": "Regan Linney",
-                "id": 1118454,
-                "shirt_number": "10",
-                "position_id": 86,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.3,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.7,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.4
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Georgie Kelly",
                 "id": 621848,
                 "shirt_number": "9",
-                "position_id": 115,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.87,
-                  "height": 0.192,
-                  "width": 1
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Regan Linney",
+                "id": 1118454,
+                "shirt_number": "10",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
               }
             ],
             "bench": [
@@ -3277,19 +3133,24 @@
                 "shirt_number": "16"
               },
               {
-                "name": "Josh Williams",
-                "id": 1315308,
-                "shirt_number": "22"
+                "name": "Cameron Harper",
+                "id": 918328,
+                "shirt_number": "3"
+              },
+              {
+                "name": "Hayden Atkinson",
+                "id": 1863749,
+                "shirt_number": "21"
+              },
+              {
+                "name": "Leo Duru",
+                "id": 1360350,
+                "shirt_number": "17"
               },
               {
                 "name": "Morgan Feeney",
                 "id": 760343,
                 "shirt_number": "5"
-              },
-              {
-                "name": "Stephen Wearne",
-                "id": 1201266,
-                "shirt_number": "20"
               },
               {
                 "name": "Junior Luamba",
@@ -3300,243 +3161,127 @@
                 "name": "Luke Skinner",
                 "id": 1797583,
                 "shirt_number": "19"
-              },
-              {
-                "name": "Jonah Lowes",
-                "id": null,
-                "shirt_number": "25"
               }
             ],
             "raw_keys": [
               "id",
               "name",
-              "formation",
               "starters",
+              "coach",
               "subs",
-              "averageStarterAge",
-              "lastMatch"
+              "averageStarterAge"
             ]
           },
           {
             "team_id": 8412,
             "team_name": "Scunthorpe United",
-            "formation": "4-3-1-2",
+            "formation": null,
             "starters": [
               {
                 "name": "Louis Jones",
                 "id": 729759,
                 "shirt_number": "1",
-                "position_id": 11,
+                "position_id": null,
                 "usual_position_id": 0,
-                "horizontal_layout": {
-                  "x": 0.1,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.1,
-                  "height": 0.192,
-                  "width": 1
-                }
-              },
-              {
-                "name": "Ross Barrows",
-                "id": 806970,
-                "shirt_number": "44",
-                "position_id": 32,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Will Evans",
-                "id": 214797,
-                "shirt_number": "5",
-                "position_id": 34,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.625,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.375,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Branden Horton",
                 "id": 892903,
                 "shirt_number": "3",
-                "position_id": 36,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.375,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.625,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Ross Barrows",
+                "id": 806970,
+                "shirt_number": "44",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Tyler Denton",
                 "id": 780820,
                 "shirt_number": "33",
-                "position_id": 38,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.125,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.875,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "Patrick Jones",
-                "id": 1217899,
-                "shirt_number": "14",
-                "position_id": 63,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Joe Rowley",
-                "id": 830553,
-                "shirt_number": "11",
-                "position_id": 65,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Jordan Richards",
-                "id": 662930,
-                "shirt_number": "19",
-                "position_id": 67,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.29
-                }
+                "name": "Will Evans",
+                "id": 214797,
+                "shirt_number": "5",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Jacob Butterfield",
                 "id": 116741,
                 "shirt_number": "23",
-                "position_id": 85,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 1
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "James Gale",
-                "id": 1303744,
-                "shirt_number": "31",
-                "position_id": 104,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.7,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.3,
-                  "y": 0.87,
-                  "height": 0.192,
-                  "width": 0.4
-                }
+                "name": "Joe Rowley",
+                "id": 830553,
+                "shirt_number": "11",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Jordan Richards",
+                "id": 662930,
+                "shirt_number": "19",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Hugh Parker",
                 "id": 1640697,
                 "shirt_number": "12",
-                "position_id": 106,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.3,
-                  "height": 0.25,
-                  "width": 0.26
-                },
-                "vertical_layout": {
-                  "x": 0.7,
-                  "y": 0.87,
-                  "height": 0.192,
-                  "width": 0.4
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "James Gale",
+                "id": 1303744,
+                "shirt_number": "31",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Patrick Jones",
+                "id": 1217899,
+                "shirt_number": "14",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
               }
             ],
             "bench": [
               {
-                "name": "Maison Campbell",
-                "id": 1138332,
-                "shirt_number": "25"
+                "name": "Jean Belehouan",
+                "id": 1222159,
+                "shirt_number": "4"
               },
               {
                 "name": "Joe Starbuck",
@@ -3544,24 +3289,24 @@
                 "shirt_number": "21"
               },
               {
-                "name": "Jean Belehouan",
-                "id": 1222159,
-                "shirt_number": "4"
-              },
-              {
                 "name": "Alfie Beestin",
                 "id": 776160,
                 "shirt_number": "8"
               },
               {
-                "name": "Declan Howe",
-                "id": 1560824,
-                "shirt_number": "7"
-              },
-              {
                 "name": "Luke Brennan",
                 "id": 1113896,
                 "shirt_number": "10"
+              },
+              {
+                "name": "Danny Whitehall",
+                "id": 564845,
+                "shirt_number": "9"
+              },
+              {
+                "name": "Declan Howe",
+                "id": 1560824,
+                "shirt_number": "7"
               },
               {
                 "name": "Kyle Hurst",
@@ -3572,15 +3317,13 @@
             "raw_keys": [
               "id",
               "name",
-              "formation",
               "starters",
               "subs",
-              "averageStarterAge",
-              "lastMatch"
+              "averageStarterAge"
             ]
           }
         ],
-        "xi_fingerprint": "3dadca47a2a537e51e8f",
+        "xi_fingerprint": "5341757211e3f170acb6",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -3592,7 +3335,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906406,
@@ -3611,7 +3354,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3637,7 +3380,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907543,
@@ -3656,7 +3399,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3682,7 +3425,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948047,
@@ -3701,7 +3444,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3727,7 +3470,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907028,
@@ -3746,7 +3489,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3772,7 +3515,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953856,
@@ -3791,7 +3534,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3817,7 +3560,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907029,
@@ -3836,7 +3579,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3862,7 +3605,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948048,
@@ -3881,7 +3624,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3907,7 +3650,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907544,
@@ -3926,7 +3669,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3952,7 +3695,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948049,
@@ -3971,7 +3714,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -3997,7 +3740,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907545,
@@ -4016,9 +3759,9 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
-      "status": "REFERENCE_PREVIOUS_XI",
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "confirmed_at": null,
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
@@ -4036,223 +3779,113 @@
         "present": true,
         "complete_11v11": true,
         "confirmed": false,
-        "historical_reference": true,
-        "lineup_type": "lastStarting11",
-        "provider_source": "lastStartingLineups",
+        "historical_reference": false,
+        "lineup_type": "simple",
+        "provider_source": "enetpulse",
         "teams": [
           {
             "team_id": 161803,
             "team_name": "Eastleigh",
-            "formation": "4-2-3-1",
+            "formation": null,
             "starters": [
               {
                 "name": "Nick Townsend",
                 "id": 498522,
                 "shirt_number": "1",
-                "position_id": 11,
+                "position_id": null,
                 "usual_position_id": 0,
-                "horizontal_layout": {
-                  "x": 0.1,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.1,
-                  "height": 0.192,
-                  "width": 1
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Nick Akoto",
                 "id": 1485185,
                 "shirt_number": "14",
-                "position_id": 32,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.385
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Temi Eweka",
                 "id": 1393426,
                 "shirt_number": "6",
-                "position_id": 34,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.625,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.375,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Tommy Dobson-Ventura",
                 "id": 1527074,
                 "shirt_number": "18",
-                "position_id": 36,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.375,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.625,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Reece Johnson",
-                "id": 1797874,
-                "shirt_number": "27",
-                "position_id": 38,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.125,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.875,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Harry Sidwell",
                 "id": 1668459,
                 "shirt_number": "4",
-                "position_id": 64,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.7,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.3,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.4
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Jordan Cousins",
                 "id": 280486,
                 "shirt_number": "24",
-                "position_id": 66,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.3,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.7,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.4
-                }
-              },
-              {
-                "name": "Aaron Blair",
-                "id": 1290300,
-                "shirt_number": "11",
-                "position_id": 83,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.837,
-                  "height": 0.25,
-                  "width": 0.385
-                },
-                "vertical_layout": {
-                  "x": 0.162,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.325
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Josh Lundstram",
                 "id": 865570,
                 "shirt_number": "8",
-                "position_id": 85,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.337
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Reece Johnson",
+                "id": 1797874,
+                "shirt_number": "27",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Aaron Blair",
+                "id": 1290300,
+                "shirt_number": "11",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Max Dickov",
                 "id": 1800387,
                 "shirt_number": "7",
-                "position_id": 87,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.163,
-                  "height": 0.25,
-                  "width": 0.193
-                },
-                "vertical_layout": {
-                  "x": 0.837,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.325
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Oliver Hawkins",
                 "id": 598078,
                 "shirt_number": "12",
-                "position_id": 115,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.87,
-                  "height": 0.192,
-                  "width": 1
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               }
             ],
             "bench": [
@@ -4267,14 +3900,19 @@
                 "shirt_number": "16"
               },
               {
-                "name": "Nelson Khumbeni",
-                "id": 1089745,
-                "shirt_number": "21"
+                "name": "Ibrahim Bakare",
+                "id": 1076170,
+                "shirt_number": "5"
               },
               {
                 "name": "Will Randall",
                 "id": 526838,
                 "shirt_number": "10"
+              },
+              {
+                "name": "Nelson Khumbeni",
+                "id": 1089745,
+                "shirt_number": "21"
               },
               {
                 "name": "Dion Rankine",
@@ -4290,233 +3928,122 @@
             "raw_keys": [
               "id",
               "name",
-              "formation",
               "starters",
+              "coach",
               "subs",
-              "averageStarterAge",
-              "lastMatch"
+              "averageStarterAge"
             ]
           },
           {
             "team_id": 8465,
             "team_name": "Aldershot Town",
-            "formation": "4-3-3",
+            "formation": null,
             "starters": [
               {
                 "name": "Nick Hayes",
                 "id": 1184510,
                 "shirt_number": "1",
-                "position_id": 11,
+                "position_id": null,
                 "usual_position_id": 0,
-                "horizontal_layout": {
-                  "x": 0.1,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.2
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.1,
-                  "height": 0.2,
-                  "width": 1
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Kiki Oshilaja",
                 "id": 1581080,
                 "shirt_number": "5",
-                "position_id": 32,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Michael Stickland",
                 "id": 1209498,
                 "shirt_number": "12",
-                "position_id": 34,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.625,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.375,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Tyrese Dyce",
-                "id": 1187272,
-                "shirt_number": "17",
-                "position_id": 36,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.375,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.625,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Sashiel Adom-Malaki",
-                "id": 1529400,
-                "shirt_number": "18",
-                "position_id": 38,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.125,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.875,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Michee Efete",
                 "id": 789591,
                 "shirt_number": "2",
-                "position_id": 73,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.613,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.613,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "Conor Lawless",
-                "id": 1126174,
-                "shirt_number": "23",
-                "position_id": 75,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.613,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.613,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "name": "Sashiel Adom-Malaki",
+                "id": 1529400,
+                "shirt_number": "18",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Tyrese Dyce",
+                "id": 1187272,
+                "shirt_number": "17",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Dominic Odusanya",
                 "id": 1224723,
                 "shirt_number": "6",
-                "position_id": 77,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.613,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.613,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Basil Tuma",
                 "id": 1330875,
                 "shirt_number": "10",
-                "position_id": 103,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.87,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Conor Lawless",
+                "id": 1126174,
+                "shirt_number": "23",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Marcus Dinanga",
                 "id": 816396,
                 "shirt_number": "9",
-                "position_id": 105,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.87,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Tristan Abrahams",
                 "id": 828710,
                 "shirt_number": "7",
-                "position_id": 107,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.87,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               }
             ],
             "bench": [
               {
-                "name": "Charlie Patmore",
-                "id": 2120246,
-                "shirt_number": "13"
+                "name": "Elijah Oladunjoye",
+                "id": 1921511,
+                "shirt_number": "24"
               },
               {
                 "name": "Jack Matton",
@@ -4524,9 +4051,14 @@
                 "shirt_number": "16"
               },
               {
-                "name": "Elijah Oladunjoye",
-                "id": 1921511,
-                "shirt_number": "24"
+                "name": "Brody Peart",
+                "id": 1587811,
+                "shirt_number": "21"
+              },
+              {
+                "name": "Jordan Alves",
+                "id": 1415498,
+                "shirt_number": "27"
               },
               {
                 "name": "Kwaku Frimpong",
@@ -4534,33 +4066,27 @@
                 "shirt_number": "15"
               },
               {
-                "name": "Brody Peart",
-                "id": 1587811,
-                "shirt_number": "21"
+                "name": "Hakeem Sandah",
+                "id": 1692217,
+                "shirt_number": "11"
               },
               {
                 "name": "Marcus Wyllie",
                 "id": 1416719,
                 "shirt_number": "20"
-              },
-              {
-                "name": "Jordan Kane Alves",
-                "id": null,
-                "shirt_number": "27"
               }
             ],
             "raw_keys": [
               "id",
               "name",
-              "formation",
               "starters",
+              "coach",
               "subs",
-              "averageStarterAge",
-              "lastMatch"
+              "averageStarterAge"
             ]
           }
         ],
-        "xi_fingerprint": "a8cb09cc92f34ee06633",
+        "xi_fingerprint": "f4f4566911706f51136c",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -4572,7 +4098,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906407,
@@ -4591,7 +4117,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -4617,7 +4143,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949236,
@@ -4636,7 +4162,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -4662,7 +4188,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5204231,
@@ -4681,7 +4207,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -4707,7 +4233,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907547,
@@ -4726,7 +4252,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -4752,7 +4278,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907548,
@@ -4771,7 +4297,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -5333,7 +4859,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906409,
@@ -5352,7 +4878,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -5378,7 +4904,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953857,
@@ -5397,7 +4923,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -5423,7 +4949,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949235,
@@ -5442,7 +4968,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -5468,7 +4994,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953858,
@@ -5487,7 +5013,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -5513,7 +5039,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907549,
@@ -5532,7 +5058,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -5558,7 +5084,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953859,
@@ -5577,7 +5103,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -5603,7 +5129,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907030,
@@ -5622,9 +5148,9 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
-      "status": "REFERENCE_PREVIOUS_XI",
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "confirmed_at": null,
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
@@ -5642,250 +5168,125 @@
         "present": true,
         "complete_11v11": true,
         "confirmed": false,
-        "historical_reference": true,
-        "lineup_type": "lastStarting11",
-        "provider_source": "lastStartingLineups",
+        "historical_reference": false,
+        "lineup_type": "simple",
+        "provider_source": "enetpulse",
         "teams": [
           {
             "team_id": 7946,
             "team_name": "Harrogate Town",
-            "formation": "3-4-2-1",
+            "formation": null,
             "starters": [
               {
-                "name": "Mark Oxley",
-                "id": 109262,
-                "shirt_number": "1",
-                "position_id": 11,
+                "name": "Rory Watson",
+                "id": 592890,
+                "shirt_number": "30",
+                "position_id": null,
                 "usual_position_id": 0,
-                "horizontal_layout": {
-                  "x": 0.1,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.1,
-                  "height": 0.192,
-                  "width": 1
-                }
-              },
-              {
-                "name": "Lewis Cass",
-                "id": 961344,
-                "shirt_number": "24",
-                "position_id": 33,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Archie Baptiste",
                 "id": 1621132,
                 "shirt_number": "4",
-                "position_id": 35,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Lewis Cass",
+                "id": 961344,
+                "shirt_number": "24",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Tom Bradbury",
                 "id": 1005800,
                 "shirt_number": "5",
-                "position_id": 37,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.292,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.292,
-                  "height": 0.192,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "Lewis Payne",
-                "id": 1236349,
-                "shirt_number": "2",
-                "position_id": 62,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "name": "Warren Burrell",
+                "id": 127653,
+                "shirt_number": "6",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Bailey Hobson",
                 "id": 1299127,
                 "shirt_number": "15",
-                "position_id": 64,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.625,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.375,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Brayden Johnson",
-                "id": 1692310,
-                "shirt_number": "25",
-                "position_id": 66,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.375,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.625,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Ethan Bristow",
                 "id": 1113767,
                 "shirt_number": "3",
-                "position_id": 68,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.125,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.875,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "George Thomson",
-                "id": 612736,
-                "shirt_number": "7",
-                "position_id": 84,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.7,
-                  "height": 0.25,
-                  "width": 0.193
-                },
-                "vertical_layout": {
-                  "x": 0.3,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.4
-                }
+                "name": "Josh Hmami",
+                "id": 883050,
+                "shirt_number": "17",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "Brad Dolaghan",
-                "id": 1622892,
-                "shirt_number": "23",
-                "position_id": 86,
+                "name": "Morgan Williams",
+                "id": 1338974,
+                "shirt_number": "14",
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.3,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.7,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.4
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Will McGowan",
+                "id": 1315913,
+                "shirt_number": "11",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Shawn McCoulsky",
                 "id": 778775,
                 "shirt_number": "9",
-                "position_id": 105,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.87,
-                  "height": 0.192,
-                  "width": 1
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               }
             ],
             "bench": [
               {
-                "name": "Rory Watson",
-                "id": 592890,
-                "shirt_number": "30"
+                "name": "Mark Oxley",
+                "id": 109262,
+                "shirt_number": "1"
               },
               {
-                "name": "Warren Burrell",
-                "id": 127653,
-                "shirt_number": "6"
-              },
-              {
-                "name": "Josh Hmami",
-                "id": 883050,
-                "shirt_number": "17"
-              },
-              {
-                "name": "Morgan Williams",
-                "id": 1338974,
-                "shirt_number": "14"
-              },
-              {
-                "name": "Will McGowan",
-                "id": 1315913,
-                "shirt_number": "11"
+                "name": "Grant Horton",
+                "id": 1081234,
+                "shirt_number": "26"
               },
               {
                 "name": "Oliver Pimlott",
@@ -5893,285 +5294,151 @@
                 "shirt_number": "22"
               },
               {
+                "name": "Brad Dolaghan",
+                "id": 1622892,
+                "shirt_number": "23"
+              },
+              {
+                "name": "Lucas Barnes",
+                "id": 1702709,
+                "shirt_number": "29"
+              },
+              {
                 "name": "Ciaran McGuckin",
                 "id": 1410178,
                 "shirt_number": "35"
+              },
+              {
+                "name": "George Thomson",
+                "id": 612736,
+                "shirt_number": "7"
               }
             ],
             "raw_keys": [
               "id",
               "name",
-              "formation",
               "starters",
+              "coach",
               "subs",
-              "averageStarterAge",
-              "lastMatch"
+              "averageStarterAge"
             ]
           },
           {
             "team_id": 6189,
             "team_name": "Gateshead FC",
-            "formation": "4-3-3",
+            "formation": null,
             "starters": [
               {
                 "name": "Pete Jameson",
                 "id": 813058,
                 "shirt_number": "12",
-                "position_id": 11,
+                "position_id": null,
                 "usual_position_id": 0,
-                "horizontal_layout": {
-                  "x": 0.1,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.2
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.1,
-                  "height": 0.2,
-                  "width": 1
-                }
-              },
-              {
-                "name": "Keon Lewis-Burgess",
-                "id": 1589621,
-                "shirt_number": "38",
-                "position_id": 32,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.875,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.125,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
-              },
-              {
-                "name": "Kyle Ferguson",
-                "id": 774514,
-                "shirt_number": "24",
-                "position_id": 34,
-                "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.625,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.375,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Alex Lankshear",
                 "id": 1327407,
                 "shirt_number": "5",
-                "position_id": 36,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.375,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.625,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Jack Robinson",
                 "id": 970945,
                 "shirt_number": "6",
-                "position_id": 38,
+                "position_id": 1,
                 "usual_position_id": 1,
-                "horizontal_layout": {
-                  "x": 0.357,
-                  "y": 0.125,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.875,
-                  "y": 0.357,
-                  "height": 0.2,
-                  "width": 0.25
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "Josh Home",
-                "id": 1599679,
-                "shirt_number": "4",
-                "position_id": 73,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.613,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.613,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "name": "Keon Lewis-Burgess",
+                "id": 1589621,
+                "shirt_number": "38",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
-                "name": "Rocco Coyle",
-                "id": 1559570,
-                "shirt_number": "17",
-                "position_id": 75,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.613,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.613,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "name": "Kyle Ferguson",
+                "id": 774514,
+                "shirt_number": "24",
+                "position_id": 1,
+                "usual_position_id": 1,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Fenton John",
                 "id": 1251290,
                 "shirt_number": "20",
-                "position_id": 77,
+                "position_id": 2,
                 "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.613,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.613,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Josh Home",
+                "id": 1599679,
+                "shirt_number": "4",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Rocco Coyle",
+                "id": 1559570,
+                "shirt_number": "17",
+                "position_id": 2,
+                "usual_position_id": 2,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "Billy Chadwick",
+                "id": 1186442,
+                "shirt_number": "23",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
+              },
+              {
+                "name": "David Eguaibor",
+                "id": 1649657,
+                "shirt_number": "27",
+                "position_id": 3,
+                "usual_position_id": 3,
+                "horizontal_layout": null,
+                "vertical_layout": null
               },
               {
                 "name": "Michael Spellman",
                 "id": 1384552,
                 "shirt_number": "21",
-                "position_id": 103,
+                "position_id": 3,
                 "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.79,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.21,
-                  "y": 0.87,
-                  "height": 0.2,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Ashley Boatswain",
-                "id": 1613563,
-                "shirt_number": "14",
-                "position_id": 105,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.87,
-                  "height": 0.2,
-                  "width": 0.29
-                }
-              },
-              {
-                "name": "Luke Supyk",
-                "id": 1562969,
-                "shirt_number": "19",
-                "position_id": 107,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.87,
-                  "y": 0.21,
-                  "height": 0.25,
-                  "width": 0.257
-                },
-                "vertical_layout": {
-                  "x": 0.79,
-                  "y": 0.87,
-                  "height": 0.2,
-                  "width": 0.29
-                }
+                "horizontal_layout": null,
+                "vertical_layout": null
               }
             ],
-            "bench": [
-              {
-                "name": "Daniel Robert Cameron",
-                "id": 1683897,
-                "shirt_number": "31"
-              },
-              {
-                "name": "Ben Williams",
-                "id": 1207580,
-                "shirt_number": "18"
-              },
-              {
-                "name": "David Ferguson",
-                "id": 304119,
-                "shirt_number": "3"
-              },
-              {
-                "name": "Joshua Anifowose",
-                "id": 1206272,
-                "shirt_number": "11"
-              },
-              {
-                "name": "Sam Bowen",
-                "id": 1123266,
-                "shirt_number": "8"
-              },
-              {
-                "name": "Billy Chadwick",
-                "id": 1186442,
-                "shirt_number": "23"
-              },
-              {
-                "name": "David Didi Eguaibor",
-                "id": null,
-                "shirt_number": "27"
-              }
-            ],
+            "bench": [],
             "raw_keys": [
               "id",
               "name",
-              "formation",
               "starters",
-              "subs",
-              "averageStarterAge",
-              "lastMatch"
+              "coach",
+              "averageStarterAge"
             ]
           }
         ],
-        "xi_fingerprint": "585fee185be43daec23e",
+        "xi_fingerprint": "327d225d231a941c1104",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -6183,7 +5450,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906410,
@@ -6202,7 +5469,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6228,7 +5495,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949234,
@@ -6247,7 +5514,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6273,7 +5540,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949233,
@@ -6292,7 +5559,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6318,7 +5585,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953395,
@@ -6337,7 +5604,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -6898,7 +6165,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906411,
@@ -6917,7 +6184,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6943,7 +6210,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907031,
@@ -6962,7 +6229,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -6988,7 +6255,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948050,
@@ -7007,7 +6274,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7033,7 +6300,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949232,
@@ -7052,7 +6319,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7078,7 +6345,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948051,
@@ -7097,7 +6364,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7123,7 +6390,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907032,
@@ -7142,7 +6409,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7168,7 +6435,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907550,
@@ -7187,7 +6454,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7213,7 +6480,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953860,
@@ -7232,7 +6499,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7258,7 +6525,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953396,
@@ -7277,7 +6544,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7303,7 +6570,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953861,
@@ -7322,7 +6589,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7348,7 +6615,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907033,
@@ -7367,7 +6634,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7393,7 +6660,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948052,
@@ -7412,7 +6679,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7438,7 +6705,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953398,
@@ -7457,7 +6724,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7483,7 +6750,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953399,
@@ -7502,7 +6769,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7528,7 +6795,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953400,
@@ -7547,7 +6814,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7573,7 +6840,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907551,
@@ -7592,7 +6859,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -7618,7 +6885,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953862,
@@ -7637,7 +6904,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -8198,7 +7465,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906412,
@@ -8217,8 +7484,8 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "minutes_to_start": 49.4,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
       "retained_from_previous": false,
@@ -8243,7 +7510,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907035,
@@ -8262,7 +7529,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -8288,7 +7555,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907034,
@@ -8307,7 +7574,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -8333,7 +7600,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907036,
@@ -8352,7 +7619,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -8378,7 +7645,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948053,
@@ -8397,7 +7664,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -8423,7 +7690,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949230,
@@ -8442,7 +7709,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -9003,7 +8270,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906413,
@@ -9022,7 +8289,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9048,7 +8315,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907026,
@@ -9067,7 +8334,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9093,7 +8360,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948054,
@@ -9112,7 +8379,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9138,7 +8405,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907552,
@@ -9157,7 +8424,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Campionato U23",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9175,7 +8442,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -9190,7 +8457,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9216,7 +8483,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953863,
@@ -9235,7 +8502,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9261,7 +8528,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949229,
@@ -9280,7 +8547,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9306,7 +8573,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953397,
@@ -9325,7 +8592,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference South",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9351,7 +8618,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907553,
@@ -9370,7 +8637,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Northern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9396,7 +8663,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5949228,
@@ -9415,7 +8682,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9441,7 +8708,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948055,
@@ -9460,7 +8727,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Isthmian League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -9486,7 +8753,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5948056,
@@ -9505,7 +8772,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -10066,7 +9333,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906414,
@@ -10085,7 +9352,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -10111,7 +9378,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953402,
@@ -10130,7 +9397,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference North",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -10156,7 +9423,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5907037,
@@ -10175,7 +9442,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -10731,7 +9998,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906415,
@@ -10750,7 +10017,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Southern League",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -10776,7 +10043,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5953864,
@@ -10795,7 +10062,7 @@
       "start_time": "31-08-2026 16:00",
       "start_utc": "2026-08-31T14:00:00+00:00",
       "league": "Conference National",
-      "minutes_to_start": 62.0,
+      "minutes_to_start": 49.4,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "REFERENCE_PREVIOUS_XI",
       "confirmed_at": null,
@@ -11356,7 +10623,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-08-31T12:57:59.087496+00:00",
+        "polled_at": "2026-08-31T13:10:33.957161+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5906416,
@@ -11367,16 +10634,231 @@
           "error": "EVENT_NOT_MATCHED"
         }
       }
+    },
+    {
+      "match_market_id": "36361.52654",
+      "match_event_id": 16073759,
+      "match": "Bukovyna Chernivtsi - Dynamo Kiev",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "Premier League",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5909137,
+        "home": "Bukovyna Chernivtsi",
+        "away": "Dynamo Kyiv",
+        "league": "Premier League",
+        "score": 0.8453,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36351.832",
+      "match_event_id": 16080945,
+      "match": "FC Gagra - Iberia",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "Umaglesi Liga",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5165355,
+        "home": "FC Gagra",
+        "away": "Iberia 1999",
+        "league": "Erovnuli Liga",
+        "score": 0.8721,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36351.2291",
+      "match_event_id": 16081012,
+      "match": "GFK Tikvesh 1930 - FK Vardar Skopje",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "Prva Liga",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5804928,
+        "home": "GFK Tikves Kavadarci",
+        "away": "FK Vardar Skopje",
+        "league": "Prva Liga",
+        "score": 0.7527,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36362.4896",
+      "match_event_id": 16079689,
+      "match": "Graficar Beograd - GFK Dubocica",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "Prva Liga",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": null,
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36362.18612",
+      "match_event_id": 16081028,
+      "match": "Kutaisi - Meshakhte Tkibuli",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "Umaglesi Liga",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5165354,
+        "home": "Torpedo Kutaisi",
+        "away": "FC Meshakhte Tkibuli",
+        "league": "Erovnuli Liga",
+        "score": 0.8536,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36362.34133",
+      "match_event_id": 16083679,
+      "match": "Maribor - NK Bravo Publikum",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "U19",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": null,
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": []
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36361.27150",
+      "match_event_id": 16062474,
+      "match": "OFK MALZENICE - MFk Bytca",
+      "start_time": "31-08-2026 17:00",
+      "start_utc": "2026-08-31T15:00:00+00:00",
+      "league": "2.Liga",
+      "minutes_to_start": 109.4,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5820724,
+        "home": "Malženice",
+        "away": "MFK Bytca",
+        "league": "2. Liga",
+        "score": 0.9021,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
     }
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T12:57:59.087496+00:00",
+    "generated_at": "2026-08-31T13:10:33.957161+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 102,
+    "target_count": 98,
     "sources": [
       "FotMob",
       "Sofascore"
