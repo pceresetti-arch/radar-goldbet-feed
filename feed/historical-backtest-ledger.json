@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v8",
-  "generated_at": "2026-08-31T14:45:44.736Z",
+  "schema_version": "radar-historical-backtest-ledger-v9",
+  "generated_at": "2026-08-31T15:48:38Z",
   "local_timezone": "Europe/Rome",
-  "status": "TRUE_OPEN_PROVENANCE_RESTORED_CLOSE_OUTCOME_JOIN_PENDING",
+  "status": "PRIOR_OPEN_CLOSE_AGGREGATE_RECOVERED_RAW_ROWS_PENDING",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -83,7 +83,11 @@
     "betflag_watcher_quote_keys": 11166,
     "betflag_open_radar_certified_quotes": 1802,
     "betflag_first_seen_only_quotes": 9364,
-    "betflag_certified_close_quotes": 0
+    "betflag_certified_close_quotes": 0,
+    "recovered_primeira_eredivisie_holdout_fixtures_each": 612,
+    "recovered_primeira_eredivisie_fixture_equivalent_total": 1224,
+    "recovered_primeira_eredivisie_raw_match_rows": 0,
+    "recovered_primeira_eredivisie_status": "AGGREGATE_AND_METHOD_EVIDENCE_RECOVERED_RAW_V1_47_INPUT_MISSING"
   },
   "quarantined_evidence": [
     {
@@ -148,7 +152,11 @@
     "Corrected the false categorical statement that no TRUE OPEN history exists.",
     "Inventoried 642 TRUE_OPEN_CERTIFIED GoldBet events and 9,188 market rows from Diretta/Flashscore; 6,132 rows contain an opening-to-observed-current change.",
     "Inventoried the BetFlag watcher separately: 392 events, 11,166 quote keys, 1,802 OPEN_RADAR_CERTIFIED and 9,364 FIRST_SEEN_ONLY; the persisted snapshot contains zero certified closes.",
-    "Recorded the previously reported 612-match Primeira Liga/Eredivisie result as pending artifact recovery rather than erasing or re-verifying it without its dataset."
+    "Recorded the previously reported 612-match Primeira Liga/Eredivisie result as pending artifact recovery rather than erasing or re-verifying it without its dataset.",
+    "Recovered the Primeira Liga/Eredivisie v1.47 published table, v1.77 two-holdout synthesis, v1.84 precision budget and synthesis code from archived Backtest Master packages.",
+    "Verified byte-identical v1.77 result and code across five package copies using SHA-256; this proves artifact preservation, not independent replication.",
+    "Corrected a material metric conflation: +13.66% CLV is the 2024/25 1X2 >=2pp cell, while +9.20% early ROI is the 2025/26 O/U 2.5 >=3pp cell.",
+    "Classified the recovered sample as EXTERNAL_CROSS_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC, not GoldBet TRUE OPEN, because it uses Bet365 early price plus market-average confirmation and CLOSE-conditioned selection."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -525,9 +533,29 @@
         "certified_close": 0
       },
       "prior_612_match_claim": {
-        "status": "UNVERIFIED_PENDING_ARTIFACT_RECOVERY",
-        "metrics_not_promoted": true
+        "status": "RECOVERED_AGGREGATE_AND_METHOD_EVIDENCE_RAW_V1_47_ROWS_MISSING",
+        "evidence": "feed/historical/open-close/primeira-eredivisie-recovered-v1.json",
+        "holdouts": 2,
+        "fixtures_per_holdout": 612,
+        "fixture_equivalent_total": 1224,
+        "metrics_promoted": false,
+        "reason": "All pooled ROI intervals include zero and selection uses later CLOSE information; raw match rows/timestamps are not recovered."
       }
+    },
+    "recovered_primeira_eredivisie_open_close": {
+      "evidence": "feed/historical/open-close/primeira-eredivisie-recovered-v1.json",
+      "source_class": "EXTERNAL_CROSS_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC",
+      "pooled_roi_1x2_2pp": 0.044936577114573543,
+      "pooled_roi_1x2_2pp_ci95": [
+        -0.06578309846515207,
+        0.15565625269429914
+      ],
+      "pooled_roi_ou25_3pp": 0.06868353732302462,
+      "pooled_roi_ou25_3pp_ci95": [
+        -0.030948560674440975,
+        0.1683156353204902
+      ],
+      "threshold_promotion": false
     }
   },
   "ablation_plan": {
@@ -545,10 +573,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Recover or reconstruct by provenance join—not price invention—the prior Primeira Liga/Eredivisie OPEN-to-CLOSE artifact; in parallel map certified 2026 GoldBet TRUE OPEN events to real pre-kickoff closes and outcomes when exact joins exist.",
+    "priority": "Recover the v1.47 row-level Primeira Liga/Eredivisie inputs and raw timestamps; until then preserve the recovered aggregate as diagnostic. Separately continue exact GoldBet TRUE_OPEN-to-last-pre-kickoff-close-to-outcome joins.",
     "structural_lane": "Keep Sweden, Norway and Denmark holdouts frozen; Netherlands acquisition follows after the OPEN provenance correction is stabilized.",
-    "market_lane": "Separate TRUE_OPEN_CERTIFIED, OPEN_RADAR_CERTIFIED and FIRST_SEEN; accept only observed close timestamps as CLOSE.",
-    "mms_lane": "TRUE OPEN is available. Historical threshold/ROI testing remains pending because certified CLOSE plus outcome joins are not yet materialized on the eligible sample."
+    "market_lane": "Keep recovered Bet365/market-average early-to-CLOSE evidence separate from GoldBet TRUE_OPEN and BetFlag watcher histories.",
+    "mms_lane": "The prior 1,224-fixture aggregate is recovered but no threshold is robust or executable. GoldBet MMS requires its own certified same-book OPEN/CLOSE/outcome join."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -559,7 +587,8 @@
       "Cross-league Sweden+Norway v1: reject promotion of the full prior-five form/goal-balance/venue/opponent-quality bundle beyond Elo; neither 2025 holdout provides a reliable paired improvement.",
       "Norway v1: reject any claim that a structure-only 1X2 model matches the information in the external closing market; the closing benchmark has significantly lower Brier and log-loss.",
       "Pooled Sweden+Norway: reject promotion of prior-five form as an incremental module beyond Elo; paired intervals include zero.",
-      "Pooled Sweden+Norway: reject the full structural bundle as an improvement over Elo; point estimates are worse and paired intervals include zero."
+      "Pooled Sweden+Norway: reject the full structural bundle as an improvement over Elo; point estimates are worse and paired intervals include zero.",
+      "Primeira Liga+Eredivisie v1.47/v1.77: reject promotion of every 1X2 and O/U 2.5 threshold; all pooled early-ROI intervals include zero, results are league-heterogeneous, and selection is CLOSE-conditioned."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -573,7 +602,8 @@
       "Superseded OOS reports caused by identity errors must remain explicitly quarantined rather than silently overwritten.",
       "Classwise probability calibration is mandatory when an outcome is never the argmax; top-pick accuracy alone cannot diagnose probabilistic failure.",
       "League-specific drift must be reported before pooling closing-market benchmarks.",
-      "Expensive historical evidence generation is separated from fast race-safe publication to avoid interference from operational feed commits."
+      "Expensive historical evidence generation is separated from fast race-safe publication to avoid interference from operational feed commits.",
+      "Archived aggregate evidence is recoverable and hashable, but cannot be labelled row-level reproducible until the original match inputs and raw timestamps are recovered."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
