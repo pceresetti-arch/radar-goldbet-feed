@@ -106,7 +106,8 @@ jobs:
               'feed/betflag-movement-index.json',
               'feed/betflag-residential-hot-feed.json',
               'feed/betflag-live-status.json',
-              'feed/betflag-residential-fixtures-index.json'
+              'feed/betflag-residential-fixtures-index.json',
+              'feed/betflag-fixtures-index.json'
             )
 
             foreach ($rel in $files) {
@@ -117,12 +118,15 @@ jobs:
               Copy-Item $src $dst -Force
             }
 
-            $srcFixtures = Join-Path $workspace 'feed/betflag-residential-fixtures'
-            $dstFixtures = Join-Path $publishRoot 'feed/betflag-residential-fixtures'
-            if (-not (Test-Path $srcFixtures)) { throw 'Missing generated BetFlag fixture directory' }
-            Remove-Item $dstFixtures -Recurse -Force -ErrorAction SilentlyContinue
-            New-Item -ItemType Directory -Force -Path $dstFixtures | Out-Null
-            Copy-Item (Join-Path $srcFixtures '*') $dstFixtures -Recurse -Force
+            $fixtureDirs = @('betflag-residential-fixtures','betflag-fixtures')
+            foreach ($dirName in $fixtureDirs) {
+              $srcFixtures = Join-Path $workspace ("feed/" + $dirName)
+              $dstFixtures = Join-Path $publishRoot ("feed/" + $dirName)
+              if (-not (Test-Path $srcFixtures)) { throw "Missing generated BetFlag fixture directory: $dirName" }
+              Remove-Item $dstFixtures -Recurse -Force -ErrorAction SilentlyContinue
+              New-Item -ItemType Directory -Force -Path $dstFixtures | Out-Null
+              Copy-Item (Join-Path $srcFixtures '*') $dstFixtures -Recurse -Force
+            }
 
             $watchRel = 'feed/betflag-open-close-watch.json'
             $watchSrc = Join-Path $workspace $watchRel
@@ -136,7 +140,7 @@ jobs:
             try {
               git config user.name "radar-betflag-residential-bot"
               git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
-              git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures
+              git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures feed/betflag-fixtures-index.json feed/betflag-fixtures
               if (Test-Path $watchRel) { git add $watchRel }
 
               git diff --cached --quiet
