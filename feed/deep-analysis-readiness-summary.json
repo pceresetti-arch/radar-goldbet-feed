@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-31T00:23:37.720492+00:00",
+  "generated_at": "2026-08-31T00:26:13.511010+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 8.2,
-    "tactical": 7.8,
-    "betflag_fixture_feed": 3.9,
-    "betflag_standard_source": 4.0,
-    "betflag_player_source": 4.0,
+    "lineups": 0.9,
+    "tactical": 0.6,
+    "betflag_fixture_feed": 6.5,
+    "betflag_standard_source": 6.6,
+    "betflag_player_source": 6.6,
     "player_context": 0.5
   },
   "freshness_limits_minutes": {
@@ -33,13 +33,42 @@
     "exact_proof_required_at_decision_time": true
   },
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
-  "match_count": 10,
+  "match_count": 6,
   "readiness_counts": {
-    "WAIT_BETFLAG_FIXTURE_MAPPING": 4,
-    "WAIT_OFFICIAL_STANDARD_XI": 6
+    "READY_DEEP_ANALYSIS": 1,
+    "WAIT_OFFICIAL_STANDARD_XI": 5
   },
-  "ready_count": 0,
-  "ready_matches": [],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "ready_count": 1,
+  "ready_matches": [
+    {
+      "match_market_id": "36351.10407",
+      "match": "Independiente Rivadavia - Racing",
+      "league": "Primera Division",
+      "start_time": "31-08-2026 02:30",
+      "minutes_to_start": 4.7,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
+      "betflag_standard_count": 35,
+      "player_count": 58,
+      "player_quote_count": 446,
+      "player_lane_ready": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    }
+  ],
+  "player_lane_ready_count": 1,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36351.10407",
+      "match": "Independiente Rivadavia - Racing",
+      "league": "Primera Division",
+      "start_time": "31-08-2026 02:30",
+      "minutes_to_start": 4.7,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 58,
+      "player_quote_count": 446,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
