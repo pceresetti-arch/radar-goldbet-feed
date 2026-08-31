@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-08-31T12:19:49.062545+00:00",
+  "generated_at": "2026-08-31T12:29:50.141691+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-08-31T12:16:24.165712+00:00",
-      "finished_at": "2026-08-31T12:16:52.655236+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 18,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T12:17:27.655376+00:00",
-      "finished_at": "2026-08-31T12:17:27.876772+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 18,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T12:18:02.877116+00:00",
-      "finished_at": "2026-08-31T12:18:03.217663+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 18,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T12:18:38.218030+00:00",
-      "finished_at": "2026-08-31T12:18:38.448296+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 18,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T12:19:13.448656+00:00",
-      "finished_at": "2026-08-31T12:19:13.827885+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 18,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-08-31T12:19:48.828289+00:00",
-      "finished_at": "2026-08-31T12:19:49.062300+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 18,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-08-31T12:29:07.228436+00:00",
+      "finished_at": "2026-08-31T12:29:50.141647+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 19,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-31T12:29:50.140506+00:00",
+          "match": "Tottenham - Birmingham",
+          "league": "Premier League 2",
+          "start_time": "31-08-2026 15:00",
+          "minutes_to_start": 30.2,
+          "match_market_id": "36361.60606",
+          "match_event_id": 16077424,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000019112,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "20ad25a6acec588461db",
+          "current_xi_fingerprint": "db928a78639293fc85d8",
+          "confirmed_at": "2026-08-31T12:29:49.810605+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-08-31T12:29:50.140506+00:00",
+          "match": "Tottenham - Birmingham",
+          "league": "Premier League 2",
+          "start_time": "31-08-2026 15:00",
+          "minutes_to_start": 30.2,
+          "match_market_id": "36361.60606",
+          "match_event_id": 16077424,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000019112,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "20ad25a6acec588461db",
+          "current_xi_fingerprint": "db928a78639293fc85d8",
+          "confirmed_at": "2026-08-31T12:29:49.810605+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-31T12:29:50.140506+00:00",
+      "match": "Tottenham - Birmingham",
+      "league": "Premier League 2",
+      "start_time": "31-08-2026 15:00",
+      "minutes_to_start": 30.2,
+      "match_market_id": "36361.60606",
+      "match_event_id": 16077424,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000019112,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "20ad25a6acec588461db",
+      "current_xi_fingerprint": "db928a78639293fc85d8",
+      "confirmed_at": "2026-08-31T12:29:49.810605+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-08-31T12:29:50.140506+00:00",
+      "match": "Tottenham - Birmingham",
+      "league": "Premier League 2",
+      "start_time": "31-08-2026 15:00",
+      "minutes_to_start": 30.2,
+      "match_market_id": "36361.60606",
+      "match_event_id": 16077424,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000019112,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "20ad25a6acec588461db",
+      "current_xi_fingerprint": "db928a78639293fc85d8",
+      "confirmed_at": "2026-08-31T12:29:49.810605+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "CA Independiente - Union de Santa Fe",
       "match_market_id": "36362.18730",
       "match_event_id": 16081059,
-      "minutes_to_start": 40.2,
+      "minutes_to_start": 30.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,25 +135,16 @@
       "match": "Man Utd - Leicester (R)",
       "match_market_id": "36361.60607",
       "match_event_id": 16077426,
-      "minutes_to_start": 40.2,
+      "minutes_to_start": 30.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Tottenham - Birmingham",
-      "match_market_id": "36361.60606",
-      "match_event_id": 16077424,
-      "minutes_to_start": 40.2,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000019112
-    },
-    {
       "match": "Viking FK - TIL 2020",
       "match_market_id": "36361.59717",
       "match_event_id": 16077087,
-      "minutes_to_start": 40.2,
+      "minutes_to_start": 30.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -128,7 +153,7 @@
       "match": "Aberystwyth - Llanelli Town",
       "match_market_id": "36361.61467",
       "match_event_id": 16077656,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -137,7 +162,7 @@
       "match": "Afan Lido - Ynyshir Albions",
       "match_market_id": "36362.3728",
       "match_event_id": 16079417,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -146,7 +171,7 @@
       "match": "Airbus UK Broughton - Holywell Town",
       "match_market_id": "36361.42349",
       "match_event_id": 16071891,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5882064
@@ -155,7 +180,7 @@
       "match": "Ammanford - Cardiff Metropolitan University FC",
       "match_market_id": "36361.32795",
       "match_event_id": 16073546,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5882065
@@ -164,7 +189,7 @@
       "match": "Baglan Dragons - Caerphilly Athletic FC",
       "match_market_id": "36362.3715",
       "match_event_id": 16079415,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -173,7 +198,7 @@
       "match": "Briton Ferry - Barry Town United FC",
       "match_market_id": "36361.4041",
       "match_event_id": 16071892,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5882066
@@ -182,7 +207,7 @@
       "match": "Caerau Ely FC - T. Stars",
       "match_market_id": "36362.3729",
       "match_event_id": 16079418,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -191,7 +216,7 @@
       "match": "Cambrian - Pen-y-Bont FC",
       "match_market_id": "36361.60324",
       "match_event_id": 16077258,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5882068
@@ -200,7 +225,7 @@
       "match": "Cardiff Draconians - Pontardawe Town",
       "match_market_id": "36362.3717",
       "match_event_id": 16079416,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -209,7 +234,7 @@
       "match": "Carmarthen Town - Trethomas Bluebirds",
       "match_market_id": "36361.4160",
       "match_event_id": 16077655,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -218,7 +243,7 @@
       "match": "Flint Town United - Connah´s Quay Nomads FC",
       "match_market_id": "36361.4054",
       "match_event_id": 16071893,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5882070
@@ -227,7 +252,7 @@
       "match": "Haverfordwest County AFC - Trefelin",
       "match_market_id": "36361.55316",
       "match_event_id": 16077401,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5882071
@@ -236,7 +261,7 @@
       "match": "Newport City FC - Swansea Uni",
       "match_market_id": "36361.61476",
       "match_event_id": 16077657,
-      "minutes_to_start": 70.2,
+      "minutes_to_start": 60.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -245,7 +270,25 @@
       "match": "Pontypridd Town - Llantwit Major",
       "match_market_id": "36361.4156",
       "match_event_id": 16077409,
+      "minutes_to_start": 60.2,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Oman - Dhofar",
+      "match_market_id": "36362.19265",
+      "match_event_id": 16081114,
       "minutes_to_start": 70.2,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Samail - SAHAM",
+      "match_market_id": "36362.18617",
+      "match_event_id": 16081034,
+      "minutes_to_start": 75.2,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
