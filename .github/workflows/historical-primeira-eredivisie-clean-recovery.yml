@@ -1,0 +1,53 @@
+name: Historical Primeira Eredivisie Clean Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-primeira-eredivisie-clean-recovery.yml'
+      - 'tools/historical_recover_primeira_eredivisie.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-primeira-eredivisie-clean-recovery
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch clean sources and rebuild frozen diagnostic
+        run: python tools/historical_recover_primeira_eredivisie.py
+      - name: Preserve generated evidence
+        run: |
+          rm -rf /tmp/primeira-eredivisie-clean
+          cp -R feed/historical/open-close/primeira-eredivisie-clean-source /tmp/primeira-eredivisie-clean
+      - name: Commit recovered source and evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/open-close/primeira-eredivisie-clean-source
+            mkdir -p feed/historical/open-close
+            cp -R /tmp/primeira-eredivisie-clean feed/historical/open-close/primeira-eredivisie-clean-source
+            git add feed/historical/open-close/primeira-eredivisie-clean-source
+            if git diff --cached --quiet; then
+              echo "No recovery changes"
+              exit 0
+            fi
+            git commit -m "Update clean Primeira Eredivisie historical recovery"
+            if git push; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          exit 1
