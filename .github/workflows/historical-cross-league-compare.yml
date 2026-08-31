@@ -29,10 +29,12 @@ jobs:
         run: |
           git config user.name "radar-backtest-bot"
           git config user.email "actions@users.noreply.github.com"
-          for attempt in 1 2 3 4 5; do
+          cp feed/historical/cross-league/sweden-norway-oos-comparison-v1.json /tmp/sweden-norway-oos-comparison-v1.json
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
             git fetch origin main
             git reset --hard origin/main
-            python tools/historical_compare_sweden_norway.py
+            mkdir -p feed/historical/cross-league
+            cp /tmp/sweden-norway-oos-comparison-v1.json feed/historical/cross-league/sweden-norway-oos-comparison-v1.json
             git add feed/historical/cross-league
             if git diff --cached --quiet; then
               echo "No comparison changes"
@@ -42,7 +44,7 @@ jobs:
             if git push; then
               exit 0
             fi
-            echo "Push raced with another workflow; regenerating from latest main attempt ${attempt}/5"
+            echo "Push raced with another workflow; rebasing generated evidence attempt ${attempt}/10"
             sleep $((attempt * 2))
           done
           echo "Unable to publish cross-league evidence after bounded retries"
