@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T12:29:49.810605+00:00",
+  "generated_at": "2026-08-31T12:45:25.669609+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -30,13 +30,13 @@
       "start_time": "31-08-2026 15:00",
       "start_utc": "2026-08-31T13:00:00+00:00",
       "league": "Premier League 2",
-      "minutes_to_start": 30.2,
+      "minutes_to_start": 14.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-08-31T12:29:49.810605+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "be3eef07f9cb54992389",
       "source": "FotMob",
       "fotmob_match": {
         "id": 1000019112,
@@ -417,9 +417,9 @@
                 }
               },
               {
-                "name": "Menzi Mazwi",
-                "id": 1818790,
-                "shirt_number": "10",
+                "name": "Alezandro Da Silva",
+                "id": 1859725,
+                "shirt_number": "8",
                 "position_id": 64,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -474,9 +474,9 @@
                 }
               },
               {
-                "name": "Alezandro Da Silva",
-                "id": 1859725,
-                "shirt_number": "8",
+                "name": "Menzi Mazwi",
+                "id": 1818790,
+                "shirt_number": "10",
                 "position_id": 85,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -569,7 +569,7 @@
             ]
           }
         ],
-        "xi_fingerprint": "be3eef07f9cb54992389",
+        "xi_fingerprint": "cad0369e633546311db1",
         "xi_name_fingerprint": "0bd80cfe64630d219292",
         "raw_keys": [
           "matchId",
@@ -582,7 +582,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-08-31T12:29:49.810605+00:00",
+        "polled_at": "2026-08-31T12:45:25.669609+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 1000019112,
@@ -597,12 +597,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-08-31T12:29:49.810605+00:00",
+    "generated_at": "2026-08-31T12:45:25.669609+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 20,
+    "target_count": 101,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -613,17 +613,14 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Tottenham - Birmingham",
-        "minutes_to_start": 30.2,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Tottenham - Birmingham",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "official_tactical_gate": true,
   "source_match_count": 101,
   "official_match_count": 1
