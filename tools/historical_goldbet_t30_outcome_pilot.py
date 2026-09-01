@@ -50,6 +50,14 @@ def parse_score(raw: bytes):
     return (by["1st Half"]["home"] + by["2nd Half"]["home"],
             by["1st Half"]["away"] + by["2nd Half"]["away"]), periods
 
+def verified_pre_kickoff(rec, captured, mins):
+    if mins is None or mins < 0 or not captured or not rec.get("start_time"):
+        return False
+    try:
+        return datetime.fromisoformat(captured.replace("Z", "+00:00")) < datetime.fromisoformat(rec["start_time"].replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return False
+
 def checkpoint_t30(rec):
     candidates = []
     for name, cp in (rec.get("checkpoints") or {}).items():
@@ -68,16 +76,18 @@ def checkpoint_t30(rec):
         is_t30 = str(name).upper().replace("_", "-") == "T-30" or target == 30
         # Preserve the watcher checkpoint classification. A T-30 fallback can
         # be slightly outside +/-5 minutes; exact distance and quality remain explicit.
-        if is_t30 and abs(mins-30) <= 10:
-            candidates.append((abs(mins-30), mins, price, cp.get("captured_at"),
+        captured = cp.get("captured_at")
+        if is_t30 and abs(mins-30) <= 10 and verified_pre_kickoff(rec, captured, mins):
+            candidates.append((abs(mins-30), mins, price, captured,
                                f"checkpoint:{name}:{cp.get('quality','UNCLASSIFIED')}"))
     for s in rec.get("snapshots") or []:
         try:
             mins, price = float(s["minutes_to_start"]), float(s["price"])
         except (KeyError, TypeError, ValueError):
             continue
-        if 25 <= mins <= 35:
-            candidates.append((abs(mins-30), mins, price, s.get("captured_at"), "snapshot"))
+        captured = s.get("captured_at")
+        if 25 <= mins <= 35 and verified_pre_kickoff(rec, captured, mins):
+            candidates.append((abs(mins-30), mins, price, captured, "snapshot"))
     if not candidates:
         return None
     _, mins, price, captured, source = min(candidates)
@@ -185,7 +195,7 @@ def main():
             "identity_join": "EXACT_FLASHSCORE_EVENT_ID",
             "bookmaker": "GoldBet", "same_bookmaker": True,
             "opening": "TRUE_OPEN_CERTIFIED",
-            "t30_definition": "persisted T-30 checkpoint within +/-10 minutes (quality retained), otherwise snapshot within +/-5 minutes",
+            "t30_definition": "persisted T-30 checkpoint within +/-10 minutes (quality retained), otherwise snapshot within +/-5 minutes; both minutes_to_start >= 0 and captured_at < kickoff are mandatory",
             "outcome_join_order": "price features frozen before outcome attachment",
             "post_kickoff_prices_used": False,
             "limitations": [
