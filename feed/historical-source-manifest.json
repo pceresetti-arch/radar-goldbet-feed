@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v33",
-  "generated_at": "2026-09-01T19:21:25Z",
+  "schema_version": "radar-historical-source-manifest-v34",
+  "generated_at": "2026-09-01T22:30:18Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SUPERETTAN_SOURCE_COVERAGE_FAILURE_ELEVEN_LEAGUE_SAMPLE_UNCHANGED",
+  "status": "SUPERETTAN_PROVIDER_BLOCKED_ELEVEN_LEAGUE_SAMPLE_UNCHANGED",
   "priority": [
     "Sweden",
     "Norway",
@@ -956,7 +956,7 @@
       "name": "Planned Superettan block from persisted Swedish consolidated source",
       "league": "Superettan",
       "source_class": "REPOSITORY_COVERAGE_AUDIT",
-      "status": "REJECTED_SOURCE_ABSENT_NO_MODEL",
+      "status": "REJECTED_SOURCE_ABSENT_AND_PROVIDER_HTTP_403_NO_MODEL",
       "audit": "feed/historical/superettan/source-coverage-audit-v1.json",
       "inspected_source": "feed/historical/sweden/football-data-SWE.csv",
       "inspected_source_blob_sha": "ce3641c6fbc748f0dffd871395e6a8a4df57d9b7",
@@ -982,8 +982,18 @@
         "The inspected 3,526-row Swedish CSV contains only Allsvenskan after canonicalizing a trailing-space alias.",
         "A complete recursive repository tree listing contains no Superettan-named path.",
         "No partial, inferred or cross-division rows were accepted.",
-        "A retry requires an independently versioned raw source with hashes and a phase-pure 16-club/240-match/30-appearance gate."
-      ]
+        "A retry requires an independently versioned raw source with hashes and a phase-pure 16-club/240-match/30-appearance gate.",
+        "Three independent provider requests returned HTTP 403 before any payload; zero partial rows were accepted."
+      ],
+      "acquisition_workflow": ".github/workflows/historical-superettan-source.yml",
+      "acquisition_script": "tools/historical_acquire_superettan_sofascore.py",
+      "workflow_runs": [
+        33566331135,
+        33566434753,
+        33566570574
+      ],
+      "http_403_runs": 3,
+      "api_payloads_received": 0
     }
   ],
   "required_blocks": {
@@ -1173,13 +1183,14 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "priority": "Acquire a versioned Superettan 2022-2025 raw source; the persisted SWE snapshot is Allsvenskan-only.",
+    "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
     "structural_sample": "Eleven accepted leagues, 12,304 fixtures and 3,076 holdout rows",
     "blocked_source_blocks": [
-      "Superettan: zero repository rows",
+      "Superettan: repository source absent and provider HTTP 403",
       "Belgian Pro League: format drift",
       "J1 League: format drift"
     ],
+    "next_analysis_lane": "Cross-league calibration and error decomposition on the eleven accepted frozen OOS blocks.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context."
   }
