@@ -35,6 +35,12 @@ def norm_season(value):
         return s
     return s
 
+def parse_date(value):
+    for fmt in ("%d/%m/%Y","%d/%m/%y","%Y-%m-%d"):
+        try: return datetime.strptime((value or "").strip(),fmt).date()
+        except ValueError: pass
+    raise ValueError(f"unparsed date {value!r}")
+
 def main():
     generated=datetime.now(timezone.utc).isoformat()
     failures=[]
@@ -60,6 +66,12 @@ def main():
     seasons=[]
     for target in TARGET:
         sr=[r for r in rows if norm_season(r.get("Season"))==target and (r.get("League") or "").strip()==selected_league]
+        sr.sort(key=lambda r:(parse_date(r.get("Date")), (r.get("Time") or ""), (r.get("Home") or ""), (r.get("Away") or "")))
+        core=sr[:192]
+        core_apps=Counter()
+        for r in core:
+            core_apps[(r.get("Home") or "").strip()]+=1; core_apps[(r.get("Away") or "").strip()]+=1
+        extras=sr[192:]
         apps=Counter()
         keys=[]
         invalid_results=0
@@ -83,10 +95,13 @@ def main():
             "duplicate_fixture_keys":len(keys)-len(set(keys)),
             "invalid_or_inconsistent_results":invalid_results,
             "missing_average_close_triplets":close_missing,
+            "chronological_core_192":{"rows":len(core),"clubs":len(core_apps),"appearance_values":sorted(set(core_apps.values())),"balanced_12_clubs_32_each":len(core)==192 and len(core_apps)==12 and set(core_apps.values())=={32}},
+            "subsequent_extras":[{"date":r.get("Date"),"time":r.get("Time"),"home":r.get("Home"),"away":r.get("Away")} for r in extras],
         })
     signatures=[(s["rows"],s["clubs"],tuple(s["appearance_values"])) for s in seasons]
     all_four=all(s["rows"]>0 for s in seasons)
     comparable=all_four and len(set(signatures))==1
+    core_comparable=all_four and all(s["chronological_core_192"]["balanced_12_clubs_32_each"] for s in seasons)
     report={
         "schema_version":"radar-historical-austria1-format-audit-v1",
         "generated_at":generated,
@@ -110,7 +125,9 @@ def main():
         "comparability":{
             "signature_fields":["fixture_rows","club_count","team_appearance_values"],
             "season_signatures":{s["season"]:{"rows":s["rows"],"clubs":s["clubs"],"appearance_values":s["appearance_values"]} for s in seasons},
-            "four_season_directly_comparable":comparable
+            "four_season_directly_comparable":comparable,
+            "chronological_core_192_comparable":core_comparable,
+            "core_rule":"Retain the earliest 192 fixtures only when they form 12 clubs with exactly 32 appearances each; exclude only chronologically subsequent fixtures."
         },
         "anti_hindsight":{
             "outcomes_used_for_format_decision":False,
@@ -118,8 +135,8 @@ def main():
             "holdout_model_evaluated":False,
             "model_built":False
         },
-        "status":"FORMAT_COMPARABLE_READY_FOR_FROZEN_SPLIT" if comparable else ("FOUR_SEASON_FORMAT_DRIFT_NO_MODEL" if all_four else "SOURCE_FAILURE_OR_MISSING_SEASON_NO_MODEL"),
-        "decision":"Construct no development/holdout model unless four target seasons share the same phase-exposure signature; inspect format only."
+        "status":"FULL_FORMAT_COMPARABLE_READY_FOR_FROZEN_SPLIT" if comparable else ("CORE_192_COMPARABLE_READY_FOR_FROZEN_SPLIT" if core_comparable else ("FOUR_SEASON_FORMAT_DRIFT_NO_MODEL" if all_four else "SOURCE_FAILURE_OR_MISSING_SEASON_NO_MODEL")),
+        "decision":"A structural model is eligible only if the frozen chronological core rule yields 192 fixtures, 12 clubs and 32 appearances per club in every season; subsequent playoff fixtures remain excluded."
     }
     REPORT.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print(json.dumps({"status":report["status"],"selected_league":selected_league,"signatures":report["comparability"]["season_signatures"],"failures":failures},indent=2))
