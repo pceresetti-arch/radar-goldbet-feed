@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v26",
-  "generated_at": "2026-09-01T12:42:56.263Z",
+  "schema_version": "radar-historical-source-manifest-v27",
+  "generated_at": "2026-09-01T13:49:43.843Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "ENGLAND1_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+  "status": "SCOTLAND1_SOURCE_FAILURE_QUARANTINED_NINE_LEAGUE_SAMPLE_UNCHANGED",
   "priority": [
     "Sweden",
     "Norway",
@@ -761,6 +761,36 @@
         "Last persisted pre-kickoff is not relabelled as CLOSE.",
         "All 2,309 snapshot timestamps agree with stored minutes-to-start sign; future eligibility nevertheless requires both timestamp proofs."
       ]
+    },
+    {
+      "name": "Football-Data Scottish Premiership 2022/23-2025/26 attempt",
+      "path": "feed/historical/scotland1/source-failure-v1.json",
+      "source_class": "EXTERNAL_HISTORICAL_SOURCE_ATTEMPT",
+      "status": "TRANSIENT_READ_TIMEOUT_ALL_SEASONS_NO_ROWS_ACCEPTED",
+      "seasons": [
+        "2022/2023",
+        "2023/2024",
+        "2024/2025",
+        "2025/2026"
+      ],
+      "attempts": 2,
+      "expected_rows": 912,
+      "accepted_rows": 0,
+      "role": [
+        "SOURCE_FAILURE_LEDGER",
+        "FORMAT_GATE_DEFINITION"
+      ],
+      "forbidden_role": [
+        "STRUCTURAL_MODEL_INPUT",
+        "OOS_METRICS",
+        "PARTIAL_SEASON_ACCEPTANCE"
+      ],
+      "quality_notes": [
+        "All four SC0 endpoints timed out on both workflow attempts.",
+        "No incomplete file or row entered the source snapshot.",
+        "Baseline and model steps were skipped.",
+        "Retry later; transport failure does not establish source incompleteness."
+      ]
     }
   ],
   "required_blocks": {
@@ -943,11 +973,12 @@
     "lane": "GOLDBET_SANITIZED_COMMON_SUPPORT_T30",
     "goal": "Scale matched sanitized T-30 snapshots within the same competitions and an independent temporal block.",
     "prior_claim_status": "Raw multi-snapshot state is ineligible; 2,068 post-kickoff snapshots quarantined.",
-    "structural_next": "Hold all nine league OOS blocks frozen; extend only after league-specific team and match-count gates pass.",
+    "structural_next": "Retry Scottish Premiership only after all four SC0 seasons download successfully and pass 12-club/228-fixture/38-match gates; keep nine accepted league blocks frozen.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
     "historical_t30_status": "GOOD_43_ROWS_20_COMPLETE_GROUPS_3_FIXTURES_DIAGNOSTIC_ONLY",
     "historical_close_status": "NOT_CERTIFIED",
     "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS",
-    "dual_timestamp_gate": "ACTIVE_MINUTES_NONNEGATIVE_AND_CAPTURED_AT_BEFORE_KICKOFF"
+    "dual_timestamp_gate": "ACTIVE_MINUTES_NONNEGATIVE_AND_CAPTURED_AT_BEFORE_KICKOFF",
+    "scotland1_status": "TRANSIENT_SOURCE_TIMEOUT_2_ATTEMPTS_ZERO_ROWS_ACCEPTED"
   }
 }
