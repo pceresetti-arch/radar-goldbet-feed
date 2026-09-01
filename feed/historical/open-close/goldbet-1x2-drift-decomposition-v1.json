@@ -1,0 +1,425 @@
+{
+  "schema_version": "radar-goldbet-1x2-drift-decomposition-v1",
+  "generated_at": "2026-09-01T03:40:51.632190+00:00",
+  "classification": "ERROR_ANALYSIS_NO_RULE_TUNING",
+  "methodology": {
+    "target": "FT 1X2 maximum shortening candidate with movement >=1pp",
+    "lead_split": "<360 versus >=360 minutes",
+    "controls": [
+      "selection side",
+      "observed-current price bin"
+    ],
+    "standardization": "fixed pooled composition across cells with >=5 observations in both groups",
+    "bootstrap_draws": 10000,
+    "observed_current_is_close": false
+  },
+  "source": {
+    "path": "feed/historical/open-close/goldbet-fixture-level-mms-v1.json",
+    "sha256": "7271474b4d35394a6bd8580e5d2ad6e8655b76eb63feb9a41cbd3abcafda2c64"
+  },
+  "raw": {
+    "near": {
+      "n": 67,
+      "roi": -0.4191044776119403,
+      "hit_rate": 0.31343283582089554,
+      "mean_price": 2.8664179104477614,
+      "mean_current_probability": 0.4151549504833466,
+      "calibration_error_actual_minus_probability": -0.10172211466245114,
+      "mean_movement_pp": 3.623831087757485
+    },
+    "far": {
+      "n": 325,
+      "roi": 0.08166153846153845,
+      "hit_rate": 0.4553846153846154,
+      "mean_price": 2.6797846153846154,
+      "mean_current_probability": 0.40729691053146966,
+      "calibration_error_actual_minus_probability": 0.04808770485314577,
+      "mean_movement_pp": 3.270395760879495
+    },
+    "roi_difference_near_minus_far": -0.5007660160734788
+  },
+  "side_composition": [
+    {
+      "selection": "HOME",
+      "near": {
+        "n": 35,
+        "roi": -0.1637142857142857,
+        "hit_rate": 0.4857142857142857,
+        "mean_price": 2.05,
+        "mean_current_probability": 0.4999816370376455,
+        "calibration_error_actual_minus_probability": -0.01426735132335974,
+        "mean_movement_pp": 4.326001228338439
+      },
+      "far": {
+        "n": 168,
+        "roi": -0.023333333333333345,
+        "hit_rate": 0.5059523809523809,
+        "mean_price": 2.135952380952381,
+        "mean_current_probability": 0.48350848174169303,
+        "calibration_error_actual_minus_probability": 0.0224438992106879,
+        "mean_movement_pp": 3.7214871165417938
+      }
+    },
+    {
+      "selection": "DRAW",
+      "near": {
+        "n": 9,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 4.227777777777778,
+        "mean_current_probability": 0.2604001387771318,
+        "calibration_error_actual_minus_probability": -0.2604001387771318,
+        "mean_movement_pp": 1.975719072391228
+      },
+      "far": {
+        "n": 39,
+        "roi": -0.26282051282051283,
+        "hit_rate": 0.23076923076923078,
+        "mean_price": 3.830769230769231,
+        "mean_current_probability": 0.2613557203225924,
+        "calibration_error_actual_minus_probability": -0.030586489553361663,
+        "mean_movement_pp": 2.057843728543052
+      }
+    },
+    {
+      "selection": "AWAY",
+      "near": {
+        "n": 23,
+        "roi": -0.5804347826086956,
+        "hit_rate": 0.17391304347826086,
+        "mean_price": 3.5760869565217392,
+        "mean_current_probability": 0.3466270929161935,
+        "calibration_error_actual_minus_probability": -0.17271404943793256,
+        "mean_movement_pp": 3.200224705929785
+      },
+      "far": {
+        "n": 118,
+        "roi": 0.34500000000000003,
+        "hit_rate": 0.4576271186440678,
+        "mean_price": 3.0736440677966104,
+        "mean_current_probability": 0.34702710082662785,
+        "calibration_error_actual_minus_probability": 0.11060001781743994,
+        "mean_movement_pp": 3.0289227228274203
+      }
+    }
+  ],
+  "price_composition": [
+    {
+      "price_bin": "P_LT_1_75",
+      "near": {
+        "n": 16,
+        "roi": -0.13625000000000004,
+        "hit_rate": 0.625,
+        "mean_price": 1.4075,
+        "mean_current_probability": 0.6581887816755476,
+        "calibration_error_actual_minus_probability": -0.0331887816755476,
+        "mean_movement_pp": 4.091426081127784
+      },
+      "far": {
+        "n": 70,
+        "roi": -0.09057142857142857,
+        "hit_rate": 0.6714285714285714,
+        "mean_price": 1.424,
+        "mean_current_probability": 0.6515365992051091,
+        "calibration_error_actual_minus_probability": 0.019891972223462367,
+        "mean_movement_pp": 4.183063176724598
+      }
+    },
+    {
+      "price_bin": "P_1_75_2_50",
+      "near": {
+        "n": 25,
+        "roi": -0.16,
+        "hit_rate": 0.4,
+        "mean_price": 2.1052,
+        "mean_current_probability": 0.4388583165340383,
+        "calibration_error_actual_minus_probability": -0.03885831653403829,
+        "mean_movement_pp": 4.184011525809135
+      },
+      "far": {
+        "n": 99,
+        "roi": 0.039696969696969696,
+        "hit_rate": 0.494949494949495,
+        "mean_price": 2.0762626262626265,
+        "mean_current_probability": 0.44649853308056875,
+        "calibration_error_actual_minus_probability": 0.04845096186892624,
+        "mean_movement_pp": 3.7725409158714864
+      }
+    },
+    {
+      "price_bin": "P_2_50_4_00",
+      "near": {
+        "n": 16,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 3.103125,
+        "mean_current_probability": 0.30081893591024017,
+        "calibration_error_actual_minus_probability": -0.30081893591024017,
+        "mean_movement_pp": 3.1694979645784342
+      },
+      "far": {
+        "n": 119,
+        "roi": 0.02058823529411765,
+        "hit_rate": 0.33613445378151263,
+        "mean_price": 3.0764705882352943,
+        "mean_current_probability": 0.3023671387524514,
+        "calibration_error_actual_minus_probability": 0.033767315029061204,
+        "mean_movement_pp": 2.572496612973427
+      }
+    },
+    {
+      "price_bin": "P_GE_4_00",
+      "near": {
+        "n": 10,
+        "roi": -0.5900000000000001,
+        "hit_rate": 0.1,
+        "mean_price": 6.725,
+        "mean_current_probability": 0.14998002876606648,
+        "calibration_error_actual_minus_probability": -0.04998002876606646,
+        "mean_movement_pp": 2.202161000322362
+      },
+      "far": {
+        "n": 37,
+        "roi": 0.7162162162162162,
+        "hit_rate": 0.32432432432432434,
+        "mean_price": 5.394594594594595,
+        "mean_current_probability": 0.17780782950951268,
+        "calibration_error_actual_minus_probability": 0.14651649481481163,
+        "mean_movement_pp": 2.444744656756734
+      }
+    }
+  ],
+  "side_price_cells": [
+    {
+      "selection": "HOME",
+      "price_bin": "P_LT_1_75",
+      "near": {
+        "n": 13,
+        "roi": -0.04461538461538462,
+        "hit_rate": 0.6923076923076923,
+        "mean_price": 1.4053846153846155,
+        "mean_current_probability": 0.662711709265815,
+        "calibration_error_actual_minus_probability": 0.029595983041877265,
+        "mean_movement_pp": 4.235046011438461
+      },
+      "far": {
+        "n": 60,
+        "roi": -0.14166666666666666,
+        "hit_rate": 0.6333333333333333,
+        "mean_price": 1.4303333333333332,
+        "mean_current_probability": 0.6476008843449236,
+        "calibration_error_actual_minus_probability": -0.014267551011590218,
+        "mean_movement_pp": 4.4830805020067395
+      }
+    },
+    {
+      "selection": "HOME",
+      "price_bin": "P_1_75_2_50",
+      "near": {
+        "n": 16,
+        "roi": 0.05312499999999999,
+        "hit_rate": 0.5,
+        "mean_price": 2.095625,
+        "mean_current_probability": 0.44187739507035384,
+        "calibration_error_actual_minus_probability": 0.058122604929646146,
+        "mean_movement_pp": 4.338309407909474
+      },
+      "far": {
+        "n": 67,
+        "roi": 0.019104477611940295,
+        "hit_rate": 0.4925373134328358,
+        "mean_price": 2.0413432835820897,
+        "mean_current_probability": 0.454600440523271,
+        "calibration_error_actual_minus_probability": 0.03793687290956486,
+        "mean_movement_pp": 3.733892824293683
+      }
+    },
+    {
+      "selection": "HOME",
+      "price_bin": "P_2_50_4_00",
+      "near": {
+        "n": 5,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 2.79,
+        "mean_current_probability": 0.33170223983615565,
+        "calibration_error_actual_minus_probability": -0.33170223983615565,
+        "mean_movement_pp": 4.897997866155912
+      },
+      "far": {
+        "n": 34,
+        "roi": 0.16323529411764706,
+        "hit_rate": 0.38235294117647056,
+        "mean_price": 2.9779411764705883,
+        "mean_current_probability": 0.31210368482169887,
+        "calibration_error_actual_minus_probability": 0.07024925635477174,
+        "mean_movement_pp": 2.738662518460393
+      }
+    },
+    {
+      "selection": "HOME",
+      "price_bin": "P_GE_4_00",
+      "near": {
+        "n": 1,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 6.0,
+        "mean_current_probability": 0.15555555555555556,
+        "calibration_error_actual_minus_probability": -0.15555555555555556,
+        "mean_movement_pp": 2.451504985814226
+      },
+      "far": {
+        "n": 7,
+        "roi": -0.32142857142857145,
+        "hit_rate": 0.14285714285714285,
+        "mean_price": 5.0,
+        "mean_current_probability": 0.18623101041601475,
+        "calibration_error_actual_minus_probability": -0.0433738675588719,
+        "mean_movement_pp": 1.8485229433266952
+      }
+    },
+    {
+      "selection": "DRAW",
+      "price_bin": "P_2_50_4_00",
+      "near": {
+        "n": 8,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 3.25625,
+        "mean_current_probability": 0.2833820808865929,
+        "calibration_error_actual_minus_probability": -0.2833820808865929,
+        "mean_movement_pp": 2.0849370269370513
+      },
+      "far": {
+        "n": 28,
+        "roi": 0.02678571428571427,
+        "hit_rate": 0.32142857142857145,
+        "mean_price": 3.105357142857143,
+        "mean_current_probability": 0.29757516789812216,
+        "calibration_error_actual_minus_probability": 0.02385340353044929,
+        "mean_movement_pp": 1.903014295181491
+      }
+    },
+    {
+      "selection": "DRAW",
+      "price_bin": "P_GE_4_00",
+      "near": {
+        "n": 1,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 12.0,
+        "mean_current_probability": 0.07654460190144273,
+        "calibration_error_actual_minus_probability": -0.07654460190144273,
+        "mean_movement_pp": 1.1019754360246423
+      },
+      "far": {
+        "n": 11,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 5.677272727272728,
+        "mean_current_probability": 0.16916076285760773,
+        "calibration_error_actual_minus_probability": -0.16916076285760773,
+        "mean_movement_pp": 2.45195501346339
+      }
+    },
+    {
+      "selection": "AWAY",
+      "price_bin": "P_LT_1_75",
+      "near": {
+        "n": 3,
+        "roi": -0.5333333333333333,
+        "hit_rate": 0.3333333333333333,
+        "mean_price": 1.4166666666666667,
+        "mean_current_probability": 0.6385894287843886,
+        "calibration_error_actual_minus_probability": -0.3052560954510553,
+        "mean_movement_pp": 3.4690730497815125
+      },
+      "far": {
+        "n": 10,
+        "roi": 0.21600000000000003,
+        "hit_rate": 0.9,
+        "mean_price": 1.386,
+        "mean_current_probability": 0.6751508883662221,
+        "calibration_error_actual_minus_probability": 0.22484911163377785,
+        "mean_movement_pp": 2.3829592250317533
+      }
+    },
+    {
+      "selection": "AWAY",
+      "price_bin": "P_1_75_2_50",
+      "near": {
+        "n": 9,
+        "roi": -0.5388888888888889,
+        "hit_rate": 0.2222222222222222,
+        "mean_price": 2.1222222222222222,
+        "mean_current_probability": 0.4334910658028106,
+        "calibration_error_actual_minus_probability": -0.2112688435805884,
+        "mean_movement_pp": 3.909704179852976
+      },
+      "far": {
+        "n": 32,
+        "roi": 0.08281250000000001,
+        "hit_rate": 0.5,
+        "mean_price": 2.149375,
+        "mean_current_probability": 0.42953516437241085,
+        "calibration_error_actual_minus_probability": 0.07046483562758914,
+        "mean_movement_pp": 3.8534603576125113
+      }
+    },
+    {
+      "selection": "AWAY",
+      "price_bin": "P_2_50_4_00",
+      "near": {
+        "n": 3,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 3.216666666666667,
+        "mean_current_probability": 0.2958450427634404,
+        "calibration_error_actual_minus_probability": -0.2958450427634404,
+        "mean_movement_pp": 3.1808272956596606
+      },
+      "far": {
+        "n": 57,
+        "roi": -0.0675438596491228,
+        "hit_rate": 0.3157894736842105,
+        "mean_price": 3.1210526315789475,
+        "mean_current_probability": 0.29891332502555323,
+        "calibration_error_actual_minus_probability": 0.016876148658657268,
+        "mean_movement_pp": 2.8022486149316257
+      }
+    },
+    {
+      "selection": "AWAY",
+      "price_bin": "P_GE_4_00",
+      "near": {
+        "n": 8,
+        "roi": -0.48750000000000004,
+        "hit_rate": 0.125,
+        "mean_price": 6.15625,
+        "mean_current_probability": 0.1584625162754583,
+        "calibration_error_actual_minus_probability": -0.03346251627545829,
+        "mean_movement_pp": 2.308516197673094
+      },
+      "far": {
+        "n": 19,
+        "roi": 2.0921052631578947,
+        "hit_rate": 0.5789473684210527,
+        "mean_price": 5.376315789473685,
+        "mean_current_probability": 0.17971074881611485,
+        "calibration_error_actual_minus_probability": 0.3992366196049378,
+        "mean_movement_pp": 2.660230870979737
+      }
+    }
+  ],
+  "standardized": {
+    "eligible_cells": 6,
+    "covered_near": 59,
+    "covered_far": 240,
+    "near_minus_far_roi": -0.5604050645037759,
+    "bootstrap_ci95": [
+      -0.8296589944705879,
+      -0.2895708075128396
+    ]
+  },
+  "decision": "DRIFT_PERSISTS_AFTER_SIDE_PRICE_STANDARDIZATION"
+}
