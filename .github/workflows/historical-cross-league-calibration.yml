@@ -1,0 +1,33 @@
+name: Historical cross-league calibration
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/historical_cross_league_calibration_v1.py"
+      - ".github/workflows/historical-cross-league-calibration.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reconstruct frozen OOS predictions and audit calibration
+        run: python tools/historical_cross_league_calibration_v1.py
+      - name: Persist report
+        run: |
+          git config user.name "radar-history-bot"
+          git config user.email "radar-history-bot@users.noreply.github.com"
+          git add feed/historical/calibration/cross-league-elo-calibration-v1.json
+          if git diff --cached --quiet; then
+            echo "No report changes"
+          else
+            git commit -m "Add cross-league frozen OOS calibration report"
+            git push
+          fi
