@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v34",
-  "generated_at": "2026-09-01T22:30:18Z",
+  "schema_version": "radar-historical-source-manifest-v35",
+  "generated_at": "2026-09-01T23:48:30Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SUPERETTAN_PROVIDER_BLOCKED_ELEVEN_LEAGUE_SAMPLE_UNCHANGED",
+  "status": "ELEVEN_LEAGUE_OOS_CALIBRATION_COMPLETE_DRAW_CLASS_FAILURE",
   "priority": [
     "Sweden",
     "Norway",
@@ -1145,7 +1145,7 @@
       }
     },
     "pre_match_structural": {
-      "status": "TEN_LEAGUE_OOS_COMPLETE_2884_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
+      "status": "ELEVEN_LEAGUE_OOS_COMPLETE_3076_HOLDOUT_ROWS_ELO_DRAW_CLASS_FAILURE",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -1153,8 +1153,9 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Elo robustly beats the development prior in Sweden, Norway, Netherlands, Portugal, Bundesliga, LaLiga, Premier League and Scottish Premiership, but not in Denmark or 2. Bundesliga. Form/full bundles remain unpromoted in every league; external close remains non-GoldBet and is not conclusively superior to Elo in Netherlands, Premier League or Scotland.",
-      "identity_gate": "League-specific schedule integrity required before metrics: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark; 18 teams/34 matches per club for Netherlands, Portugal, Bundesliga and 2. Bundesliga; 20 teams/38 matches per club for LaLiga and Premier League; Scotland requires 12 teams/228 fixtures/38 matches per club with the asymmetric post-split phase retained."
+      "result": "Frozen ELO_ONLY predictions reproduce all eleven accepted reports exactly and are reasonably calibrated in aggregate, but never select DRAW as top class across 3,076 fixtures despite 764 realized draws. The external average closing benchmark is robustly superior on Brier and log-loss under fixture-stratified and equal-league bootstrap. Elo remains a strength feature/research baseline, not a complete standalone 1X2 decision model.",
+      "identity_gate": "League-specific schedule integrity required before metrics: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark; 18 teams/34 matches per club for Netherlands, Portugal, Bundesliga and 2. Bundesliga; 20 teams/38 matches per club for LaLiga and Premier League; Scotland requires 12 teams/228 fixtures/38 matches per club with the asymmetric post-split phase retained.",
+      "calibration_report": "feed/historical/calibration/cross-league-elo-calibration-v1.json"
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -1180,7 +1181,9 @@
     "primary_mms_reason": "Certified GoldBet TRUE OPEN exists and may generate MMS signals. Historical ROI/CLV promotion still requires observed close and outcome joins.",
     "identity_integrity_required": true,
     "classwise_calibration_required": true,
-    "league_drift_reporting_required": true
+    "league_drift_reporting_required": true,
+    "top_pick_class_coverage_required": true,
+    "zero_argmax_realized_class_policy": "STRUCTURAL_FAILURE_NO_OPERATIONAL_PROMOTION"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1190,7 +1193,7 @@
       "Belgian Pro League: format drift",
       "J1 League: format drift"
     ],
-    "next_analysis_lane": "Cross-league calibration and error decomposition on the eleven accepted frozen OOS blocks.",
+    "next_analysis_lane": "Development-only design of a draw-class repair candidate, frozen before a new independent temporal holdout; current OOS fixtures remain audit-only and cannot be used for retuning.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context."
   }
