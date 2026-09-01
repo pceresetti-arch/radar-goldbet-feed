@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v20",
-  "generated_at": "2026-09-01T05:27:06.096Z",
+  "schema_version": "radar-historical-backtest-ledger-v21",
+  "generated_at": "2026-09-01T06:29:33.061Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_POST_KICKOFF_SNAPSHOT_CONTAMINATION_QUARANTINED",
+  "status": "GOLDBET_DUAL_PRE_KICKOFF_GATE_ENFORCED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -265,7 +265,11 @@
     "Detected and quarantined 2,068 snapshots with negative minutes-to-start across 43 records and three events; none is eligible for pre-match features, CLV or ROI.",
     "Materialized 73 sanitized record summaries for five exact Flashscore events, retaining only snapshots at or before kickoff.",
     "Verified 43 GOOD T-30 record candidates and 20 selection-complete GOOD T-30 market groups across three fixtures.",
-    "Kept every last-persisted pre-kickoff quote explicitly distinct from certified CLOSE; the clean sample remains diagnostic only."
+    "Kept every last-persisted pre-kickoff quote explicitly distinct from certified CLOSE; the clean sample remains diagnostic only.",
+    "Validated all 2,309 persisted GoldBet snapshot timestamps against kickoff: zero sign or lead-time inconsistencies.",
+    "Made the historical contract require both minutes_to_start >= 0 and captured_at < kickoff; disagreement is now a quarantine condition.",
+    "Updated and reran the exact-ID T-30 pilot under the dual temporal gate; coverage remained 5 exact outcomes, 3 eligible fixtures and 43 selection rows.",
+    "Confirmed the stronger gate changes no pilot result and promotes no MMS threshold."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1140,6 +1144,18 @@
         "post_kickoff_snapshots": 2068
       },
       "interpretation": "The raw movement state contains extensive post-kickoff observations. Only explicitly sanitized non-negative lead-time snapshots may enter historical features; the remaining T-30 sample is too small for threshold promotion."
+    },
+    "goldbet_dual_timestamp_gate_2026": {
+      "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
+      "pilot": "feed/historical/open-close/goldbet-t30-outcome-pilot-v1.json",
+      "snapshots_checked": 2309,
+      "timestamp_sign_mismatches": 0,
+      "pilot_coverage_after_gate": {
+        "exact_outcomes": 5,
+        "eligible_events": 3,
+        "eligible_rows": 43
+      },
+      "decision": "GATE_ENFORCED_RESULTS_UNCHANGED_NO_RULE_PROMOTION"
     }
   },
   "ablation_plan": {
@@ -1208,7 +1224,8 @@
       "MMS reports must segment lead time and ordered temporal blocks before pooling; a significant subgroup reversal is classified as drift/confounding until independently replicated.",
       "Material MMS lead-time drift must be standardized at minimum by selection side and price band; persistence after standardization is recorded as instability/confounding, never as a timing rule.",
       "Before interpreting lead-time drift, require common support within competition, selection side and price band; zero eligible overlap cells force a NOT_IDENTIFIABLE verdict rather than a null or causal conclusion.",
-      "Historical snapshot ingestion must hard-reject minutes_to_start < 0 before feature construction and must preserve a separate quarantine count; filtering only at metric time is insufficient."
+      "Historical snapshot ingestion must hard-reject minutes_to_start < 0 before feature construction and must preserve a separate quarantine count; filtering only at metric time is insufficient.",
+      "Pre-kickoff eligibility now requires two agreeing temporal proofs: non-negative minutes_to_start and captured_at strictly before kickoff; any disagreement is quarantined."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
