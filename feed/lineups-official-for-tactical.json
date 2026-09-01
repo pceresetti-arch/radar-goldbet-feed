@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T00:42:38.874442+00:00",
+  "generated_at": "2026-09-01T01:02:39.162395+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 6,
+  "target_count": 5,
   "status_counts": {
-    "NOT_AVAILABLE": 4,
-    "SOURCE_CONFIRMED": 2
+    "SOURCE_CONFIRMED": 2,
+    "NOT_AVAILABLE": 3
   },
   "schedule_stats": [
     {
@@ -29,7 +29,7 @@
       "start_time": "01-09-2026 02:45",
       "start_utc": "2026-09-01T00:45:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -17.7,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T00:17:52.926715+00:00",
@@ -63,7 +63,7 @@
                 "id": 1242010,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -318,6 +318,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -337,7 +338,7 @@
                 "id": 610694,
                 "shirt_number": "31",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -592,6 +593,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -603,7 +605,6 @@
           }
         ],
         "xi_fingerprint": "7ecf6132a38fc83f5d79",
-        "xi_name_fingerprint": "62a09322392a4b6eeb32",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -613,19 +614,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-01T00:42:38.874442+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 1000013213,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.39748",
@@ -634,13 +623,13 @@
       "start_time": "01-09-2026 03:05",
       "start_utc": "2026-09-01T01:05:00+00:00",
       "league": "Primera A",
-      "minutes_to_start": 22.4,
+      "minutes_to_start": 2.3,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T00:42:38.874442+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "1243d2d28b33bdb4961d",
       "source": "FotMob",
       "fotmob_match": {
         "id": 1000014117,
@@ -797,9 +786,9 @@
                 }
               },
               {
-                "name": "Kelvin Flórez",
-                "id": 1634837,
-                "shirt_number": "18",
+                "name": "Edwar López",
+                "id": 930398,
+                "shirt_number": "28",
                 "position_id": 83,
                 "usual_position_id": 3,
                 "horizontal_layout": {
@@ -835,9 +824,9 @@
                 }
               },
               {
-                "name": "Edwar López",
-                "id": 930398,
-                "shirt_number": "28",
+                "name": "Kelvin Flórez",
+                "id": 1634837,
+                "shirt_number": "18",
                 "position_id": 87,
                 "usual_position_id": 3,
                 "horizontal_layout": {
@@ -1197,7 +1186,7 @@
             ]
           }
         ],
-        "xi_fingerprint": "1243d2d28b33bdb4961d",
+        "xi_fingerprint": "d3a2bc843c2ef9c5732c",
         "xi_name_fingerprint": "8d5f033c35dfa52340db",
         "raw_keys": [
           "matchId",
@@ -1210,7 +1199,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-09-01T00:42:38.874442+00:00",
+        "polled_at": "2026-09-01T01:02:39.162395+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 1000014117,
@@ -1225,12 +1214,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T00:42:38.874442+00:00",
+    "generated_at": "2026-09-01T01:02:39.162395+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 5,
+    "target_count": 2,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -1241,32 +1230,15 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Universidad Catolica - O´Higgins",
-        "minutes_to_start": 2.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Deportes Tolima - Cucuta",
-        "minutes_to_start": 22.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
   "watchdog_identity_repairs": [
     {
-      "match": "Universidad Catolica - O´Higgins",
+      "match": "Deportes Tolima - Cucuta",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     }
   ],
   "official_tactical_gate": true,
-  "source_match_count": 6,
+  "source_match_count": 5,
   "official_match_count": 2
 }
