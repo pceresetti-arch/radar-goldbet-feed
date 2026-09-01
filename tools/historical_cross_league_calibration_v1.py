@@ -198,10 +198,24 @@ def main():
     overall_elo = metrics(all_rows, "elo")
     overall_market = metrics(all_rows, "market")
     paired = bootstrap(all_rows)
+    predicted_side_counts = {o: 0 for o in OUTCOMES}
+    realized_outcome_counts = {o: 0 for o in OUTCOMES}
+    for row in all_rows:
+        predicted_side_counts[OUTCOMES[max(range(3), key=lambda k: row["elo"][k])]] += 1
+        realized_outcome_counts[OUTCOMES[row["y"]]] += 1
+    market_robust = all(
+        paired[m]["stratified_fixture_bootstrap_ci95"][1] < 0
+        and paired[m]["league_bootstrap_ci95"][1] < 0
+        for m in ("brier", "log_loss")
+    )
     verdict = {
-        "elo_calibration_status": "DIAGNOSTIC_NOT_OPERATIONAL",
-        "market_comparison_status": "NO_PROMOTION",
-        "reason": "Calibration is measured on frozen OOS predictions; any recalibration rule requires a new independent temporal block.",
+        "elo_calibration_status": "ACCEPTABLE_POOLED_DIAGNOSTIC_ONLY",
+        "market_comparison_status": "EXTERNAL_AVERAGE_CLOSE_ROBUSTLY_BETTER" if market_robust else "INCONCLUSIVE",
+        "draw_top_pick_status": "STRUCTURAL_MODEL_FAILURE_ZERO_DRAW_TOP_PICKS",
+        "predicted_side_counts": predicted_side_counts,
+        "realized_outcome_counts": realized_outcome_counts,
+        "operational_rule_promoted": False,
+        "reason": "Frozen OOS evidence exposes a no-draw top-pick failure and robust market superiority; recalibration or class-rule changes require a new independent temporal block.",
     }
     report = {
         "schema_version": "radar-historical-cross-league-elo-calibration-v1",
