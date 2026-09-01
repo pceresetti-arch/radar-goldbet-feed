@@ -1,6 +1,6 @@
 {
   "schema_version": "radar-historical-cross-league-elo-calibration-v1",
-  "generated_at": "2026-09-01T23:45:58.846219+00:00",
+  "generated_at": "2026-09-01T23:47:34.834517+00:00",
   "anti_hindsight": {
     "models_retrained_or_retuned": false,
     "predictions_reconstructed_from": "persisted feature rows plus persisted development-only means/scales and frozen weights",
@@ -1640,9 +1640,21 @@
     }
   },
   "verdict": {
-    "elo_calibration_status": "DIAGNOSTIC_NOT_OPERATIONAL",
-    "market_comparison_status": "NO_PROMOTION",
-    "reason": "Calibration is measured on frozen OOS predictions; any recalibration rule requires a new independent temporal block."
+    "elo_calibration_status": "ACCEPTABLE_POOLED_DIAGNOSTIC_ONLY",
+    "market_comparison_status": "EXTERNAL_AVERAGE_CLOSE_ROBUSTLY_BETTER",
+    "draw_top_pick_status": "STRUCTURAL_MODEL_FAILURE_ZERO_DRAW_TOP_PICKS",
+    "predicted_side_counts": {
+      "H": 2084,
+      "D": 0,
+      "A": 992
+    },
+    "realized_outcome_counts": {
+      "H": 1361,
+      "D": 764,
+      "A": 951
+    },
+    "operational_rule_promoted": false,
+    "reason": "Frozen OOS evidence exposes a no-draw top-pick failure and robust market superiority; recalibration or class-rule changes require a new independent temporal block."
   },
   "economic_metrics": {
     "clv": "NOT_CALCULATED_EXTERNAL_AVERAGE_CLOSE_IS_NOT_GOLDBET_CLOSE",
