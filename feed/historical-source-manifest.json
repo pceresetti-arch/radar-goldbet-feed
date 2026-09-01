@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v15",
-  "generated_at": "2026-09-01T00:42:28.924Z",
+  "schema_version": "radar-historical-source-manifest-v16",
+  "generated_at": "2026-09-01T01:44:39.900Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_638_EVENT_EXACT_OUTCOME_CALIBRATION_COMPLETE",
+  "status": "GOLDBET_FIXTURE_LEVEL_MMS_THRESHOLDS_REJECTED",
   "priority": [
     "Sweden",
     "Norway",
@@ -403,6 +403,43 @@
         "Observed-current timing is heterogeneous and never relabelled CLOSE.",
         "Fixture-clustered paired intervals cross zero for aggregate and each market-specific current-versus-open comparison."
       ]
+    },
+    {
+      "name": "GoldBet fixture-level MMS exact-outcome diagnostic",
+      "path": "feed/historical/open-close/goldbet-fixture-level-mms-v1.json",
+      "source_class": "GOLDBET_SAME_BOOK_FIXTURE_LEVEL_MOVEMENT_DIAGNOSTIC",
+      "status": "ACCEPTED_NO_THRESHOLD_PROMOTED",
+      "exact_outcome_events": 638,
+      "candidate_fixture_market_rows": 1897,
+      "by_market": {
+        "HOME_DRAW_AWAY": 638,
+        "OVER_UNDER_2_5": 637,
+        "BOTH_TEAMS_TO_SCORE": 622
+      },
+      "thresholds": [
+        "DEVIG_PP_1",
+        "DEVIG_PP_2",
+        "DEVIG_PP_3",
+        "ABS_PRICE_DROP_0_20"
+      ],
+      "role": [
+        "FIXTURE_LEVEL_MMS_DIAGNOSTIC",
+        "OBSERVED_CURRENT_EXECUTION_PRICE",
+        "ROI_HIT_RATE_DRAWDOWN_UNCERTAINTY"
+      ],
+      "forbidden_role": [
+        "CERTIFIED_CLOSE",
+        "MULTI_SEASON_OOS",
+        "THRESHOLD_PROMOTION",
+        "CORRELATED_LINE_INDEPENDENCE"
+      ],
+      "quality_notes": [
+        "At most one maximum-shortening selection is retained per fixture and market; O/U is restricted to line 2.5.",
+        "All price features are frozen before exact-ID outcomes are attached.",
+        "Every 10,000-draw ROI interval includes zero.",
+        "O/U 2.5 and BTTS have negative point ROI at all 1/2/3pp thresholds.",
+        "Observed-current timing is heterogeneous and remains distinct from CLOSE."
+      ]
     }
   ],
   "required_blocks": {
@@ -460,7 +497,7 @@
       }
     },
     "same_book_open_close": {
-      "status": "TRUE_OPEN_AND_PREKICKOFF_OBSERVED_CURRENT_AVAILABLE_CERTIFIED_CLOSE_PENDING",
+      "status": "TRUE_OPEN_EXACT_OUTCOMES_FIXTURE_MMS_COMPLETE_CERTIFIED_CLOSE_PENDING",
       "bookmaker_primary": "GoldBet",
       "required_fields": [
         "fixture_id",
@@ -475,7 +512,7 @@
         "close_timestamp",
         "price_source"
       ],
-      "note": "GoldBet TRUE OPEN is joined to 638 exact final outcomes and 9,134 scored selection rows. Observed-current point estimates are slightly better, but all clustered intervals cross zero; the snapshot remains non-CLOSE and no rule is promoted."
+      "note": "Fixture-level testing covers 638 exact outcomes and 1,897 pre-specified market units. All 1/2/3pp and absolute-drop 0.20 ROI intervals include zero; no MMS threshold is promoted. Observed-current remains non-CLOSE."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_3912_ROWS",
