@@ -1,0 +1,51 @@
+name: Historical Backtest Austria 1 Bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-backtest-austria1-bootstrap.yml'
+      - 'tools/historical_build_austria1_baseline.py'
+      - 'tools/historical_model_austria1_structural.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-backtest-austria1-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build frozen Austria baseline
+        run: python tools/historical_build_austria1_baseline.py
+      - name: Build Austria structural OOS model
+        run: python tools/historical_model_austria1_structural.py
+      - name: Preserve generated evidence
+        run: |
+          rm -rf /tmp/austria1-history
+          cp -R feed/historical/austria1 /tmp/austria1-history
+      - name: Commit historical evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/austria1
+            mkdir -p feed/historical
+            cp -R /tmp/austria1-history feed/historical/austria1
+            git add feed/historical/austria1
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Add Austria 1 structural OOS block"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
