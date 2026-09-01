@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v16",
-  "generated_at": "2026-09-01T01:44:39.900Z",
+  "schema_version": "radar-historical-source-manifest-v17",
+  "generated_at": "2026-09-01T02:44:17.869Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_FIXTURE_LEVEL_MMS_THRESHOLDS_REJECTED",
+  "status": "GOLDBET_MMS_MATERIAL_TIMING_AND_TEMPORAL_DRIFT_FOUND",
   "priority": [
     "Sweden",
     "Norway",
@@ -440,6 +440,31 @@
         "O/U 2.5 and BTTS have negative point ROI at all 1/2/3pp thresholds.",
         "Observed-current timing is heterogeneous and remains distinct from CLOSE."
       ]
+    },
+    {
+      "name": "GoldBet fixture-level MMS stability and drift audit",
+      "path": "feed/historical/open-close/goldbet-mms-stability-v1.json",
+      "source_class": "GOLDBET_MMS_STABILITY_DIAGNOSTIC",
+      "status": "ACCEPTED_MATERIAL_DRIFT_NO_SUBGROUP_PROMOTION",
+      "audits": 12,
+      "material_drift_findings": 7,
+      "country_cells_n_ge_30": 6,
+      "role": [
+        "LEAD_TIME_DRIFT",
+        "TEMPORAL_STABILITY",
+        "COMPETITION_CELL_SCREEN"
+      ],
+      "forbidden_role": [
+        "SUBGROUP_RULE_PROMOTION",
+        "CERTIFIED_CLOSE",
+        "CAUSAL_TIMING_EFFECT"
+      ],
+      "quality_notes": [
+        "1X2 PP1 ROI differs materially between <360 and >=360 minute observations.",
+        "1X2 PP1 reverses materially between ordered temporal halves.",
+        "BTTS PP1 deteriorates materially in the later temporal half.",
+        "Subgroup reversals are classified as non-stationarity/confounding and require independent replication."
+      ]
     }
   ],
   "required_blocks": {
@@ -512,7 +537,7 @@
         "close_timestamp",
         "price_source"
       ],
-      "note": "Fixture-level testing covers 638 exact outcomes and 1,897 pre-specified market units. All 1/2/3pp and absolute-drop 0.20 ROI intervals include zero; no MMS threshold is promoted. Observed-current remains non-CLOSE."
+      "note": "Fixture-level MMS thresholds remain rejected. Stability analysis finds material lead-time and temporal reversals, so pooled ROI is not interpretable without timing segmentation; observed-current remains non-CLOSE."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_3912_ROWS",
