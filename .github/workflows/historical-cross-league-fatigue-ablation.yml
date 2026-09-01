@@ -1,0 +1,28 @@
+name: Historical cross-league fatigue ablation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/historical_cross_league_fatigue_ablation.py"
+
+permissions:
+  contents: write
+
+jobs:
+  fatigue-ablation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run frozen pre-match fatigue ablation
+        run: python tools/historical_cross_league_fatigue_ablation.py
+      - name: Commit evidence
+        run: |
+          git config user.name "radar-historical-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add feed/historical/fatigue/cross-league-fatigue-ablation-v1.json
+          git diff --cached --quiet || git commit -m "Add cross-league fatigue OOS ablation"
+          git push
