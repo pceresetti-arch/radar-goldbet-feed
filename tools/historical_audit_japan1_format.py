@@ -84,7 +84,8 @@ def main():
         "seasons":seasons,"failures":failures,
         "comparability":{"signature_fields":["fixture_rows","club_count","team_appearance_values"],"season_signatures":{s["season"]:{"rows":s["rows"],"clubs":s["clubs"],"appearance_values":s["appearance_values"]} for s in seasons},"four_season_directly_comparable":comparable},
         "anti_hindsight":{"outcomes_used_for_format_decision":False,"odds_used_for_format_decision":False,"holdout_model_evaluated":False,"model_built":False},
-        "status":"FORMAT_COMPARABLE_READY_FOR_FROZEN_SPLIT" if comparable else ("FOUR_SEASON_FORMAT_DRIFT_NO_MODEL" if all_four else "SOURCE_FAILURE_OR_MISSING_SEASON_NO_MODEL"),
+        "status":"FORMAT_COMPARABLE_READY_FOR_FROZEN_SPLIT" if comparable else ("FORMAT_DRIFT_18_TO_20_AND_2022_PLAYOFF_ROWS_NO_MODEL" if all_four else "SOURCE_FAILURE_OR_MISSING_SEASON_NO_MODEL"),
+        "interpretation":{"season_2022":"310 rows include a regular 18-club 306-match schedule plus four rows involving lower-division playoff participants; full source league label is not phase-pure.","season_2023":"18 clubs and 306 balanced fixtures.","seasons_2024_2025":"20 clubs and 380 balanced fixtures after league expansion.","eligible_four_season_holdout":False,"future_safe_option":"A 20-club cohort currently has only 2024 and 2025 complete seasons, insufficient for the requested four-season development/holdout design.","decision":"NO_MODEL_NO_METRICS_NO_THRESHOLD_PROMOTION"},
         "decision":"Construct no development/holdout model unless all four target seasons share identical club count and schedule exposure; never downsample based on outcomes."
     }
     REPORT.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
