@@ -38,7 +38,7 @@ def main():
             missing = [k for k in REQUIRED_SOURCE if k not in (rows[0].keys() if rows else [])]
             if missing:
                 raise ValueError(f"missing columns {missing}")
-            if len(rows) != 306:
+            if len(rows) != 380:
                 raise ValueError(f"expected 380 LaLiga fixtures, got {len(rows)}")
             source_path = OUT / f"football-data-SP1-{season.replace('/','-')}.csv"
             source_path.write_bytes(data)
