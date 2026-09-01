@@ -1,0 +1,126 @@
+{
+  "schema_version": "radar-historical-england1-baseline-v1",
+  "generated_at": "2026-09-01T12:40:48.944209+00:00",
+  "source_snapshot": "feed/historical/england1/football-data-ENG1.csv",
+  "normalized_dataset": "feed/historical/england1/premier-league-2022-2026-regular.csv",
+  "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022/2023-2025/2026; 20-team Premier League with 38 league matches per club; post-season European playoffs excluded chronologically after the 38-match cap.",
+  "seasons": [
+    "2022/2023",
+    "2023/2024",
+    "2024/2025",
+    "2025/2026"
+  ],
+  "split": {
+    "development": [
+      "2022/2023",
+      "2023/2024",
+      "2024/2025"
+    ],
+    "holdout": [
+      "2025/2026"
+    ]
+  },
+  "sample": {
+    "source_selected_rows": 1520,
+    "regular_rows": 1520,
+    "development_rows": 1140,
+    "holdout_rows": 380,
+    "excluded_playoff_rows": 0,
+    "excluded": [],
+    "regular_team_counts": {
+      "2022/2023": 20,
+      "2023/2024": 20,
+      "2024/2025": 20,
+      "2025/2026": 20
+    },
+    "team_alias_map": {},
+    "team_alias_field_corrections": 0,
+    "season_match_cap_per_team": 38
+  },
+  "data_quality": {
+    "normalized_duplicate_fixture_keys": 0,
+    "identity_integrity": "Each frozen season must contain exactly 20 clubs and 38 accepted league matches per club; any subsequent playoff row is excluded chronologically without using its result.",
+    "missing_avg_close_triplets": 0,
+    "kickoff_utc_verified_rows": 0,
+    "kickoff_policy": "No UTC conversion is performed because the source documents Time as kickoff time but does not state timezone. Rolling structural features must use strictly prior source dates, excluding same-date information."
+  },
+  "development_outcome_prior": {
+    "H": 0.45087719298245615,
+    "D": 0.22982456140350876,
+    "A": 0.3192982456140351
+  },
+  "holdout_metrics": {
+    "development_prior_baseline": {
+      "n": 380,
+      "multiclass_brier_sum_mean": 0.6562511542012921,
+      "multiclass_brier_class_mean": 0.21875038473376404,
+      "log_loss": 1.0845110721635958,
+      "top_pick_accuracy": 0.4263157894736842,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 380,
+          "hits": 162,
+          "mean_confidence": 0.45087719298245843,
+          "hit_rate": 0.4263157894736842
+        }
+      }
+    },
+    "devigged_average_market_close_benchmark": {
+      "n": 380,
+      "multiclass_brier_sum_mean": 0.6077370146246495,
+      "multiclass_brier_class_mean": 0.20257900487488315,
+      "log_loss": 1.0117668726695335,
+      "top_pick_accuracy": 0.49473684210526314,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 60,
+          "hits": 24,
+          "mean_confidence": 0.38070305026753043,
+          "hit_rate": 0.4
+        },
+        "0.4-0.5": {
+          "n": 129,
+          "hits": 55,
+          "mean_confidence": 0.44533271958403436,
+          "hit_rate": 0.4263565891472868
+        },
+        "0.5-0.6": {
+          "n": 98,
+          "hits": 47,
+          "mean_confidence": 0.5462601741667592,
+          "hit_rate": 0.47959183673469385
+        },
+        "0.6-0.7": {
+          "n": 68,
+          "hits": 42,
+          "mean_confidence": 0.6440363464875517,
+          "hit_rate": 0.6176470588235294
+        },
+        "0.7-0.8": {
+          "n": 21,
+          "hits": 16,
+          "mean_confidence": 0.7456653506124548,
+          "hit_rate": 0.7619047619047619
+        },
+        "0.8-0.9": {
+          "n": 4,
+          "hits": 4,
+          "mean_confidence": 0.8358215640959317,
+          "hit_rate": 1.0
+        }
+      }
+    },
+    "average_market_close_overround": 1.0567305097980337
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "mms": {
+    "goldbet_primary_eligible": false,
+    "open_to_close_eligible": false,
+    "reason": "Only external closing 1X2 benchmark odds are present; no GoldBet TRUE OPEN or same-book OPEN series."
+  },
+  "rule_decision": "BENCHMARK_ONLY_NO_OPERATIONAL_PROMOTION"
+}
