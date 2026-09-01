@@ -219,6 +219,15 @@
     "holdout_model_evaluated": false,
     "model_built": false
   },
-  "status": "FOUR_SEASON_FORMAT_DRIFT_NO_MODEL",
-  "decision": "Do not construct development/holdout model until a comparable competition-phase rule is frozen without inspecting holdout performance."
+  "status": "FOUR_SEASON_FORMAT_DRIFT_AND_2025_2026_FULL_PHASE_INCOMPLETE_NO_MODEL",
+  "decision": "Do not construct development/holdout model until a comparable competition-phase rule is frozen without inspecting holdout performance.",
+  "interpretation": {
+    "material_format_drift": true,
+    "season_2022_2023": "18 clubs, 306 fixtures, 34 appearances per club; internally balanced regular season.",
+    "seasons_2023_2024_to_2025_2026": "16 clubs with playoff phases; total appearances vary by qualification path and cannot be treated as a balanced schedule.",
+    "source_completeness_warning_2025_2026": "311 rows versus 312 in 2023/2024 and 2024/2025; Dender and RAAL La Louviere have 35 appearances, so full-phase completeness is not certified.",
+    "eligible_four_season_holdout": false,
+    "future_safe_option": "Audit and freeze regular-season-only phase separately. The 16-club format offers only three comparable completed seasons, insufficient for the requested four-season design.",
+    "decision": "NO_MODEL_NO_METRICS_NO_THRESHOLD_PROMOTION"
+  }
 }
