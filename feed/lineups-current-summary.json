@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T22:21:02.626268+00:00",
+  "generated_at": "2026-09-01T22:38:50.844410+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -29,12 +29,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T22:21:02.626268+00:00",
+    "generated_at": "2026-09-01T22:38:50.844410+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 9,
+    "target_count": 6,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -43,150 +43,151 @@
       "2026-09-01": {
         "provider": "Sofascore",
         "error": "SCHEDULE_UNAVAILABLE"
+      },
+      "2026-09-02": {
+        "provider": "Sofascore",
+        "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Londrina EC PR - Juventude RS",
-        "minutes_to_start": 9.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Londrina EC PR - Juventude RS",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
     {
       "match": "Bage - Passo Fundo",
       "start_time": "02-09-2026 00:30",
       "league": "Gaucho A2",
-      "minutes_to_start": 9.0,
+      "minutes_to_start": -8.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.14268",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Barranquilla - Boca Juniors de Cali",
       "start_time": "02-09-2026 00:30",
       "league": "Primera B",
-      "minutes_to_start": 9.0,
+      "minutes_to_start": -8.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.4467",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Londrina EC PR - Juventude RS",
       "start_time": "02-09-2026 00:30",
       "league": "Serie B",
-      "minutes_to_start": 9.0,
+      "minutes_to_start": -8.8,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.20748",
       "confirmed_at": "2026-09-01T22:21:02.626268+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "xi_changed_after_confirmation": false,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "R. Verde - Trindade",
       "start_time": "02-09-2026 00:30",
       "league": "Goiano 2",
-      "minutes_to_start": 9.0,
+      "minutes_to_start": -8.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.18541",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Uniao - Veranopolis",
       "start_time": "02-09-2026 00:30",
       "league": "Gaucho A2",
-      "minutes_to_start": 9.0,
+      "minutes_to_start": -8.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.14257",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Defence Force - Sando",
       "start_time": "02-09-2026 01:00",
       "league": "Concacaf Caribbean Club Shield",
-      "minutes_to_start": 39.0,
+      "minutes_to_start": 21.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.18579",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "FC Universitario de Vinto - Club Aurora",
       "start_time": "02-09-2026 01:00",
       "league": "Bolivia Coppa",
-      "minutes_to_start": 39.0,
+      "minutes_to_start": 21.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16475",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Guarani - Lajeadense",
       "start_time": "02-09-2026 01:00",
       "league": "Gaucho A2",
-      "minutes_to_start": 39.0,
+      "minutes_to_start": 21.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.31368",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Montevideo City - Danubio",
       "start_time": "02-09-2026 01:15",
       "league": "Coppa",
-      "minutes_to_start": 54.0,
+      "minutes_to_start": 36.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.8268",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "Atletico Mineiro MG - Cruzeiro",
       "start_time": "02-09-2026 02:00",
       "league": "Coppa Brasiliana",
-      "minutes_to_start": 99.0,
+      "minutes_to_start": 81.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.16924",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
     {
       "match": "LDU Quito - Mushuc Runa SC",
       "start_time": "02-09-2026 02:00",
       "league": "Serie A",
-      "minutes_to_start": 99.0,
+      "minutes_to_start": 81.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.1251",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     }
   ]
