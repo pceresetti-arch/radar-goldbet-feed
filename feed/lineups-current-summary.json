@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T13:01:13.842979+00:00",
+  "generated_at": "2026-09-01T13:22:12.817104+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 16,
+  "target_count": 18,
   "status_counts": {
-    "SOURCE_CONFIRMED": 1,
-    "NOT_AVAILABLE": 12,
-    "REFERENCE_PREVIOUS_XI": 3
+    "NOT_AVAILABLE": 13,
+    "LINEUP_PRESENT_UNCONFIRMED": 1,
+    "REFERENCE_PREVIOUS_XI": 4
   },
   "schedule_stats": [
     {
@@ -24,12 +24,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T13:01:13.842979+00:00",
+    "generated_at": "2026-09-01T13:22:12.817104+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 10,
+    "target_count": 12,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -42,66 +42,12 @@
     },
     "changes": []
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Bandirmaspor - Antalyaspor",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "matches": [
-    {
-      "match": "Bandirmaspor - Antalyaspor",
-      "start_time": "01-09-2026 15:00",
-      "league": "TFF First League",
-      "minutes_to_start": -1.2,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.31190",
-      "confirmed_at": "2026-09-01T12:41:58.973670+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Gadafi FC - Updf FC",
-      "start_time": "01-09-2026 15:00",
-      "league": "Premier League",
-      "minutes_to_start": -1.2,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.20767",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "NEC FC - Lugazi Municipal",
-      "start_time": "01-09-2026 15:00",
-      "league": "Premier League",
-      "minutes_to_start": -1.2,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36363.2940",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Progresul Spartac - Concordia Chiajna",
-      "start_time": "01-09-2026 15:00",
-      "league": "Coppa",
-      "minutes_to_start": -1.2,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.57824",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Podhale Nowy Targ - Grodzisk Mazowiecki",
       "start_time": "01-09-2026 15:30",
       "league": "Coppa",
-      "minutes_to_start": 28.8,
+      "minutes_to_start": 7.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.35220",
       "confirmed_at": null,
@@ -113,7 +59,7 @@
       "match": "Boston River - CA River Plate (URU)",
       "start_time": "01-09-2026 16:00",
       "league": "Tercera Division Reserve",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.44242",
       "confirmed_at": null,
@@ -125,7 +71,7 @@
       "match": "CA San Miguel II - Nueva Chicago Reserve",
       "start_time": "01-09-2026 16:00",
       "league": "Campeonato De Riserva De Primera Nacional",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.20509",
       "confirmed_at": null,
@@ -137,7 +83,7 @@
       "match": "Chemik Bydgoszcz - Gliwice",
       "start_time": "01-09-2026 16:00",
       "league": "Coppa",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.44240",
       "confirmed_at": null,
@@ -149,8 +95,8 @@
       "match": "El Mahallah - Al Sharqiya Enppi",
       "start_time": "01-09-2026 16:00",
       "league": "Premier League",
-      "minutes_to_start": 58.8,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 37.8,
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
       "match_market_id": "36361.39655",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
@@ -161,7 +107,7 @@
       "match": "Talaea El Gaish - Zed",
       "start_time": "01-09-2026 16:00",
       "league": "Premier League",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.33401",
       "confirmed_at": null,
@@ -173,7 +119,7 @@
       "match": "Tarnobrzeg - Zaglebie Lubin",
       "start_time": "01-09-2026 16:00",
       "league": "Coppa",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.55030",
       "confirmed_at": null,
@@ -185,7 +131,7 @@
       "match": "Wisla Plock II - Niepolomice",
       "start_time": "01-09-2026 16:00",
       "league": "Coppa",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.55027",
       "confirmed_at": null,
@@ -197,7 +143,7 @@
       "match": "Zks Kluczevia Stargard - Pogon Siedlce",
       "start_time": "01-09-2026 16:00",
       "league": "Coppa",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.55025",
       "confirmed_at": null,
@@ -209,7 +155,7 @@
       "match": "Ümraniyespor - Mugla",
       "start_time": "01-09-2026 16:00",
       "league": "TFF First League",
-      "minutes_to_start": 58.8,
+      "minutes_to_start": 37.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.31191",
       "confirmed_at": null,
@@ -221,7 +167,7 @@
       "match": "Primeiro de Agosto - Interclube",
       "start_time": "01-09-2026 16:30",
       "league": "Girabola",
-      "minutes_to_start": 88.8,
+      "minutes_to_start": 67.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.22450",
       "confirmed_at": null,
@@ -233,12 +179,84 @@
       "match": "Tomasov - Inter Bratislava",
       "start_time": "01-09-2026 16:30",
       "league": "Coppa",
-      "minutes_to_start": 88.8,
+      "minutes_to_start": 67.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.55158",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "CA Excursionistas Reserve - Csd Liniers Reseves",
+      "start_time": "01-09-2026 17:00",
+      "league": "Campeonato De Riserva De Primera Nacional",
+      "minutes_to_start": 97.8,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36363.8340",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Corona Brasov - Oradea",
+      "start_time": "01-09-2026 17:00",
+      "league": "Coppa",
+      "minutes_to_start": 97.8,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36361.57826",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Minija 2017 - Dainava Alytus",
+      "start_time": "01-09-2026 17:00",
+      "league": "Coppa LEF",
+      "minutes_to_start": 97.8,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36363.5244",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "NK Smartno 1928 - Velenje",
+      "start_time": "01-09-2026 17:00",
+      "league": "Coppa",
+      "minutes_to_start": 97.8,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36363.9238",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Sepsi OSK - Cluj",
+      "start_time": "01-09-2026 17:00",
+      "league": "Coppa",
+      "minutes_to_start": 97.8,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.57825",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Volos - Kalamata",
+      "start_time": "01-09-2026 17:00",
+      "league": "Coppa",
+      "minutes_to_start": 97.8,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.57733",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
