@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v14",
-  "generated_at": "2026-08-31T23:40:37.332Z",
+  "schema_version": "radar-historical-source-manifest-v15",
+  "generated_at": "2026-09-01T00:42:28.924Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_EXACT_OUTCOME_T30_PILOT_COMPLETE",
+  "status": "GOLDBET_638_EVENT_EXACT_OUTCOME_CALIBRATION_COMPLETE",
   "priority": [
     "Sweden",
     "Norway",
@@ -369,6 +369,40 @@
         "Two fixtures use T-30 checkpoints classified FALLBACK and one uses GOOD; quality is never collapsed.",
         "Only two fixtures generate >=1pp shortening signals and multiple rows are correlated markets/lines."
       ]
+    },
+    {
+      "name": "GoldBet TRUE OPEN exact-outcome calibration 2026",
+      "path": "feed/historical/open-close/goldbet-true-open-calibration-v1.json",
+      "outcome_table": "feed/historical/open-close/goldbet-exact-outcomes-v1.json",
+      "source_class": "GOLDBET_TRUE_OPEN_EXACT_OUTCOME_PROSPECTIVE_DIAGNOSTIC",
+      "status": "ACCEPTED_DIAGNOSTIC_NO_RULE_PROMOTED",
+      "indexed_events": 642,
+      "exact_final_outcomes": 638,
+      "unresolved_events": 4,
+      "complete_price_groups": 4248,
+      "scored_selection_rows": 9134,
+      "markets": [
+        "1X2",
+        "OVER_UNDER",
+        "BOTH_TEAMS_TO_SCORE"
+      ],
+      "role": [
+        "TRUE_OPEN_CALIBRATION",
+        "OBSERVED_CURRENT_COMPARISON",
+        "EXACT_ID_OUTCOME_JOIN"
+      ],
+      "forbidden_role": [
+        "CERTIFIED_CLOSE",
+        "MULTI_SEASON_OOS",
+        "ROI_STRATEGY",
+        "THRESHOLD_PROMOTION"
+      ],
+      "quality_notes": [
+        "All pre-match price rows are frozen before final outcomes are attached.",
+        "Four event feeds lack both regular-half score sections and remain excluded.",
+        "Observed-current timing is heterogeneous and never relabelled CLOSE.",
+        "Fixture-clustered paired intervals cross zero for aggregate and each market-specific current-versus-open comparison."
+      ]
     }
   ],
   "required_blocks": {
@@ -416,6 +450,13 @@
             "2025/2026"
           ]
         }
+      },
+      "goldbet_2026_exact_outcomes": {
+        "status": "PARTIAL_ACCEPTED_638_OF_642_EXACT_IDS",
+        "report": "feed/historical/open-close/goldbet-exact-outcomes-v1.json",
+        "final_events": 638,
+        "unresolved_events": 4,
+        "rule": "Exact Flashscore event ID only; require both regular halves; never use fuzzy match-score fields."
       }
     },
     "same_book_open_close": {
@@ -434,7 +475,7 @@
         "close_timestamp",
         "price_source"
       ],
-      "note": "GoldBet has 642 exact TRUE OPEN events and 9,188 exact observed-current rows, all before kickoff. A five-event movement-state pilot now proves exact-ID outcome joins and three-event T-30 coverage, but no observation is certified as final CLOSE."
+      "note": "GoldBet TRUE OPEN is joined to 638 exact final outcomes and 9,134 scored selection rows. Observed-current point estimates are slightly better, but all clustered intervals cross zero; the snapshot remains non-CLOSE and no rule is promoted."
     },
     "market_close_benchmark": {
       "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_3912_ROWS",
