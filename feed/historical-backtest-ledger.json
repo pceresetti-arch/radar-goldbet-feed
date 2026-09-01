@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v15",
-  "generated_at": "2026-09-01T00:42:14.806Z",
+  "schema_version": "radar-historical-backtest-ledger-v16",
+  "generated_at": "2026-09-01T01:44:26.551Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_638_EVENT_EXACT_OUTCOME_CALIBRATION_COMPLETE",
+  "status": "GOLDBET_FIXTURE_LEVEL_MMS_THRESHOLDS_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -123,7 +123,12 @@
     "goldbet_exact_outcome_unresolved_events": 4,
     "goldbet_calibration_complete_price_groups": 4248,
     "goldbet_calibration_scored_selection_rows": 9134,
-    "goldbet_calibration_invalid_groups": 0
+    "goldbet_calibration_invalid_groups": 0,
+    "goldbet_fixture_level_mms_candidate_rows": 1897,
+    "goldbet_fixture_level_mms_events": 638,
+    "goldbet_fixture_level_1x2_rows": 638,
+    "goldbet_fixture_level_ou25_rows": 637,
+    "goldbet_fixture_level_btts_rows": 622
   },
   "quarantined_evidence": [
     {
@@ -216,7 +221,10 @@
     "Kept all T-30 movement thresholds diagnostic: only two fixtures generate >=1pp shortening signals and correlated markets/lines prevent inferential or operational promotion.",
     "Scaled the exact Flashscore-event-ID outcome resolver from five to all 642 GoldBet TRUE OPEN records: 638 final two-half outcomes parsed, four unresolved/non-final feeds excluded, zero duplicate IDs.",
     "Scored 4,248 complete market groups and 9,134 selection rows across 1X2, full-time Over/Under and BTTS with pre-match prices frozen before outcome attachment.",
-    "Compared TRUE OPEN with the exact pre-kickoff observed-current price using fixture-clustered 5,000-draw bootstrap intervals; point estimates favor observed-current slightly, but every aggregate and market-specific interval crosses zero."
+    "Compared TRUE OPEN with the exact pre-kickoff observed-current price using fixture-clustered 5,000-draw bootstrap intervals; point estimates favor observed-current slightly, but every aggregate and market-specific interval crosses zero.",
+    "Reduced the 9,134 correlated selection rows to 1,897 pre-specified fixture-market units: one maximum shortening candidate for FT 1X2, FT O/U 2.5 and FT BTTS.",
+    "Evaluated de-vig probability movements >=1/2/3pp and the legacy absolute price drop >=0.20 at the exact observed GoldBet price, with 10,000-draw ROI bootstrap intervals and chronological drawdown.",
+    "Found no threshold-market cell with a positive 95% ROI lower bound; O/U 2.5 and BTTS point ROI is negative at every de-vig movement threshold."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -825,6 +833,99 @@
         "btts": 622
       },
       "interpretation": "Observed-current has marginally better point estimates, but fixture-clustered intervals cross zero in aggregate and in every market. No superiority, threshold or operational rule is established."
+    },
+    "goldbet_fixture_level_mms_2026": {
+      "report": "feed/historical/open-close/goldbet-fixture-level-mms-v1.json",
+      "classification": "PROSPECTIVE_2026_SAME_BOOK_OBSERVED_CURRENT_DIAGNOSTIC",
+      "coverage": {
+        "events": 638,
+        "candidate_fixture_market_rows": 1897,
+        "one_x_two": 638,
+        "ou25": 637,
+        "btts": 622
+      },
+      "one_x_two": {
+        "pp1": {
+          "n": 392,
+          "roi": -0.0039285714,
+          "ci95": [
+            -0.1344897959,
+            0.134005102
+          ],
+          "max_drawdown": 55.63
+        },
+        "pp2": {
+          "n": 248,
+          "roi": 0.0144758065,
+          "ci95": [
+            -0.1409677419,
+            0.1761290323
+          ],
+          "max_drawdown": 22.59
+        },
+        "pp3": {
+          "n": 166,
+          "roi": -0.0237349398,
+          "ci95": [
+            -0.1986746988,
+            0.1581325301
+          ],
+          "max_drawdown": 24.61
+        }
+      },
+      "ou25": {
+        "pp1": {
+          "n": 283,
+          "roi": -0.004770318,
+          "ci95": [
+            -0.1098233216,
+            0.0989045936
+          ]
+        },
+        "pp2": {
+          "n": 165,
+          "roi": -0.0529090909,
+          "ci95": [
+            -0.1888484848,
+            0.0827878788
+          ]
+        },
+        "pp3": {
+          "n": 107,
+          "roi": -0.0645794393,
+          "ci95": [
+            -0.2361682243,
+            0.1104672897
+          ]
+        }
+      },
+      "btts": {
+        "pp1": {
+          "n": 274,
+          "roi": -0.052919708,
+          "ci95": [
+            -0.1595985401,
+            0.0503284672
+          ]
+        },
+        "pp2": {
+          "n": 140,
+          "roi": -0.0468571429,
+          "ci95": [
+            -0.1962857143,
+            0.0990714286
+          ]
+        },
+        "pp3": {
+          "n": 87,
+          "roi": -0.0551724138,
+          "ci95": [
+            -0.2367816092,
+            0.1354022989
+          ]
+        }
+      },
+      "interpretation": "No market-threshold cell supports promotion. Observed-current timing is heterogeneous and not CLOSE; independent replication remains mandatory."
     }
   },
   "ablation_plan": {
@@ -842,10 +943,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Investigate the four unresolved exact IDs and build a non-correlated fixture-level MMS analysis on the 638 settled events.",
-    "structural_lane": "Keep all completed multi-season league holdouts frozen and separate from the prospective 2026 GoldBet block.",
-    "market_lane": "Segment OPEN-to-observed-current diagnostics by lead time, league and market; preserve the fact that observed-current is not CLOSE.",
-    "mms_lane": "Select one pre-specified signal unit per fixture/market and use event-clustered uncertainty before considering any movement threshold."
+    "priority": "Replicate fixture-level MMS on an independent temporal block and add league/lead-time drift only where cell sizes remain adequate.",
+    "structural_lane": "Keep multi-season structural holdouts frozen.",
+    "market_lane": "Continue collecting true last-pre-kickoff observations; current 2026 snapshots remain heterogeneous observed-current prices, not CLOSE.",
+    "mms_lane": "All tested 1/2/3pp and absolute-drop 0.20 thresholds remain rejected for promotion pending independent evidence."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -860,7 +961,9 @@
       "Primeira Liga+Eredivisie v1.47/v1.77: reject promotion of every 1X2 and O/U 2.5 threshold; all pooled early-ROI intervals include zero, results are league-heterogeneous, and selection is CLOSE-conditioned.",
       "Netherlands v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both have worse point estimates and paired intervals include zero.",
       "GoldBet T-30 pilot v1: reject promotion of all 1/2/3pp shortening thresholds; signals occur on only two fixtures and rows are correlated across 1X2 and total-goal lines.",
-      "GoldBet exact-outcome calibration v1: reject the claim that the heterogeneous pre-kickoff observed-current snapshot reliably improves TRUE OPEN; all fixture-clustered paired Brier/log-loss intervals cross zero."
+      "GoldBet exact-outcome calibration v1: reject the claim that the heterogeneous pre-kickoff observed-current snapshot reliably improves TRUE OPEN; all fixture-clustered paired Brier/log-loss intervals cross zero.",
+      "GoldBet fixture-level MMS v1: reject promotion of de-vig shortening thresholds >=1/2/3pp for FT 1X2, O/U 2.5 and BTTS; every 10,000-draw ROI interval includes zero.",
+      "GoldBet fixture-level MMS v1: reject the legacy absolute price-drop >=0.20 rule across 1X2, O/U 2.5 and BTTS; all ROI intervals include zero and O/U/BTTS point ROI is negative."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -882,7 +985,8 @@
       "Fields named home_score/away_score/match_score in the Diretta index are identity-match confidence values, not final scores; outcome semantics require a separately documented result source.",
       "A pre-kickoff current price is not a CLOSE unless it is proven to be the last valid same-book observation before kickoff; timing alone is insufficient.",
       "Final outcomes may be joined through exact Flashscore event IDs only after pre-match price features are frozen; T-30 checkpoint quality and distance must remain explicit.",
-      "Outcome resolution scales only through exact Flashscore event IDs; feeds lacking both regular-half score sections remain unresolved and excluded rather than inferred."
+      "Outcome resolution scales only through exact Flashscore event IDs; feeds lacking both regular-half score sections remain unresolved and excluded rather than inferred.",
+      "MMS threshold tests use at most one pre-specified candidate per fixture and market; correlated totals lines and opposing selections may not be counted as independent signals."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
