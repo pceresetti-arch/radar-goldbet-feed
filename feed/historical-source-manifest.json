@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v30",
-  "generated_at": "2026-09-01T16:43:03.671Z",
+  "schema_version": "radar-historical-source-manifest-v31",
+  "generated_at": "2026-09-01T17:38:09.066Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "TEN_LEAGUE_FATIGUE_ABLATION_COMPLETE_NOT_PROMOTED",
+  "status": "AUSTRIA1_STRUCTURAL_OOS_COMPLETE_ELEVEN_LEAGUE_SAMPLE",
   "priority": [
     "Sweden",
     "Norway",
@@ -884,6 +884,41 @@
         "Accepted league datasets omit cross-competition matches; travel, extra time, minutes, rotation and injury recovery are unavailable.",
         "Pooled Brier and log-loss deteriorate with paired 95% intervals entirely unfavorable to the added module."
       ]
+    },
+    {
+      "name": "Football-Data.co.uk Austria consolidated source",
+      "url": "https://www.football-data.co.uk/new/AUT.csv",
+      "league": "Austrian Bundesliga",
+      "role": [
+        "FIXTURE_RESULT_BASELINE",
+        "MARKET_CLOSING_BENCHMARK",
+        "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS"
+      ],
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "source_snapshot": "feed/historical/austria1/football-data-AUT.csv",
+      "source_sha256": "88c29cfd945f800d3b0d2bd6c2a9d2fed020cb48462155d466dc85a72ae78bc8",
+      "format_audit": "feed/historical/austria1/format-audit-v1.json",
+      "normalized_dataset": "feed/historical/austria1/austrian-bundesliga-2022-2026-regular.csv",
+      "benchmark_output": "feed/historical/austria1/baseline-benchmark.json",
+      "structural_feature_dataset": "feed/historical/austria1/austrian-bundesliga-2022-2026-features.csv",
+      "structural_oos_report": "feed/historical/austria1/structural-oos-v1.json",
+      "status": "ACCEPTED_AUSTRIA1_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+      "verified_source_rows": 774,
+      "accepted_regular_rows": 768,
+      "development_rows": 576,
+      "holdout_rows": 192,
+      "excluded_european_playoff_rows": 6,
+      "quality_notes": [
+        "The earliest 192 chronologically ordered fixtures form 12 clubs with exactly 32 appearances per club in every frozen season.",
+        "Six only chronologically subsequent European playoff fixtures in 2022/2023 and 2023/2024 are excluded without inspecting results.",
+        "Outcome columns are joined only after same-date-batched pre-match feature freeze.",
+        "Closing odds remain an external benchmark and never GoldBet TRUE OPEN."
+      ]
     }
   ],
   "required_blocks": {
@@ -1073,8 +1108,9 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "priority": "Next Radar league with four comparable seasons and a frozen format gate",
-    "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
-    "belgium_constraint": "Full-season four-year model remains excluded because of format drift and incomplete 2025/2026 phase coverage."
+    "priority": "J1 League historical source and format audit before any model",
+    "structural_sample": "Eleven accepted leagues, 12,304 fixtures and 3,076 holdout rows",
+    "belgium_constraint": "Full-season four-year model remains excluded because of format drift and incomplete 2025/2026 phase coverage.",
+    "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context."
   }
 }
