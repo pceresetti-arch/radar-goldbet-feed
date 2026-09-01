@@ -1,0 +1,59 @@
+name: Historical Backtest Portugal Bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-backtest-portugal-bootstrap.yml'
+      - 'tools/historical_ingest_portugal.py'
+      - 'tools/historical_build_portugal_baseline.py'
+      - 'tools/historical_model_portugal_structural.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-backtest-portugal-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover and profile Portugal historical source
+        run: python tools/historical_ingest_portugal.py
+      - name: Build frozen Portugal baseline
+        run: python tools/historical_build_portugal_baseline.py
+      - name: Build Portugal structural OOS model
+        run: python tools/historical_model_portugal_structural.py
+      - name: Preserve generated evidence
+        run: |
+          rm -rf /tmp/portugal-history
+          cp -R feed/historical/portugal /tmp/portugal-history
+      - name: Commit historical discovery evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/portugal
+            mkdir -p feed/historical
+            cp -R /tmp/portugal-history feed/historical/portugal
+            git add feed/historical/portugal
+            if git diff --cached --quiet; then
+              echo "No discovery changes"
+              exit 0
+            fi
+            git commit -m "Update Portugal historical source discovery"
+            if git push; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          exit 1
