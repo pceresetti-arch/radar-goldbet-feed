@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v27",
-  "generated_at": "2026-09-01T13:49:43.843Z",
+  "schema_version": "radar-historical-backtest-ledger-v28",
+  "generated_at": "2026-09-01T14:44:13.661Z",
   "local_timezone": "Europe/Rome",
-  "status": "SCOTLAND1_SOURCE_FAILURE_QUARANTINED_NO_SAMPLE_CHANGE",
+  "status": "SCOTLAND1_STRUCTURAL_OOS_COMPLETE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -331,7 +331,12 @@
     "External de-vigged average closing odds have better Premier League point estimates than Elo, but paired Brier/log-loss intervals versus Elo include zero; superiority is significant only against the full structural variant.",
     "Defined and versioned the Scottish Premiership four-season gate: 12 clubs, 228 fixtures and 38 matches per club, retaining the post-split phase without assuming a balanced round robin.",
     "Attempted Football-Data SC0 ingestion twice; all four season files timed out in both attempts. Zero partial rows were accepted and all downstream modeling steps were skipped.",
-    "Quarantined the Scotland source failure at feed/historical/scotland1/source-failure-v1.json; the nine accepted structural blocks remain frozen at 10,624 fixtures and 2,656 OOS."
+    "Quarantined the Scotland source failure at feed/historical/scotland1/source-failure-v1.json; the nine accepted structural blocks remain frozen at 10,624 fixtures and 2,656 OOS.",
+    "Recovered all four Scottish Premiership SC0 source files after two quarantined timeout attempts; each immutable source contains exactly 228 fixtures and a separate SHA-256.",
+    "Frozen Scottish Premiership split before evaluation: 2022/2023-2024/2025 development (684), untouched 2025/2026 holdout (228).",
+    "Verified 12 clubs, 228 fixtures and 38 matches per club in every Scottish season, including the post-split phase; zero duplicate fixture keys and zero missing average closing triplets.",
+    "Replicated the unchanged structural specification on Scotland; Elo robustly improves the development prior, while form/full worsen Elo on Brier and log-loss without reliable incremental value.",
+    "Corrected an inherited ENGLAND1 provenance label to SCOTLAND1 before formal acceptance; metrics and feature rows were unchanged."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1657,14 +1662,52 @@
       "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_REJECTED; MARKET_POINT_BETTER_NOT_CONCLUSIVE_VS_ELO; MARKET_SIGNIFICANTLY_BETTER_VS_FULL; NO_OPERATIONAL_PROMOTION"
     },
     "scotland1_source_attempt_2022_2026": {
-      "status": "TRANSIENT_SOURCE_FAILURE_NO_SAMPLE_ACCEPTED",
-      "attempts": 2,
+      "status": "RECOVERED_COMPLETE_FOUR_SEASONS",
+      "attempts": 3,
+      "failed_attempts": 2,
+      "successful_attempt": 3,
       "requested_seasons": 4,
-      "successful_seasons": 0,
-      "accepted_rows": 0,
+      "successful_seasons": 4,
+      "accepted_rows": 912,
       "expected_rows": 912,
-      "downstream_model_executed": false,
+      "downstream_model_executed": true,
       "report": "feed/historical/scotland1/source-failure-v1.json"
+    },
+    "scotland1_structural_oos_2025_2026": {
+      "development_n": 684,
+      "holdout_n": 228,
+      "development_prior_baseline": {
+        "brier": 0.650717314729319,
+        "log_loss": 1.0773116810022252,
+        "accuracy": 0.4473684210526316
+      },
+      "elo_only": {
+        "brier": 0.5835089090350832,
+        "log_loss": 0.9821868766986213,
+        "accuracy": 0.5394736842105263
+      },
+      "elo_plus_form": {
+        "brier": 0.586621048193369,
+        "log_loss": 0.9870434384256126,
+        "accuracy": 0.5482456140350878
+      },
+      "full_structural": {
+        "brier": 0.5853963636795275,
+        "log_loss": 0.9855345927646763,
+        "accuracy": 0.543859649122807
+      },
+      "external_average_close": {
+        "brier": 0.5758910416100392,
+        "log_loss": 0.9684421006736637,
+        "accuracy": 0.5219298245614035
+      },
+      "inference": {
+        "elo_vs_prior": "ROBUST_BRIER_AND_LOG_LOSS_CI_ABOVE_ZERO",
+        "form_vs_elo": "NOT_PROMOTED_POINT_WORSE_CI_INCLUDES_ZERO",
+        "full_vs_elo": "NOT_PROMOTED_POINT_WORSE_CI_INCLUDES_ZERO",
+        "close_vs_elo": "POINT_BETTER_NOT_STATISTICALLY_CONCLUSIVE"
+      },
+      "report": "feed/historical/scotland1/structural-oos-v1.json"
     }
   },
   "ablation_plan": {
@@ -1682,8 +1725,8 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Retry Scottish Premiership ingestion only when the source endpoint is responsive; do not accept partial seasons.",
-    "structural_lane": "Scottish gate frozen at 12 clubs, 228 fixtures and 38 matches per club including post-split; existing nine league OOS blocks remain unchanged.",
+    "priority": "Continue structural expansion only where four completed seasons pass league-specific format gates; keep GoldBet MMS thresholds frozen.",
+    "structural_lane": "Freeze ten completed league OOS blocks totaling 11,536 fixtures and 2,884 holdout rows; Belgium requires explicit playoff-format treatment before ingestion.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1717,7 +1760,8 @@
       "LaLiga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; paired intervals include zero and the full bundle has worse point estimates.",
       "LaLiga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant.",
       "Premier League v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
-      "Premier League v1: reject a definitive closing-market superiority claim versus Elo; closing point estimates are better but paired Brier and log-loss intervals include zero."
+      "Premier League v1: reject a definitive closing-market superiority claim versus Elo; closing point estimates are better but paired Brier and log-loss intervals include zero.",
+      "Scottish Premiership form and full structural bundles: no reliable incremental improvement over Elo on the frozen 2025/2026 holdout."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1748,7 +1792,8 @@
       "Pre-kickoff eligibility now requires two agreeing temporal proofs: non-negative minutes_to_start and captured_at strictly before kickoff; any disagreement is quarantined.",
       "Inherited artifact labels must be validated after mechanical league extension; a mislabelled feature path is corrected before evidence acceptance.",
       "League-format constants must be changed in both documented expectations and executable eligibility conditions; a message-only update is insufficient and failed runs remain quarantined.",
-      "Scottish Premiership must retain its post-split phase and must not be modeled as a balanced round robin; partial source seasons are forbidden."
+      "Scottish Premiership must retain its post-split phase and must not be modeled as a balanced round robin; partial source seasons are forbidden.",
+      "Scottish Premiership post-split phase retained; schedule treated as asymmetric, not a balanced round robin."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
