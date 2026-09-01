@@ -1,0 +1,542 @@
+{
+  "schema_version": "radar-historical-scotland1-structural-oos-v1",
+  "generated_at": "2026-09-01T14:39:52.591181+00:00",
+  "dataset": "feed/historical/scotland1/scottish-premiership-2022-2026-regular.csv",
+  "feature_dataset": "feed/historical/scotland1/scottish-premiership-2022-2026-features.csv",
+  "anti_hindsight": {
+    "outcomes_used_for_current_match_features": false,
+    "same_date_results_used": false,
+    "features_updated_after_complete_date_batch": true,
+    "development_seasons": [
+      "2022/2023",
+      "2023/2024",
+      "2024/2025"
+    ],
+    "holdout_seasons": [
+      "2025/2026"
+    ],
+    "holdout_used_for_training_or_tuning": false,
+    "missing_feature_imputation": "development mean only",
+    "hyperparameters": "copied unchanged from Sweden/Norway v1 before Scotland 1 holdout evaluation",
+    "specification_source": "SWEDEN_NORWAY_V1_FROZEN_NO_ENGLAND1_HOLDOUT_TUNING"
+  },
+  "feature_rules": {
+    "elo": {
+      "initial": 1500,
+      "k": 20.0,
+      "home_advantage": 60.0,
+      "season_mean_reversion": 0.5
+    },
+    "rolling_window_matches": 5,
+    "form": "points per game from prior five matches",
+    "goal_balance": "goals for minus against per prior match",
+    "home_away": "home team's prior home PPG minus away team's prior away PPG",
+    "opponent_quality": "mean pre-match Elo of prior five opponents"
+  },
+  "sample": {
+    "development": 684,
+    "holdout": 228
+  },
+  "ablation_same_holdout": {
+    "ELO_ONLY": {
+      "features": [
+        "elo_diff"
+      ],
+      "imputation": "DEVELOPMENT_MEAN_ONLY",
+      "standardization": {
+        "means": {
+          "elo_diff": -0.3878128125925712
+        },
+        "scales": {
+          "elo_diff": 91.78171829129151
+        }
+      },
+      "fixed_training": {
+        "l2": 0.01,
+        "learning_rate": 0.08,
+        "iterations": 1800
+      },
+      "weights_by_outcome": {
+        "H": [
+          0.39828976729703636,
+          0.5720528394560798
+        ],
+        "D": [
+          -0.2991847464416116,
+          -0.046856937175047485
+        ],
+        "A": [
+          -0.09910502085542365,
+          -0.5251959022810335
+        ]
+      },
+      "holdout_metrics": {
+        "n": 228,
+        "multiclass_brier_sum_mean": 0.5835089090350832,
+        "multiclass_brier_class_mean": 0.1945029696783611,
+        "log_loss": 0.9821868766986213,
+        "top_pick_accuracy": 0.5394736842105263,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 19,
+            "hits": 9,
+            "mean_confidence": 0.38819721393061024,
+            "hit_rate": 0.47368421052631576
+          },
+          "0.4-0.5": {
+            "n": 69,
+            "hits": 27,
+            "mean_confidence": 0.4501188655276589,
+            "hit_rate": 0.391304347826087
+          },
+          "0.5-0.6": {
+            "n": 61,
+            "hits": 35,
+            "mean_confidence": 0.5519662174016042,
+            "hit_rate": 0.5737704918032787
+          },
+          "0.6-0.7": {
+            "n": 50,
+            "hits": 28,
+            "mean_confidence": 0.6528279279793345,
+            "hit_rate": 0.56
+          },
+          "0.7-0.8": {
+            "n": 21,
+            "hits": 17,
+            "mean_confidence": 0.7470469103634663,
+            "hit_rate": 0.8095238095238095
+          },
+          "0.8-0.9": {
+            "n": 8,
+            "hits": 7,
+            "mean_confidence": 0.8374061210524313,
+            "hit_rate": 0.875
+          }
+        }
+      }
+    },
+    "ELO_PLUS_FORM": {
+      "features": [
+        "elo_diff",
+        "form_ppg_diff",
+        "goal_balance_diff"
+      ],
+      "imputation": "DEVELOPMENT_MEAN_ONLY",
+      "standardization": {
+        "means": {
+          "elo_diff": -0.3878128125925712,
+          "form_ppg_diff": -0.045839487936976855,
+          "goal_balance_diff": -0.07818808468734613
+        },
+        "scales": {
+          "elo_diff": 91.78171829129151,
+          "form_ppg_diff": 1.0026157346381686,
+          "goal_balance_diff": 1.512516638169976
+        }
+      },
+      "fixed_training": {
+        "l2": 0.01,
+        "learning_rate": 0.08,
+        "iterations": 1800
+      },
+      "weights_by_outcome": {
+        "H": [
+          0.39934384146968804,
+          0.43479886444957033,
+          0.09378294692319313,
+          0.1080124218989801
+        ],
+        "D": [
+          -0.29951890412776694,
+          0.02823498412548349,
+          -0.003472507812405839,
+          -0.10516637589814926
+        ],
+        "A": [
+          -0.09982493734191954,
+          -0.46303384857505414,
+          -0.09031043911078743,
+          -0.0028460460008308667
+        ]
+      },
+      "holdout_metrics": {
+        "n": 228,
+        "multiclass_brier_sum_mean": 0.586621048193369,
+        "multiclass_brier_class_mean": 0.19554034939778966,
+        "log_loss": 0.9870434384256126,
+        "top_pick_accuracy": 0.5482456140350878,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 16,
+            "hits": 7,
+            "mean_confidence": 0.3904708339691673,
+            "hit_rate": 0.4375
+          },
+          "0.4-0.5": {
+            "n": 68,
+            "hits": 30,
+            "mean_confidence": 0.4442143170412117,
+            "hit_rate": 0.4411764705882353
+          },
+          "0.5-0.6": {
+            "n": 59,
+            "hits": 32,
+            "mean_confidence": 0.5513588686258845,
+            "hit_rate": 0.5423728813559322
+          },
+          "0.6-0.7": {
+            "n": 49,
+            "hits": 28,
+            "mean_confidence": 0.6441877817407303,
+            "hit_rate": 0.5714285714285714
+          },
+          "0.7-0.8": {
+            "n": 29,
+            "hits": 22,
+            "mean_confidence": 0.7480973685973421,
+            "hit_rate": 0.7586206896551724
+          },
+          "0.8-0.9": {
+            "n": 7,
+            "hits": 6,
+            "mean_confidence": 0.839782250565566,
+            "hit_rate": 0.8571428571428571
+          }
+        }
+      }
+    },
+    "FULL_STRUCTURAL": {
+      "features": [
+        "elo_diff",
+        "form_ppg_diff",
+        "goal_balance_diff",
+        "venue_ppg_diff",
+        "opponent_elo_diff"
+      ],
+      "imputation": "DEVELOPMENT_MEAN_ONLY",
+      "standardization": {
+        "means": {
+          "elo_diff": -0.3878128125925712,
+          "form_ppg_diff": -0.045839487936976855,
+          "goal_balance_diff": -0.07818808468734613,
+          "venue_ppg_diff": 0.47333333333333333,
+          "opponent_elo_diff": -0.307649516667438
+        },
+        "scales": {
+          "elo_diff": 91.78171829129151,
+          "form_ppg_diff": 1.0026157346381686,
+          "goal_balance_diff": 1.512516638169976,
+          "venue_ppg_diff": 1.0026541890829421,
+          "opponent_elo_diff": 35.43330788766957
+        }
+      },
+      "fixed_training": {
+        "l2": 0.01,
+        "learning_rate": 0.08,
+        "iterations": 1800
+      },
+      "weights_by_outcome": {
+        "H": [
+          0.40065928054752,
+          0.45985493827332025,
+          0.09904296741889042,
+          0.08522434485112745,
+          -0.006122536340048111,
+          -0.06905004590775464
+        ],
+        "D": [
+          -0.2991823062674479,
+          0.007007513067649553,
+          -0.02098232513010648,
+          -0.10597575021230644,
+          0.05067884297166363,
+          0.009700363107605704
+        ],
+        "A": [
+          -0.10147697428007066,
+          -0.46686245134096954,
+          -0.07806064228878418,
+          0.02075140536117889,
+          -0.04455630663161547,
+          0.05934968280014881
+        ]
+      },
+      "holdout_metrics": {
+        "n": 228,
+        "multiclass_brier_sum_mean": 0.5853963636795275,
+        "multiclass_brier_class_mean": 0.19513212122650916,
+        "log_loss": 0.9855345927646763,
+        "top_pick_accuracy": 0.543859649122807,
+        "top_pick_calibration": {
+          "0.3-0.4": {
+            "n": 15,
+            "hits": 6,
+            "mean_confidence": 0.3857791675032632,
+            "hit_rate": 0.4
+          },
+          "0.4-0.5": {
+            "n": 69,
+            "hits": 29,
+            "mean_confidence": 0.44378962848459214,
+            "hit_rate": 0.42028985507246375
+          },
+          "0.5-0.6": {
+            "n": 60,
+            "hits": 33,
+            "mean_confidence": 0.5528735573891513,
+            "hit_rate": 0.55
+          },
+          "0.6-0.7": {
+            "n": 47,
+            "hits": 27,
+            "mean_confidence": 0.6450279832025644,
+            "hit_rate": 0.574468085106383
+          },
+          "0.7-0.8": {
+            "n": 28,
+            "hits": 22,
+            "mean_confidence": 0.7466907932183322,
+            "hit_rate": 0.7857142857142857
+          },
+          "0.8-0.9": {
+            "n": 9,
+            "hits": 7,
+            "mean_confidence": 0.8324653784945559,
+            "hit_rate": 0.7777777777777778
+          }
+        }
+      }
+    }
+  },
+  "paired_match_bootstrap": {
+    "draws": 10000,
+    "seed": 20260831,
+    "unit": "match",
+    "interpretation": "Diagnostic paired uncertainty on the frozen 2025/2026 holdout; single-season dependence and lack of league replication prevent operational promotion.",
+    "positive_comparator_minus_model_means_model_better": true,
+    "comparisons": {
+      "ELO_ONLY": {
+        "vs_development_prior": {
+          "brier": {
+            "comparator_minus_model_point": 0.06720840569423553,
+            "ci95_percentile": [
+              0.031837807155031324,
+              0.10213466630139151
+            ],
+            "bootstrap_probability_model_better": 0.9999
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.09512480430360074,
+            "ci95_percentile": [
+              0.04544472306638981,
+              0.14412701270289657
+            ],
+            "bootstrap_probability_model_better": 0.9998
+          }
+        },
+        "vs_external_market_close": {
+          "brier": {
+            "comparator_minus_model_point": -0.007617867425043449,
+            "ci95_percentile": [
+              -0.024995645221440703,
+              0.009731635933079153
+            ],
+            "bootstrap_probability_model_better": 0.1974
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.013744776024956992,
+            "ci95_percentile": [
+              -0.03932078226525493,
+              0.011850811730486374
+            ],
+            "bootstrap_probability_model_better": 0.1459
+          }
+        }
+      },
+      "ELO_PLUS_FORM": {
+        "vs_development_prior": {
+          "brier": {
+            "comparator_minus_model_point": 0.06409626653594942,
+            "ci95_percentile": [
+              0.026777300655080064,
+              0.10011396602776337
+            ],
+            "bootstrap_probability_model_better": 0.9994
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.09026824257660905,
+            "ci95_percentile": [
+              0.03711716216081159,
+              0.14079420564154532
+            ],
+            "bootstrap_probability_model_better": 0.9991
+          }
+        },
+        "vs_external_market_close": {
+          "brier": {
+            "comparator_minus_model_point": -0.010730006583329555,
+            "ci95_percentile": [
+              -0.030118081495114187,
+              0.008028421693913016
+            ],
+            "bootstrap_probability_model_better": 0.1302
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.018601337751948686,
+            "ci95_percentile": [
+              -0.04747474971231781,
+              0.009350725046206104
+            ],
+            "bootstrap_probability_model_better": 0.0954
+          }
+        }
+      },
+      "FULL_STRUCTURAL": {
+        "vs_development_prior": {
+          "brier": {
+            "comparator_minus_model_point": 0.06532095104979073,
+            "ci95_percentile": [
+              0.02742571348243764,
+              0.10196471017540511
+            ],
+            "bootstrap_probability_model_better": 0.9993
+          },
+          "log_loss": {
+            "comparator_minus_model_point": 0.09177708823754592,
+            "ci95_percentile": [
+              0.03668886071870592,
+              0.14350353031389626
+            ],
+            "bootstrap_probability_model_better": 0.9992
+          }
+        },
+        "vs_external_market_close": {
+          "brier": {
+            "comparator_minus_model_point": -0.009505322069488242,
+            "ci95_percentile": [
+              -0.03016680893662492,
+              0.010769396528622613
+            ],
+            "bootstrap_probability_model_better": 0.1857
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.01709249209101182,
+            "ci95_percentile": [
+              -0.047927645707218997,
+              0.012995823034754356
+            ],
+            "bootstrap_probability_model_better": 0.1404
+          }
+        }
+      },
+      "incremental_vs_elo_only": {
+        "ELO_PLUS_FORM": {
+          "brier": {
+            "comparator_minus_model_point": -0.0031121391582861055,
+            "ci95_percentile": [
+              -0.01040971708766834,
+              0.003936329550988681
+            ],
+            "bootstrap_probability_model_better": 0.1968
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.004856561726991692,
+            "ci95_percentile": [
+              -0.015946853641273382,
+              0.005792545473522673
+            ],
+            "bootstrap_probability_model_better": 0.1897
+          }
+        },
+        "FULL_STRUCTURAL": {
+          "brier": {
+            "comparator_minus_model_point": -0.0018874546444447925,
+            "ci95_percentile": [
+              -0.011070913825277405,
+              0.0072383309717310535
+            ],
+            "bootstrap_probability_model_better": 0.3461
+          },
+          "log_loss": {
+            "comparator_minus_model_point": -0.0033477160660548284,
+            "ci95_percentile": [
+              -0.017472101062942495,
+              0.010362469828078771
+            ],
+            "bootstrap_probability_model_better": 0.3249
+          }
+        }
+      }
+    }
+  },
+  "references": {
+    "development_prior_baseline": {
+      "n": 228,
+      "multiclass_brier_sum_mean": 0.650717314729319,
+      "multiclass_brier_class_mean": 0.21690577157643967,
+      "log_loss": 1.0773116810022252,
+      "top_pick_accuracy": 0.4473684210526316,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 228,
+          "hits": 102,
+          "mean_confidence": 0.4736842105263151,
+          "hit_rate": 0.4473684210526316
+        }
+      }
+    },
+    "devigged_external_average_close_benchmark": {
+      "n": 228,
+      "multiclass_brier_sum_mean": 0.5758910416100392,
+      "multiclass_brier_class_mean": 0.19196368053667975,
+      "log_loss": 0.9684421006736637,
+      "top_pick_accuracy": 0.5219298245614035,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 28,
+          "hits": 11,
+          "mean_confidence": 0.37934565905742895,
+          "hit_rate": 0.39285714285714285
+        },
+        "0.4-0.5": {
+          "n": 73,
+          "hits": 23,
+          "mean_confidence": 0.4490498282614607,
+          "hit_rate": 0.3150684931506849
+        },
+        "0.5-0.6": {
+          "n": 63,
+          "hits": 38,
+          "mean_confidence": 0.5403916040612983,
+          "hit_rate": 0.6031746031746031
+        },
+        "0.6-0.7": {
+          "n": 37,
+          "hits": 26,
+          "mean_confidence": 0.6462603629608547,
+          "hit_rate": 0.7027027027027027
+        },
+        "0.7-0.8": {
+          "n": 21,
+          "hits": 16,
+          "mean_confidence": 0.7434197820690847,
+          "hit_rate": 0.7619047619047619
+        },
+        "0.8-0.9": {
+          "n": 6,
+          "hits": 5,
+          "mean_confidence": 0.8325059722875031,
+          "hit_rate": 0.8333333333333334
+        }
+      }
+    }
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "promotion_gate": "NO_AUTOMATIC_PROMOTION_REQUIRES_ROBUST_IMPROVEMENT_AND_REPLICATION",
+  "mms": "NOT_TESTED_GOLDBET_TRUE_OPEN_NOT_JOINED_TO_THIS_STRUCTURAL_BLOCK"
+}

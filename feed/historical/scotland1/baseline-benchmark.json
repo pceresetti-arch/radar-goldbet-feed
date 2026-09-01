@@ -1,0 +1,129 @@
+{
+  "schema_version": "radar-historical-scotland1-baseline-v1",
+  "generated_at": "2026-09-01T14:39:25.975426+00:00",
+  "source_snapshot": "feed/historical/scotland1/football-data-SCO1.csv",
+  "normalized_dataset": "feed/historical/scotland1/scottish-premiership-2022-2026-regular.csv",
+  "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022/2023-2025/2026; all 38 official Scottish Premiership matches per club, including the championship/relegation post-split phase. The 12-club split schedule is intentionally retained and is not treated as a balanced round robin.",
+  "seasons": [
+    "2022/2023",
+    "2023/2024",
+    "2024/2025",
+    "2025/2026"
+  ],
+  "split": {
+    "development": [
+      "2022/2023",
+      "2023/2024",
+      "2024/2025"
+    ],
+    "holdout": [
+      "2025/2026"
+    ]
+  },
+  "sample": {
+    "source_selected_rows": 912,
+    "regular_rows": 912,
+    "development_rows": 684,
+    "holdout_rows": 228,
+    "excluded_playoff_rows": 0,
+    "excluded": [],
+    "regular_team_counts": {
+      "2022/2023": 12,
+      "2023/2024": 12,
+      "2024/2025": 12,
+      "2025/2026": 12
+    },
+    "team_alias_map": {},
+    "team_alias_field_corrections": 0,
+    "season_match_cap_per_team": 38,
+    "expected_fixtures_per_season": 228,
+    "post_split_phase_included": true,
+    "balanced_round_robin_assumed": false
+  },
+  "data_quality": {
+    "normalized_duplicate_fixture_keys": 0,
+    "identity_integrity": "Each frozen season must contain exactly 12 clubs, 228 fixtures and 38 accepted league matches per club. The post-split phase is retained; no balanced round-robin assumption is made.",
+    "missing_avg_close_triplets": 0,
+    "kickoff_utc_verified_rows": 0,
+    "kickoff_policy": "No UTC conversion is performed because the source documents Time as kickoff time but does not state timezone. Rolling structural features must use strictly prior source dates, excluding same-date information."
+  },
+  "development_outcome_prior": {
+    "H": 0.47368421052631576,
+    "D": 0.21783625730994152,
+    "A": 0.3084795321637427
+  },
+  "holdout_metrics": {
+    "development_prior_baseline": {
+      "n": 228,
+      "multiclass_brier_sum_mean": 0.650717314729319,
+      "multiclass_brier_class_mean": 0.21690577157643967,
+      "log_loss": 1.0773116810022252,
+      "top_pick_accuracy": 0.4473684210526316,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 228,
+          "hits": 102,
+          "mean_confidence": 0.4736842105263151,
+          "hit_rate": 0.4473684210526316
+        }
+      }
+    },
+    "devigged_average_market_close_benchmark": {
+      "n": 228,
+      "multiclass_brier_sum_mean": 0.5758910416100392,
+      "multiclass_brier_class_mean": 0.19196368053667975,
+      "log_loss": 0.9684421006736637,
+      "top_pick_accuracy": 0.5219298245614035,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 28,
+          "hits": 11,
+          "mean_confidence": 0.37934565905742895,
+          "hit_rate": 0.39285714285714285
+        },
+        "0.4-0.5": {
+          "n": 73,
+          "hits": 23,
+          "mean_confidence": 0.4490498282614607,
+          "hit_rate": 0.3150684931506849
+        },
+        "0.5-0.6": {
+          "n": 63,
+          "hits": 38,
+          "mean_confidence": 0.5403916040612983,
+          "hit_rate": 0.6031746031746031
+        },
+        "0.6-0.7": {
+          "n": 37,
+          "hits": 26,
+          "mean_confidence": 0.6462603629608547,
+          "hit_rate": 0.7027027027027027
+        },
+        "0.7-0.8": {
+          "n": 21,
+          "hits": 16,
+          "mean_confidence": 0.7434197820690847,
+          "hit_rate": 0.7619047619047619
+        },
+        "0.8-0.9": {
+          "n": 6,
+          "hits": 5,
+          "mean_confidence": 0.8325059722875031,
+          "hit_rate": 0.8333333333333334
+        }
+      }
+    },
+    "average_market_close_overround": 1.069838261217886
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "mms": {
+    "goldbet_primary_eligible": false,
+    "open_to_close_eligible": false,
+    "reason": "Only external closing 1X2 benchmark odds are present; no GoldBet TRUE OPEN or same-book OPEN series."
+  },
+  "rule_decision": "BENCHMARK_ONLY_NO_OPERATIONAL_PROMOTION"
+}
