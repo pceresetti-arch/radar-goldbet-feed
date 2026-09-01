@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T11:28:37.697189+00:00",
+  "generated_at": "2026-09-01T11:45:38.512109+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 14,
+  "target_count": 15,
   "status_counts": {
     "SOURCE_CONFIRMED": 2,
-    "NOT_AVAILABLE": 11,
+    "NOT_AVAILABLE": 12,
     "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
@@ -30,7 +30,7 @@
       "start_time": "01-09-2026 13:35",
       "start_utc": "2026-09-01T11:35:00+00:00",
       "league": "FA Cup",
-      "minutes_to_start": 6.4,
+      "minutes_to_start": -10.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
@@ -64,7 +64,7 @@
                 "id": 1180689,
                 "shirt_number": "26",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -353,7 +353,7 @@
                 "id": 1168703,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -634,7 +634,6 @@
           }
         ],
         "xi_fingerprint": "23666a4d88b07b19724c",
-        "xi_name_fingerprint": "2071fa121c6d62a031a3",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -644,19 +643,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-01T11:28:37.697189+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5961058,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.52423",
@@ -665,7 +652,7 @@
       "start_time": "01-09-2026 13:35",
       "start_utc": "2026-09-01T11:35:00+00:00",
       "league": "FA Cup",
-      "minutes_to_start": 6.4,
+      "minutes_to_start": -10.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
@@ -699,7 +686,7 @@
                 "id": 1248507,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -988,7 +975,7 @@
                 "id": 432795,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -1269,7 +1256,6 @@
           }
         ],
         "xi_fingerprint": "2203ef5636fbdeda8e8e",
-        "xi_name_fingerprint": "ada2581ecf4b93351737",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -1279,29 +1265,17 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-01T11:28:37.697189+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5961059,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     }
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T11:28:37.697189+00:00",
+    "generated_at": "2026-09-01T11:45:38.512109+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 10,
+    "target_count": 11,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -1314,17 +1288,7 @@
     },
     "changes": []
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Dalian Zhixing FC - Shanghai Shenhua",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Shandong Taishan - Shanghai Port",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "official_tactical_gate": true,
-  "source_match_count": 14,
+  "source_match_count": 15,
   "official_match_count": 2
 }
