@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v32",
-  "generated_at": "2026-09-01T18:34:46.511Z",
+  "schema_version": "radar-historical-backtest-ledger-v33",
+  "generated_at": "2026-09-01T19:21:25Z",
   "local_timezone": "Europe/Rome",
-  "status": "JAPAN1_FORMAT_AUDIT_COMPLETE_NO_MODEL",
+  "status": "SUPERETTAN_SOURCE_COVERAGE_FAILURE_NO_MODEL",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -194,7 +194,12 @@
     "japan1_2024_rows": 380,
     "japan1_2025_rows": 380,
     "japan1_structural_rows_accepted": 0,
-    "japan1_oos_rows": 0
+    "japan1_oos_rows": 0,
+    "superettan_repository_source_rows": 0,
+    "superettan_requested_seasons_with_rows": 0,
+    "superettan_repository_paths": 0,
+    "superettan_structural_rows_accepted": 0,
+    "superettan_oos_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -221,6 +226,11 @@
       "path": "github-actions://historical-backtest-spain1-bootstrap/run-33502936142",
       "classification": "SUPERSEDED_INVALID_ROW_COUNT_GATE",
       "reason": "Initial LaLiga pipeline retained a 306-row conditional while the documented 20-team expectation was 380; it failed before dataset/model generation and contributed no metrics."
+    },
+    {
+      "path": "feed/historical/sweden/football-data-SWE.csv",
+      "classification": "ALLSVENSKAN_ONLY_NOT_SUPERETTAN_SOURCE",
+      "reason": "The consolidated SWE snapshot contains 3,526 Allsvenskan rows and zero Superettan rows; it cannot support the ledger's planned Superettan audit or model."
     }
   ],
   "work_completed": [
@@ -371,7 +381,11 @@
     "Audited J1 League 2022-2025 from a SHA-256-bound Football-Data source with zero missing average closing triplets.",
     "Detected four non-phase-pure 2022 rows involving lower-division playoff participants beyond the 18-club 306-match schedule.",
     "Confirmed structural expansion from 18 clubs/306 fixtures in 2022-2023 to 20 clubs/380 fixtures in 2024-2025.",
-    "Rejected a four-season J1 development/holdout model before evaluation; the comparable 20-club cohort contains only two complete seasons."
+    "Rejected a four-season J1 development/holdout model before evaluation; the comparable 20-club cohort contains only two complete seasons.",
+    "Audited the planned Superettan 2022-2025 increment against the repository source of truth before any model execution.",
+    "Found that the persisted Swedish consolidated source contains only Allsvenskan (3,526 rows) and zero Superettan rows.",
+    "Verified the complete 1,058-path repository tree contains no Superettan-named artifact; accepted zero partial rows and left the 2025 holdout undefined and untouched.",
+    "Corrected the ledger assumption that Superettan could be audited from the existing Swedish consolidated source."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1877,8 +1891,9 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Audit Superettan 2022-2025 format and source coverage, using the existing Swedish consolidated source without re-fetching or rebuilding Allsvenskan.",
-    "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded from four-season modeling for format drift.",
+    "priority": "Acquire and persist an independently versioned Superettan 2022-2025 source; do not reuse the Allsvenskan-only SWE snapshot.",
+    "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by absent source coverage.",
+    "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season, explicit playoff separation, complete fixture identities and verified closing-field coverage before freezing 2022-2024 development and 2025 holdout.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -1956,7 +1971,8 @@
       "Multi-phase leagues require a frozen phase definition and identical schedule exposure across development and holdout; total-season rows cannot be pooled across Belgian format changes.",
       "Freshness/fatigue features derived from schedules must use strictly prior dates and date-batched updates; unavailable travel, cross-competition, extra-time, player-minute and rotation context must remain explicit missing modules.",
       "Austrian Bundesliga four-season comparability uses a frozen chronological 192-fixture core: accept only if all 12 clubs have exactly 32 appearances, and exclude only subsequent European playoff rows.",
-      "Calendar-year leagues must be format-gated independently; J1 playoff rows and the 18-to-20-club expansion cannot be normalized by outcome-blind downsampling into the requested four-season design."
+      "Calendar-year leagues must be format-gated independently; J1 playoff rows and the 18-to-20-club expansion cannot be normalized by outcome-blind downsampling into the requested four-season design.",
+      "A country-level consolidated source may not be assumed to cover lower divisions: league values and repository paths must be enumerated before scheduling a format audit or model."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
