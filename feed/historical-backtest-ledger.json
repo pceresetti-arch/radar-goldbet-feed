@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v24",
-  "generated_at": "2026-09-01T10:37:17.560Z",
+  "schema_version": "radar-historical-backtest-ledger-v25",
+  "generated_at": "2026-09-01T11:35:37.217Z",
   "local_timezone": "Europe/Rome",
-  "status": "GERMANY1_STRUCTURAL_OOS_COMPLETE",
+  "status": "SPAIN1_STRUCTURAL_OOS_COMPLETE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,8 +66,8 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 7584,
-    "total_structural_oos_holdout_rows": 1896,
+    "total_external_market_close_benchmark_rows": 9104,
+    "total_structural_oos_holdout_rows": 2276,
     "pooled_sweden_norway_holdout_rows": 480,
     "cross_league_classwise_calibration_rows": 480,
     "eligible_denmark_regular_fixture_rows": 768,
@@ -106,7 +106,7 @@
     "netherlands_holdout_rows": 306,
     "netherlands_source_files": 4,
     "netherlands_missing_avg_close_triplets": 0,
-    "total_structural_regular_fixture_rows": 7584,
+    "total_structural_regular_fixture_rows": 9104,
     "goldbet_true_open_rows_with_exact_observed_current": 9188,
     "goldbet_events_with_pre_kickoff_observed_current": 642,
     "goldbet_primary_market_open_current_rows": 4931,
@@ -165,7 +165,12 @@
     "germany1_development_rows": 918,
     "germany1_holdout_rows": 306,
     "germany1_source_files": 4,
-    "germany1_missing_avg_close_triplets": 0
+    "germany1_missing_avg_close_triplets": 0,
+    "eligible_spain1_regular_fixture_rows": 1520,
+    "spain1_development_rows": 1140,
+    "spain1_holdout_rows": 380,
+    "spain1_source_files": 4,
+    "spain1_missing_avg_close_triplets": 0
   },
   "quarantined_evidence": [
     {
@@ -187,6 +192,11 @@
       "path": "feed/historical/norway/structural-oos-v1.json@workflow-run-33386825923",
       "classification": "SUPERSEDED_INVALID_FIXTURE_IDENTITY_SAMPLE",
       "reason": "The first Norway build split Ham-Kam and HamKam, dropped 30 regular 2023 fixtures and produced a 15-team season. Its metrics are invalid and were replaced after identity correction."
+    },
+    {
+      "path": "github-actions://historical-backtest-spain1-bootstrap/run-33502936142",
+      "classification": "SUPERSEDED_INVALID_ROW_COUNT_GATE",
+      "reason": "Initial LaLiga pipeline retained a 306-row conditional while the documented 20-team expectation was 380; it failed before dataset/model generation and contributed no metrics."
     }
   ],
   "work_completed": [
@@ -300,7 +310,14 @@
     "Frozen Bundesliga temporal split before evaluation: 2022/2023-2024/2025 development (918), untouched 2025/2026 holdout (306).",
     "Verified 18 clubs and 34 matches per club in every frozen Bundesliga season, zero duplicate fixture keys and zero missing average closing triplets.",
     "Replicated the unchanged structural specification on Bundesliga; Elo robustly improves the development prior, while form/full add no reliable incremental value.",
-    "External de-vigged average closing odds significantly beat every Bundesliga structural variant on Brier and log-loss."
+    "External de-vigged average closing odds significantly beat every Bundesliga structural variant on Brier and log-loss.",
+    "Detected and quarantined the initial LaLiga workflow before modeling because its inherited row-count conditional remained 306 despite the documented 380-fixture expectation.",
+    "Corrected the LaLiga eligibility gate to 20 clubs, 38 matches per club and 380 fixtures per season; the failed run contributed no dataset or metric.",
+    "Fetched four Football-Data LaLiga season files for 2022/2023-2025/2026; each contains exactly 380 fixtures and is bound by SHA-256.",
+    "Frozen LaLiga temporal split before evaluation: 2022/2023-2024/2025 development (1,140), untouched 2025/2026 holdout (380).",
+    "Verified 20 clubs and 38 matches per club in every frozen LaLiga season, zero duplicate fixture keys and zero missing average closing triplets.",
+    "Replicated the unchanged structural specification on LaLiga; Elo robustly improves the development prior, while form/full add no reliable incremental value.",
+    "External de-vigged average closing odds significantly beat every LaLiga structural variant on Brier and log-loss."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1442,6 +1459,91 @@
         }
       },
       "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_REJECTED; EXTERNAL_MARKET_SIGNIFICANTLY_BETTER_THAN_ALL_STRUCTURAL_VARIANTS; NO_OPERATIONAL_PROMOTION"
+    },
+    "spain1_structural_oos_2025_2026": {
+      "report": "feed/historical/spain1/structural-oos-v1.json",
+      "sample": {
+        "development": 1140,
+        "holdout": 380,
+        "regular_total": 1520,
+        "source_files": 4
+      },
+      "development_prior": {
+        "brier": 0.631777469990768,
+        "log_loss": 1.048906487372349,
+        "accuracy": 0.48947368421052634
+      },
+      "external_market_close": {
+        "brier": 0.5716509492588124,
+        "log_loss": 0.9649804790839727,
+        "accuracy": 0.5447368421052632
+      },
+      "elo_only": {
+        "brier": 0.5881244020098404,
+        "log_loss": 0.994650644425845,
+        "accuracy": 0.5157894736842106
+      },
+      "elo_plus_form": {
+        "brier": 0.5883460627111001,
+        "log_loss": 0.9940699854654129,
+        "accuracy": 0.5131578947368421
+      },
+      "full_structural": {
+        "brier": 0.5914558261568146,
+        "log_loss": 0.9994114641195535,
+        "accuracy": 0.5078947368421053
+      },
+      "paired_decisions": {
+        "elo_vs_prior": {
+          "brier_gain": 0.04365306798092574,
+          "brier_ci95": [
+            0.0171190529114508,
+            0.07029855415092154
+          ],
+          "log_loss_gain": 0.05425584294650283,
+          "log_loss_ci95": [
+            0.01259340010247518,
+            0.09538868518182511
+          ]
+        },
+        "market_vs_elo": {
+          "brier_gain": 0.016473452751028194,
+          "brier_ci95": [
+            0.0026383486061130313,
+            0.030527943296971734
+          ],
+          "log_loss_gain": 0.029670165341871994,
+          "log_loss_ci95": [
+            0.007051097644592765,
+            0.05338039811343569
+          ]
+        },
+        "form_vs_elo": {
+          "brier_gain": -0.00022166070125928053,
+          "brier_ci95": [
+            -0.00413493333642808,
+            0.0036722910432784696
+          ],
+          "log_loss_gain": 0.0005806589604316136,
+          "log_loss_ci95": [
+            -0.005370432183740395,
+            0.006568108127151816
+          ]
+        },
+        "full_vs_elo": {
+          "brier_gain": -0.0033314241469736675,
+          "brier_ci95": [
+            -0.008851585618351553,
+            0.002134431560646374
+          ],
+          "log_loss_gain": -0.004760819693709976,
+          "log_loss_ci95": [
+            -0.01346957407066816,
+            0.003855313897681084
+          ]
+        }
+      },
+      "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_NOT_PROMOTED; EXTERNAL_MARKET_SIGNIFICANTLY_BETTER_THAN_ALL_STRUCTURAL_VARIANTS; NO_OPERATIONAL_PROMOTION"
     }
   },
   "ablation_plan": {
@@ -1459,8 +1561,8 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Continue structural OOS expansion where league format is stable; keep MMS thresholds frozen pending matched GoldBet T-30 coverage.",
-    "structural_lane": "Freeze all seven completed league OOS blocks; extend only to another Radar league with four comparable completed seasons.",
+    "priority": "Continue structural expansion with league-specific format validation; keep MMS thresholds frozen pending matched GoldBet T-30 coverage.",
+    "structural_lane": "Freeze all eight completed league OOS blocks; extend only where four completed seasons pass league-specific schedule gates.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1490,7 +1592,9 @@
       "2. Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; point estimates are equal or worse and intervals include zero.",
       "2. Bundesliga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant.",
       "Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; point estimates are worse and paired intervals include zero.",
-      "Bundesliga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant."
+      "Bundesliga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant.",
+      "LaLiga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; paired intervals include zero and the full bundle has worse point estimates.",
+      "LaLiga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1519,7 +1623,8 @@
       "Before interpreting lead-time drift, require common support within competition, selection side and price band; zero eligible overlap cells force a NOT_IDENTIFIABLE verdict rather than a null or causal conclusion.",
       "Historical snapshot ingestion must hard-reject minutes_to_start < 0 before feature construction and must preserve a separate quarantine count; filtering only at metric time is insufficient.",
       "Pre-kickoff eligibility now requires two agreeing temporal proofs: non-negative minutes_to_start and captured_at strictly before kickoff; any disagreement is quarantined.",
-      "Inherited artifact labels must be validated after mechanical league extension; a mislabelled feature path is corrected before evidence acceptance."
+      "Inherited artifact labels must be validated after mechanical league extension; a mislabelled feature path is corrected before evidence acceptance.",
+      "League-format constants must be changed in both documented expectations and executable eligibility conditions; a message-only update is insufficient and failed runs remain quarantined."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
