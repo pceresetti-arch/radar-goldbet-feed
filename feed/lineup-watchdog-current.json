@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-01T10:19:58.774717+00:00",
+  "generated_at": "2026-09-01T10:35:51.786678+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,96 +21,121 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-01T10:17:00.023077+00:00",
-      "finished_at": "2026-09-01T10:17:02.447964+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 5,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T10:17:37.448090+00:00",
-      "finished_at": "2026-09-01T10:17:37.667425+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 5,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T10:18:12.667592+00:00",
-      "finished_at": "2026-09-01T10:18:13.018811+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 5,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T10:18:48.018991+00:00",
-      "finished_at": "2026-09-01T10:18:48.175706+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 5,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T10:19:23.175916+00:00",
-      "finished_at": "2026-09-01T10:19:23.626125+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 5,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T10:19:58.626295+00:00",
-      "finished_at": "2026-09-01T10:19:58.774651+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 5,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-01T10:35:48.490167+00:00",
+      "finished_at": "2026-09-01T10:35:51.786659+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 3,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-01T10:35:51.786398+00:00",
+          "match": "FC Kharkiv - KFF Mitrovica",
+          "league": "UEFA Europa Cup Femminile",
+          "start_time": "01-09-2026 13:00",
+          "minutes_to_start": 24.1,
+          "match_market_id": "36363.5685",
+          "match_event_id": 16087701,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000019452,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "9f2f73b95a78397ab016",
+          "current_xi_fingerprint": "423a58391dcd6dcfd0fe",
+          "confirmed_at": "2026-09-01T10:35:51.558186+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-01T10:35:51.786398+00:00",
+          "match": "FC Kharkiv - KFF Mitrovica",
+          "league": "UEFA Europa Cup Femminile",
+          "start_time": "01-09-2026 13:00",
+          "minutes_to_start": 24.1,
+          "match_market_id": "36363.5685",
+          "match_event_id": 16087701,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000019452,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "9f2f73b95a78397ab016",
+          "current_xi_fingerprint": "423a58391dcd6dcfd0fe",
+          "confirmed_at": "2026-09-01T10:35:51.558186+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
+  "observed_events": [
     {
-      "match": "Sigma Olomouc - Sparta Praga U19",
-      "match_market_id": "36363.7939",
-      "match_event_id": 16087856,
-      "minutes_to_start": 10.0,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-01T10:35:51.786398+00:00",
       "match": "FC Kharkiv - KFF Mitrovica",
+      "league": "UEFA Europa Cup Femminile",
+      "start_time": "01-09-2026 13:00",
+      "minutes_to_start": 24.1,
       "match_market_id": "36363.5685",
       "match_event_id": 16087701,
-      "minutes_to_start": 40.0,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000019452,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "9f2f73b95a78397ab016",
+      "current_xi_fingerprint": "423a58391dcd6dcfd0fe",
+      "confirmed_at": "2026-09-01T10:35:51.558186+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-01T10:35:51.786398+00:00",
+      "match": "FC Kharkiv - KFF Mitrovica",
+      "league": "UEFA Europa Cup Femminile",
+      "start_time": "01-09-2026 13:00",
+      "minutes_to_start": 24.1,
+      "match_market_id": "36363.5685",
+      "match_event_id": 16087701,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000019452,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "9f2f73b95a78397ab016",
+      "current_xi_fingerprint": "423a58391dcd6dcfd0fe",
+      "confirmed_at": "2026-09-01T10:35:51.558186+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Dalian Zhixing FC - Shanghai Shenhua",
+      "match_market_id": "36362.44010",
+      "match_event_id": 16085202,
+      "minutes_to_start": 59.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
-      "fotmob_match_id": 1000019452
+      "fotmob_match_id": 5961058
     },
     {
       "match": "Rizhao Yuqi - Beijing Guoan",
       "match_market_id": "36363.18360",
       "match_event_id": 16089128,
-      "minutes_to_start": 75.0,
+      "minutes_to_start": 59.1,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,20 +144,11 @@
       "match": "Shandong Taishan - Shanghai Port",
       "match_market_id": "36361.52423",
       "match_event_id": 16073652,
-      "minutes_to_start": 75.0,
+      "minutes_to_start": 59.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5961059
-    },
-    {
-      "match": "Dalian Zhixing FC - Shanghai Shenhua",
-      "match_market_id": "36362.44010",
-      "match_event_id": 16085202,
-      "minutes_to_start": 75.0,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 5961058
     }
   ],
-  "target_count": 11
+  "target_count": 12
 }
