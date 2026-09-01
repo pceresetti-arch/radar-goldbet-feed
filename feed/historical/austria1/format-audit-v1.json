@@ -1,6 +1,6 @@
 {
   "schema_version": "radar-historical-austria1-format-audit-v1",
-  "generated_at": "2026-09-01T17:30:37.301315+00:00",
+  "generated_at": "2026-09-01T17:32:08.439834+00:00",
   "competition": "Austrian Bundesliga",
   "source_provider": "Football-Data",
   "source_url": "https://www.football-data.co.uk/new/AUT.csv",
@@ -101,7 +101,35 @@
       "all_teams_same_appearances": false,
       "duplicate_fixture_keys": 0,
       "invalid_or_inconsistent_results": 0,
-      "missing_average_close_triplets": 0
+      "missing_average_close_triplets": 0,
+      "chronological_core_192": {
+        "rows": 192,
+        "clubs": 12,
+        "appearance_values": [
+          32
+        ],
+        "balanced_12_clubs_32_each": true
+      },
+      "subsequent_extras": [
+        {
+          "date": "05/06/2023",
+          "time": "18:00",
+          "home": "Wolfsberger AC",
+          "away": "A. Lustenau"
+        },
+        {
+          "date": "08/06/2023",
+          "time": "16:00",
+          "home": "A. Lustenau",
+          "away": "Austria Vienna"
+        },
+        {
+          "date": "11/06/2023",
+          "time": "16:00",
+          "home": "Austria Vienna",
+          "away": "A. Lustenau"
+        }
+      ]
     },
     {
       "season": "2023/2024",
@@ -130,7 +158,35 @@
       "all_teams_same_appearances": false,
       "duplicate_fixture_keys": 0,
       "invalid_or_inconsistent_results": 0,
-      "missing_average_close_triplets": 0
+      "missing_average_close_triplets": 0,
+      "chronological_core_192": {
+        "rows": 192,
+        "clubs": 12,
+        "appearance_values": [
+          32
+        ],
+        "balanced_12_clubs_32_each": true
+      },
+      "subsequent_extras": [
+        {
+          "date": "21/05/2024",
+          "time": "18:00",
+          "home": "Wolfsberger AC",
+          "away": "Austria Vienna"
+        },
+        {
+          "date": "24/05/2024",
+          "time": "18:30",
+          "home": "Austria Vienna",
+          "away": "Hartberg"
+        },
+        {
+          "date": "28/05/2024",
+          "time": "18:00",
+          "home": "Hartberg",
+          "away": "Austria Vienna"
+        }
+      ]
     },
     {
       "season": "2024/2025",
@@ -156,7 +212,16 @@
       "all_teams_same_appearances": true,
       "duplicate_fixture_keys": 0,
       "invalid_or_inconsistent_results": 0,
-      "missing_average_close_triplets": 0
+      "missing_average_close_triplets": 0,
+      "chronological_core_192": {
+        "rows": 192,
+        "clubs": 12,
+        "appearance_values": [
+          32
+        ],
+        "balanced_12_clubs_32_each": true
+      },
+      "subsequent_extras": []
     },
     {
       "season": "2025/2026",
@@ -182,7 +247,16 @@
       "all_teams_same_appearances": true,
       "duplicate_fixture_keys": 0,
       "invalid_or_inconsistent_results": 0,
-      "missing_average_close_triplets": 0
+      "missing_average_close_triplets": 0,
+      "chronological_core_192": {
+        "rows": 192,
+        "clubs": 12,
+        "appearance_values": [
+          32
+        ],
+        "balanced_12_clubs_32_each": true
+      },
+      "subsequent_extras": []
     }
   ],
   "failures": [],
@@ -228,7 +302,9 @@
         ]
       }
     },
-    "four_season_directly_comparable": false
+    "four_season_directly_comparable": false,
+    "chronological_core_192_comparable": true,
+    "core_rule": "Retain the earliest 192 fixtures only when they form 12 clubs with exactly 32 appearances each; exclude only chronologically subsequent fixtures."
   },
   "anti_hindsight": {
     "outcomes_used_for_format_decision": false,
@@ -236,6 +312,6 @@
     "holdout_model_evaluated": false,
     "model_built": false
   },
-  "status": "FOUR_SEASON_FORMAT_DRIFT_NO_MODEL",
-  "decision": "Construct no development/holdout model unless four target seasons share the same phase-exposure signature; inspect format only."
+  "status": "CORE_192_COMPARABLE_READY_FOR_FROZEN_SPLIT",
+  "decision": "A structural model is eligible only if the frozen chronological core rule yields 192 fixtures, 12 clubs and 32 appearances per club in every season; subsequent playoff fixtures remain excluded."
 }
