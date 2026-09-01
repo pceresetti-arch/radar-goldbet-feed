@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v17",
-  "generated_at": "2026-09-01T02:44:07.080Z",
+  "schema_version": "radar-historical-backtest-ledger-v18",
+  "generated_at": "2026-09-01T03:41:51.781Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_MMS_MATERIAL_TIMING_AND_TEMPORAL_DRIFT_FOUND",
+  "status": "GOLDBET_1X2_TIMING_DRIFT_PERSISTS_AFTER_COMPOSITION_CONTROL",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -131,7 +131,12 @@
     "goldbet_fixture_level_btts_rows": 622,
     "goldbet_mms_stability_audits": 12,
     "goldbet_mms_material_drift_findings": 7,
-    "goldbet_mms_country_cells_n_ge_30": 6
+    "goldbet_mms_country_cells_n_ge_30": 6,
+    "goldbet_1x2_pp1_near_events": 67,
+    "goldbet_1x2_pp1_far_events": 325,
+    "goldbet_1x2_standardization_eligible_cells": 6,
+    "goldbet_1x2_standardization_covered_near": 59,
+    "goldbet_1x2_standardization_covered_far": 240
   },
   "quarantined_evidence": [
     {
@@ -232,7 +237,11 @@
     "Detected material 1X2 timing drift: PP1 ROI is -41.91% for observations <360 minutes versus +8.17% at >=360 minutes; the bootstrap difference interval excludes zero.",
     "Detected material 1X2 chronology drift: PP1 moves from -24.39% in the early half to +23.61% in the late half; the difference interval excludes zero.",
     "Detected BTTS chronology deterioration at PP1: +8.67% early versus -19.26% late; the difference interval excludes zero.",
-    "Classified these reversals as non-stationarity/timing confounding, not profitable sub-rules; pooled MMS ROI may no longer be interpreted without lead-time and temporal segmentation."
+    "Classified these reversals as non-stationarity/timing confounding, not profitable sub-rules; pooled MMS ROI may no longer be interpreted without lead-time and temporal segmentation.",
+    "Decomposed the material GoldBet 1X2 PP1 lead-time drift by selected side and observed-current odds band without tuning a betting rule.",
+    "Standardized near-kickoff (<360m) and far-from-kickoff (>=360m) ROI across six pooled side-by-price cells with at least five observations in both groups.",
+    "Confirmed that the lead-time reversal persists after composition control: adjusted near-minus-far ROI -56.04 percentage points, fixture bootstrap 95% interval -82.97 to -28.96 points.",
+    "Rejected the explanation that the drift is only caused by a different HOME/DRAW/AWAY or price-band mix; timing remains associated with severe calibration and outcome instability."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1005,6 +1014,40 @@
         ]
       },
       "interpretation": "Material reversals indicate timing/composition and temporal drift. They do not promote early/late or far/near sub-rules; independent temporal replication is required."
+    },
+    "goldbet_1x2_drift_decomposition_2026": {
+      "report": "feed/historical/open-close/goldbet-1x2-drift-decomposition-v1.json",
+      "classification": "PROSPECTIVE_2026_ERROR_DECOMPOSITION_NOT_CAUSAL_TIMING_EFFECT",
+      "raw": {
+        "near_lt_360": {
+          "n": 67,
+          "roi": -0.4191044776119403,
+          "hit_rate": 0.31343283582089554,
+          "calibration_error": -0.10172211466245114
+        },
+        "far_ge_360": {
+          "n": 325,
+          "roi": 0.08166153846153845,
+          "hit_rate": 0.4553846153846154,
+          "calibration_error": 0.04808770485314577
+        },
+        "near_minus_far_roi": -0.5007660160734788
+      },
+      "standardized": {
+        "controls": [
+          "selection_side",
+          "observed_current_price_band"
+        ],
+        "eligible_cells": 6,
+        "covered_near": 59,
+        "covered_far": 240,
+        "near_minus_far_roi": -0.5604050645037759,
+        "bootstrap_ci95": [
+          -0.8296589944705879,
+          -0.2895708075128396
+        ]
+      },
+      "interpretation": "The 1X2 PP1 timing drift survives side and price-band standardization. This is evidence of instability/confounding, not a causal timing advantage or an operational subgroup."
     }
   },
   "ablation_plan": {
@@ -1022,10 +1065,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Identify whether 1X2 timing drift is explained by competition mix, price range or selection side using multivariable/error decomposition without tuning a betting rule.",
+    "priority": "Explain the residual 1X2 timing drift by competition and ordered time block, while keeping side/price standardization fixed and avoiding subgroup tuning.",
     "structural_lane": "Keep all multi-season OOS structural blocks frozen.",
-    "market_lane": "Persist genuine T-30/last-pre-kickoff coverage to replace heterogeneous observed-current timing.",
-    "mms_lane": "Pooled thresholds remain rejected; no timing subgroup may be promoted from this discovery sample."
+    "market_lane": "Persist genuine T-30/last-pre-kickoff GoldBet snapshots; heterogeneous observed-current timing remains unsuitable as CLOSE.",
+    "mms_lane": "All pooled and timing-subgroup thresholds remain rejected pending an independent temporal block."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -1043,7 +1086,8 @@
       "GoldBet exact-outcome calibration v1: reject the claim that the heterogeneous pre-kickoff observed-current snapshot reliably improves TRUE OPEN; all fixture-clustered paired Brier/log-loss intervals cross zero.",
       "GoldBet fixture-level MMS v1: reject promotion of de-vig shortening thresholds >=1/2/3pp for FT 1X2, O/U 2.5 and BTTS; every 10,000-draw ROI interval includes zero.",
       "GoldBet fixture-level MMS v1: reject the legacy absolute price-drop >=0.20 rule across 1X2, O/U 2.5 and BTTS; all ROI intervals include zero and O/U/BTTS point ROI is negative.",
-      "GoldBet MMS stability v1: reject pooled interpretation of 1X2 movement ROI across heterogeneous lead times; <360 and >=360 minute samples differ materially."
+      "GoldBet MMS stability v1: reject pooled interpretation of 1X2 movement ROI across heterogeneous lead times; <360 and >=360 minute samples differ materially.",
+      "GoldBet 1X2 drift decomposition v1: reject the claim that the <360 versus >=360 minute ROI reversal is explained solely by selected side or observed-current price mix; the standardized near-minus-far interval remains entirely negative."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1067,7 +1111,8 @@
       "Final outcomes may be joined through exact Flashscore event IDs only after pre-match price features are frozen; T-30 checkpoint quality and distance must remain explicit.",
       "Outcome resolution scales only through exact Flashscore event IDs; feeds lacking both regular-half score sections remain unresolved and excluded rather than inferred.",
       "MMS threshold tests use at most one pre-specified candidate per fixture and market; correlated totals lines and opposing selections may not be counted as independent signals.",
-      "MMS reports must segment lead time and ordered temporal blocks before pooling; a significant subgroup reversal is classified as drift/confounding until independently replicated."
+      "MMS reports must segment lead time and ordered temporal blocks before pooling; a significant subgroup reversal is classified as drift/confounding until independently replicated.",
+      "Material MMS lead-time drift must be standardized at minimum by selection side and price band; persistence after standardization is recorded as instability/confounding, never as a timing rule."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
