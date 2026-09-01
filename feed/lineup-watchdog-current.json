@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-01T08:32:56.439592+00:00",
+  "generated_at": "2026-09-01T08:52:27.547747+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,15 +21,65 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
-      "mode": "FULL_DISCOVERY",
-      "started_at": "2026-09-01T08:32:55.682509+00:00",
-      "finished_at": "2026-09-01T08:32:56.439572+00:00",
+      "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
+      "started_at": "2026-09-01T08:49:29.979435+00:00",
+      "finished_at": "2026-09-01T08:49:31.212876+00:00",
       "official_count": 0,
-      "urgent_unconfirmed_count": 0,
+      "urgent_unconfirmed_count": 2,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-01T08:50:06.213010+00:00",
+      "finished_at": "2026-09-01T08:50:06.409103+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 2,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-01T08:50:41.409264+00:00",
+      "finished_at": "2026-09-01T08:50:41.769672+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 2,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-01T08:51:16.769802+00:00",
+      "finished_at": "2026-09-01T08:51:16.964428+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 2,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-01T08:51:51.964556+00:00",
+      "finished_at": "2026-09-01T08:51:52.366144+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 2,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-01T08:52:27.366272+00:00",
+      "finished_at": "2026-09-01T08:52:27.547728+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 2,
       "events": [],
       "actionable_events": []
     }
@@ -37,6 +87,25 @@
   "observed_events": [],
   "actionable_events": [],
   "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [],
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "FC Vizela U23 - Santa Clara U23",
+      "match_market_id": "36361.5375",
+      "match_event_id": 16083480,
+      "minutes_to_start": 67.5,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "SC Farense U23 - Famalicao U23",
+      "match_market_id": "36361.5377",
+      "match_event_id": 16083637,
+      "minutes_to_start": 67.5,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    }
+  ],
   "target_count": 3
 }
