@@ -1,0 +1,39 @@
+name: Historical GoldBet Exact Outcomes
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "tools/historical_goldbet_exact_outcomes.py"
+      - ".github/workflows/historical-goldbet-exact-outcomes.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-goldbet-exact-outcomes
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Resolve exact outcomes
+        run: python tools/historical_goldbet_exact_outcomes.py
+      - name: Commit evidence
+        run: |
+          git config user.name "radar-history-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add feed/historical/open-close/goldbet-exact-outcomes-v1.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist exact outcomes for GoldBet TRUE OPEN index"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
