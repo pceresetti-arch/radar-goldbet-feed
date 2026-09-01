@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v18",
-  "generated_at": "2026-09-01T03:41:51.781Z",
+  "schema_version": "radar-historical-backtest-ledger-v19",
+  "generated_at": "2026-09-01T04:37:02.959Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_1X2_TIMING_DRIFT_PERSISTS_AFTER_COMPOSITION_CONTROL",
+  "status": "GOLDBET_1X2_TIMING_EFFECT_NOT_IDENTIFIABLE_DUE_TO_COMPETITION_COVERAGE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -136,7 +136,13 @@
     "goldbet_1x2_pp1_far_events": 325,
     "goldbet_1x2_standardization_eligible_cells": 6,
     "goldbet_1x2_standardization_covered_near": 59,
-    "goldbet_1x2_standardization_covered_far": 240
+    "goldbet_1x2_standardization_covered_far": 240,
+    "goldbet_1x2_pp1_countries": 65,
+    "goldbet_1x2_pp1_tournaments": 120,
+    "goldbet_1x2_country_side_price_common_support_cells": 0,
+    "goldbet_1x2_near_europe_events": 21,
+    "goldbet_1x2_far_england_events": 67,
+    "goldbet_1x2_far_scotland_events": 26
   },
   "quarantined_evidence": [
     {
@@ -241,7 +247,12 @@
     "Decomposed the material GoldBet 1X2 PP1 lead-time drift by selected side and observed-current odds band without tuning a betting rule.",
     "Standardized near-kickoff (<360m) and far-from-kickoff (>=360m) ROI across six pooled side-by-price cells with at least five observations in both groups.",
     "Confirmed that the lead-time reversal persists after composition control: adjusted near-minus-far ROI -56.04 percentage points, fixture bootstrap 95% interval -82.97 to -28.96 points.",
-    "Rejected the explanation that the drift is only caused by a different HOME/DRAW/AWAY or price-band mix; timing remains associated with severe calibration and outcome instability."
+    "Rejected the explanation that the drift is only caused by a different HOME/DRAW/AWAY or price-band mix; timing remains associated with severe calibration and outcome instability.",
+    "Extended the GoldBet 1X2 PP1 error analysis to 65 country labels and 120 exact tournaments across 392 signals.",
+    "Found zero country-by-selection-by-price cells with at least three observations in both <360m and >=360m lead groups; country-adjusted timing ROI is therefore not identifiable.",
+    "Confirmed severe competition/source composition imbalance: near observations are concentrated in EUROPE events (21/67), while far observations include 67 England and 26 Scotland events.",
+    "Corrected the automated interpretation from 'not robust after country control' to 'not identifiable due to no common support'; no causal or operational timing conclusion is allowed.",
+    "Within the early chronological half, side-price adjusted near-minus-far ROI remains -36.02 points (95% interval -68.99 to -4.04), while the late half has only one eligible cell and is inconclusive."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1048,6 +1059,56 @@
         ]
       },
       "interpretation": "The 1X2 PP1 timing drift survives side and price-band standardization. This is evidence of instability/confounding, not a causal timing advantage or an operational subgroup."
+    },
+    "goldbet_1x2_residual_drift_2026": {
+      "report": "feed/historical/open-close/goldbet-1x2-residual-drift-v1.json",
+      "classification": "PROSPECTIVE_2026_COMMON_SUPPORT_AUDIT_NO_CAUSAL_CLAIM",
+      "sample": {
+        "events": 392,
+        "near": 67,
+        "far": 325,
+        "countries": 65,
+        "tournaments": 120,
+        "kickoff_window": [
+          "2026-08-24T23:30:00Z",
+          "2026-08-29T21:30:00Z"
+        ]
+      },
+      "competition_control": {
+        "controls": [
+          "country",
+          "selection",
+          "price_band"
+        ],
+        "minimum_each_group": 3,
+        "eligible_cells": 0,
+        "covered_near": 0,
+        "covered_far": 0,
+        "decision": "NOT_IDENTIFIABLE_NO_COMMON_SUPPORT"
+      },
+      "chronology": {
+        "early": {
+          "eligible_cells": 7,
+          "covered_near": 50,
+          "covered_far": 96,
+          "adjusted_difference": -0.3602386452297814,
+          "ci95": [
+            -0.6899196820280623,
+            -0.04042919176803141
+          ]
+        },
+        "late": {
+          "eligible_cells": 1,
+          "covered_near": 6,
+          "covered_far": 50,
+          "adjusted_difference": 0.25473333333333326,
+          "ci95": [
+            -0.6047333333333335,
+            1.0635333333333332
+          ]
+        }
+      },
+      "interpretation": "The previously observed lead-time reversal cannot be separated from competition/source coverage. This supersedes any interpretation of lead time as an independent driver."
     }
   },
   "ablation_plan": {
@@ -1065,10 +1126,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Explain the residual 1X2 timing drift by competition and ordered time block, while keeping side/price standardization fixed and avoiding subgroup tuning.",
+    "priority": "Build common-support coverage by collecting genuine near- and far-kickoff snapshots within the same competitions and fixed temporal blocks before retesting MMS timing.",
     "structural_lane": "Keep all multi-season OOS structural blocks frozen.",
-    "market_lane": "Persist genuine T-30/last-pre-kickoff GoldBet snapshots; heterogeneous observed-current timing remains unsuitable as CLOSE.",
-    "mms_lane": "All pooled and timing-subgroup thresholds remain rejected pending an independent temporal block."
+    "market_lane": "Persist true T-30 and last-pre-kickoff GoldBet snapshots with exact competition identity.",
+    "mms_lane": "Timing, pooled and competition subgroup rules remain rejected; no extrapolation across unmatched competition samples."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -1087,7 +1148,8 @@
       "GoldBet fixture-level MMS v1: reject promotion of de-vig shortening thresholds >=1/2/3pp for FT 1X2, O/U 2.5 and BTTS; every 10,000-draw ROI interval includes zero.",
       "GoldBet fixture-level MMS v1: reject the legacy absolute price-drop >=0.20 rule across 1X2, O/U 2.5 and BTTS; all ROI intervals include zero and O/U/BTTS point ROI is negative.",
       "GoldBet MMS stability v1: reject pooled interpretation of 1X2 movement ROI across heterogeneous lead times; <360 and >=360 minute samples differ materially.",
-      "GoldBet 1X2 drift decomposition v1: reject the claim that the <360 versus >=360 minute ROI reversal is explained solely by selected side or observed-current price mix; the standardized near-minus-far interval remains entirely negative."
+      "GoldBet 1X2 drift decomposition v1: reject the claim that the <360 versus >=360 minute ROI reversal is explained solely by selected side or observed-current price mix; the standardized near-minus-far interval remains entirely negative.",
+      "GoldBet 1X2 residual drift v1: reject any claim that lead time independently causes the ROI reversal; country×side×price common support is zero, so the effect is not identifiable apart from competition/source coverage."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1112,7 +1174,8 @@
       "Outcome resolution scales only through exact Flashscore event IDs; feeds lacking both regular-half score sections remain unresolved and excluded rather than inferred.",
       "MMS threshold tests use at most one pre-specified candidate per fixture and market; correlated totals lines and opposing selections may not be counted as independent signals.",
       "MMS reports must segment lead time and ordered temporal blocks before pooling; a significant subgroup reversal is classified as drift/confounding until independently replicated.",
-      "Material MMS lead-time drift must be standardized at minimum by selection side and price band; persistence after standardization is recorded as instability/confounding, never as a timing rule."
+      "Material MMS lead-time drift must be standardized at minimum by selection side and price band; persistence after standardization is recorded as instability/confounding, never as a timing rule.",
+      "Before interpreting lead-time drift, require common support within competition, selection side and price band; zero eligible overlap cells force a NOT_IDENTIFIABLE verdict rather than a null or causal conclusion."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
