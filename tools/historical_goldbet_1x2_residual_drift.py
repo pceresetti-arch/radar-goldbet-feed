@@ -90,7 +90,12 @@ def main():
     near_hhi=sum((n/len(near))**2 for n in nc.values())
     far_hhi=sum((n/len(far))**2 for n in fc.values())
     ci=comp["bootstrap_ci95"]
-    decision="RESIDUAL_DRIFT_PERSISTS_AFTER_COUNTRY_SIDE_PRICE_CONTROL" if ci and ci[1]<0 else "RESIDUAL_DRIFT_NOT_ROBUST_AFTER_COUNTRY_CONTROL"
+    if comp["eligible_cells"]==0:
+        decision="RESIDUAL_DRIFT_NOT_IDENTIFIABLE_NO_COUNTRY_SIDE_PRICE_COMMON_SUPPORT"
+    elif ci and ci[1]<0:
+        decision="RESIDUAL_DRIFT_PERSISTS_AFTER_COUNTRY_SIDE_PRICE_CONTROL"
+    else:
+        decision="RESIDUAL_DRIFT_NOT_ROBUST_AFTER_COUNTRY_CONTROL"
     report={"schema_version":"radar-goldbet-1x2-residual-drift-v1","generated_at":datetime.now(timezone.utc).isoformat(),
       "classification":"ERROR_ANALYSIS_NO_RULE_TUNING_NO_CAUSAL_CLAIM",
       "methodology":{"target":"FT 1X2 maximum shortening candidate movement >=1pp","lead_split":"<360 versus >=360 minutes",
@@ -104,7 +109,7 @@ def main():
       "country_cells":country_rows,"tournament_cells":tournament_rows,
       "side_price_standardized":base,"country_side_price_standardized":comp,
       "chronological_halves":halves,"decision":decision,
-      "interpretation":"Competition and chronology are diagnostic controls only. No positive subgroup is eligible for promotion from this discovery sample."}
+      "interpretation":"Country-side-price standardization is not identifiable because no cell has sufficient observations in both lead groups. The apparent lead-time effect is confounded by source/competition coverage. Competition and chronology remain diagnostic controls only; no subgroup is eligible for promotion."}
     OUT.parent.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"sample":report["sample"],"adjusted":comp,"decision":decision}))
