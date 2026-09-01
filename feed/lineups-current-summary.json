@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T00:42:38.874442+00:00",
+  "generated_at": "2026-09-01T01:02:39.162395+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 6,
+  "target_count": 5,
   "status_counts": {
-    "NOT_AVAILABLE": 4,
-    "SOURCE_CONFIRMED": 2
+    "SOURCE_CONFIRMED": 2,
+    "NOT_AVAILABLE": 3
   },
   "schedule_stats": [
     {
@@ -23,12 +23,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T00:42:38.874442+00:00",
+    "generated_at": "2026-09-01T01:02:39.162395+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 5,
+    "target_count": 2,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -39,47 +39,24 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Universidad Catolica - O´Higgins",
-        "minutes_to_start": 2.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Deportes Tolima - Cucuta",
-        "minutes_to_start": 22.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
-  "matches": [
+  "watchdog_identity_repairs": [
     {
-      "match": "Bahia BA - SE Palmeiras SP",
-      "start_time": "01-09-2026 02:30",
-      "league": "Serie A Femminile",
-      "minutes_to_start": -12.6,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36352.41953",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
+      "match": "Deportes Tolima - Cucuta",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
+  "matches": [
     {
       "match": "Universidad Catolica - O´Higgins",
       "start_time": "01-09-2026 02:45",
       "league": "Primera Division",
-      "minutes_to_start": 2.4,
+      "minutes_to_start": -17.7,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.898",
-      "confirmed_at": "2026-09-01T00:42:38.874442+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-09-01T00:17:52.926715+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -87,7 +64,7 @@
       "match": "Pitbulls Santa Barbara FC - AD Municipal Santa Ana",
       "start_time": "01-09-2026 03:00",
       "league": "Liga de Ascenso",
-      "minutes_to_start": 17.4,
+      "minutes_to_start": -2.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.19260",
       "confirmed_at": null,
@@ -99,7 +76,7 @@
       "match": "Umecit - Veraguas United FC",
       "start_time": "01-09-2026 03:00",
       "league": "Liga",
-      "minutes_to_start": 17.4,
+      "minutes_to_start": -2.7,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.32221",
       "confirmed_at": null,
@@ -111,11 +88,11 @@
       "match": "Deportes Tolima - Cucuta",
       "start_time": "01-09-2026 03:05",
       "league": "Primera A",
-      "minutes_to_start": 22.4,
+      "minutes_to_start": 2.3,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.39748",
       "confirmed_at": "2026-09-01T00:42:38.874442+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -123,7 +100,7 @@
       "match": "Club Santos Laguna - Atlante FC",
       "start_time": "01-09-2026 03:06",
       "league": "Liga Mx Femminile",
-      "minutes_to_start": 23.4,
+      "minutes_to_start": 3.3,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.34066",
       "confirmed_at": null,
