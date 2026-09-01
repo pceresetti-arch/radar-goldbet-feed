@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-superettan-source-coverage-audit-v1",
-  "generated_at": "2026-09-01T19:21:25Z",
+  "schema_version": "radar-historical-superettan-source-coverage-audit-v2",
+  "generated_at": "2026-09-01T22:30:18Z",
   "local_timezone": "Europe/Rome",
-  "status": "SOURCE_COVERAGE_FAILURE_NO_MODEL",
+  "status": "SOURCE_ACQUISITION_BLOCKED_ZERO_PARTIAL_ROWS_NO_MODEL",
   "objective": "Verify whether the repository-persisted Swedish consolidated source supports a leakage-safe Superettan 2022-2025 structural OOS block.",
   "repository_source_of_truth": {
     "path": "feed/historical/sweden/football-data-SWE.csv",
@@ -34,11 +34,12 @@
     "structural_model_allowed": false,
     "oos_metrics_computed": false,
     "accepted_rows": 0,
-    "reason": "The ledger incorrectly assumed that the existing Swedish consolidated source included Superettan. It contains Allsvenskan only, and no separate Superettan artifact exists in the complete repository tree.",
+    "reason": "The repository has no Superettan source, and three independent acquisition runs were blocked by the provider with HTTP 403 before any season payload was received. No partial rows exist to accept.",
     "required_before_retry": [
-      "Acquire a versioned Superettan source covering 2022-2025.",
-      "Persist raw files and SHA-256 provenance.",
-      "Verify fixture identity, 16-club/240-match/30-appearance phase structure, closing-field completeness and playoff separation without outcome-based selection.",
+      "Use a different versionable public source or a permitted upstream export for Superettan 2022-2025.",
+      "Persist raw season payloads and SHA-256 provenance.",
+      "Verify fixture identity, 16-club/240-match/30-appearance phase structure and playoff separation without outcome-based selection.",
+      "Keep historical odds and market benchmarks unavailable unless separately sourced and verified.",
       "Freeze 2022-2024 development and untouched 2025 holdout before model evaluation."
     ]
   },
@@ -47,12 +48,38 @@
     "missing_rows_or_prices_invented": false,
     "partial_sample_accepted": false,
     "allsvenskan_rebuilt_or_modified": false,
-    "oos_holdout_touched": false
+    "oos_holdout_touched": false,
+    "provider_403_payload_used": false,
+    "partial_api_rows_accepted": false
   },
   "sample_impact": {
     "accepted_structural_fixtures_before": 12304,
     "accepted_structural_holdout_before": 3076,
     "accepted_structural_fixtures_after": 12304,
     "accepted_structural_holdout_after": 3076
-  }
+  },
+  "acquisition_attempts": [
+    {
+      "run_id": 33566331135,
+      "endpoint_host": "www.sofascore.com",
+      "attempts": 4,
+      "result": "HTTP_403_FORBIDDEN",
+      "accepted_rows": 0
+    },
+    {
+      "run_id": 33566434753,
+      "endpoint_host": "api.sofascore.com",
+      "attempts": 4,
+      "result": "HTTP_403_FORBIDDEN",
+      "accepted_rows": 0
+    },
+    {
+      "run_id": 33566570574,
+      "endpoint_host": "api.sofascore.com",
+      "attempts": 4,
+      "browser_headers": true,
+      "result": "HTTP_403_FORBIDDEN",
+      "accepted_rows": 0
+    }
+  ]
 }
