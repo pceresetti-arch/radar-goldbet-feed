@@ -1,0 +1,58 @@
+{
+  "schema_version": "radar-historical-superettan-source-coverage-audit-v1",
+  "generated_at": "2026-09-01T19:21:25Z",
+  "local_timezone": "Europe/Rome",
+  "status": "SOURCE_COVERAGE_FAILURE_NO_MODEL",
+  "objective": "Verify whether the repository-persisted Swedish consolidated source supports a leakage-safe Superettan 2022-2025 structural OOS block.",
+  "repository_source_of_truth": {
+    "path": "feed/historical/sweden/football-data-SWE.csv",
+    "github_blob_sha": "ce3641c6fbc748f0dffd871395e6a8a4df57d9b7",
+    "rows": 3526,
+    "observed_league_values": [
+      "Allsvenskan",
+      "Allsvenskan "
+    ],
+    "canonical_league_counts": {
+      "Allsvenskan": 3526
+    },
+    "superettan_rows": 0,
+    "requested_superettan_seasons": {
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  "repository_inventory": {
+    "recursive_tree_complete": true,
+    "paths_scanned": 1058,
+    "paths_matching_case_insensitive_superettan": 0
+  },
+  "decision": {
+    "audit_complete": true,
+    "format_audit_possible": false,
+    "structural_model_allowed": false,
+    "oos_metrics_computed": false,
+    "accepted_rows": 0,
+    "reason": "The ledger incorrectly assumed that the existing Swedish consolidated source included Superettan. It contains Allsvenskan only, and no separate Superettan artifact exists in the complete repository tree.",
+    "required_before_retry": [
+      "Acquire a versioned Superettan source covering 2022-2025.",
+      "Persist raw files and SHA-256 provenance.",
+      "Verify fixture identity, 16-club/240-match/30-appearance phase structure, closing-field completeness and playoff separation without outcome-based selection.",
+      "Freeze 2022-2024 development and untouched 2025 holdout before model evaluation."
+    ]
+  },
+  "anti_hindsight_controls": {
+    "outcomes_used_for_feature_or_phase_selection": false,
+    "missing_rows_or_prices_invented": false,
+    "partial_sample_accepted": false,
+    "allsvenskan_rebuilt_or_modified": false,
+    "oos_holdout_touched": false
+  },
+  "sample_impact": {
+    "accepted_structural_fixtures_before": 12304,
+    "accepted_structural_holdout_before": 3076,
+    "accepted_structural_fixtures_after": 12304,
+    "accepted_structural_holdout_after": 3076
+  }
+}
