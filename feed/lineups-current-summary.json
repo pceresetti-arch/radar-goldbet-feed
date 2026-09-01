@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T08:52:27.452141+00:00",
+  "generated_at": "2026-09-01T09:06:14.733754+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 3,
+  "target_count": 4,
   "status_counts": {
-    "NOT_AVAILABLE": 3
+    "NOT_AVAILABLE": 3,
+    "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
     {
@@ -22,12 +23,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T08:52:27.452141+00:00",
+    "generated_at": "2026-09-01T09:06:14.733754+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 2,
+    "target_count": 3,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -45,7 +46,7 @@
       "match": "FC Vizela U23 - Santa Clara U23",
       "start_time": "01-09-2026 12:00",
       "league": "Campionato U23",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 53.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.5375",
       "confirmed_at": null,
@@ -57,7 +58,7 @@
       "match": "SC Farense U23 - Famalicao U23",
       "start_time": "01-09-2026 12:00",
       "league": "Campionato U23",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 53.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.5377",
       "confirmed_at": null,
@@ -69,12 +70,24 @@
       "match": "Sigma Olomouc - Sparta Praga U19",
       "start_time": "01-09-2026 12:30",
       "league": "U19 League",
-      "minutes_to_start": 97.5,
+      "minutes_to_start": 83.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.7939",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "FC Kharkiv - KFF Mitrovica",
+      "start_time": "01-09-2026 13:00",
+      "league": "UEFA Europa Cup Femminile",
+      "minutes_to_start": 113.8,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36363.5685",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
