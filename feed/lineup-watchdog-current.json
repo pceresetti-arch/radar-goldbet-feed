@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-01T23:33:01.357806+00:00",
+  "generated_at": "2026-09-01T23:42:51.150438+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,81 +21,115 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-01T23:30:03.588132+00:00",
-      "finished_at": "2026-09-01T23:30:04.925951+00:00",
-      "official_count": 1,
+      "started_at": "2026-09-01T23:42:48.823134+00:00",
+      "finished_at": "2026-09-01T23:42:51.150428+00:00",
+      "official_count": 2,
       "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T23:30:39.926094+00:00",
-      "finished_at": "2026-09-01T23:30:40.149326+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T23:31:15.149507+00:00",
-      "finished_at": "2026-09-01T23:31:15.467059+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T23:31:50.467247+00:00",
-      "finished_at": "2026-09-01T23:31:50.729262+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T23:32:25.729442+00:00",
-      "finished_at": "2026-09-01T23:32:26.173145+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T23:33:01.173361+00:00",
-      "finished_at": "2026-09-01T23:33:01.357741+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-01T23:42:51.150313+00:00",
+          "match": "LDU Quito - Mushuc Runa SC",
+          "league": "Serie A",
+          "start_time": "02-09-2026 02:00",
+          "minutes_to_start": 17.2,
+          "match_market_id": "36361.1251",
+          "match_event_id": 16073158,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000009094,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "b3247838c5a4a8e61233",
+          "current_xi_fingerprint": "dc1f6733ad7041f6744f",
+          "confirmed_at": "2026-09-01T23:42:50.910845+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-01T23:42:51.150313+00:00",
+          "match": "LDU Quito - Mushuc Runa SC",
+          "league": "Serie A",
+          "start_time": "02-09-2026 02:00",
+          "minutes_to_start": 17.2,
+          "match_market_id": "36361.1251",
+          "match_event_id": 16073158,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000009094,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "b3247838c5a4a8e61233",
+          "current_xi_fingerprint": "dc1f6733ad7041f6744f",
+          "confirmed_at": "2026-09-01T23:42:50.910845+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
+  "observed_events": [
     {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-01T23:42:51.150313+00:00",
       "match": "LDU Quito - Mushuc Runa SC",
+      "league": "Serie A",
+      "start_time": "02-09-2026 02:00",
+      "minutes_to_start": 17.2,
       "match_market_id": "36361.1251",
       "match_event_id": 16073158,
-      "minutes_to_start": 27.0,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000009094,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "b3247838c5a4a8e61233",
+      "current_xi_fingerprint": "dc1f6733ad7041f6744f",
+      "confirmed_at": "2026-09-01T23:42:50.910845+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-01T23:42:51.150313+00:00",
+      "match": "LDU Quito - Mushuc Runa SC",
+      "league": "Serie A",
+      "start_time": "02-09-2026 02:00",
+      "minutes_to_start": 17.2,
+      "match_market_id": "36361.1251",
+      "match_event_id": 16073158,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000009094,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "b3247838c5a4a8e61233",
+      "current_xi_fingerprint": "dc1f6733ad7041f6744f",
+      "confirmed_at": "2026-09-01T23:42:50.910845+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Fortaleza - Once Caldas",
+      "match_market_id": "36361.3440",
+      "match_event_id": 16074183,
+      "minutes_to_start": 77.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
-      "fotmob_match_id": 1000009094
+      "fotmob_match_id": 1000014120
     }
   ],
   "target_count": 3
