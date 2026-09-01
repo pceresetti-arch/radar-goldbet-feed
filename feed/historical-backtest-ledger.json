@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v34",
-  "generated_at": "2026-09-01T22:30:18Z",
+  "schema_version": "radar-historical-backtest-ledger-v35",
+  "generated_at": "2026-09-01T23:48:30Z",
   "local_timezone": "Europe/Rome",
-  "status": "SUPERETTAN_SOURCE_ACQUISITION_BLOCKED_ZERO_ROWS",
+  "status": "CROSS_LEAGUE_ELO_CALIBRATION_COMPLETE_DRAW_CLASS_FAILURE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -203,7 +203,14 @@
     "superettan_acquisition_workflow_runs": 3,
     "superettan_provider_http_403_runs": 3,
     "superettan_api_payloads_received": 0,
-    "superettan_partial_rows_accepted": 0
+    "superettan_partial_rows_accepted": 0,
+    "cross_league_calibration_leagues": 11,
+    "cross_league_calibration_holdout_fixtures": 3076,
+    "cross_league_calibration_probability_rows": 9228,
+    "cross_league_elo_home_top_picks": 2084,
+    "cross_league_elo_draw_top_picks": 0,
+    "cross_league_elo_away_top_picks": 992,
+    "cross_league_realized_draws": 764
   },
   "quarantined_evidence": [
     {
@@ -397,7 +404,12 @@
     "Corrected the ledger assumption that Superettan could be audited from the existing Swedish consolidated source.",
     "Implemented a reproducible Superettan 2022-2025 public-source acquisition with immutable raw snapshots, page hashes and a frozen 240/16/30 schedule gate.",
     "Executed three independent acquisition runs; the provider rejected all requests with HTTP 403 before returning any season payload.",
-    "Accepted zero partial Superettan rows, computed no model metrics and left the structural sample unchanged."
+    "Accepted zero partial Superettan rows, computed no model metrics and left the structural sample unchanged.",
+    "Reconstructed all 3,076 frozen ELO_ONLY OOS predictions across eleven leagues from persisted anti-hindsight feature rows and persisted development-only weights, means and scales.",
+    "Passed exact metric-reproduction gates for every league at absolute tolerance 1e-12 before pooling.",
+    "Completed pooled and league-level calibration on 9,228 outcome-probability rows.",
+    "Confirmed that the external de-vigged average closing benchmark beats ELO_ONLY on Brier and log-loss under both stratified fixture and equal-league bootstrap intervals.",
+    "Detected a structural draw-class failure: ELO_ONLY selected DRAW as top probability zero times while 764 holdout fixtures ended drawn."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1886,6 +1898,57 @@
         "accuracy": 0.4479166666666667
       },
       "decision": "NO_ELO_FORM_FULL_OR_OPERATIONAL_RULE_PROMOTION"
+    },
+    "cross_league_elo_calibration_v1": {
+      "report": "feed/historical/calibration/cross-league-elo-calibration-v1.json",
+      "sample": {
+        "leagues": 11,
+        "holdout_fixtures": 3076,
+        "outcome_probability_rows": 9228
+      },
+      "elo_only": {
+        "brier": 0.6002423703022668,
+        "log_loss": 1.0050528376814343,
+        "accuracy": 0.5045513654096229,
+        "top_pick_ece": 0.018981840296227483,
+        "all_class_ece": 0.010766071066484742
+      },
+      "external_average_close": {
+        "brier": 0.5829934129060756,
+        "log_loss": 0.9792668118476726,
+        "accuracy": 0.5341352405721717
+      },
+      "market_minus_elo": {
+        "brier_point": -0.017248957396191145,
+        "brier_stratified_fixture_ci95": [
+          -0.022144144331995814,
+          -0.01229134313954849
+        ],
+        "brier_equal_league_ci95": [
+          -0.02117694843544527,
+          -0.013366813750183284
+        ],
+        "log_loss_point": -0.025786025833761526,
+        "log_loss_stratified_fixture_ci95": [
+          -0.03320821589128607,
+          -0.018299185976917105
+        ],
+        "log_loss_equal_league_ci95": [
+          -0.031047092716711962,
+          -0.020161817304625625
+        ]
+      },
+      "top_pick_counts": {
+        "H": 2084,
+        "D": 0,
+        "A": 992
+      },
+      "realized_outcome_counts": {
+        "H": 1361,
+        "D": 764,
+        "A": 951
+      },
+      "decision": "NO_OPERATIONAL_PROMOTION_ELO_INCOMPLETE_AS_THREE_WAY_TOP_PICK_MODEL"
     }
   },
   "ablation_plan": {
@@ -1906,7 +1969,7 @@
     "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
     "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by source absence/provider denial.",
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
-    "next_analysis_lane": "Advance a cross-league calibration/error decomposition on the eleven accepted blocks without changing frozen model parameters.",
+    "next_analysis_lane": "Design a development-only draw-class repair candidate, freeze it before evaluation, and require a new independent temporal holdout; never retrofit the current 3,076 OOS fixtures.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -1948,7 +2011,9 @@
       "Austria Bundesliga v1: reject the claim that Elo robustly improves the development prior; Elo has worse Brier/log-loss point estimates and paired intervals include zero.",
       "Austria Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
       "Austria Bundesliga v1: reject a definitive external closing-market superiority claim versus Elo; closing point estimates are better but paired intervals include zero.",
-      "J1 League four-season structural model: rejected because the source changes from an 18-club 306-fixture format in 2022-2023 to a 20-club 380-fixture format in 2024-2025, while 2022 also contains four playoff rows outside the phase-pure league schedule."
+      "J1 League four-season structural model: rejected because the source changes from an 18-club 306-fixture format in 2022-2023 to a 20-club 380-fixture format in 2024-2025, while 2022 also contains four playoff rows outside the phase-pure league schedule.",
+      "Cross-league ELO_ONLY v1: reject treatment as a complete 1X2 top-pick model; across 3,076 frozen OOS fixtures it never selects DRAW despite 764 realized draws.",
+      "Cross-league ELO_ONLY v1: reject the claim that the structural baseline matches the external average closing benchmark; Brier and log-loss disadvantages remain entirely below zero under both stratified fixture and equal-league bootstrap intervals."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1986,8 +2051,9 @@
       "Austrian Bundesliga four-season comparability uses a frozen chronological 192-fixture core: accept only if all 12 clubs have exactly 32 appearances, and exclude only subsequent European playoff rows.",
       "Calendar-year leagues must be format-gated independently; J1 playoff rows and the 18-to-20-club expansion cannot be normalized by outcome-blind downsampling into the requested four-season design.",
       "A country-level consolidated source may not be assumed to cover lower divisions: league values and repository paths must be enumerated before scheduling a format audit or model.",
-      "A blocked provider endpoint must not be retried indefinitely: after independent host/header attempts return zero payload, record the source failure and move to another analysis lane while preserving the acceptance gate."
+      "A blocked provider endpoint must not be retried indefinitely: after independent host/header attempts return zero payload, record the source failure and move to another analysis lane while preserving the acceptance gate.",
+      "Every multiclass structural model must pass a frozen top-pick class-coverage audit; zero argmax predictions for a realized class is a structural failure even when pooled calibration ECE is small."
     ],
-    "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
+    "note": "Elo remains a useful strength feature/research baseline but is not accepted as a complete standalone 1X2 decision model because the frozen version has zero DRAW top picks. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
 }
