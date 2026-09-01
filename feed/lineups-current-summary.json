@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T23:42:50.910845+00:00",
+  "generated_at": "2026-09-01T23:57:38.048230+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -23,7 +23,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T23:42:50.910845+00:00",
+    "generated_at": "2026-09-01T23:57:38.048230+00:00",
     "window_minutes": [
       0,
       85.0
@@ -41,16 +41,8 @@
     },
     "changes": [
       {
-        "match": "LDU Quito - Mushuc Runa SC",
-        "minutes_to_start": 17.2,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
         "match": "Atletico Mineiro MG - Cruzeiro",
-        "minutes_to_start": 17.2,
+        "minutes_to_start": 2.4,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -58,15 +50,25 @@
       }
     ]
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Atletico Mineiro MG - Cruzeiro",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "LDU Quito - Mushuc Runa SC",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
     {
       "match": "Atletico Mineiro MG - Cruzeiro",
       "start_time": "02-09-2026 02:00",
       "league": "Coppa Brasiliana",
-      "minutes_to_start": 17.2,
+      "minutes_to_start": 2.4,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.16924",
-      "confirmed_at": "2026-09-01T23:42:50.910845+00:00",
+      "confirmed_at": "2026-09-01T23:57:38.048230+00:00",
       "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
@@ -75,11 +77,11 @@
       "match": "LDU Quito - Mushuc Runa SC",
       "start_time": "02-09-2026 02:00",
       "league": "Serie A",
-      "minutes_to_start": 17.2,
+      "minutes_to_start": 2.4,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.1251",
       "confirmed_at": "2026-09-01T23:42:50.910845+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -87,7 +89,7 @@
       "match": "Fortaleza - Once Caldas",
       "start_time": "02-09-2026 03:00",
       "league": "Primera A",
-      "minutes_to_start": 77.2,
+      "minutes_to_start": 62.4,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.3440",
       "confirmed_at": null,
