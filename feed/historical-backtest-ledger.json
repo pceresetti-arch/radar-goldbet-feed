@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v29",
-  "generated_at": "2026-09-01T15:27:05.688Z",
+  "schema_version": "radar-historical-backtest-ledger-v30",
+  "generated_at": "2026-09-01T16:42:51.354Z",
   "local_timezone": "Europe/Rome",
-  "status": "BELGIUM1_FORMAT_AUDIT_COMPLETE_NO_MODEL",
+  "status": "CROSS_LEAGUE_FATIGUE_ABLATION_COMPLETE_MODULE_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,8 +66,8 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 10624,
-    "total_structural_oos_holdout_rows": 2656,
+    "total_external_market_close_benchmark_rows": 11536,
+    "total_structural_oos_holdout_rows": 2884,
     "pooled_sweden_norway_holdout_rows": 480,
     "cross_league_classwise_calibration_rows": 480,
     "eligible_denmark_regular_fixture_rows": 768,
@@ -106,7 +106,7 @@
     "netherlands_holdout_rows": 306,
     "netherlands_source_files": 4,
     "netherlands_missing_avg_close_triplets": 0,
-    "total_structural_regular_fixture_rows": 10624,
+    "total_structural_regular_fixture_rows": 11536,
     "goldbet_true_open_rows_with_exact_observed_current": 9188,
     "goldbet_events_with_pre_kickoff_observed_current": 642,
     "goldbet_primary_market_open_current_rows": 4931,
@@ -175,7 +175,13 @@
     "england1_development_rows": 1140,
     "england1_holdout_rows": 380,
     "england1_source_files": 4,
-    "england1_missing_avg_close_triplets": 0
+    "england1_missing_avg_close_triplets": 0,
+    "eligible_scotland1_regular_fixture_rows": 912,
+    "scotland1_development_rows": 684,
+    "scotland1_holdout_rows": 228,
+    "fatigue_ablation_leagues": 10,
+    "fatigue_ablation_development_rows": 8652,
+    "fatigue_ablation_holdout_rows": 2884
   },
   "quarantined_evidence": [
     {
@@ -340,7 +346,11 @@
     "Completed a row-level Belgian Pro League format audit over 2022/2023-2025/2026 using four SHA-bound Football-Data B1 files.",
     "Rejected direct four-season modeling: 2022/2023 has 18 clubs and a balanced 306-match schedule, while later 16-club seasons contain asymmetric playoff paths.",
     "Flagged 2025/2026 full-phase incompleteness: 311 rows versus 312 in the prior two seasons, with Dender and RAAL La Louviere on 35 appearances.",
-    "Built no Belgian features or OOS metrics; the accepted structural sample remains 11,536 fixtures and 2,884 holdout rows."
+    "Built no Belgian features or OOS metrics; the accepted structural sample remains 11,536 fixtures and 2,884 holdout rows.",
+    "Built a frozen ten-league freshness/fatigue ablation from strictly prior calendar dates only: rest-day differential plus prior 7/14/21-day league-fixture congestion, with no same-date updates.",
+    "Evaluated 8,652 development and 2,884 untouched holdout fixtures; ELO_PLUS_FATIGUE worsens pooled Brier from 0.596217 to 0.599239 and log-loss from 0.999328 to 1.004456.",
+    "Paired bootstrap intervals are entirely unfavorable to the fatigue bundle for both Brier and log-loss; only 3/10 leagues show positive point direction and Portugal has significant harm on both losses.",
+    "Rejected promotion of the schedule-only fatigue module; travel, cross-competition matches, extra time, player minutes, rotation and injury recovery remain unavailable and were not invented."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1754,6 +1764,45 @@
       "accepted_model_rows": 0,
       "holdout_evaluated": false,
       "report": "feed/historical/belgium1/format-audit-v1.json"
+    },
+    "cross_league_fatigue_ablation": {
+      "report": "feed/historical/fatigue/cross-league-fatigue-ablation-v1.json",
+      "sample": {
+        "leagues": 10,
+        "development": 8652,
+        "holdout": 2884
+      },
+      "elo_only": {
+        "brier": 0.5962171633455716,
+        "log_loss": 0.9993275181401996,
+        "accuracy": 0.5110957004160888
+      },
+      "elo_plus_schedule_fatigue": {
+        "brier": 0.5992393691266399,
+        "log_loss": 1.0044563364431125,
+        "accuracy": 0.5110957004160888
+      },
+      "paired_elo_minus_fatigue": {
+        "brier_point": -0.003022205781068333,
+        "brier_ci95": [
+          -0.005470382889695746,
+          -0.0006746369048814462
+        ],
+        "log_loss_point": -0.005128818302913144,
+        "log_loss_ci95": [
+          -0.009293083510821263,
+          -0.0011349137373506324
+        ]
+      },
+      "positive_direction_leagues_out_of_10": {
+        "brier": 3,
+        "log_loss": 3
+      },
+      "significant_harm": [
+        "Portugal:Brier",
+        "Portugal:log_loss"
+      ],
+      "decision": "NOT_PROMOTED"
     }
   },
   "ablation_plan": {
@@ -1771,8 +1820,9 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Keep Belgium excluded from four-season modeling; audit a regular-season-only cohort separately without inspecting holdout performance.",
-    "structural_lane": "Ten completed league OOS blocks remain frozen at 11,536 fixtures and 2,884 holdout rows. Belgium needs a phase-normalized design and currently has only three comparable 16-club seasons.",
+    "priority": "Continue league expansion with a frozen format audit for the next Radar competition; keep schedule-only fatigue rejected pending richer verified pre-match workload data.",
+    "structural_lane": "Ten completed league OOS blocks remain frozen at 11,536 fixtures and 2,884 holdout rows. Belgium remains excluded from the four-season full-phase model.",
+    "fatigue_lane": "Do not operationalize calendar-only fatigue. Reopen only with verified cross-competition schedules and, separately, pre-match player minutes/rotation evidence.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1808,7 +1858,8 @@
       "Premier League v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
       "Premier League v1: reject a definitive closing-market superiority claim versus Elo; closing point estimates are better but paired Brier and log-loss intervals include zero.",
       "Scottish Premiership form and full structural bundles: no reliable incremental improvement over Elo on the frozen 2025/2026 holdout.",
-      "Belgian Pro League full-season four-year model: rejected because club count and playoff exposure drift materially, with 2025/2026 full-phase source incompleteness."
+      "Belgian Pro League full-season four-year model: rejected because club count and playoff exposure drift materially, with 2025/2026 full-phase source incompleteness.",
+      "Cross-league schedule-fatigue v1: reject promotion of rest-day and prior 7/14/21-day league-fixture congestion features beyond Elo; pooled Brier and log-loss worsen with paired IC95 entirely below zero, only 3/10 leagues improve directionally, and Portugal shows significant harm."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1841,7 +1892,8 @@
       "League-format constants must be changed in both documented expectations and executable eligibility conditions; a message-only update is insufficient and failed runs remain quarantined.",
       "Scottish Premiership must retain its post-split phase and must not be modeled as a balanced round robin; partial source seasons are forbidden.",
       "Scottish Premiership post-split phase retained; schedule treated as asymmetric, not a balanced round robin.",
-      "Multi-phase leagues require a frozen phase definition and identical schedule exposure across development and holdout; total-season rows cannot be pooled across Belgian format changes."
+      "Multi-phase leagues require a frozen phase definition and identical schedule exposure across development and holdout; total-season rows cannot be pooled across Belgian format changes.",
+      "Freshness/fatigue features derived from schedules must use strictly prior dates and date-batched updates; unavailable travel, cross-competition, extra-time, player-minute and rotation context must remain explicit missing modules."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
