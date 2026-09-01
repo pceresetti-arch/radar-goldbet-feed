@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v14",
-  "generated_at": "2026-08-31T23:40:17.921Z",
+  "schema_version": "radar-historical-backtest-ledger-v15",
+  "generated_at": "2026-09-01T00:42:14.806Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_EXACT_OUTCOME_T30_PILOT_COMPLETE",
+  "status": "GOLDBET_638_EVENT_EXACT_OUTCOME_CALIBRATION_COMPLETE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -115,11 +115,15 @@
     "goldbet_certified_last_pre_kickoff_close_rows": 0,
     "goldbet_outcome_joined_events": 5,
     "goldbet_movement_state_events": 5,
-    "goldbet_exact_outcome_joined_events": 5,
+    "goldbet_exact_outcome_joined_events": 638,
     "goldbet_events_with_persisted_t30": 3,
     "goldbet_t30_selection_rows": 43,
     "goldbet_t30_good_selection_rows": 13,
-    "goldbet_t30_fallback_selection_rows": 30
+    "goldbet_t30_fallback_selection_rows": 30,
+    "goldbet_exact_outcome_unresolved_events": 4,
+    "goldbet_calibration_complete_price_groups": 4248,
+    "goldbet_calibration_scored_selection_rows": 9134,
+    "goldbet_calibration_invalid_groups": 0
   },
   "quarantined_evidence": [
     {
@@ -209,7 +213,10 @@
     "Resolved final scores for all five movement-state fixtures through exact Flashscore event IDs; zero name/fuzzy joins and zero outcome failures.",
     "Froze GoldBet TRUE OPEN and pre-kickoff T-30 price features before attaching final outcomes; no post-kickoff price entered the pilot.",
     "Materialized 43 T-30 market-selection rows across three fixtures: 13 GOOD checkpoint rows and 30 explicitly labelled FALLBACK rows.",
-    "Kept all T-30 movement thresholds diagnostic: only two fixtures generate >=1pp shortening signals and correlated markets/lines prevent inferential or operational promotion."
+    "Kept all T-30 movement thresholds diagnostic: only two fixtures generate >=1pp shortening signals and correlated markets/lines prevent inferential or operational promotion.",
+    "Scaled the exact Flashscore-event-ID outcome resolver from five to all 642 GoldBet TRUE OPEN records: 638 final two-half outcomes parsed, four unresolved/non-final feeds excluded, zero duplicate IDs.",
+    "Scored 4,248 complete market groups and 9,134 selection rows across 1X2, full-time Over/Under and BTTS with pre-match prices frozen before outcome attachment.",
+    "Compared TRUE OPEN with the exact pre-kickoff observed-current price using fixture-clustered 5,000-draw bootstrap intervals; point estimates favor observed-current slightly, but every aggregate and market-specific interval crosses zero."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -783,6 +790,41 @@
         }
       ],
       "interpretation": "Descriptive pilot only. Fixture n=2 above thresholds and correlated market rows make ROI/hit-rate unstable; no rule promoted."
+    },
+    "goldbet_true_open_exact_outcome_calibration_2026": {
+      "report": "feed/historical/open-close/goldbet-true-open-calibration-v1.json",
+      "classification": "PROSPECTIVE_2026_EXACT_OUTCOME_DIAGNOSTIC_NOT_MULTI_SEASON_OOS",
+      "sample": {
+        "indexed_events": 642,
+        "exact_final_outcomes": 638,
+        "unresolved": 4,
+        "complete_price_groups": 4248,
+        "selection_rows": 9134
+      },
+      "all_supported": {
+        "true_open": {
+          "selection_brier": 0.1895651137936562,
+          "selection_log_loss": 0.5606885960055812
+        },
+        "observed_current": {
+          "selection_brier": 0.1888848477390663,
+          "selection_log_loss": 0.5590549575317396
+        },
+        "paired_current_minus_open_brier_ci95": [
+          -0.0014907839462039163,
+          0.00011438891968398868
+        ],
+        "paired_current_minus_open_log_loss_ci95": [
+          -0.0036187343099585156,
+          0.00033023743673576966
+        ]
+      },
+      "market_event_coverage": {
+        "one_x_two": 638,
+        "over_under": 637,
+        "btts": 622
+      },
+      "interpretation": "Observed-current has marginally better point estimates, but fixture-clustered intervals cross zero in aggregate and in every market. No superiority, threshold or operational rule is established."
     }
   },
   "ablation_plan": {
@@ -800,10 +842,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Scale the exact Flashscore-event-ID outcome resolver from the five-event pilot to the 642-event TRUE OPEN index, while preserving a separate feature-freeze boundary.",
-    "structural_lane": "Keep all completed league holdouts frozen.",
-    "market_lane": "Expand persisted last-pre-kickoff/T-30 coverage; segment GOOD versus FALLBACK checkpoints and never relabel either as certified CLOSE.",
-    "mms_lane": "No threshold inference until independent fixtures, non-correlated market units, exact outcomes and materially larger same-book pre-kickoff coverage are available."
+    "priority": "Investigate the four unresolved exact IDs and build a non-correlated fixture-level MMS analysis on the 638 settled events.",
+    "structural_lane": "Keep all completed multi-season league holdouts frozen and separate from the prospective 2026 GoldBet block.",
+    "market_lane": "Segment OPEN-to-observed-current diagnostics by lead time, league and market; preserve the fact that observed-current is not CLOSE.",
+    "mms_lane": "Select one pre-specified signal unit per fixture/market and use event-clustered uncertainty before considering any movement threshold."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -817,7 +859,8 @@
       "Pooled Sweden+Norway: reject the full structural bundle as an improvement over Elo; point estimates are worse and paired intervals include zero.",
       "Primeira Liga+Eredivisie v1.47/v1.77: reject promotion of every 1X2 and O/U 2.5 threshold; all pooled early-ROI intervals include zero, results are league-heterogeneous, and selection is CLOSE-conditioned.",
       "Netherlands v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both have worse point estimates and paired intervals include zero.",
-      "GoldBet T-30 pilot v1: reject promotion of all 1/2/3pp shortening thresholds; signals occur on only two fixtures and rows are correlated across 1X2 and total-goal lines."
+      "GoldBet T-30 pilot v1: reject promotion of all 1/2/3pp shortening thresholds; signals occur on only two fixtures and rows are correlated across 1X2 and total-goal lines.",
+      "GoldBet exact-outcome calibration v1: reject the claim that the heterogeneous pre-kickoff observed-current snapshot reliably improves TRUE OPEN; all fixture-clustered paired Brier/log-loss intervals cross zero."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -838,7 +881,8 @@
       "European season-file acquisition may replace a missing country-level consolidated CSV only when each immutable league-season file is separately hashed, row-count gated and normalized with unchanged provenance labels.",
       "Fields named home_score/away_score/match_score in the Diretta index are identity-match confidence values, not final scores; outcome semantics require a separately documented result source.",
       "A pre-kickoff current price is not a CLOSE unless it is proven to be the last valid same-book observation before kickoff; timing alone is insufficient.",
-      "Final outcomes may be joined through exact Flashscore event IDs only after pre-match price features are frozen; T-30 checkpoint quality and distance must remain explicit."
+      "Final outcomes may be joined through exact Flashscore event IDs only after pre-match price features are frozen; T-30 checkpoint quality and distance must remain explicit.",
+      "Outcome resolution scales only through exact Flashscore event IDs; feeds lacking both regular-half score sections remain unresolved and excluded rather than inferred."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
