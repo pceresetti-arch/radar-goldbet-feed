@@ -1,0 +1,48 @@
+name: Historical Superettan Source Acquisition
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-superettan-source.yml'
+      - 'tools/historical_acquire_superettan_sofascore.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-superettan-source
+  cancel-in-progress: false
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Acquire and gate Superettan 2022-2025
+        run: python tools/historical_acquire_superettan_sofascore.py
+      - name: Preserve evidence
+        run: |
+          rm -rf /tmp/superettan-history
+          cp -R feed/historical/superettan /tmp/superettan-history
+      - name: Commit source evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/superettan
+            mkdir -p feed/historical
+            cp -R /tmp/superettan-history feed/historical/superettan
+            git add feed/historical/superettan
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Add Superettan 2022-2025 source evidence"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
