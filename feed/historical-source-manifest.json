@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v19",
-  "generated_at": "2026-09-01T04:37:16.173Z",
+  "schema_version": "radar-historical-source-manifest-v20",
+  "generated_at": "2026-09-01T05:27:19.917Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_1X2_TIMING_COMMON_SUPPORT_FAILURE",
+  "status": "GOLDBET_POST_KICKOFF_SNAPSHOTS_QUARANTINED",
   "priority": [
     "Sweden",
     "Norway",
@@ -534,6 +534,41 @@
         "The early half retains a negative side-price adjusted difference, but competition confounding remains unresolved.",
         "The late half has only one eligible side-price cell and is inconclusive."
       ]
+    },
+    {
+      "name": "GoldBet multi-snapshot pre-kickoff hygiene audit",
+      "path": "feed/historical/open-close/goldbet-snapshot-hygiene-v1.json",
+      "source_class": "GOLDBET_MULTI_SNAPSHOT_SANITIZED_DIAGNOSTIC",
+      "status": "ACCEPTED_SANITIZED_T30_PILOT_RAW_STATE_FORBIDDEN",
+      "sample": {
+        "events": 5,
+        "records": 73,
+        "market_groups": 34,
+        "good_t30_rows": 43,
+        "complete_good_t30_groups": 20
+      },
+      "quarantine": {
+        "records_with_post_kickoff": 43,
+        "events_with_post_kickoff": 3,
+        "post_kickoff_snapshots": 2068
+      },
+      "role": [
+        "T30_COVERAGE_AUDIT",
+        "POST_KICKOFF_QUARANTINE",
+        "LAST_PERSISTED_PRE_KICKOFF_DIAGNOSTIC"
+      ],
+      "forbidden_role": [
+        "RAW_STATE_MODEL_INPUT",
+        "CERTIFIED_CLOSE",
+        "MULTI_SEASON_OOS",
+        "THRESHOLD_PROMOTION"
+      ],
+      "quality_notes": [
+        "All negative minutes-to-start snapshots are excluded before feature construction.",
+        "Twenty complete market groups meet the strict 20-40 minute T-30 window.",
+        "The T-30 groups cover only three fixtures and cannot support inference.",
+        "Last persisted pre-kickoff is not relabelled as CLOSE."
+      ]
     }
   ],
   "required_blocks": {
@@ -663,12 +698,13 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "lane": "GOLDBET_WITHIN_COMPETITION_T30_COVERAGE",
-    "goal": "Acquire matched TRUE OPEN, genuine T-30/last-pre-kickoff and outcome rows within the same competitions and temporal blocks.",
-    "prior_claim_status": "Timing effect not identifiable because competition-by-side-by-price common support is zero.",
+    "lane": "GOLDBET_SANITIZED_COMMON_SUPPORT_T30",
+    "goal": "Scale matched sanitized T-30 snapshots within the same competitions and an independent temporal block.",
+    "prior_claim_status": "Raw multi-snapshot state is ineligible; 2,068 post-kickoff snapshots quarantined.",
     "structural_next": "Hold all four league OOS blocks frozen.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
-    "historical_close_status": "NOT_CERTIFIED_SINGLE_OBSERVED_CURRENT_ONLY",
+    "historical_t30_status": "GOOD_43_ROWS_20_COMPLETE_GROUPS_3_FIXTURES_DIAGNOSTIC_ONLY",
+    "historical_close_status": "NOT_CERTIFIED",
     "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS"
   }
 }
