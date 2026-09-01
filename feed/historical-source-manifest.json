@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v31",
-  "generated_at": "2026-09-01T17:38:09.066Z",
+  "schema_version": "radar-historical-source-manifest-v32",
+  "generated_at": "2026-09-01T18:35:02.710Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "AUSTRIA1_STRUCTURAL_OOS_COMPLETE_ELEVEN_LEAGUE_SAMPLE",
+  "status": "JAPAN1_FORMAT_AUDIT_COMPLETE_NO_MODEL_ELEVEN_LEAGUE_SAMPLE_UNCHANGED",
   "priority": [
     "Sweden",
     "Norway",
@@ -919,6 +919,38 @@
         "Outcome columns are joined only after same-date-batched pre-match feature freeze.",
         "Closing odds remain an external benchmark and never GoldBet TRUE OPEN."
       ]
+    },
+    {
+      "name": "Football-Data.co.uk Japan consolidated source",
+      "url": "https://www.football-data.co.uk/new/JPN.csv",
+      "league": "J1 League",
+      "role": [
+        "FORMAT_DISCOVERY",
+        "FIXTURE_RESULT_BASELINE_CANDIDATE",
+        "MARKET_CLOSING_BENCHMARK_CANDIDATE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS",
+        "FOUR_SEASON_STRUCTURAL_MODEL"
+      ],
+      "source_class": "EXTERNAL_FORMAT_DISCOVERY",
+      "source_snapshot": "feed/historical/japan1/football-data-JPN.csv",
+      "source_sha256": "13d01043ef1f33f7f8f455b73b90bb95d9aa6b6141c5423b210c64d72c59b6d9",
+      "format_audit": "feed/historical/japan1/format-audit-v1.json",
+      "status": "FORMAT_DRIFT_18_TO_20_AND_2022_PLAYOFF_ROWS_NO_MODEL",
+      "audited_rows": 1376,
+      "accepted_regular_rows": 0,
+      "development_rows": 0,
+      "holdout_rows": 0,
+      "quality_notes": [
+        "2022 has 310 source rows and includes four rows involving lower-division playoff participants beyond the 306-match J1 schedule.",
+        "2023 has 18 clubs and 306 balanced fixtures.",
+        "2024 and 2025 have 20 clubs and 380 balanced fixtures after expansion.",
+        "The 20-club format currently offers only two complete seasons, insufficient for the requested four-season design.",
+        "All audited rows contain average closing 1X2 triplets, but odds availability does not override structural non-comparability."
+      ]
     }
   ],
   "required_blocks": {
@@ -1108,9 +1140,12 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "priority": "J1 League historical source and format audit before any model",
+    "priority": "Superettan 2022-2025 format and coverage audit from the existing Swedish consolidated source",
     "structural_sample": "Eleven accepted leagues, 12,304 fixtures and 3,076 holdout rows",
-    "belgium_constraint": "Full-season four-year model remains excluded because of format drift and incomplete 2025/2026 phase coverage.",
+    "excluded_format_blocks": [
+      "Belgian Pro League full-season four-year design",
+      "J1 League four-year design"
+    ],
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context."
   }
 }
