@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v26",
-  "generated_at": "2026-09-01T12:42:56.263Z",
+  "schema_version": "radar-historical-backtest-ledger-v27",
+  "generated_at": "2026-09-01T13:49:43.843Z",
   "local_timezone": "Europe/Rome",
-  "status": "ENGLAND1_STRUCTURAL_OOS_COMPLETE",
+  "status": "SCOTLAND1_SOURCE_FAILURE_QUARANTINED_NO_SAMPLE_CHANGE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -328,7 +328,10 @@
     "Frozen Premier League temporal split before evaluation: 2022/2023-2024/2025 development (1,140), untouched 2025/2026 holdout (380).",
     "Verified 20 clubs and 38 matches per club in every frozen Premier League season, zero duplicate fixture keys and zero missing average closing triplets.",
     "Replicated the unchanged structural specification on Premier League; Elo robustly improves the development prior, while form/full add no reliable incremental value.",
-    "External de-vigged average closing odds have better Premier League point estimates than Elo, but paired Brier/log-loss intervals versus Elo include zero; superiority is significant only against the full structural variant."
+    "External de-vigged average closing odds have better Premier League point estimates than Elo, but paired Brier/log-loss intervals versus Elo include zero; superiority is significant only against the full structural variant.",
+    "Defined and versioned the Scottish Premiership four-season gate: 12 clubs, 228 fixtures and 38 matches per club, retaining the post-split phase without assuming a balanced round robin.",
+    "Attempted Football-Data SC0 ingestion twice; all four season files timed out in both attempts. Zero partial rows were accepted and all downstream modeling steps were skipped.",
+    "Quarantined the Scotland source failure at feed/historical/scotland1/source-failure-v1.json; the nine accepted structural blocks remain frozen at 10,624 fixtures and 2,656 OOS."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1652,6 +1655,16 @@
         }
       },
       "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_REJECTED; MARKET_POINT_BETTER_NOT_CONCLUSIVE_VS_ELO; MARKET_SIGNIFICANTLY_BETTER_VS_FULL; NO_OPERATIONAL_PROMOTION"
+    },
+    "scotland1_source_attempt_2022_2026": {
+      "status": "TRANSIENT_SOURCE_FAILURE_NO_SAMPLE_ACCEPTED",
+      "attempts": 2,
+      "requested_seasons": 4,
+      "successful_seasons": 0,
+      "accepted_rows": 0,
+      "expected_rows": 912,
+      "downstream_model_executed": false,
+      "report": "feed/historical/scotland1/source-failure-v1.json"
     }
   },
   "ablation_plan": {
@@ -1669,8 +1682,8 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Continue structural expansion with league-specific format validation; keep MMS thresholds frozen pending matched GoldBet T-30 coverage.",
-    "structural_lane": "Freeze all nine completed league OOS blocks; extend only where four completed seasons pass league-specific schedule gates.",
+    "priority": "Retry Scottish Premiership ingestion only when the source endpoint is responsive; do not accept partial seasons.",
+    "structural_lane": "Scottish gate frozen at 12 clubs, 228 fixtures and 38 matches per club including post-split; existing nine league OOS blocks remain unchanged.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1734,7 +1747,8 @@
       "Historical snapshot ingestion must hard-reject minutes_to_start < 0 before feature construction and must preserve a separate quarantine count; filtering only at metric time is insufficient.",
       "Pre-kickoff eligibility now requires two agreeing temporal proofs: non-negative minutes_to_start and captured_at strictly before kickoff; any disagreement is quarantined.",
       "Inherited artifact labels must be validated after mechanical league extension; a mislabelled feature path is corrected before evidence acceptance.",
-      "League-format constants must be changed in both documented expectations and executable eligibility conditions; a message-only update is insufficient and failed runs remain quarantined."
+      "League-format constants must be changed in both documented expectations and executable eligibility conditions; a message-only update is insufficient and failed runs remain quarantined.",
+      "Scottish Premiership must retain its post-split phase and must not be modeled as a balanced round robin; partial source seasons are forbidden."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
