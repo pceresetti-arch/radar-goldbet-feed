@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v16",
-  "generated_at": "2026-09-01T01:44:26.551Z",
+  "schema_version": "radar-historical-backtest-ledger-v17",
+  "generated_at": "2026-09-01T02:44:07.080Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_FIXTURE_LEVEL_MMS_THRESHOLDS_REJECTED",
+  "status": "GOLDBET_MMS_MATERIAL_TIMING_AND_TEMPORAL_DRIFT_FOUND",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -128,7 +128,10 @@
     "goldbet_fixture_level_mms_events": 638,
     "goldbet_fixture_level_1x2_rows": 638,
     "goldbet_fixture_level_ou25_rows": 637,
-    "goldbet_fixture_level_btts_rows": 622
+    "goldbet_fixture_level_btts_rows": 622,
+    "goldbet_mms_stability_audits": 12,
+    "goldbet_mms_material_drift_findings": 7,
+    "goldbet_mms_country_cells_n_ge_30": 6
   },
   "quarantined_evidence": [
     {
@@ -224,7 +227,12 @@
     "Compared TRUE OPEN with the exact pre-kickoff observed-current price using fixture-clustered 5,000-draw bootstrap intervals; point estimates favor observed-current slightly, but every aggregate and market-specific interval crosses zero.",
     "Reduced the 9,134 correlated selection rows to 1,897 pre-specified fixture-market units: one maximum shortening candidate for FT 1X2, FT O/U 2.5 and FT BTTS.",
     "Evaluated de-vig probability movements >=1/2/3pp and the legacy absolute price drop >=0.20 at the exact observed GoldBet price, with 10,000-draw ROI bootstrap intervals and chronological drawdown.",
-    "Found no threshold-market cell with a positive 95% ROI lower bound; O/U 2.5 and BTTS point ROI is negative at every de-vig movement threshold."
+    "Found no threshold-market cell with a positive 95% ROI lower bound; O/U 2.5 and BTTS point ROI is negative at every de-vig movement threshold.",
+    "Completed twelve fixture-level MMS stability audits across three markets and four frozen movement rules, splitting observations by <360 versus >=360 minutes and by ordered temporal halves.",
+    "Detected material 1X2 timing drift: PP1 ROI is -41.91% for observations <360 minutes versus +8.17% at >=360 minutes; the bootstrap difference interval excludes zero.",
+    "Detected material 1X2 chronology drift: PP1 moves from -24.39% in the early half to +23.61% in the late half; the difference interval excludes zero.",
+    "Detected BTTS chronology deterioration at PP1: +8.67% early versus -19.26% late; the difference interval excludes zero.",
+    "Classified these reversals as non-stationarity/timing confounding, not profitable sub-rules; pooled MMS ROI may no longer be interpreted without lead-time and temporal segmentation."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -926,6 +934,77 @@
         }
       },
       "interpretation": "No market-threshold cell supports promotion. Observed-current timing is heterogeneous and not CLOSE; independent replication remains mandatory."
+    },
+    "goldbet_mms_stability_2026": {
+      "report": "feed/historical/open-close/goldbet-mms-stability-v1.json",
+      "material_findings": 7,
+      "one_x_two_pp1_lead": {
+        "t_lt_360": {
+          "n": 67,
+          "roi": -0.4191044776,
+          "ci95": [
+            -0.6353731343,
+            -0.1923880597
+          ]
+        },
+        "t_ge_360": {
+          "n": 325,
+          "roi": 0.0816615385,
+          "ci95": [
+            -0.0656923077,
+            0.2409538462
+          ]
+        },
+        "difference_ci95": [
+          -0.7678121699,
+          -0.2299187141
+        ]
+      },
+      "one_x_two_pp1_chronology": {
+        "early": {
+          "n": 196,
+          "roi": -0.2439285714,
+          "ci95": [
+            -0.3980612245,
+            -0.0757142857
+          ]
+        },
+        "late": {
+          "n": 196,
+          "roi": 0.2360714286,
+          "ci95": [
+            0.0239285714,
+            0.4533673469
+          ]
+        },
+        "difference_ci95": [
+          -0.7425,
+          -0.2203571429
+        ]
+      },
+      "btts_pp1_chronology": {
+        "early": {
+          "n": 137,
+          "roi": 0.0867153285,
+          "ci95": [
+            -0.0576642336,
+            0.2347445255
+          ]
+        },
+        "late": {
+          "n": 137,
+          "roi": -0.1925547445,
+          "ci95": [
+            -0.3438686131,
+            -0.048540146
+          ]
+        },
+        "difference_ci95": [
+          0.0683211679,
+          0.4843065693
+        ]
+      },
+      "interpretation": "Material reversals indicate timing/composition and temporal drift. They do not promote early/late or far/near sub-rules; independent temporal replication is required."
     }
   },
   "ablation_plan": {
@@ -943,10 +1022,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Replicate fixture-level MMS on an independent temporal block and add league/lead-time drift only where cell sizes remain adequate.",
-    "structural_lane": "Keep multi-season structural holdouts frozen.",
-    "market_lane": "Continue collecting true last-pre-kickoff observations; current 2026 snapshots remain heterogeneous observed-current prices, not CLOSE.",
-    "mms_lane": "All tested 1/2/3pp and absolute-drop 0.20 thresholds remain rejected for promotion pending independent evidence."
+    "priority": "Identify whether 1X2 timing drift is explained by competition mix, price range or selection side using multivariable/error decomposition without tuning a betting rule.",
+    "structural_lane": "Keep all multi-season OOS structural blocks frozen.",
+    "market_lane": "Persist genuine T-30/last-pre-kickoff coverage to replace heterogeneous observed-current timing.",
+    "mms_lane": "Pooled thresholds remain rejected; no timing subgroup may be promoted from this discovery sample."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -963,7 +1042,8 @@
       "GoldBet T-30 pilot v1: reject promotion of all 1/2/3pp shortening thresholds; signals occur on only two fixtures and rows are correlated across 1X2 and total-goal lines.",
       "GoldBet exact-outcome calibration v1: reject the claim that the heterogeneous pre-kickoff observed-current snapshot reliably improves TRUE OPEN; all fixture-clustered paired Brier/log-loss intervals cross zero.",
       "GoldBet fixture-level MMS v1: reject promotion of de-vig shortening thresholds >=1/2/3pp for FT 1X2, O/U 2.5 and BTTS; every 10,000-draw ROI interval includes zero.",
-      "GoldBet fixture-level MMS v1: reject the legacy absolute price-drop >=0.20 rule across 1X2, O/U 2.5 and BTTS; all ROI intervals include zero and O/U/BTTS point ROI is negative."
+      "GoldBet fixture-level MMS v1: reject the legacy absolute price-drop >=0.20 rule across 1X2, O/U 2.5 and BTTS; all ROI intervals include zero and O/U/BTTS point ROI is negative.",
+      "GoldBet MMS stability v1: reject pooled interpretation of 1X2 movement ROI across heterogeneous lead times; <360 and >=360 minute samples differ materially."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -986,7 +1066,8 @@
       "A pre-kickoff current price is not a CLOSE unless it is proven to be the last valid same-book observation before kickoff; timing alone is insufficient.",
       "Final outcomes may be joined through exact Flashscore event IDs only after pre-match price features are frozen; T-30 checkpoint quality and distance must remain explicit.",
       "Outcome resolution scales only through exact Flashscore event IDs; feeds lacking both regular-half score sections remain unresolved and excluded rather than inferred.",
-      "MMS threshold tests use at most one pre-specified candidate per fixture and market; correlated totals lines and opposing selections may not be counted as independent signals."
+      "MMS threshold tests use at most one pre-specified candidate per fixture and market; correlated totals lines and opposing selections may not be counted as independent signals.",
+      "MMS reports must segment lead time and ordered temporal blocks before pooling; a significant subgroup reversal is classified as drift/confounding until independently replicated."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
