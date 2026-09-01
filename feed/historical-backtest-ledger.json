@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v19",
-  "generated_at": "2026-09-01T04:37:02.959Z",
+  "schema_version": "radar-historical-backtest-ledger-v20",
+  "generated_at": "2026-09-01T05:27:06.096Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_1X2_TIMING_EFFECT_NOT_IDENTIFIABLE_DUE_TO_COMPETITION_COVERAGE",
+  "status": "GOLDBET_POST_KICKOFF_SNAPSHOT_CONTAMINATION_QUARANTINED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -142,7 +142,15 @@
     "goldbet_1x2_country_side_price_common_support_cells": 0,
     "goldbet_1x2_near_europe_events": 21,
     "goldbet_1x2_far_england_events": 67,
-    "goldbet_1x2_far_scotland_events": 26
+    "goldbet_1x2_far_scotland_events": 26,
+    "goldbet_multi_snapshot_events": 5,
+    "goldbet_multi_snapshot_market_rows": 73,
+    "goldbet_multi_snapshot_market_groups": 34,
+    "goldbet_records_with_post_kickoff_snapshots": 43,
+    "goldbet_events_with_post_kickoff_snapshots": 3,
+    "goldbet_post_kickoff_snapshots_quarantined": 2068,
+    "goldbet_good_t30_rows": 43,
+    "goldbet_complete_good_t30_market_groups": 20
   },
   "quarantined_evidence": [
     {
@@ -252,7 +260,12 @@
     "Found zero country-by-selection-by-price cells with at least three observations in both <360m and >=360m lead groups; country-adjusted timing ROI is therefore not identifiable.",
     "Confirmed severe competition/source composition imbalance: near observations are concentrated in EUROPE events (21/67), while far observations include 67 England and 26 Scotland events.",
     "Corrected the automated interpretation from 'not robust after country control' to 'not identifiable due to no common support'; no causal or operational timing conclusion is allowed.",
-    "Within the early chronological half, side-price adjusted near-minus-far ROI remains -36.02 points (95% interval -68.99 to -4.04), while the late half has only one eligible cell and is inconclusive."
+    "Within the early chronological half, side-price adjusted near-minus-far ROI remains -36.02 points (95% interval -68.99 to -4.04), while the late half has only one eligible cell and is inconclusive.",
+    "Audited the persisted GoldBet/Diretta multi-snapshot state independently from the operational feed.",
+    "Detected and quarantined 2,068 snapshots with negative minutes-to-start across 43 records and three events; none is eligible for pre-match features, CLV or ROI.",
+    "Materialized 73 sanitized record summaries for five exact Flashscore events, retaining only snapshots at or before kickoff.",
+    "Verified 43 GOOD T-30 record candidates and 20 selection-complete GOOD T-30 market groups across three fixtures.",
+    "Kept every last-persisted pre-kickoff quote explicitly distinct from certified CLOSE; the clean sample remains diagnostic only."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1109,6 +1122,24 @@
         }
       },
       "interpretation": "The previously observed lead-time reversal cannot be separated from competition/source coverage. This supersedes any interpretation of lead time as an independent driver."
+    },
+    "goldbet_snapshot_hygiene_2026": {
+      "report": "feed/historical/open-close/goldbet-snapshot-hygiene-v1.json",
+      "classification": "PRE_KICKOFF_SANITIZATION_AND_T30_COVERAGE_AUDIT",
+      "coverage": {
+        "events": 5,
+        "records": 73,
+        "market_groups": 34,
+        "selection_complete_groups": 34,
+        "good_t30_rows": 43,
+        "complete_good_t30_groups": 20
+      },
+      "quarantine": {
+        "records": 43,
+        "events": 3,
+        "post_kickoff_snapshots": 2068
+      },
+      "interpretation": "The raw movement state contains extensive post-kickoff observations. Only explicitly sanitized non-negative lead-time snapshots may enter historical features; the remaining T-30 sample is too small for threshold promotion."
     }
   },
   "ablation_plan": {
@@ -1126,10 +1157,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Build common-support coverage by collecting genuine near- and far-kickoff snapshots within the same competitions and fixed temporal blocks before retesting MMS timing.",
+    "priority": "Scale the sanitized GoldBet T-30 capture to matched fixtures within the same competitions; enforce post-kickoff exclusion at the historical ingestion gate.",
     "structural_lane": "Keep all multi-season OOS structural blocks frozen.",
-    "market_lane": "Persist true T-30 and last-pre-kickoff GoldBet snapshots with exact competition identity.",
-    "mms_lane": "Timing, pooled and competition subgroup rules remain rejected; no extrapolation across unmatched competition samples."
+    "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
+    "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
   "rule_decisions": {
     "promoted_rules": [
@@ -1149,7 +1180,8 @@
       "GoldBet fixture-level MMS v1: reject the legacy absolute price-drop >=0.20 rule across 1X2, O/U 2.5 and BTTS; all ROI intervals include zero and O/U/BTTS point ROI is negative.",
       "GoldBet MMS stability v1: reject pooled interpretation of 1X2 movement ROI across heterogeneous lead times; <360 and >=360 minute samples differ materially.",
       "GoldBet 1X2 drift decomposition v1: reject the claim that the <360 versus >=360 minute ROI reversal is explained solely by selected side or observed-current price mix; the standardized near-minus-far interval remains entirely negative.",
-      "GoldBet 1X2 residual drift v1: reject any claim that lead time independently causes the ROI reversal; country×side×price common support is zero, so the effect is not identifiable apart from competition/source coverage."
+      "GoldBet 1X2 residual drift v1: reject any claim that lead time independently causes the ROI reversal; country×side×price common support is zero, so the effect is not identifiable apart from competition/source coverage.",
+      "GoldBet snapshot hygiene v1: reject use of the raw multi-snapshot state for historical modeling; 2,068 post-kickoff observations require explicit quarantine and the clean T-30 sample covers only three fixtures."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1175,7 +1207,8 @@
       "MMS threshold tests use at most one pre-specified candidate per fixture and market; correlated totals lines and opposing selections may not be counted as independent signals.",
       "MMS reports must segment lead time and ordered temporal blocks before pooling; a significant subgroup reversal is classified as drift/confounding until independently replicated.",
       "Material MMS lead-time drift must be standardized at minimum by selection side and price band; persistence after standardization is recorded as instability/confounding, never as a timing rule.",
-      "Before interpreting lead-time drift, require common support within competition, selection side and price band; zero eligible overlap cells force a NOT_IDENTIFIABLE verdict rather than a null or causal conclusion."
+      "Before interpreting lead-time drift, require common support within competition, selection side and price band; zero eligible overlap cells force a NOT_IDENTIFIABLE verdict rather than a null or causal conclusion.",
+      "Historical snapshot ingestion must hard-reject minutes_to_start < 0 before feature construction and must preserve a separate quarantine count; filtering only at metric time is insufficient."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
