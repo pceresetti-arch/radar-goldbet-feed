@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v20",
-  "generated_at": "2026-09-01T05:27:19.917Z",
+  "schema_version": "radar-historical-source-manifest-v21",
+  "generated_at": "2026-09-01T06:29:41.005Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_POST_KICKOFF_SNAPSHOTS_QUARANTINED",
+  "status": "GOLDBET_DUAL_PRE_KICKOFF_GATE_ACTIVE",
   "priority": [
     "Sweden",
     "Norway",
@@ -555,7 +555,8 @@
       "role": [
         "T30_COVERAGE_AUDIT",
         "POST_KICKOFF_QUARANTINE",
-        "LAST_PERSISTED_PRE_KICKOFF_DIAGNOSTIC"
+        "LAST_PERSISTED_PRE_KICKOFF_DIAGNOSTIC",
+        "DUAL_TIMESTAMP_GATE_VALIDATION"
       ],
       "forbidden_role": [
         "RAW_STATE_MODEL_INPUT",
@@ -567,7 +568,8 @@
         "All negative minutes-to-start snapshots are excluded before feature construction.",
         "Twenty complete market groups meet the strict 20-40 minute T-30 window.",
         "The T-30 groups cover only three fixtures and cannot support inference.",
-        "Last persisted pre-kickoff is not relabelled as CLOSE."
+        "Last persisted pre-kickoff is not relabelled as CLOSE.",
+        "All 2,309 snapshot timestamps agree with stored minutes-to-start sign; future eligibility nevertheless requires both timestamp proofs."
       ]
     }
   ],
@@ -705,6 +707,7 @@
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
     "historical_t30_status": "GOOD_43_ROWS_20_COMPLETE_GROUPS_3_FIXTURES_DIAGNOSTIC_ONLY",
     "historical_close_status": "NOT_CERTIFIED",
-    "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS"
+    "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS",
+    "dual_timestamp_gate": "ACTIVE_MINUTES_NONNEGATIVE_AND_CAPTURED_AT_BEFORE_KICKOFF"
   }
 }
