@@ -122,6 +122,10 @@ jobs:
           },indent=2))
           PY
 
+      - name: Validate Radar consumer quote path
+        if: env.RADAR_BRIDGE_MODE == 'fixture_feed'
+        run: python scripts/validate_radar_quote_consumer.py --index feed/betflag-fixtures-index.json --output feed/radar-quote-consumer-health.json
+
       - name: Commit bridge output
         shell: bash
         run: |
@@ -129,7 +133,7 @@ jobs:
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
           if [ "$RADAR_BRIDGE_MODE" = "fixture_feed" ]; then
-            git add feed/betflag-fixtures-index.json feed/betflag-fixtures
+            git add feed/betflag-fixtures-index.json feed/betflag-fixtures feed/radar-quote-consumer-health.json
             msg='Refresh Worker-backed BetFlag fixture feeds'
           else
             git add "feed/radar-betflag-v7-live-responses/$RADAR_REQUEST_FILE"
