@@ -1,0 +1,1309 @@
+{
+  "schema_version": "radar-historical-cross-league-fatigue-ablation-v1",
+  "generated_at": "2026-09-01T16:41:47.662560+00:00",
+  "scope": {
+    "leagues": [
+      "sweden",
+      "norway",
+      "denmark",
+      "netherlands",
+      "portugal",
+      "germany2",
+      "germany1",
+      "spain1",
+      "england1",
+      "scotland1"
+    ],
+    "total_development": 8652,
+    "total_holdout": 2884
+  },
+  "anti_hindsight": {
+    "schedule_features_use_strictly_prior_calendar_dates_only": true,
+    "same_date_results_or_schedule_updates_used": false,
+    "outcomes_used_for_fatigue_features": false,
+    "holdout_used_for_training_imputation_standardization_or_tuning": false,
+    "split": "existing frozen per-league chronological development/2025-or-2025-26 holdout",
+    "kickoff_time_limitation": "source timezone is not verified; calendar-date ordering only, and same-day information is excluded"
+  },
+  "feature_contract_frozen_before_evaluation": {
+    "rest_days": "calendar days since prior accepted league fixture, capped at 30; first observation missing and imputed with development mean",
+    "congestion": "count of accepted league fixtures strictly before current date within 7, 14 and 21 calendar days",
+    "comparison": "ELO_ONLY versus ELO_PLUS_FATIGUE on identical holdout rows",
+    "training": {
+      "l2": 0.01,
+      "learning_rate": 0.08,
+      "iterations": 1800
+    },
+    "promotion_gate": "both pooled paired-bootstrap CI95 lower bounds > 0, positive point direction in >=7/10 leagues for both metrics, and no single-league significant harm"
+  },
+  "unsupported_not_invented": {
+    "travel_distance": "NOT_AVAILABLE",
+    "cross_competition_fixtures": "NOT_AVAILABLE_DATASETS_CONTAIN_LEAGUE_FIXTURES_ONLY",
+    "extra_time": "NOT_AVAILABLE",
+    "player_minutes": "NOT_AVAILABLE",
+    "lineup_rotation": "NOT_AVAILABLE",
+    "injury_recovery": "NOT_AVAILABLE"
+  },
+  "data_quality": {
+    "sweden": {
+      "rows": 960,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    },
+    "norway": {
+      "rows": 960,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    },
+    "denmark": {
+      "rows": 768,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    },
+    "netherlands": {
+      "rows": 1224,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    },
+    "portugal": {
+      "rows": 1224,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 2
+    },
+    "germany2": {
+      "rows": 1224,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 2
+    },
+    "germany1": {
+      "rows": 1224,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    },
+    "spain1": {
+      "rows": 1520,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 2
+    },
+    "england1": {
+      "rows": 1520,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    },
+    "scotland1": {
+      "rows": 912,
+      "missing_source_date": 0,
+      "holdout_missing_rest_diff_imputed_from_development": 1
+    }
+  },
+  "per_league": {
+    "sweden": {
+      "dataset": "feed/historical/sweden/allsvenskan-2022-2025-features.csv",
+      "sample": {
+        "development": 720,
+        "holdout": 240
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.3911155306614559
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 64.28737227661989
+          },
+          "holdout_metrics": {
+            "n": 240,
+            "multiclass_brier_sum_mean": 0.602753652980464,
+            "multiclass_brier_class_mean": 0.20091788432682134,
+            "log_loss": 1.006184683329089,
+            "top_pick_accuracy": 0.5041666666666667
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.35248053683920666,
+              0.3047229810276721
+            ],
+            "D": [
+              -0.3359481251990218,
+              0.03942235281396459
+            ],
+            "A": [
+              -0.016532411640188954,
+              -0.34414533384163964
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.3911155306614559,
+            "rest_days_diff": -0.08757062146892655,
+            "matches_prior_7d_diff": 0.019444444444444445,
+            "matches_prior_14d_diff": 0.013888888888888888,
+            "matches_prior_21d_diff": 0.005555555555555556
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 64.28737227661989,
+            "rest_days_diff": 1.564331693133701,
+            "matches_prior_7d_diff": 0.5078929482810135,
+            "matches_prior_14d_diff": 0.5108015366818538,
+            "matches_prior_21d_diff": 0.5451526006768117
+          },
+          "holdout_metrics": {
+            "n": 240,
+            "multiclass_brier_sum_mean": 0.6053281356870225,
+            "multiclass_brier_class_mean": 0.2017760452290075,
+            "log_loss": 1.0105062302276595,
+            "top_pick_accuracy": 0.49166666666666664
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3516895360849021,
+              0.30108769305637567,
+              0.02831856678119147,
+              0.016156915361216044,
+              0.0795374500374918,
+              -0.08696159445391197
+            ],
+            "D": [
+              -0.3348376454972738,
+              0.04016426487479012,
+              -0.009784130784697418,
+              0.018316207360825183,
+              -0.03461101987638019,
+              0.03469321000237736
+            ],
+            "A": [
+              -0.016851890587629464,
+              -0.34125195793116664,
+              -0.018534435996494035,
+              -0.034473122722041234,
+              -0.044926430161111516,
+              0.05226838445153441
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.0025744827065585355,
+          "ci95_percentile": [
+            -0.00893183824598521,
+            0.0038074754895461365
+          ],
+          "bootstrap_probability_fatigue_better": 0.2214
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.004321546898570545,
+          "ci95_percentile": [
+            -0.013549005715671476,
+            0.0048650123625190505
+          ],
+          "bootstrap_probability_fatigue_better": 0.1837
+        }
+      }
+    },
+    "norway": {
+      "dataset": "feed/historical/norway/eliteserien-2022-2025-features.csv",
+      "sample": {
+        "development": 720,
+        "holdout": 240
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.44416339979557146
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 69.75500895515954
+          },
+          "holdout_metrics": {
+            "n": 240,
+            "multiclass_brier_sum_mean": 0.5557614857729863,
+            "multiclass_brier_class_mean": 0.18525382859099546,
+            "log_loss": 0.9399924502851355,
+            "top_pick_accuracy": 0.5708333333333333
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3673150561760076,
+              0.3667314162276032
+            ],
+            "D": [
+              -0.3204034783026332,
+              0.049484095758412304
+            ],
+            "A": [
+              -0.04691157787337289,
+              -0.41621551198601553
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.44416339979557146,
+            "rest_days_diff": 0.11864406779661017,
+            "matches_prior_7d_diff": -0.001388888888888889,
+            "matches_prior_14d_diff": -0.002777777777777778,
+            "matches_prior_21d_diff": 0.005555555555555556
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 69.75500895515954,
+            "rest_days_diff": 3.0243909360942767,
+            "matches_prior_7d_diff": 0.48733773811152187,
+            "matches_prior_14d_diff": 0.6191329560635185,
+            "matches_prior_21d_diff": 0.6871618135670021
+          },
+          "holdout_metrics": {
+            "n": 240,
+            "multiclass_brier_sum_mean": 0.5574678181756487,
+            "multiclass_brier_class_mean": 0.18582260605854958,
+            "log_loss": 0.9431893353431403,
+            "top_pick_accuracy": 0.5583333333333333
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.36921942748599207,
+              0.37315275613656973,
+              -0.06108287793120151,
+              -0.05323577955630984,
+              -0.01637416863154272,
+              0.044225707222147026
+            ],
+            "D": [
+              -0.31898240147333456,
+              0.05332648822323508,
+              -0.03559532086345017,
+              -0.003548266070496077,
+              -0.07856325072524233,
+              0.04586897436564389
+            ],
+            "A": [
+              -0.05023702601265723,
+              -0.4264792443598054,
+              0.09667819879465157,
+              0.05678404562680588,
+              0.09493741935678517,
+              -0.0900946815877909
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.0017063324026623911,
+          "ci95_percentile": [
+            -0.008160233570710053,
+            0.004689379483051111
+          ],
+          "bootstrap_probability_fatigue_better": 0.3086
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.0031968850580048986,
+          "ci95_percentile": [
+            -0.012158382800480382,
+            0.005847754341670021
+          ],
+          "bootstrap_probability_fatigue_better": 0.2469
+        }
+      }
+    },
+    "denmark": {
+      "dataset": "feed/historical/denmark/superliga-2022-2026-features.csv",
+      "sample": {
+        "development": 576,
+        "holdout": 192
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.4609164847855247
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 58.83247967228811
+          },
+          "holdout_metrics": {
+            "n": 192,
+            "multiclass_brier_sum_mean": 0.6322465493300863,
+            "multiclass_brier_class_mean": 0.21074884977669542,
+            "log_loss": 1.051165450292309,
+            "top_pick_accuracy": 0.4739583333333333
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.23843612661812408,
+              0.34118857609439085
+            ],
+            "D": [
+              -0.14819780337186186,
+              0.004423962008686099
+            ],
+            "A": [
+              -0.09023832324626371,
+              -0.3456125381030786
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.4609164847855247,
+            "rest_days_diff": 0.024691358024691357,
+            "matches_prior_7d_diff": -0.024305555555555556,
+            "matches_prior_14d_diff": 0.006944444444444444,
+            "matches_prior_21d_diff": 0.026041666666666668
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 58.83247967228811,
+            "rest_days_diff": 1.8863915895844963,
+            "matches_prior_7d_diff": 0.4888686667219215,
+            "matches_prior_14d_diff": 0.4601709793619254,
+            "matches_prior_21d_diff": 0.4499409201186554
+          },
+          "holdout_metrics": {
+            "n": 192,
+            "multiclass_brier_sum_mean": 0.630711535563795,
+            "multiclass_brier_class_mean": 0.210237178521265,
+            "log_loss": 1.0490489558715088,
+            "top_pick_accuracy": 0.4895833333333333
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.23803853643446363,
+              0.3461477619053659,
+              -0.030768260323619154,
+              0.09282987168372754,
+              0.05864864838771222,
+              -0.07030616613419295
+            ],
+            "D": [
+              -0.14443169644434864,
+              0.004634333045291004,
+              -0.04232799245289257,
+              -0.07515974008798558,
+              -0.021310870261543248,
+              -0.007015733623096812
+            ],
+            "A": [
+              -0.09360683999011551,
+              -0.350782094950656,
+              0.0730962527765119,
+              -0.01767013159574184,
+              -0.037337778126169,
+              0.07732189975728974
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": 0.0015350137662912561,
+          "ci95_percentile": [
+            -0.008167905569298061,
+            0.011411560782530783
+          ],
+          "bootstrap_probability_fatigue_better": 0.6177
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": 0.0021164944208000515,
+          "ci95_percentile": [
+            -0.01221257775366547,
+            0.016001506519790026
+          ],
+          "bootstrap_probability_fatigue_better": 0.6095
+        }
+      }
+    },
+    "netherlands": {
+      "dataset": "feed/historical/netherlands/eredivisie-2022-2026-features.csv",
+      "sample": {
+        "development": 918,
+        "holdout": 306
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.5435704633830443
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 92.28723309302455
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.5945065027313481,
+            "multiclass_brier_class_mean": 0.1981688342437827,
+            "log_loss": 1.000134894310519,
+            "top_pick_accuracy": 0.4934640522875817
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3048643477130317,
+              0.6609624704640549
+            ],
+            "D": [
+              -0.16543565555295972,
+              -0.021778080734165015
+            ],
+            "A": [
+              -0.13942869216007067,
+              -0.6391843897298892
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.5435704633830443,
+            "rest_days_diff": 0.0918141592920354,
+            "matches_prior_7d_diff": -0.02505446623093682,
+            "matches_prior_14d_diff": -0.02832244008714597,
+            "matches_prior_21d_diff": -0.0010893246187363835
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 92.28723309302455,
+            "rest_days_diff": 2.2423368580416856,
+            "matches_prior_7d_diff": 0.5852431363321091,
+            "matches_prior_14d_diff": 0.6359454359907339,
+            "matches_prior_21d_diff": 0.6322823328609837
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.6017915743490758,
+            "multiclass_brier_class_mean": 0.20059719144969193,
+            "log_loss": 1.0106301612658672,
+            "top_pick_accuracy": 0.4869281045751634
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3079206411992243,
+              0.6551275001678587,
+              -0.026942717915763394,
+              -0.023404038523637406,
+              0.0800730871393891,
+              0.02304517109809965
+            ],
+            "D": [
+              -0.16416939443014097,
+              -0.018049863280975114,
+              -0.011420697052367496,
+              0.03038987515222065,
+              -0.07102202602639032,
+              0.08299296757776056
+            ],
+            "A": [
+              -0.1437512467690823,
+              -0.6370776368868841,
+              0.038363414968131,
+              -0.0069858366285832614,
+              -0.009051061112998623,
+              -0.10603813867586039
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.007285071617727661,
+          "ci95_percentile": [
+            -0.015263674527316388,
+            0.00045266258963818723
+          ],
+          "bootstrap_probability_fatigue_better": 0.0324
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.010495266955348383,
+          "ci95_percentile": [
+            -0.02222161776275498,
+            0.0013944204845348176
+          ],
+          "bootstrap_probability_fatigue_better": 0.0412
+        }
+      }
+    },
+    "portugal": {
+      "dataset": "feed/historical/portugal/primeira-liga-2022-2026-features.csv",
+      "sample": {
+        "development": 918,
+        "holdout": 306
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.07958116196883082
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 94.10104606604767
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.5655157152231765,
+            "multiclass_brier_class_mean": 0.18850523840772548,
+            "log_loss": 0.9511261973441718,
+            "top_pick_accuracy": 0.5326797385620915
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.33808739590876896,
+              0.6581043978745701
+            ],
+            "D": [
+              -0.23126812675350178,
+              0.007406182735367459
+            ],
+            "A": [
+              -0.10681926915526802,
+              -0.6655105806099382
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.07958116196883082,
+            "rest_days_diff": 0.0077348066298342545,
+            "matches_prior_7d_diff": 0.016339869281045753,
+            "matches_prior_14d_diff": -0.008714596949891068,
+            "matches_prior_21d_diff": -0.004357298474945534
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 94.10104606604767,
+            "rest_days_diff": 2.053684428235616,
+            "matches_prior_7d_diff": 0.5370326178520444,
+            "matches_prior_14d_diff": 0.5133620686554526,
+            "matches_prior_21d_diff": 0.5218353846129027
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.5767730312594453,
+            "multiclass_brier_class_mean": 0.19225767708648178,
+            "log_loss": 0.9688311472317288,
+            "top_pick_accuracy": 0.5359477124183006
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.33800500645727655,
+              0.6603069635441231,
+              -0.03818896122413851,
+              -0.09540743165448098,
+              -0.040262197015799896,
+              0.010819342050181046
+            ],
+            "D": [
+              -0.23102344116746906,
+              0.0033821693390224147,
+              -0.058917127991549106,
+              0.021605500852735625,
+              -0.01215405070609815,
+              0.025132123583283334
+            ],
+            "A": [
+              -0.10698156528980819,
+              -0.6636891328831466,
+              0.0971060892156878,
+              0.07380193080174502,
+              0.05241624772189807,
+              -0.035951465633464415
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.011257316036268929,
+          "ci95_percentile": [
+            -0.018775312520446844,
+            -0.004343589702544212
+          ],
+          "bootstrap_probability_fatigue_better": 0.0003
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.017704949887556963,
+          "ci95_percentile": [
+            -0.030046742542711183,
+            -0.00640374397168269
+          ],
+          "bootstrap_probability_fatigue_better": 0.0009
+        }
+      }
+    },
+    "germany2": {
+      "dataset": "feed/historical/germany2/2-bundesliga-2022-2026-features.csv",
+      "sample": {
+        "development": 918,
+        "holdout": 306
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.011270788830288706
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 55.63434314795888
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.6341724328992305,
+            "multiclass_brier_class_mean": 0.2113908109664102,
+            "log_loss": 1.051753901287893,
+            "top_pick_accuracy": 0.4477124183006536
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3076046110784046,
+              0.23444733218007774
+            ],
+            "D": [
+              -0.24278216910147765,
+              -0.027837444896609366
+            ],
+            "A": [
+              -0.06482244197693007,
+              -0.20660988728346733
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.011270788830288706,
+            "rest_days_diff": 0.022197558268590455,
+            "matches_prior_7d_diff": -0.02505446623093682,
+            "matches_prior_14d_diff": 0.010893246187363835,
+            "matches_prior_21d_diff": -0.008714596949891068
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 55.63434314795888,
+            "rest_days_diff": 1.0782668137715508,
+            "matches_prior_7d_diff": 0.5160007803407829,
+            "matches_prior_14d_diff": 0.5090585393122885,
+            "matches_prior_21d_diff": 0.5004684986184137
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.6317784824454858,
+            "multiclass_brier_class_mean": 0.21059282748182861,
+            "log_loss": 1.0471896088369148,
+            "top_pick_accuracy": 0.46405228758169936
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.31071971881381477,
+              0.23493127268962882,
+              0.0012480680821919526,
+              -0.03608076554922782,
+              -0.08520109369674994,
+              0.01137862095478171
+            ],
+            "D": [
+              -0.24029232210676432,
+              -0.030413824491084682,
+              0.031052612062332105,
+              -0.06400789808467205,
+              0.001007820145832861,
+              -0.011654579879846255
+            ],
+            "A": [
+              -0.07042739670704935,
+              -0.20451744819854434,
+              -0.032300680144524106,
+              0.10008866363389995,
+              0.08419327355091706,
+              0.00027595892506453856
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": 0.002393950453744709,
+          "ci95_percentile": [
+            -0.0058224905007513116,
+            0.010783468042411147
+          ],
+          "bootstrap_probability_fatigue_better": 0.7195
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": 0.004564292450978286,
+          "ci95_percentile": [
+            -0.008311968263565794,
+            0.017317546219149885
+          ],
+          "bootstrap_probability_fatigue_better": 0.756
+        }
+      }
+    },
+    "germany1": {
+      "dataset": "feed/historical/germany1/bundesliga-2022-2026-features.csv",
+      "sample": {
+        "development": 918,
+        "holdout": 306
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.7161659010556434
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 78.2570971821873
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.5830088508431511,
+            "multiclass_brier_class_mean": 0.1943362836143837,
+            "log_loss": 0.9807977478614479,
+            "top_pick_accuracy": 0.545751633986928
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.28235303620591085,
+              0.4132761025033259
+            ],
+            "D": [
+              -0.19229434972345316,
+              0.0384150880239782
+            ],
+            "A": [
+              -0.09005868648245678,
+              -0.4516911905273044
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.7161659010556434,
+            "rest_days_diff": -0.03535911602209945,
+            "matches_prior_7d_diff": -0.0010893246187363835,
+            "matches_prior_14d_diff": -0.0010893246187363835,
+            "matches_prior_21d_diff": -0.00980392156862745
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 78.2570971821873,
+            "rest_days_diff": 1.0185400169179937,
+            "matches_prior_7d_diff": 0.4771453223995591,
+            "matches_prior_14d_diff": 0.4391005248097694,
+            "matches_prior_21d_diff": 0.43899241523996296
+          },
+          "holdout_metrics": {
+            "n": 306,
+            "multiclass_brier_sum_mean": 0.5893110048982908,
+            "multiclass_brier_class_mean": 0.1964370016327636,
+            "log_loss": 0.9963615686862403,
+            "top_pick_accuracy": 0.5555555555555556
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.2844200971032806,
+              0.41632527051083784,
+              -0.09369986650275992,
+              0.011460194533916862,
+              0.0075361144954595545,
+              -0.017555554217853486
+            ],
+            "D": [
+              -0.19041041285023144,
+              0.04037075276271117,
+              0.02586736946076949,
+              0.06581435924029473,
+              -0.03537080933990248,
+              0.041109993418310224
+            ],
+            "A": [
+              -0.09400968425304905,
+              -0.45669602327354936,
+              0.06783249704199042,
+              -0.07727455377421144,
+              0.027834694844442905,
+              -0.02355443920045682
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.006302154055139709,
+          "ci95_percentile": [
+            -0.020482252175620674,
+            0.0057912482827292685
+          ],
+          "bootstrap_probability_fatigue_better": 0.174
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.015563820824792325,
+          "ci95_percentile": [
+            -0.04404283742592696,
+            0.007152867986792406
+          ],
+          "bootstrap_probability_fatigue_better": 0.1068
+        }
+      }
+    },
+    "spain1": {
+      "dataset": "feed/historical/spain1/laliga-2022-2026-features.csv",
+      "sample": {
+        "development": 1140,
+        "holdout": 380
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.3286220730595946
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 82.62404901462435
+          },
+          "holdout_metrics": {
+            "n": 380,
+            "multiclass_brier_sum_mean": 0.5881244020098406,
+            "multiclass_brier_class_mean": 0.19604146733661354,
+            "log_loss": 0.9946506444258444,
+            "top_pick_accuracy": 0.5157894736842106
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.33311567711437234,
+              0.5168037577416716
+            ],
+            "D": [
+              -0.1655074881668873,
+              -0.055656150381067915
+            ],
+            "A": [
+              -0.167608188947486,
+              -0.4611476073606035
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.3286220730595946,
+            "rest_days_diff": -0.06039076376554174,
+            "matches_prior_7d_diff": 0.02017543859649123,
+            "matches_prior_14d_diff": -0.014035087719298246,
+            "matches_prior_21d_diff": -0.0061403508771929825
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 82.62404901462435,
+            "rest_days_diff": 2.145649782973865,
+            "matches_prior_7d_diff": 0.5319081546759483,
+            "matches_prior_14d_diff": 0.5539138562740246,
+            "matches_prior_21d_diff": 0.5548486576835255
+          },
+          "holdout_metrics": {
+            "n": 380,
+            "multiclass_brier_sum_mean": 0.5873729347721846,
+            "multiclass_brier_class_mean": 0.19579097825739486,
+            "log_loss": 0.9921808813854055,
+            "top_pick_accuracy": 0.5052631578947369
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3352309995395514,
+              0.5112948456320421,
+              -0.03468577622460221,
+              0.017254720240975484,
+              0.046358823049146854,
+              0.012342740912873802
+            ],
+            "D": [
+              -0.17058607480794172,
+              -0.05293929654522009,
+              0.08510447576198751,
+              0.02624429077666007,
+              -0.023734925823258313,
+              -0.0657307805596891
+            ],
+            "A": [
+              -0.16464492473160888,
+              -0.45835554908682113,
+              -0.05041869953738521,
+              -0.04349901101763551,
+              -0.02262389722588856,
+              0.053388039646815044
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": 0.0007514672376560878,
+          "ci95_percentile": [
+            -0.0040307830889051155,
+            0.005529496531027059
+          ],
+          "bootstrap_probability_fatigue_better": 0.6152
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": 0.0024697630404387993,
+          "ci95_percentile": [
+            -0.004982924855939821,
+            0.010162623011164782
+          ],
+          "bootstrap_probability_fatigue_better": 0.745
+        }
+      }
+    },
+    "england1": {
+      "dataset": "feed/historical/england1/premier-league-2022-2026-features.csv",
+      "sample": {
+        "development": 1140,
+        "holdout": 380
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.6493349341049849
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 87.28902616724635
+          },
+          "holdout_metrics": {
+            "n": 380,
+            "multiclass_brier_sum_mean": 0.6213256651932424,
+            "multiclass_brier_class_mean": 0.20710855506441414,
+            "log_loss": 1.0321098219412053,
+            "top_pick_accuracy": 0.49473684210526314
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3332592991891388,
+              0.5199173735810331
+            ],
+            "D": [
+              -0.2573831014807911,
+              0.009719176724356841
+            ],
+            "A": [
+              -0.07587619770834508,
+              -0.5296365503053917
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": 0.6493349341049849,
+            "rest_days_diff": 0.03907637655417407,
+            "matches_prior_7d_diff": 0.0043859649122807015,
+            "matches_prior_14d_diff": 0.007894736842105263,
+            "matches_prior_21d_diff": 0.0043859649122807015
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 87.28902616724635,
+            "rest_days_diff": 1.9592384062972374,
+            "matches_prior_7d_diff": 0.46166942507451186,
+            "matches_prior_14d_diff": 0.5239265947047982,
+            "matches_prior_21d_diff": 0.5915917201176739
+          },
+          "holdout_metrics": {
+            "n": 380,
+            "multiclass_brier_sum_mean": 0.6219977513069592,
+            "multiclass_brier_class_mean": 0.20733258376898642,
+            "log_loss": 1.0330727155114803,
+            "top_pick_accuracy": 0.49473684210526314
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3339819665516816,
+              0.5208370082752448,
+              -0.08171560821289464,
+              -0.032801437665368666,
+              -0.006631806089239731,
+              0.018861389278810006
+            ],
+            "D": [
+              -0.2559946181141803,
+              0.00871922268645971,
+              0.027925828842929032,
+              0.02816089632171887,
+              0.029649930014689036,
+              0.007005267366409117
+            ],
+            "A": [
+              -0.07798734843750056,
+              -0.5295562309617065,
+              0.05378977936996583,
+              0.004640541343649925,
+              -0.023018123925449347,
+              -0.025866656645219185
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.0006720861137167079,
+          "ci95_percentile": [
+            -0.003688132044277508,
+            0.0022523055749951158
+          ],
+          "bootstrap_probability_fatigue_better": 0.3278
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.0009628935702748759,
+          "ci95_percentile": [
+            -0.005575429443539046,
+            0.00367406227467786
+          ],
+          "bootstrap_probability_fatigue_better": 0.3396
+        }
+      }
+    },
+    "scotland1": {
+      "dataset": "feed/historical/scotland1/scottish-premiership-2022-2026-features.csv",
+      "sample": {
+        "development": 684,
+        "holdout": 228
+      },
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": -0.3878128125925712
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 91.78171829129151
+          },
+          "holdout_metrics": {
+            "n": 228,
+            "multiclass_brier_sum_mean": 0.5835089090350829,
+            "multiclass_brier_class_mean": 0.19450296967836098,
+            "log_loss": 0.982186876698621,
+            "top_pick_accuracy": 0.5394736842105263
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.39828976729703636,
+              0.5720528394560798
+            ],
+            "D": [
+              -0.2991847464416116,
+              -0.046856937175047485
+            ],
+            "A": [
+              -0.09910502085542365,
+              -0.5251959022810335
+            ]
+          }
+        },
+        "ELO_PLUS_FATIGUE": {
+          "features": [
+            "elo_diff",
+            "rest_days_diff",
+            "matches_prior_7d_diff",
+            "matches_prior_14d_diff",
+            "matches_prior_21d_diff"
+          ],
+          "development_only_imputation_means": {
+            "elo_diff": -0.3878128125925712,
+            "rest_days_diff": 0.18906942392909898,
+            "matches_prior_7d_diff": -0.033625730994152045,
+            "matches_prior_14d_diff": -0.03216374269005848,
+            "matches_prior_21d_diff": -0.019005847953216373
+          },
+          "development_only_standardization_scales": {
+            "elo_diff": 91.78171829129151,
+            "rest_days_diff": 3.4258982183174127,
+            "matches_prior_7d_diff": 0.43967460088064375,
+            "matches_prior_14d_diff": 0.5315931006421356,
+            "matches_prior_21d_diff": 0.6174283157679119
+          },
+          "holdout_metrics": {
+            "n": 228,
+            "multiclass_brier_sum_mean": 0.5885249283002719,
+            "multiclass_brier_class_mean": 0.19617497610009063,
+            "log_loss": 0.9908313662037227,
+            "top_pick_accuracy": 0.5394736842105263
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4015108914939966,
+              0.5766240983078682,
+              -0.17900809027930067,
+              -0.10236296870122244,
+              -0.041487838772892506,
+              -0.011412881630346124
+            ],
+            "D": [
+              -0.30605356091572106,
+              -0.0530234703209881,
+              0.15042008461935133,
+              0.0957832046516468,
+              0.051891877730912604,
+              0.04348729248460215
+            ],
+            "A": [
+              -0.09545733057827421,
+              -0.5236006279868829,
+              0.028588005659949244,
+              0.006579764049575669,
+              -0.010404038958020051,
+              -0.03207441085425612
+            ]
+          }
+        }
+      },
+      "paired_holdout_comparison": {
+        "brier": {
+          "elo_minus_elo_plus_fatigue_point": -0.0050160192651890695,
+          "ci95_percentile": [
+            -0.012810714622969786,
+            0.0026782066006808864
+          ],
+          "bootstrap_probability_fatigue_better": 0.0994
+        },
+        "log_loss": {
+          "elo_minus_elo_plus_fatigue_point": -0.00864448950510161,
+          "ci95_percentile": [
+            -0.02074584497890319,
+            0.0037477229545113994
+          ],
+          "bootstrap_probability_fatigue_better": 0.0844
+        }
+      }
+    }
+  },
+  "pooled_holdout": {
+    "elo_only_metrics": {
+      "n": 2884,
+      "multiclass_brier_sum_mean": 0.5962171633455716,
+      "multiclass_brier_class_mean": 0.19873905444852388,
+      "log_loss": 0.9993275181401996,
+      "top_pick_accuracy": 0.5110957004160888
+    },
+    "elo_plus_fatigue_metrics": {
+      "n": 2884,
+      "multiclass_brier_sum_mean": 0.5992393691266399,
+      "multiclass_brier_class_mean": 0.19974645637554664,
+      "log_loss": 1.0044563364431125,
+      "top_pick_accuracy": 0.5110957004160888
+    },
+    "paired_comparison": {
+      "brier": {
+        "elo_minus_elo_plus_fatigue_point": -0.003022205781068333,
+        "ci95_percentile": [
+          -0.005470382889695746,
+          -0.0006746369048814462
+        ],
+        "bootstrap_probability_fatigue_better": 0.0062
+      },
+      "log_loss": {
+        "elo_minus_elo_plus_fatigue_point": -0.005128818302913144,
+        "ci95_percentile": [
+          -0.009293083510821263,
+          -0.0011349137373506324
+        ],
+        "bootstrap_probability_fatigue_better": 0.0045
+      }
+    },
+    "positive_point_direction_leagues_out_of_10": {
+      "brier": 3,
+      "log_loss": 3
+    },
+    "significant_harm_cells": [
+      {
+        "league": "portugal",
+        "metric": "brier"
+      },
+      {
+        "league": "portugal",
+        "metric": "log_loss"
+      }
+    ]
+  },
+  "decision": {
+    "module_promoted": false,
+    "classification": "NOT_PROMOTED",
+    "operational_rule_promoted": false,
+    "reason": "Frozen promotion gate not fully passed."
+  },
+  "economic_metrics": {
+    "roi_yield_drawdown": "NOT_CALCULATED_NO_EX_ANTE_BETTING_RULE",
+    "clv": "NOT_CALCULABLE_NO_SAME_BOOKMAKER_OPEN_CLOSE_JOIN"
+  }
+}
