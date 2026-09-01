@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v25",
-  "generated_at": "2026-09-01T11:35:37.217Z",
+  "schema_version": "radar-historical-source-manifest-v26",
+  "generated_at": "2026-09-01T12:42:56.263Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SPAIN1_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+  "status": "ENGLAND1_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
   "priority": [
     "Sweden",
     "Norway",
@@ -312,6 +312,44 @@
         "The initial 306-row executable gate failed before evidence generation and is superseded by the corrected 380-row gate.",
         "Outcome columns are joined only after the pre-match feature freeze and same-date results are excluded.",
         "Closing odds remain external benchmarks; GoldBet TRUE OPEN is separate and not joined."
+      ],
+      "source_files": 4,
+      "verified_source_rows": 1520,
+      "accepted_regular_rows": 1520,
+      "development_rows": 1140,
+      "holdout_rows": 380,
+      "excluded_playoff_rows": 0
+    },
+    {
+      "name": "Football-Data.co.uk England 1 season files",
+      "url": "https://www.football-data.co.uk/data.php",
+      "league": "Premier League",
+      "declared_coverage": "four official E0 season files, 2022/2023 through 2025/2026",
+      "role": [
+        "FIXTURE_RESULT_BASELINE",
+        "MARKET_CLOSING_BENCHMARK",
+        "STRUCTURAL_MODEL_INPUT_WHEN_FIELDS_ARE_PREMATCH_SAFE"
+      ],
+      "forbidden_role": [
+        "GOLDBET_DIRECT",
+        "TRUE_OPEN_GOLDBET",
+        "PRIMARY_GOLDBET_MMS"
+      ],
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "discovery_workflow": ".github/workflows/historical-backtest-england1-bootstrap.yml",
+      "dataset_profile": "feed/historical/england1/source-profile.json",
+      "source_snapshot": "feed/historical/england1/football-data-ENG1.csv",
+      "normalized_dataset": "feed/historical/england1/premier-league-2022-2026-regular.csv",
+      "benchmark_output": "feed/historical/england1/baseline-benchmark.json",
+      "structural_feature_dataset": "feed/historical/england1/premier-league-2022-2026-features.csv",
+      "structural_oos_report": "feed/historical/england1/structural-oos-v1.json",
+      "status": "ACCEPTED_ENGLAND1_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+      "quality_notes": [
+        "Four season files are separately preserved and bound by SHA-256; each contains exactly 380 fixtures.",
+        "Frozen seasons contain exactly 20 clubs and 38 matches per club.",
+        "Outcome columns are joined only after the pre-match feature freeze and same-date results are excluded.",
+        "Closing odds remain external benchmarks; GoldBet TRUE OPEN is separate and not joined.",
+        "Temporary connector-recovery marker is non-analytical and closed."
       ],
       "source_files": 4,
       "verified_source_rows": 1520,
@@ -727,7 +765,7 @@
   ],
   "required_blocks": {
     "fixtures_results": {
-      "status": "ACCEPTED_EIGHT_LEAGUES_9104_REGULAR_ROWS",
+      "status": "ACCEPTED_NINE_LEAGUES_10624_REGULAR_ROWS",
       "required_fields": [
         "competition",
         "season",
@@ -809,6 +847,16 @@
           "holdout": [
             "2025/2026"
           ]
+        },
+        "England1": {
+          "development": [
+            "2022/2023",
+            "2023/2024",
+            "2024/2025"
+          ],
+          "holdout": [
+            "2025/2026"
+          ]
         }
       },
       "goldbet_2026_exact_outcomes": {
@@ -838,7 +886,7 @@
       "note": "Fixture-level MMS thresholds remain rejected. Stability analysis finds material lead-time and temporal reversals, so pooled ROI is not interpretable without timing segmentation; observed-current remains non-CLOSE."
     },
     "market_close_benchmark": {
-      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_9104_ROWS",
+      "status": "ACCEPTED_EXTERNAL_AVERAGE_CLOSE_10624_ROWS",
       "rule": "Benchmark market closing prices may support CLV/context only under their true bookmaker/source labels; they never substitute GoldBet TRUE OPEN.",
       "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK"
     },
@@ -854,7 +902,7 @@
       }
     },
     "pre_match_structural": {
-      "status": "EIGHT_LEAGUE_OOS_COMPLETE_2276_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
+      "status": "NINE_LEAGUE_OOS_COMPLETE_2656_HOLDOUT_ROWS_RESEARCH_ELO_BASELINE_NOT_OPERATIONAL",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -862,8 +910,8 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Elo robustly beats the development prior in Sweden, Norway, Netherlands, Portugal, Bundesliga and LaLiga, but not in Denmark or 2. Bundesliga. Form/full bundles remain unpromoted in every league; external close significantly beats all structural variants in Portugal, Bundesliga, 2. Bundesliga and LaLiga and remains non-GoldBet.",
-      "identity_gate": "League-specific schedule integrity required before metrics: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark; 18 teams/34 matches per club for Netherlands, Portugal, Bundesliga and 2. Bundesliga; 20 teams/38 matches per club for LaLiga."
+      "result": "Elo robustly beats the development prior in Sweden, Norway, Netherlands, Portugal, Bundesliga, LaLiga and Premier League, but not in Denmark or 2. Bundesliga. Form/full bundles remain unpromoted in every league; external close remains non-GoldBet and is not conclusively superior to Elo in Netherlands or Premier League.",
+      "identity_gate": "League-specific schedule integrity required before metrics: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark; 18 teams/34 matches per club for Netherlands, Portugal, Bundesliga and 2. Bundesliga; 20 teams/38 matches per club for LaLiga and Premier League."
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -895,7 +943,7 @@
     "lane": "GOLDBET_SANITIZED_COMMON_SUPPORT_T30",
     "goal": "Scale matched sanitized T-30 snapshots within the same competitions and an independent temporal block.",
     "prior_claim_status": "Raw multi-snapshot state is ineligible; 2,068 post-kickoff snapshots quarantined.",
-    "structural_next": "Hold all eight league OOS blocks frozen; extend only after league-specific team and match-count gates pass.",
+    "structural_next": "Hold all nine league OOS blocks frozen; extend only after league-specific team and match-count gates pass.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
     "historical_t30_status": "GOOD_43_ROWS_20_COMPLETE_GROUPS_3_FIXTURES_DIAGNOSTIC_ONLY",
     "historical_close_status": "NOT_CERTIFIED",
