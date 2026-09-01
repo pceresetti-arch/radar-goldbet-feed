@@ -1,0 +1,47 @@
+{
+  "schema_version": "radar-historical-scotland1-source-failure-v1",
+  "generated_at": "2026-09-01T14:40:02Z",
+  "competition": "Scottish Premiership",
+  "seasons": [
+    "2022/2023",
+    "2023/2024",
+    "2024/2025",
+    "2025/2026"
+  ],
+  "intended_source_provider": "Football-Data",
+  "attempts": [
+    {
+      "workflow_run_id": 33514684952,
+      "run_attempt": 1,
+      "job_id": 99878627157,
+      "conclusion": "FAILURE",
+      "failure": "READ_TIMEOUT_ALL_FOUR_SEASONS"
+    },
+    {
+      "workflow_run_id": 33514684952,
+      "run_attempt": 2,
+      "job_id": 99880398709,
+      "conclusion": "FAILURE",
+      "failure": "READ_TIMEOUT_ALL_FOUR_SEASONS"
+    },
+    {
+      "workflow_run_id": 33514684952,
+      "run_attempt": 3,
+      "job_id": 99899260709,
+      "conclusion": "SUCCESS",
+      "accepted_rows": 912
+    }
+  ],
+  "resolution": {
+    "status": "RECOVERED_ON_RUN_ATTEMPT_3",
+    "accepted_rows": 912,
+    "downstream_steps_executed": true,
+    "note": "The first two timeout attempts remain recorded. The third attempt downloaded all four complete seasons and passed the frozen gate."
+  },
+  "status": "RESOLVED_AFTER_TRANSIENT_SOURCE_FAILURE_HISTORY_PRESERVED",
+  "anti_hindsight_and_quality_notes": [
+    "No incomplete season file was accepted in failed attempts.",
+    "The successful attempt accepted exactly 228 fixtures in each season.",
+    "The 2025/2026 holdout was not used for training or tuning."
+  ]
+}
