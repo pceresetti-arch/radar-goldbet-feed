@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T10:51:59.490917+00:00",
+  "generated_at": "2026-09-01T11:10:52.476689+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 11,
+  "target_count": 14,
   "status_counts": {
     "SOURCE_CONFIRMED": 3,
-    "NOT_AVAILABLE": 8
+    "NOT_AVAILABLE": 10,
+    "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
     {
@@ -29,13 +30,13 @@
       "start_time": "01-09-2026 13:00",
       "start_utc": "2026-09-01T11:00:00+00:00",
       "league": "UEFA Europa Cup Femminile",
-      "minutes_to_start": 8.0,
+      "minutes_to_start": -10.9,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T10:35:51.558186+00:00",
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
-      "previous_xi_fingerprint": "a5e43bd99d533baadcaa",
+      "previous_xi_fingerprint": "b54408d18aa22b7828a3",
       "source": "FotMob",
       "fotmob_match": {
         "id": 1000019452,
@@ -63,7 +64,7 @@
                 "id": 1214664,
                 "shirt_number": "61",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -340,7 +341,7 @@
                 "id": 1557679,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -609,7 +610,6 @@
           }
         ],
         "xi_fingerprint": "b54408d18aa22b7828a3",
-        "xi_name_fingerprint": "8e09599e122d9a900271",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -619,19 +619,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 1000019452,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36362.44010",
@@ -640,13 +628,13 @@
       "start_time": "01-09-2026 13:35",
       "start_utc": "2026-09-01T11:35:00+00:00",
       "league": "FA Cup",
-      "minutes_to_start": 43.0,
+      "minutes_to_start": 24.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "23666a4d88b07b19724c",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5961058,
@@ -662,7 +650,7 @@
         "confirmed": true,
         "historical_reference": false,
         "lineup_type": "standard",
-        "provider_source": "optaSdapiLegacyIntegration",
+        "provider_source": "enetpulse",
         "teams": [
           {
             "team_id": 1477043,
@@ -891,6 +879,11 @@
                 "shirt_number": "12"
               },
               {
+                "name": "Haiqing Cao",
+                "id": 432383,
+                "shirt_number": "33"
+              },
+              {
                 "name": "Jiabao Wen",
                 "id": 838151,
                 "shirt_number": "15"
@@ -906,21 +899,6 @@
                 "shirt_number": "6"
               },
               {
-                "name": "Haiqing Cao",
-                "id": 432383,
-                "shirt_number": "33"
-              },
-              {
-                "name": "Shan Huang",
-                "id": 1624736,
-                "shirt_number": "23"
-              },
-              {
-                "name": "Mingrui Yang",
-                "id": 1660335,
-                "shirt_number": "27"
-              },
-              {
                 "name": "Huachen Zhang",
                 "id": 825202,
                 "shirt_number": "8"
@@ -931,6 +909,11 @@
                 "shirt_number": "21"
               },
               {
+                "name": "Shan Huang",
+                "id": 1624736,
+                "shirt_number": "23"
+              },
+              {
                 "name": "Jin Feng",
                 "id": 623033,
                 "shirt_number": "44"
@@ -939,13 +922,20 @@
                 "name": "Lirong Xiao",
                 "id": 1932401,
                 "shirt_number": "59"
+              },
+              {
+                "name": "Mingrui Yang",
+                "id": 1660335,
+                "shirt_number": "27"
               }
             ],
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
+              "coach",
               "subs",
               "averageStarterAge",
               "totalStarterMarketValue"
@@ -1178,19 +1168,9 @@
                 "shirt_number": "24"
               },
               {
-                "name": "Qipeng Wu",
-                "id": 1787529,
-                "shirt_number": "38"
-              },
-              {
                 "name": "Shilong Wang",
                 "id": 1026512,
                 "shirt_number": "2"
-              },
-              {
-                "name": "Yue Zhu",
-                "id": 1200179,
-                "shirt_number": "25"
               },
               {
                 "name": "Shuai Yang",
@@ -1201,6 +1181,11 @@
                 "name": "Shunkai Jin",
                 "id": 1510850,
                 "shirt_number": "3"
+              },
+              {
+                "name": "Yue Zhu",
+                "id": 1200179,
+                "shirt_number": "25"
               },
               {
                 "name": "Haijian Wang",
@@ -1223,6 +1208,11 @@
                 "shirt_number": "45"
               },
               {
+                "name": "Qipeng Wu",
+                "id": 1787529,
+                "shirt_number": "38"
+              },
+              {
                 "name": "Saulo Mineiro",
                 "id": 1127467,
                 "shirt_number": "11"
@@ -1231,8 +1221,10 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
+              "coach",
               "subs",
               "averageStarterAge",
               "totalStarterMarketValue"
@@ -1252,7 +1244,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5961058,
@@ -1271,7 +1263,7 @@
       "start_time": "01-09-2026 13:35",
       "start_utc": "2026-09-01T11:35:00+00:00",
       "league": "FA Cup",
-      "minutes_to_start": 43.0,
+      "minutes_to_start": 24.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1289,7 +1281,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1304,13 +1296,13 @@
       "start_time": "01-09-2026 13:35",
       "start_utc": "2026-09-01T11:35:00+00:00",
       "league": "FA Cup",
-      "minutes_to_start": 43.0,
+      "minutes_to_start": 24.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "2203ef5636fbdeda8e8e",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5961059,
@@ -1608,6 +1600,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "subs",
@@ -1895,6 +1888,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "subs",
@@ -1916,7 +1910,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5961059,
@@ -1935,7 +1929,7 @@
       "start_time": "01-09-2026 14:00",
       "start_utc": "2026-09-01T12:00:00+00:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1953,7 +1947,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1968,7 +1962,7 @@
       "start_time": "01-09-2026 14:00",
       "start_utc": "2026-09-01T12:00:00+00:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1986,7 +1980,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -2001,7 +1995,7 @@
       "start_time": "01-09-2026 14:00",
       "start_utc": "2026-09-01T12:00:00+00:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2019,7 +2013,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -2034,7 +2028,7 @@
       "start_time": "01-09-2026 14:00",
       "start_utc": "2026-09-01T12:00:00+00:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2052,7 +2046,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -2067,7 +2061,7 @@
       "start_time": "01-09-2026 14:00",
       "start_utc": "2026-09-01T12:00:00+00:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2085,7 +2079,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -2100,7 +2094,7 @@
       "start_time": "01-09-2026 14:15",
       "start_utc": "2026-09-01T12:15:00+00:00",
       "league": "Fa Cup",
-      "minutes_to_start": 83.0,
+      "minutes_to_start": 64.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -2118,7 +2112,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-01T10:51:59.490917+00:00",
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -2133,8 +2127,643 @@
       "start_time": "01-09-2026 14:30",
       "start_utc": "2026-09-01T12:30:00+00:00",
       "league": "Coppa",
-      "minutes_to_start": 98.0,
+      "minutes_to_start": 79.1,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": null,
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": []
+      },
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-09-01T11:10:52.476689+00:00",
+        "fotmob": null,
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
+    },
+    {
+      "match_market_id": "36361.31190",
+      "match_event_id": 16067061,
+      "match": "Bandirmaspor - Antalyaspor",
+      "start_time": "01-09-2026 15:00",
+      "start_utc": "2026-09-01T13:00:00+00:00",
+      "league": "TFF First League",
+      "minutes_to_start": 109.1,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "REFERENCE_PREVIOUS_XI",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 5908913,
+        "home": "Bandırmaspor",
+        "away": "Antalyaspor",
+        "league": "1. Lig",
+        "score": 0.825,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": false,
+        "historical_reference": true,
+        "lineup_type": "lastStarting11",
+        "provider_source": "lastStartingLineups",
+        "teams": [
+          {
+            "team_id": 162975,
+            "team_name": "Bandırmaspor",
+            "formation": "4-1-4-1",
+            "starters": [
+              {
+                "name": "Akin Alkan",
+                "id": 602992,
+                "shirt_number": "16",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Ali Ülgen",
+                "id": 908588,
+                "shirt_number": "22",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Burak Bekaroglu",
+                "id": 1011176,
+                "shirt_number": "86",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Yusuf Kocatürk",
+                "id": 1362125,
+                "shirt_number": "14",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Lucas Lima",
+                "id": 268257,
+                "shirt_number": "6",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Dean Liço",
+                "id": 1191124,
+                "shirt_number": "8",
+                "position_id": 65,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Emirhan Ayhan",
+                "id": 2130316,
+                "shirt_number": "17",
+                "position_id": 82,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Rémi Mulumba",
+                "id": 210115,
+                "shirt_number": "92",
+                "position_id": 84,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Muhammed Gümüskaya",
+                "id": 1001392,
+                "shirt_number": "10",
+                "position_id": 86,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Amidou Badji",
+                "id": 1897199,
+                "shirt_number": "29",
+                "position_id": 88,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.385
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Gianni Bruno",
+                "id": 196805,
+                "shirt_number": "9",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.89,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.212
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.89,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Furkan Beklevic",
+                "id": 938757,
+                "shirt_number": "99"
+              },
+              {
+                "name": "Enes Aydın",
+                "id": 1901802,
+                "shirt_number": "34"
+              },
+              {
+                "name": "Ahmet Biler",
+                "id": 1322332,
+                "shirt_number": "3"
+              },
+              {
+                "name": "Hakan Bilgiç",
+                "id": 364842,
+                "shirt_number": "77"
+              },
+              {
+                "name": "Enes Çinemre",
+                "id": 1910680,
+                "shirt_number": "20"
+              },
+              {
+                "name": "Kerem Donertas",
+                "id": 2064494,
+                "shirt_number": "23"
+              },
+              {
+                "name": "Emirhan Acar",
+                "id": 1899931,
+                "shirt_number": "30"
+              },
+              {
+                "name": "Tosin Kehinde",
+                "id": 1065653,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Yalin Dilek",
+                "id": 1573552,
+                "shirt_number": "90"
+              },
+              {
+                "name": "Dame Bamba Seck",
+                "id": null,
+                "shirt_number": "27"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge",
+              "totalStarterMarketValue",
+              "lastMatch"
+            ]
+          },
+          {
+            "team_id": 1931,
+            "team_name": "Antalyaspor",
+            "formation": "3-4-2-1",
+            "starters": [
+              {
+                "name": "Julián",
+                "id": 282680,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.192,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Francis Nzaba",
+                "id": 1304538,
+                "shirt_number": "15",
+                "position_id": 33,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Ensar Tivsiz",
+                "id": 1854676,
+                "shirt_number": "4",
+                "position_id": 35,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Samet Karakoc",
+                "id": 1384983,
+                "shirt_number": "19",
+                "position_id": 37,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.292,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.292,
+                  "height": 0.192,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Bünyamin Balci",
+                "id": 1005366,
+                "shirt_number": "7",
+                "position_id": 62,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ramzi Safouri",
+                "id": 529869,
+                "shirt_number": "8",
+                "position_id": 64,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Pedrinho",
+                "id": 387439,
+                "shirt_number": "14",
+                "position_id": 66,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Güray Vural",
+                "id": 95870,
+                "shirt_number": "11",
+                "position_id": 68,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.485,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.485,
+                  "height": 0.192,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ömer Beyaz",
+                "id": 1138299,
+                "shirt_number": "5",
+                "position_id": 84,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.7,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Sander van de Streek",
+                "id": 304668,
+                "shirt_number": "22",
+                "position_id": 86,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.678,
+                  "y": 0.3,
+                  "height": 0.25,
+                  "width": 0.193
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.678,
+                  "height": 0.192,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Ahmet Sagat",
+                "id": 731652,
+                "shirt_number": "23",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.192
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.192,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Kagan Arican",
+                "id": 1414306,
+                "shirt_number": "99"
+              },
+              {
+                "name": "Veysel Sari",
+                "id": 178893,
+                "shirt_number": "89"
+              },
+              {
+                "name": "Mert Yilmaz",
+                "id": 1056047,
+                "shirt_number": "27"
+              },
+              {
+                "name": "Soner Dikmen",
+                "id": 511404,
+                "shirt_number": "6"
+              },
+              {
+                "name": "Hasan Ilçin",
+                "id": 1729318,
+                "shirt_number": "20"
+              },
+              {
+                "name": "Erdogan Yesilyurt",
+                "id": 331524,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Mevlüt Simsek",
+                "id": 2130514,
+                "shirt_number": "97"
+              },
+              {
+                "name": "Yohan Boli",
+                "id": 466589,
+                "shirt_number": "10"
+              },
+              {
+                "name": "Dogukan Sinik",
+                "id": 750187,
+                "shirt_number": "70"
+              },
+              {
+                "name": "Ismail Taïeb Chehaima",
+                "id": null,
+                "shirt_number": "44"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge",
+              "totalStarterMarketValue",
+              "lastMatch"
+            ]
+          }
+        ],
+        "xi_fingerprint": "2dd653ccf76af4d95349",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36363.2940",
+      "match_event_id": 16087440,
+      "match": "NEC FC - Lugazi Municipal",
+      "start_time": "01-09-2026 15:00",
+      "start_utc": "2026-09-01T13:00:00+00:00",
+      "league": "Premier League",
+      "minutes_to_start": 109.1,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
       "retained_from_previous": false,
@@ -2150,11 +2779,44 @@
         "teams": []
       },
       "error": null
+    },
+    {
+      "match_market_id": "36361.57824",
+      "match_event_id": 16076205,
+      "match": "Progresul Spartac - Concordia Chiajna",
+      "start_time": "01-09-2026 15:00",
+      "start_utc": "2026-09-01T13:00:00+00:00",
+      "league": "Coppa",
+      "minutes_to_start": 109.1,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "status": "NOT_AVAILABLE",
+      "confirmed_at": null,
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 6093739,
+        "home": "Progresul Spartac",
+        "away": "Concordia Chiajna",
+        "league": "Cup Grp. B",
+        "score": 1.0,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": false,
+        "complete_11v11": false,
+        "confirmed": false,
+        "historical_reference": false,
+        "teams": [],
+        "raw_keys": []
+      },
+      "error": null
     }
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T10:51:59.490917+00:00",
+    "generated_at": "2026-09-01T11:10:52.476689+00:00",
     "window_minutes": [
       0,
       85.0
@@ -2170,36 +2832,15 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Dalian Zhixing FC - Shanghai Shenhua",
-        "minutes_to_start": 43.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "FC Kharkiv - KFF Mitrovica",
-        "minutes_to_start": 8.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Shandong Taishan - Shanghai Port",
-        "minutes_to_start": 43.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
   "watchdog_identity_repairs": [
     {
-      "match": "FC Kharkiv - KFF Mitrovica",
+      "match": "Dalian Zhixing FC - Shanghai Shenhua",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Shandong Taishan - Shanghai Port",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     }
   ]

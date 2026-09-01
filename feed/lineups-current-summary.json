@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T10:51:59.490917+00:00",
+  "generated_at": "2026-09-01T11:10:52.476689+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 11,
+  "target_count": 14,
   "status_counts": {
     "SOURCE_CONFIRMED": 3,
-    "NOT_AVAILABLE": 8
+    "NOT_AVAILABLE": 10,
+    "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
     {
@@ -23,7 +24,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T10:51:59.490917+00:00",
+    "generated_at": "2026-09-01T11:10:52.476689+00:00",
     "window_minutes": [
       0,
       85.0
@@ -39,43 +40,28 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Dalian Zhixing FC - Shanghai Shenhua",
-        "minutes_to_start": 43.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "FC Kharkiv - KFF Mitrovica",
-        "minutes_to_start": 8.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Shandong Taishan - Shanghai Port",
-        "minutes_to_start": 43.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Dalian Zhixing FC - Shanghai Shenhua",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Shandong Taishan - Shanghai Port",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
     {
       "match": "FC Kharkiv - KFF Mitrovica",
       "start_time": "01-09-2026 13:00",
       "league": "UEFA Europa Cup Femminile",
-      "minutes_to_start": 8.0,
+      "minutes_to_start": -10.9,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36363.5685",
-      "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-09-01T10:35:51.558186+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -83,11 +69,11 @@
       "match": "Dalian Zhixing FC - Shanghai Shenhua",
       "start_time": "01-09-2026 13:35",
       "league": "FA Cup",
-      "minutes_to_start": 43.0,
+      "minutes_to_start": 24.1,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36362.44010",
       "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -95,7 +81,7 @@
       "match": "Rizhao Yuqi - Beijing Guoan",
       "start_time": "01-09-2026 13:35",
       "league": "FA Cup",
-      "minutes_to_start": 43.0,
+      "minutes_to_start": 24.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.18360",
       "confirmed_at": null,
@@ -107,11 +93,11 @@
       "match": "Shandong Taishan - Shanghai Port",
       "start_time": "01-09-2026 13:35",
       "league": "FA Cup",
-      "minutes_to_start": 43.0,
+      "minutes_to_start": 24.1,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.52423",
       "confirmed_at": "2026-09-01T10:51:59.490917+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -119,7 +105,7 @@
       "match": "Bristol City U21 - Sheffield United FC U21",
       "start_time": "01-09-2026 14:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16699",
       "confirmed_at": null,
@@ -131,7 +117,7 @@
       "match": "Charlton Athletic U21 - Wigan U21",
       "start_time": "01-09-2026 14:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16706",
       "confirmed_at": null,
@@ -143,7 +129,7 @@
       "match": "Fleetwood Town U21 - Millwall U21",
       "start_time": "01-09-2026 14:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16703",
       "confirmed_at": null,
@@ -155,7 +141,7 @@
       "match": "Huddersfield (R) - Queens Park Rangers U21",
       "start_time": "01-09-2026 14:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.39132",
       "confirmed_at": null,
@@ -167,7 +153,7 @@
       "match": "Hull City U21 - Swansea City U21",
       "start_time": "01-09-2026 14:00",
       "league": "Professional Development League",
-      "minutes_to_start": 68.0,
+      "minutes_to_start": 49.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16698",
       "confirmed_at": null,
@@ -179,7 +165,7 @@
       "match": "Brunei DPMM - Terengganu",
       "start_time": "01-09-2026 14:15",
       "league": "Fa Cup",
-      "minutes_to_start": 83.0,
+      "minutes_to_start": 64.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.8121",
       "confirmed_at": null,
@@ -191,12 +177,48 @@
       "match": "Korona II - Radomiak Radom",
       "start_time": "01-09-2026 14:30",
       "league": "Coppa",
-      "minutes_to_start": 98.0,
+      "minutes_to_start": 79.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.55018",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "Bandirmaspor - Antalyaspor",
+      "start_time": "01-09-2026 15:00",
+      "league": "TFF First League",
+      "minutes_to_start": 109.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.31190",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "NEC FC - Lugazi Municipal",
+      "start_time": "01-09-2026 15:00",
+      "league": "Premier League",
+      "minutes_to_start": 109.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36363.2940",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Progresul Spartac - Concordia Chiajna",
+      "start_time": "01-09-2026 15:00",
+      "league": "Coppa",
+      "minutes_to_start": 109.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36361.57824",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
