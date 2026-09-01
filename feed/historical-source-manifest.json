@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v28",
-  "generated_at": "2026-09-01T14:44:13.661Z",
+  "schema_version": "radar-historical-source-manifest-v29",
+  "generated_at": "2026-09-01T15:27:05.688Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "SCOTLAND1_STRUCTURAL_OOS_COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+  "status": "BELGIUM1_FORMAT_AUDIT_COMPLETE_NO_MODEL_TEN_LEAGUE_SAMPLE_UNCHANGED",
   "priority": [
     "Sweden",
     "Norway",
@@ -825,6 +825,38 @@
         "Zero duplicate fixture keys and zero missing average closing triplets.",
         "The first two source attempts timed out; no partial rows were accepted."
       ]
+    },
+    {
+      "name": "Football-Data Belgian Pro League format audit 2022/23-2025/26",
+      "path": "feed/historical/belgium1/format-audit-v1.json",
+      "source_class": "EXTERNAL_FORMAT_DISCOVERY",
+      "status": "ACCEPTED_AUDIT_REJECTED_FOR_FOUR_SEASON_MODEL",
+      "seasons": [
+        "2022/2023",
+        "2023/2024",
+        "2024/2025",
+        "2025/2026"
+      ],
+      "source_files": 4,
+      "source_rows": 1241,
+      "accepted_model_rows": 0,
+      "role": [
+        "FORMAT_DRIFT_AUDIT",
+        "SCHEDULE_EXPOSURE_AUDIT",
+        "SOURCE_COMPLETENESS_GATE"
+      ],
+      "forbidden_role": [
+        "FOUR_SEASON_OOS_MODEL",
+        "POOLED_PLAYOFF_INFERENCE",
+        "GOLDBET_TRUE_OPEN",
+        "THRESHOLD_PROMOTION"
+      ],
+      "quality_notes": [
+        "2022/2023 has 18 clubs and 306 balanced fixtures.",
+        "The following seasons have 16 clubs and asymmetric playoff exposure.",
+        "2025/2026 has 311 rows versus 312 in the preceding two seasons and is not certified complete full-phase.",
+        "No outcomes or odds were used to select a favorable phase definition."
+      ]
     }
   ],
   "required_blocks": {
@@ -1017,12 +1049,13 @@
     "lane": "GOLDBET_SANITIZED_COMMON_SUPPORT_T30",
     "goal": "Scale matched sanitized T-30 snapshots within the same competitions and an independent temporal block.",
     "prior_claim_status": "Raw multi-snapshot state is ineligible; 2,068 post-kickoff snapshots quarantined.",
-    "structural_next": "Hold all ten league OOS blocks frozen at 11,536 fixtures and 2,884 holdout rows; Belgium requires an explicit playoff-format gate before expansion.",
+    "structural_next": "Belgium remains excluded from the four-season model. A future regular-phase-only audit may use the three 16-club seasons, but cannot satisfy the current four-season design.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
     "historical_t30_status": "GOOD_43_ROWS_20_COMPLETE_GROUPS_3_FIXTURES_DIAGNOSTIC_ONLY",
     "historical_close_status": "NOT_CERTIFIED",
     "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS",
     "dual_timestamp_gate": "ACTIVE_MINUTES_NONNEGATIVE_AND_CAPTURED_AT_BEFORE_KICKOFF",
-    "scotland1_status": "COMPLETE_912_ROWS_228_HOLDOUT_POST_SPLIT_RETAINED"
+    "scotland1_status": "COMPLETE_912_ROWS_228_HOLDOUT_POST_SPLIT_RETAINED",
+    "belgium1_status": "FORMAT_DRIFT_18_TO_16_CLUBS_ASYMMETRIC_PLAYOFFS_2025_2026_INCOMPLETE_NO_MODEL"
   }
 }
