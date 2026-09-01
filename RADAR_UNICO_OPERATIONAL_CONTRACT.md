@@ -31,6 +31,7 @@ Il feed player-props automatico entra nel flusso standard del Radar Unico e non 
    - U/O Tiri In Porta Giocatore
    - versioni Plus
    - altri mercati player presenti nello snapshot
+   - Combo marcatori: scorer + 1X2/DC/Over-Under/Goal-No Goal e altre combinazioni disponibili
 6. Integrare quote standard GoldBet, movimento OPEN→corrente→T-30, consenso trasversale e contesto lega.
 7. Stimare probabilità, fair odds e quota minima per ciascun candidato.
 8. Applicare il price gate finale sulla quota corrente più recente.
@@ -88,6 +89,17 @@ Per ogni partita il Radar deve valutare, quando i dati sono disponibili:
 - Carico recente di minuti e giorni di riposo.
 - Congestione calendario e viaggi.
 - Forma atletica osservabile e trend recente.
+
+### 6A. Modulo quantitativo Freschezza/Fatica
+Il riposo non può restare una nota descrittiva. Per ogni squadra e candidato player-prop il Radar deve produrre, quando i dati sono disponibili:
+- giorni dall'ultima gara, partite e minuti negli ultimi 7/14/21 giorni;
+- supplementari, trasferte/viaggi consecutivi, rotazioni e titolari da 80–90 minuti;
+- rientro da infortunio, età, ruolo ad alta intensità, rischio cambio e minuti attesi;
+- costo fisico del sistema di gioco e aggravanti ambientali;
+- Freshness Score 0–100 per squadra e giocatore;
+- Freshness Delta = score squadra A − score squadra B.
+
+Il modulo deve correggere direttamente P Radar, fair, FINAL GATE, minuti attesi e probabilità di sostituzione. Per scorer e player props deve correggere separatamente P(evento 1T) e P(evento 2T), perché la fatica non è temporalmente uniforme. Gli input, il punteggio e la correzione applicata devono essere archiviati per retroanalisi.
 
 ### 7. Forma e qualità recente, senza overfitting
 - xG / npxG prodotti e concessi.
@@ -269,6 +281,21 @@ Solo DOPO l'analisi calcistica:
 
 ### Regola di completezza
 Se un parametro importante non è verificabile, il Radar deve segnalarlo internamente come dato mancante e ridurre la confidenza; non deve riempire il vuoto con supposizioni presentate come fatti.
+
+## Modulo Combo marcatori
+Per ogni scorer candidato il Radar deve costruire anche la matrice delle combinazioni pertinenti disponibili, almeno:
+- giocatore segna + squadra vince / doppia chance;
+- giocatore segna + Over/Under rilevante;
+- giocatore segna + Goal/No Goal;
+- eventuali combo 1T/2T esposte dal bookmaker.
+
+La probabilità della combo deve essere congiunta e condizionata al game state: è vietato moltiplicare meccanicamente probabilità trattate come indipendenti. Per ogni combo servono P congiunta, fair e FINAL GATE propri.
+
+Stati quota obbligatori:
+- `COMBO BETFLAG RECUPERATA`: prezzo fresh/exact presente nel feed;
+- `COMBO MODELLATA — QUOTA BETFLAG NON PRESENTE NEL FEED`: il modello esiste ma il feed sano non espone la quota;
+- `ACQUISIZIONE COMBO FALLITA`: errore tecnico o copertura non verificabile;
+- `COMBO NON QUOTATA SU BETFLAG`: solo dopo prova positiva di assenza da scansione sana e completa.
 
 ## Regola decisionale
 - BET: quota corrente >= quota minima Radar e analisi completa positiva.
