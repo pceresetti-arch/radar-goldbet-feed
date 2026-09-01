@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v28",
-  "generated_at": "2026-09-01T14:44:13.661Z",
+  "schema_version": "radar-historical-backtest-ledger-v29",
+  "generated_at": "2026-09-01T15:27:05.688Z",
   "local_timezone": "Europe/Rome",
-  "status": "SCOTLAND1_STRUCTURAL_OOS_COMPLETE",
+  "status": "BELGIUM1_FORMAT_AUDIT_COMPLETE_NO_MODEL",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -336,7 +336,11 @@
     "Frozen Scottish Premiership split before evaluation: 2022/2023-2024/2025 development (684), untouched 2025/2026 holdout (228).",
     "Verified 12 clubs, 228 fixtures and 38 matches per club in every Scottish season, including the post-split phase; zero duplicate fixture keys and zero missing average closing triplets.",
     "Replicated the unchanged structural specification on Scotland; Elo robustly improves the development prior, while form/full worsen Elo on Brier and log-loss without reliable incremental value.",
-    "Corrected an inherited ENGLAND1 provenance label to SCOTLAND1 before formal acceptance; metrics and feature rows were unchanged."
+    "Corrected an inherited ENGLAND1 provenance label to SCOTLAND1 before formal acceptance; metrics and feature rows were unchanged.",
+    "Completed a row-level Belgian Pro League format audit over 2022/2023-2025/2026 using four SHA-bound Football-Data B1 files.",
+    "Rejected direct four-season modeling: 2022/2023 has 18 clubs and a balanced 306-match schedule, while later 16-club seasons contain asymmetric playoff paths.",
+    "Flagged 2025/2026 full-phase incompleteness: 311 rows versus 312 in the prior two seasons, with Dender and RAAL La Louviere on 35 appearances.",
+    "Built no Belgian features or OOS metrics; the accepted structural sample remains 11,536 fixtures and 2,884 holdout rows."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1708,6 +1712,48 @@
         "close_vs_elo": "POINT_BETTER_NOT_STATISTICALLY_CONCLUSIVE"
       },
       "report": "feed/historical/scotland1/structural-oos-v1.json"
+    },
+    "belgium1_format_audit_2022_2026": {
+      "status": "FOUR_SEASON_FORMAT_DRIFT_AND_2025_2026_INCOMPLETE_NO_MODEL",
+      "seasons": {
+        "2022/2023": {
+          "rows": 306,
+          "clubs": 18,
+          "appearance_values": [
+            34
+          ]
+        },
+        "2023/2024": {
+          "rows": 312,
+          "clubs": 16,
+          "appearance_values": [
+            36,
+            39,
+            40,
+            41
+          ]
+        },
+        "2024/2025": {
+          "rows": 312,
+          "clubs": 16,
+          "appearance_values": [
+            36,
+            40
+          ]
+        },
+        "2025/2026": {
+          "rows": 311,
+          "clubs": 16,
+          "appearance_values": [
+            35,
+            36,
+            40
+          ]
+        }
+      },
+      "accepted_model_rows": 0,
+      "holdout_evaluated": false,
+      "report": "feed/historical/belgium1/format-audit-v1.json"
     }
   },
   "ablation_plan": {
@@ -1725,8 +1771,8 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Continue structural expansion only where four completed seasons pass league-specific format gates; keep GoldBet MMS thresholds frozen.",
-    "structural_lane": "Freeze ten completed league OOS blocks totaling 11,536 fixtures and 2,884 holdout rows; Belgium requires explicit playoff-format treatment before ingestion.",
+    "priority": "Keep Belgium excluded from four-season modeling; audit a regular-season-only cohort separately without inspecting holdout performance.",
+    "structural_lane": "Ten completed league OOS blocks remain frozen at 11,536 fixtures and 2,884 holdout rows. Belgium needs a phase-normalized design and currently has only three comparable 16-club seasons.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1761,7 +1807,8 @@
       "LaLiga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant.",
       "Premier League v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
       "Premier League v1: reject a definitive closing-market superiority claim versus Elo; closing point estimates are better but paired Brier and log-loss intervals include zero.",
-      "Scottish Premiership form and full structural bundles: no reliable incremental improvement over Elo on the frozen 2025/2026 holdout."
+      "Scottish Premiership form and full structural bundles: no reliable incremental improvement over Elo on the frozen 2025/2026 holdout.",
+      "Belgian Pro League full-season four-year model: rejected because club count and playoff exposure drift materially, with 2025/2026 full-phase source incompleteness."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1793,7 +1840,8 @@
       "Inherited artifact labels must be validated after mechanical league extension; a mislabelled feature path is corrected before evidence acceptance.",
       "League-format constants must be changed in both documented expectations and executable eligibility conditions; a message-only update is insufficient and failed runs remain quarantined.",
       "Scottish Premiership must retain its post-split phase and must not be modeled as a balanced round robin; partial source seasons are forbidden.",
-      "Scottish Premiership post-split phase retained; schedule treated as asymmetric, not a balanced round robin."
+      "Scottish Premiership post-split phase retained; schedule treated as asymmetric, not a balanced round robin.",
+      "Multi-phase leagues require a frozen phase definition and identical schedule exposure across development and holdout; total-season rows cannot be pooled across Belgian format changes."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
