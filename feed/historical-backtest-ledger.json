@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v31",
-  "generated_at": "2026-09-01T17:37:52.821Z",
+  "schema_version": "radar-historical-backtest-ledger-v32",
+  "generated_at": "2026-09-01T18:34:46.511Z",
   "local_timezone": "Europe/Rome",
-  "status": "AUSTRIA1_STRUCTURAL_OOS_COMPLETE_NO_RULE_PROMOTION",
+  "status": "JAPAN1_FORMAT_AUDIT_COMPLETE_NO_MODEL",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -187,7 +187,14 @@
     "austria1_holdout_rows": 192,
     "austria1_source_selected_rows": 774,
     "austria1_excluded_european_playoff_rows": 6,
-    "austria1_missing_avg_close_triplets": 0
+    "austria1_missing_avg_close_triplets": 0,
+    "japan1_audited_source_rows_2022_2025": 1376,
+    "japan1_2022_rows": 310,
+    "japan1_2023_rows": 306,
+    "japan1_2024_rows": 380,
+    "japan1_2025_rows": 380,
+    "japan1_structural_rows_accepted": 0,
+    "japan1_oos_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -360,7 +367,11 @@
     "Audited Austrian Bundesliga 2022/2023-2025/2026 and identified six chronologically subsequent European playoff fixtures in the first two seasons.",
     "Frozen a result-blind core rule retaining the earliest 192 fixtures only when they yield 12 clubs and exactly 32 appearances per club; the rule passes all four seasons.",
     "Built the Austrian structural block on 768 accepted fixtures with 576 development and untouched 192-match 2025/2026 holdout.",
-    "Austria OOS: Elo, form and full structural variants all underperform the development prior on point estimates; every paired interval versus prior includes zero, so no structural module is promoted."
+    "Austria OOS: Elo, form and full structural variants all underperform the development prior on point estimates; every paired interval versus prior includes zero, so no structural module is promoted.",
+    "Audited J1 League 2022-2025 from a SHA-256-bound Football-Data source with zero missing average closing triplets.",
+    "Detected four non-phase-pure 2022 rows involving lower-division playoff participants beyond the 18-club 306-match schedule.",
+    "Confirmed structural expansion from 18 clubs/306 fixtures in 2022-2023 to 20 clubs/380 fixtures in 2024-2025.",
+    "Rejected a four-season J1 development/holdout model before evaluation; the comparable 20-club cohort contains only two complete seasons."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1866,8 +1877,8 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Audit the next Radar competition with sufficient four-season coverage; prioritize J1 source availability and format integrity before modeling.",
-    "structural_lane": "Eleven completed league OOS blocks now contain 12,304 fixtures and 3,076 holdout rows. Belgium remains excluded from the four-season full-phase model.",
+    "priority": "Audit Superettan 2022-2025 format and source coverage, using the existing Swedish consolidated source without re-fetching or rebuilding Allsvenskan.",
+    "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded from four-season modeling for format drift.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -1908,7 +1919,8 @@
       "Cross-league schedule-fatigue v1: reject promotion of rest-day and prior 7/14/21-day league-fixture congestion features beyond Elo; pooled Brier and log-loss worsen with paired IC95 entirely below zero, only 3/10 leagues improve directionally, and Portugal shows significant harm.",
       "Austria Bundesliga v1: reject the claim that Elo robustly improves the development prior; Elo has worse Brier/log-loss point estimates and paired intervals include zero.",
       "Austria Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
-      "Austria Bundesliga v1: reject a definitive external closing-market superiority claim versus Elo; closing point estimates are better but paired intervals include zero."
+      "Austria Bundesliga v1: reject a definitive external closing-market superiority claim versus Elo; closing point estimates are better but paired intervals include zero.",
+      "J1 League four-season structural model: rejected because the source changes from an 18-club 306-fixture format in 2022-2023 to a 20-club 380-fixture format in 2024-2025, while 2022 also contains four playoff rows outside the phase-pure league schedule."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1943,7 +1955,8 @@
       "Scottish Premiership post-split phase retained; schedule treated as asymmetric, not a balanced round robin.",
       "Multi-phase leagues require a frozen phase definition and identical schedule exposure across development and holdout; total-season rows cannot be pooled across Belgian format changes.",
       "Freshness/fatigue features derived from schedules must use strictly prior dates and date-batched updates; unavailable travel, cross-competition, extra-time, player-minute and rotation context must remain explicit missing modules.",
-      "Austrian Bundesliga four-season comparability uses a frozen chronological 192-fixture core: accept only if all 12 clubs have exactly 32 appearances, and exclude only subsequent European playoff rows."
+      "Austrian Bundesliga four-season comparability uses a frozen chronological 192-fixture core: accept only if all 12 clubs have exactly 32 appearances, and exclude only subsequent European playoff rows.",
+      "Calendar-year leagues must be format-gated independently; J1 playoff rows and the 18-to-20-club expansion cannot be normalized by outcome-blind downsampling into the requested four-season design."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
