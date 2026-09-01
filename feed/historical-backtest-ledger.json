@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v33",
-  "generated_at": "2026-09-01T19:21:25Z",
+  "schema_version": "radar-historical-backtest-ledger-v34",
+  "generated_at": "2026-09-01T22:30:18Z",
   "local_timezone": "Europe/Rome",
-  "status": "SUPERETTAN_SOURCE_COVERAGE_FAILURE_NO_MODEL",
+  "status": "SUPERETTAN_SOURCE_ACQUISITION_BLOCKED_ZERO_ROWS",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -199,7 +199,11 @@
     "superettan_requested_seasons_with_rows": 0,
     "superettan_repository_paths": 0,
     "superettan_structural_rows_accepted": 0,
-    "superettan_oos_rows": 0
+    "superettan_oos_rows": 0,
+    "superettan_acquisition_workflow_runs": 3,
+    "superettan_provider_http_403_runs": 3,
+    "superettan_api_payloads_received": 0,
+    "superettan_partial_rows_accepted": 0
   },
   "quarantined_evidence": [
     {
@@ -231,6 +235,11 @@
       "path": "feed/historical/sweden/football-data-SWE.csv",
       "classification": "ALLSVENSKAN_ONLY_NOT_SUPERETTAN_SOURCE",
       "reason": "The consolidated SWE snapshot contains 3,526 Allsvenskan rows and zero Superettan rows; it cannot support the ledger's planned Superettan audit or model."
+    },
+    {
+      "path": "github-actions://historical-superettan-source/runs/33566331135,33566434753,33566570574",
+      "classification": "SOURCE_PROVIDER_HTTP_403_ZERO_PAYLOAD",
+      "reason": "Three independent runs (web host, API host and API host with browser headers) returned HTTP 403 before any season payload; zero rows were accepted."
     }
   ],
   "work_completed": [
@@ -385,7 +394,10 @@
     "Audited the planned Superettan 2022-2025 increment against the repository source of truth before any model execution.",
     "Found that the persisted Swedish consolidated source contains only Allsvenskan (3,526 rows) and zero Superettan rows.",
     "Verified the complete 1,058-path repository tree contains no Superettan-named artifact; accepted zero partial rows and left the 2025 holdout undefined and untouched.",
-    "Corrected the ledger assumption that Superettan could be audited from the existing Swedish consolidated source."
+    "Corrected the ledger assumption that Superettan could be audited from the existing Swedish consolidated source.",
+    "Implemented a reproducible Superettan 2022-2025 public-source acquisition with immutable raw snapshots, page hashes and a frozen 240/16/30 schedule gate.",
+    "Executed three independent acquisition runs; the provider rejected all requests with HTTP 403 before returning any season payload.",
+    "Accepted zero partial Superettan rows, computed no model metrics and left the structural sample unchanged."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1891,9 +1903,10 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Acquire and persist an independently versioned Superettan 2022-2025 source; do not reuse the Allsvenskan-only SWE snapshot.",
-    "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by absent source coverage.",
-    "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season, explicit playoff separation, complete fixture identities and verified closing-field coverage before freezing 2022-2024 development and 2025 holdout.",
+    "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
+    "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by source absence/provider denial.",
+    "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
+    "next_analysis_lane": "Advance a cross-league calibration/error decomposition on the eleven accepted blocks without changing frozen model parameters.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -1972,7 +1985,8 @@
       "Freshness/fatigue features derived from schedules must use strictly prior dates and date-batched updates; unavailable travel, cross-competition, extra-time, player-minute and rotation context must remain explicit missing modules.",
       "Austrian Bundesliga four-season comparability uses a frozen chronological 192-fixture core: accept only if all 12 clubs have exactly 32 appearances, and exclude only subsequent European playoff rows.",
       "Calendar-year leagues must be format-gated independently; J1 playoff rows and the 18-to-20-club expansion cannot be normalized by outcome-blind downsampling into the requested four-season design.",
-      "A country-level consolidated source may not be assumed to cover lower divisions: league values and repository paths must be enumerated before scheduling a format audit or model."
+      "A country-level consolidated source may not be assumed to cover lower divisions: league values and repository paths must be enumerated before scheduling a format audit or model.",
+      "A blocked provider endpoint must not be retried indefinitely: after independent host/header attempts return zero payload, record the source failure and move to another analysis lane while preserving the acceptance gate."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
