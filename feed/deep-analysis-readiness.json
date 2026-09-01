@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-01T08:56:08.379969+00:00",
+  "generated_at": "2026-09-01T09:07:02.673259+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 3.7,
-    "tactical": 3.3,
-    "betflag_fixture_feed": 0.4,
-    "betflag_standard_source": 0.5,
-    "betflag_player_source": 0.5,
-    "player_context": 3.3
+    "lineups": 0.8,
+    "tactical": 0.4,
+    "betflag_fixture_feed": 11.3,
+    "betflag_standard_source": 11.4,
+    "betflag_player_source": 11.4,
+    "player_context": 0.3
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -33,9 +33,9 @@
     "exact_proof_required_at_decision_time": true
   },
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
-  "match_count": 3,
+  "match_count": 4,
   "readiness_counts": {
-    "WAIT_OFFICIAL_STANDARD_XI": 3
+    "WAIT_OFFICIAL_STANDARD_XI": 4
   },
   "ready_count": 0,
   "ready_matches": [],
@@ -49,7 +49,7 @@
       "league": "Campionato U23",
       "start_time": "01-09-2026 12:00",
       "start_utc": "2026-09-01T10:00:00+00:00",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 53.8,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -100,7 +100,7 @@
       "league": "Campionato U23",
       "start_time": "01-09-2026 12:00",
       "start_utc": "2026-09-01T10:00:00+00:00",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 53.8,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -151,7 +151,7 @@
       "league": "U19 League",
       "start_time": "01-09-2026 12:30",
       "start_utc": "2026-09-01T10:30:00+00:00",
-      "minutes_to_start": 97.5,
+      "minutes_to_start": 83.8,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -176,6 +176,57 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/sigma-olomouc-sparta-praga-u19.json",
       "betflag_standard_count": 8,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
+      "player_props_ready": false,
+      "player_context_available": false,
+      "player_context_fresh": true,
+      "player_context_matches_current_xi": false,
+      "player_market_bet_ready": false,
+      "player_lane_ready": false,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
+      "player_exact_price_required_at_decision_time": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
+      "true_open_blocks_current_analysis": false,
+      "strong_drop_count": 0,
+      "strong_drops": []
+    },
+    {
+      "match_market_id": "36363.5685",
+      "match_event_id": 16087701,
+      "match": "FC Kharkiv - KFF Mitrovica",
+      "league": "UEFA Europa Cup Femminile",
+      "start_time": "01-09-2026 13:00",
+      "start_utc": "2026-09-01T11:00:00+00:00",
+      "minutes_to_start": 113.8,
+      "readiness": "WAIT_OFFICIAL_STANDARD_XI",
+      "analysis_scope": "NOT_READY",
+      "blocking_reasons": [
+        "WAIT_OFFICIAL_STANDARD_XI"
+      ],
+      "warnings": [
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+      ],
+      "lineup_status": "REFERENCE_PREVIOUS_XI",
+      "lineup_type": "lastStarting11",
+      "official_standard_xi": false,
+      "lineup_ready": false,
+      "xi_fingerprint": "8510f9adbc8364626627",
+      "xi_changed_after_confirmation": false,
+      "tactical_status": null,
+      "tactical_confidence": null,
+      "tactical_feed_fresh": true,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": false,
+      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/fc-kharkiv-kff-mitrovica.json",
+      "betflag_standard_count": 26,
       "betflag_standard_current_fresh": true,
       "betflag_standard_ready": true,
       "player_count": 0,
