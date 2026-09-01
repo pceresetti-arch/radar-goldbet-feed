@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v21",
-  "generated_at": "2026-09-01T06:29:33.061Z",
+  "schema_version": "radar-historical-backtest-ledger-v22",
+  "generated_at": "2026-09-01T08:37:22.910Z",
   "local_timezone": "Europe/Rome",
-  "status": "GOLDBET_DUAL_PRE_KICKOFF_GATE_ENFORCED",
+  "status": "PORTUGAL_STRUCTURAL_OOS_COMPLETE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,8 +66,8 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 3912,
-    "total_structural_oos_holdout_rows": 978,
+    "total_external_market_close_benchmark_rows": 5136,
+    "total_structural_oos_holdout_rows": 1284,
     "pooled_sweden_norway_holdout_rows": 480,
     "cross_league_classwise_calibration_rows": 480,
     "eligible_denmark_regular_fixture_rows": 768,
@@ -106,7 +106,7 @@
     "netherlands_holdout_rows": 306,
     "netherlands_source_files": 4,
     "netherlands_missing_avg_close_triplets": 0,
-    "total_structural_regular_fixture_rows": 3912,
+    "total_structural_regular_fixture_rows": 5136,
     "goldbet_true_open_rows_with_exact_observed_current": 9188,
     "goldbet_events_with_pre_kickoff_observed_current": 642,
     "goldbet_primary_market_open_current_rows": 4931,
@@ -150,7 +150,12 @@
     "goldbet_events_with_post_kickoff_snapshots": 3,
     "goldbet_post_kickoff_snapshots_quarantined": 2068,
     "goldbet_good_t30_rows": 43,
-    "goldbet_complete_good_t30_market_groups": 20
+    "goldbet_complete_good_t30_market_groups": 20,
+    "eligible_portugal_regular_fixture_rows": 1224,
+    "portugal_development_rows": 918,
+    "portugal_holdout_rows": 306,
+    "portugal_source_files": 4,
+    "portugal_missing_avg_close_triplets": 0
   },
   "quarantined_evidence": [
     {
@@ -269,7 +274,13 @@
     "Validated all 2,309 persisted GoldBet snapshot timestamps against kickoff: zero sign or lead-time inconsistencies.",
     "Made the historical contract require both minutes_to_start >= 0 and captured_at < kickoff; disagreement is now a quarantine condition.",
     "Updated and reran the exact-ID T-30 pilot under the dual temporal gate; coverage remained 5 exact outcomes, 3 eligible fixtures and 43 selection rows.",
-    "Confirmed the stronger gate changes no pilot result and promotes no MMS threshold."
+    "Confirmed the stronger gate changes no pilot result and promotes no MMS threshold.",
+    "Fetched four Football-Data Primeira Liga season files for 2022/2023-2025/2026; each contains exactly 306 fixtures and is bound by SHA-256.",
+    "Frozen Portugal temporal split before evaluation: 2022/2023-2024/2025 development (918), untouched 2025/2026 holdout (306).",
+    "Verified 18 clubs and 34 matches per club in every frozen season, zero duplicate fixture keys and zero missing average closing triplets.",
+    "Replicated the unchanged Sweden/Norway structural specification on Portugal; Elo significantly beats the development prior, while form and the full bundle do not improve Elo reliably.",
+    "External de-vigged average closing odds significantly beat every structural Portugal variant on both Brier and log-loss.",
+    "Corrected the inherited feature-artifact label before ledger acceptance; Portugal features are stored under a Primeira Liga path and GoldBet TRUE OPEN is explicitly classified as not joined to this block."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1156,6 +1167,91 @@
         "eligible_rows": 43
       },
       "decision": "GATE_ENFORCED_RESULTS_UNCHANGED_NO_RULE_PROMOTION"
+    },
+    "portugal_structural_oos_2025_2026": {
+      "report": "feed/historical/portugal/structural-oos-v1.json",
+      "sample": {
+        "development": 918,
+        "holdout": 306,
+        "regular_total": 1224,
+        "source_files": 4
+      },
+      "development_prior": {
+        "brier": 0.6599266189167533,
+        "log_loss": 1.0892429007708198,
+        "accuracy": 0.4117647058823529
+      },
+      "external_market_close": {
+        "brier": 0.5335996917454419,
+        "log_loss": 0.9038808045060404,
+        "accuracy": 0.5784313725490197
+      },
+      "elo_only": {
+        "brier": 0.5655157152231768,
+        "log_loss": 0.951126197344172,
+        "accuracy": 0.5326797385620915
+      },
+      "elo_plus_form": {
+        "brier": 0.5624016851213856,
+        "log_loss": 0.946144287093022,
+        "accuracy": 0.5490196078431373
+      },
+      "full_structural": {
+        "brier": 0.5606542870883846,
+        "log_loss": 0.9439773693387533,
+        "accuracy": 0.5555555555555556
+      },
+      "paired_decisions": {
+        "elo_vs_prior": {
+          "brier_gain": 0.09441090369357445,
+          "brier_ci95": [
+            0.05825252010384632,
+            0.12906426655644046
+          ],
+          "log_loss_gain": 0.13811670342664745,
+          "log_loss_ci95": [
+            0.08298764905533061,
+            0.19005376945676003
+          ]
+        },
+        "market_vs_elo": {
+          "brier_gain": 0.03191602347773476,
+          "brier_ci95": [
+            0.01588929457566442,
+            0.04777509422626678
+          ],
+          "log_loss_gain": 0.04724539283813104,
+          "log_loss_ci95": [
+            0.021925402038385153,
+            0.07343589810641615
+          ]
+        },
+        "form_vs_elo": {
+          "brier_gain": 0.003114030101791054,
+          "brier_ci95": [
+            -0.002320631564042739,
+            0.008647248939016037
+          ],
+          "log_loss_gain": 0.004981910251149086,
+          "log_loss_ci95": [
+            -0.0031663400463743975,
+            0.013179236787940031
+          ]
+        },
+        "full_vs_elo": {
+          "brier_gain": 0.0048614281347917395,
+          "brier_ci95": [
+            -0.0022695709843086704,
+            0.011961047862433202
+          ],
+          "log_loss_gain": 0.007148828005418619,
+          "log_loss_ci95": [
+            -0.004020569180524754,
+            0.01840430435066634
+          ]
+        }
+      },
+      "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_NOT_PROMOTED; EXTERNAL_MARKET_SIGNIFICANTLY_BETTER_THAN_ALL_STRUCTURAL_VARIANTS; NO_OPERATIONAL_PROMOTION"
     }
   },
   "ablation_plan": {
@@ -1173,8 +1269,8 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Scale the sanitized GoldBet T-30 capture to matched fixtures within the same competitions; enforce post-kickoff exclusion at the historical ingestion gate.",
-    "structural_lane": "Keep all multi-season OOS structural blocks frozen.",
+    "priority": "Continue league-by-league structural OOS expansion while the GoldBet T-30 lane awaits matched common-support coverage.",
+    "structural_lane": "Freeze all five completed league OOS blocks; extend next to another Radar league only with four comparable completed seasons.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1197,7 +1293,9 @@
       "GoldBet MMS stability v1: reject pooled interpretation of 1X2 movement ROI across heterogeneous lead times; <360 and >=360 minute samples differ materially.",
       "GoldBet 1X2 drift decomposition v1: reject the claim that the <360 versus >=360 minute ROI reversal is explained solely by selected side or observed-current price mix; the standardized near-minus-far interval remains entirely negative.",
       "GoldBet 1X2 residual drift v1: reject any claim that lead time independently causes the ROI reversal; country×side×price common support is zero, so the effect is not identifiable apart from competition/source coverage.",
-      "GoldBet snapshot hygiene v1: reject use of the raw multi-snapshot state for historical modeling; 2,068 post-kickoff observations require explicit quarantine and the clean T-30 sample covers only three fixtures."
+      "GoldBet snapshot hygiene v1: reject use of the raw multi-snapshot state for historical modeling; 2,068 post-kickoff observations require explicit quarantine and the clean T-30 sample covers only three fixtures.",
+      "Portugal v1: reject promotion of prior-five form and the full structural bundle beyond Elo; point estimates improve slightly but paired Brier/log-loss intervals include zero.",
+      "Portugal v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats Elo, form and full variants."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1225,7 +1323,8 @@
       "Material MMS lead-time drift must be standardized at minimum by selection side and price band; persistence after standardization is recorded as instability/confounding, never as a timing rule.",
       "Before interpreting lead-time drift, require common support within competition, selection side and price band; zero eligible overlap cells force a NOT_IDENTIFIABLE verdict rather than a null or causal conclusion.",
       "Historical snapshot ingestion must hard-reject minutes_to_start < 0 before feature construction and must preserve a separate quarantine count; filtering only at metric time is insufficient.",
-      "Pre-kickoff eligibility now requires two agreeing temporal proofs: non-negative minutes_to_start and captured_at strictly before kickoff; any disagreement is quarantined."
+      "Pre-kickoff eligibility now requires two agreeing temporal proofs: non-negative minutes_to_start and captured_at strictly before kickoff; any disagreement is quarantined.",
+      "Inherited artifact labels must be validated after mechanical league extension; a mislabelled feature path is corrected before evidence acceptance."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
