@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v29",
-  "generated_at": "2026-09-01T15:27:05.688Z",
+  "schema_version": "radar-historical-source-manifest-v30",
+  "generated_at": "2026-09-01T16:43:03.671Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "BELGIUM1_FORMAT_AUDIT_COMPLETE_NO_MODEL_TEN_LEAGUE_SAMPLE_UNCHANGED",
+  "status": "TEN_LEAGUE_FATIGUE_ABLATION_COMPLETE_NOT_PROMOTED",
   "priority": [
     "Sweden",
     "Norway",
@@ -857,6 +857,33 @@
         "2025/2026 has 311 rows versus 312 in the preceding two seasons and is not certified complete full-phase.",
         "No outcomes or odds were used to select a favorable phase definition."
       ]
+    },
+    {
+      "name": "Derived ten-league schedule-only freshness/fatigue block",
+      "league": "Sweden, Norway, Denmark, Netherlands, Portugal, Germany 1/2, Spain 1, England 1, Scotland 1",
+      "role": [
+        "PREMATCH_SCHEDULE_FATIGUE_ABLATION",
+        "STRUCTURAL_MODEL_DIAGNOSTIC"
+      ],
+      "forbidden_role": [
+        "TRAVEL_PROXY",
+        "PLAYER_MINUTES_PROXY",
+        "ROTATION_PROXY",
+        "CROSS_COMPETITION_WORKLOAD_PROXY",
+        "OPERATIONAL_BETTING_RULE"
+      ],
+      "source_class": "DERIVED_STRICTLY_PRIOR_DATE_FEATURES_FROM_ACCEPTED_FIXTURE_DATASETS",
+      "status": "COMPLETE_NOT_PROMOTED",
+      "evidence": "feed/historical/fatigue/cross-league-fatigue-ablation-v1.json",
+      "development_rows": 8652,
+      "holdout_rows": 2884,
+      "leagues": 10,
+      "quality_notes": [
+        "Current-date fixture information is excluded through date-batched updates.",
+        "Source kickoff timezone is not verified, so only prior calendar dates are used.",
+        "Accepted league datasets omit cross-competition matches; travel, extra time, minutes, rotation and injury recovery are unavailable.",
+        "Pooled Brier and log-loss deteriorate with paired 95% intervals entirely unfavorable to the added module."
+      ]
     }
   ],
   "required_blocks": {
@@ -1046,16 +1073,8 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "lane": "GOLDBET_SANITIZED_COMMON_SUPPORT_T30",
-    "goal": "Scale matched sanitized T-30 snapshots within the same competitions and an independent temporal block.",
-    "prior_claim_status": "Raw multi-snapshot state is ineligible; 2,068 post-kickoff snapshots quarantined.",
-    "structural_next": "Belgium remains excluded from the four-season model. A future regular-phase-only audit may use the three 16-club seasons, but cannot satisfy the current four-season design.",
-    "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
-    "historical_t30_status": "GOOD_43_ROWS_20_COMPLETE_GROUPS_3_FIXTURES_DIAGNOSTIC_ONLY",
-    "historical_close_status": "NOT_CERTIFIED",
-    "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS",
-    "dual_timestamp_gate": "ACTIVE_MINUTES_NONNEGATIVE_AND_CAPTURED_AT_BEFORE_KICKOFF",
-    "scotland1_status": "COMPLETE_912_ROWS_228_HOLDOUT_POST_SPLIT_RETAINED",
-    "belgium1_status": "FORMAT_DRIFT_18_TO_16_CLUBS_ASYMMETRIC_PLAYOFFS_2025_2026_INCOMPLETE_NO_MODEL"
+    "priority": "Next Radar league with four comparable seasons and a frozen format gate",
+    "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
+    "belgium_constraint": "Full-season four-year model remains excluded because of format drift and incomplete 2025/2026 phase coverage."
   }
 }
