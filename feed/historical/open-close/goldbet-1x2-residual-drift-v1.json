@@ -1,0 +1,561 @@
+{
+  "schema_version": "radar-goldbet-1x2-residual-drift-v1",
+  "generated_at": "2026-09-01T04:32:50.632340+00:00",
+  "classification": "ERROR_ANALYSIS_NO_RULE_TUNING_NO_CAUSAL_CLAIM",
+  "methodology": {
+    "target": "FT 1X2 maximum shortening candidate movement >=1pp",
+    "lead_split": "<360 versus >=360 minutes",
+    "competition_control": "country prefix from documented tournament label; exact tournaments reported descriptively",
+    "chronology": "kickoff-ordered halves",
+    "observed_current_is_close": false,
+    "bootstrap_draws": 10000
+  },
+  "source": {
+    "path": "feed/historical/open-close/goldbet-fixture-level-mms-v1.json",
+    "sha256": "7271474b4d35394a6bd8580e5d2ad6e8655b76eb63feb9a41cbd3abcafda2c64"
+  },
+  "sample": {
+    "events": 392,
+    "near": 67,
+    "far": 325,
+    "countries": 65,
+    "tournaments": 120,
+    "kickoff_min": "2026-08-24T23:30:00+00:00",
+    "kickoff_max": "2026-08-29T21:30:00+00:00"
+  },
+  "composition": {
+    "near_country_hhi": 0.12764535531298732,
+    "far_country_hhi": 0.06783431952662722,
+    "near_top_countries": [
+      [
+        "EUROPE",
+        21
+      ],
+      [
+        "ARGENTINA",
+        5
+      ],
+      [
+        "MEXICO",
+        5
+      ],
+      [
+        "BRAZIL",
+        4
+      ],
+      [
+        "JAPAN",
+        4
+      ],
+      [
+        "COLOMBIA",
+        3
+      ],
+      [
+        "SAUDI ARABIA",
+        3
+      ],
+      [
+        "CHILE",
+        2
+      ],
+      [
+        "NORTH & CENTRAL AMERICA",
+        2
+      ],
+      [
+        "EGYPT",
+        2
+      ]
+    ],
+    "far_top_countries": [
+      [
+        "ENGLAND",
+        67
+      ],
+      [
+        "SCOTLAND",
+        26
+      ],
+      [
+        "ARGENTINA",
+        23
+      ],
+      [
+        "JAPAN",
+        15
+      ],
+      [
+        "GERMANY",
+        14
+      ],
+      [
+        "FRANCE",
+        13
+      ],
+      [
+        "PORTUGAL",
+        10
+      ],
+      [
+        "EUROPE",
+        10
+      ],
+      [
+        "CZECH REPUBLIC",
+        9
+      ],
+      [
+        "SAUDI ARABIA",
+        8
+      ]
+    ]
+  },
+  "country_cells": [
+    {
+      "country": "ENGLAND",
+      "near": {
+        "n": 1,
+        "roi": 0.1299999999999999,
+        "hit_rate": 1.0,
+        "mean_price": 1.13,
+        "mean_lead_minutes": 359.9691403
+      },
+      "far": {
+        "n": 67,
+        "roi": 0.04880597014925375,
+        "hit_rate": 0.4626865671641791,
+        "mean_price": 2.568358208955224,
+        "mean_lead_minutes": 1006.9923377955224
+      },
+      "near_minus_far_roi": 0.08119402985074614
+    },
+    {
+      "country": "EUROPE",
+      "near": {
+        "n": 21,
+        "roi": -0.7352380952380954,
+        "hit_rate": 0.19047619047619047,
+        "mean_price": 2.9695238095238095,
+        "mean_lead_minutes": 282.11199744285716
+      },
+      "far": {
+        "n": 10,
+        "roi": 0.30999999999999994,
+        "hit_rate": 0.6,
+        "mean_price": 2.855,
+        "mean_lead_minutes": 856.1903422433334
+      },
+      "near_minus_far_roi": -1.0452380952380953
+    },
+    {
+      "country": "ARGENTINA",
+      "near": {
+        "n": 5,
+        "roi": -0.694,
+        "hit_rate": 0.2,
+        "mean_price": 3.186,
+        "mean_lead_minutes": 96.40013317333333
+      },
+      "far": {
+        "n": 23,
+        "roi": -0.19869565217391305,
+        "hit_rate": 0.391304347826087,
+        "mean_price": 2.5043478260869567,
+        "mean_lead_minutes": 1178.2006819833334
+      },
+      "near_minus_far_roi": -0.4953043478260869
+    },
+    {
+      "country": "SCOTLAND",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 26,
+        "roi": 0.27730769230769226,
+        "hit_rate": 0.5,
+        "mean_price": 3.0488461538461538,
+        "mean_lead_minutes": 1073.8856688532053
+      },
+      "near_minus_far_roi": null
+    },
+    {
+      "country": "JAPAN",
+      "near": {
+        "n": 4,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 7.375,
+        "mean_lead_minutes": 110.20724795
+      },
+      "far": {
+        "n": 15,
+        "roi": 0.13333333333333333,
+        "hit_rate": 0.4666666666666667,
+        "mean_price": 3.31,
+        "mean_lead_minutes": 715.0898926222221
+      },
+      "near_minus_far_roi": -1.1333333333333333
+    },
+    {
+      "country": "GERMANY",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 14,
+        "roi": 0.7414285714285714,
+        "hit_rate": 0.5714285714285714,
+        "mean_price": 2.9107142857142856,
+        "mean_lead_minutes": 888.7524784928571
+      },
+      "near_minus_far_roi": null
+    },
+    {
+      "country": "FRANCE",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 13,
+        "roi": 0.6846153846153846,
+        "hit_rate": 0.5384615384615384,
+        "mean_price": 2.7361538461538464,
+        "mean_lead_minutes": 1008.6547406910256
+      },
+      "near_minus_far_roi": null
+    },
+    {
+      "country": "SAUDI ARABIA",
+      "near": {
+        "n": 3,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 3.033333333333333,
+        "mean_lead_minutes": 259.9691403
+      },
+      "far": {
+        "n": 8,
+        "roi": -0.0025000000000000022,
+        "hit_rate": 0.5,
+        "mean_price": 2.25375,
+        "mean_lead_minutes": 1030.4315091104168
+      },
+      "near_minus_far_roi": -0.9975
+    },
+    {
+      "country": "PORTUGAL",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 10,
+        "roi": -0.1,
+        "hit_rate": 0.5,
+        "mean_price": 2.0900000000000003,
+        "mean_lead_minutes": 1020.2565473266666
+      },
+      "near_minus_far_roi": null
+    }
+  ],
+  "tournament_cells": [
+    {
+      "tournament": "SCOTLAND: Challenge Cup",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 19,
+        "roi": 0.001052631578947346,
+        "hit_rate": 0.42105263157894735,
+        "mean_price": 3.2289473684210526,
+        "mean_lead_minutes": 1113.159639814035
+      }
+    },
+    {
+      "tournament": "ENGLAND: EFL Cup",
+      "near": {
+        "n": 1,
+        "roi": 0.1299999999999999,
+        "hit_rate": 1.0,
+        "mean_price": 1.13,
+        "mean_lead_minutes": 359.9691403
+      },
+      "far": {
+        "n": 17,
+        "roi": -0.0829411764705882,
+        "hit_rate": 0.47058823529411764,
+        "mean_price": 2.696470588235294,
+        "mean_lead_minutes": 1136.5345725901961
+      }
+    },
+    {
+      "tournament": "EUROPE: Conference League - Qualification",
+      "near": {
+        "n": 11,
+        "roi": -0.7236363636363636,
+        "hit_rate": 0.18181818181818182,
+        "mean_price": 3.0645454545454545,
+        "mean_lead_minutes": 279.51459484545455
+      },
+      "far": {
+        "n": 3,
+        "roi": 0.8333333333333334,
+        "hit_rate": 0.6666666666666666,
+        "mean_price": 2.8666666666666667,
+        "mean_lead_minutes": 384.9691403
+      }
+    },
+    {
+      "tournament": "JAPAN: Emperors Cup",
+      "near": {
+        "n": 4,
+        "roi": -1.0,
+        "hit_rate": 0.0,
+        "mean_price": 7.375,
+        "mean_lead_minutes": 110.20724795
+      },
+      "far": {
+        "n": 7,
+        "roi": 0.014285714285714235,
+        "hit_rate": 0.2857142857142857,
+        "mean_price": 4.514285714285714,
+        "mean_lead_minutes": 719.9391253142858
+      }
+    },
+    {
+      "tournament": "ENGLAND: Championship",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 10,
+        "roi": -0.25999999999999995,
+        "hit_rate": 0.3,
+        "mean_price": 2.9850000000000003,
+        "mean_lead_minutes": 924.8534675766666
+      }
+    },
+    {
+      "tournament": "EUROPE: Europa League - Qualification",
+      "near": {
+        "n": 10,
+        "roi": -0.748,
+        "hit_rate": 0.2,
+        "mean_price": 2.865,
+        "mean_lead_minutes": 284.9691403
+      },
+      "far": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      }
+    },
+    {
+      "tournament": "ENGLAND: League Two",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 9,
+        "roi": 0.30000000000000004,
+        "hit_rate": 0.5555555555555556,
+        "mean_price": 2.3866666666666667,
+        "mean_lead_minutes": 914.4554533944445
+      }
+    },
+    {
+      "tournament": "ARGENTINA: Primera B",
+      "near": {
+        "n": 1,
+        "roi": 0.53,
+        "hit_rate": 1.0,
+        "mean_price": 1.53,
+        "mean_lead_minutes": 64.22483960000001
+      },
+      "far": {
+        "n": 7,
+        "roi": -0.08857142857142859,
+        "hit_rate": 0.42857142857142855,
+        "mean_price": 2.654285714285714,
+        "mean_lead_minutes": 1137.8038000404763
+      }
+    },
+    {
+      "tournament": "ENGLAND: NPL Premier Division",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 8,
+        "roi": 0.05374999999999999,
+        "hit_rate": 0.5,
+        "mean_price": 2.0075,
+        "mean_lead_minutes": 1091.6183529541668
+      }
+    },
+    {
+      "tournament": "FRANCE: Ligue 2",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 8,
+        "roi": 0.93125,
+        "hit_rate": 0.625,
+        "mean_price": 2.80625,
+        "mean_lead_minutes": 978.1167265041666
+      }
+    },
+    {
+      "tournament": "JAPAN: J1 League",
+      "near": {
+        "n": 0,
+        "roi": null,
+        "hit_rate": null,
+        "mean_price": null,
+        "mean_lead_minutes": null
+      },
+      "far": {
+        "n": 8,
+        "roi": 0.23750000000000002,
+        "hit_rate": 0.625,
+        "mean_price": 2.25625,
+        "mean_lead_minutes": 710.8468140166666
+      }
+    }
+  ],
+  "side_price_standardized": {
+    "controls": [
+      "selection",
+      "price_bin"
+    ],
+    "min_each": 5,
+    "eligible_cells": 6,
+    "covered_near": 59,
+    "covered_far": 240,
+    "near_minus_far_roi": -0.5604050645037759,
+    "bootstrap_ci95": [
+      -0.8342215912664637,
+      -0.28674277956954625
+    ]
+  },
+  "country_side_price_standardized": {
+    "controls": [
+      "country",
+      "selection",
+      "price_bin"
+    ],
+    "min_each": 3,
+    "eligible_cells": 0,
+    "covered_near": 0,
+    "covered_far": 0,
+    "near_minus_far_roi": null,
+    "bootstrap_ci95": null
+  },
+  "chronological_halves": {
+    "early": {
+      "raw_near": {
+        "n": 54,
+        "roi": -0.4987037037037037,
+        "hit_rate": 0.2777777777777778,
+        "mean_price": 2.928703703703704,
+        "mean_lead_minutes": 205.1687959978395
+      },
+      "raw_far": {
+        "n": 142,
+        "roi": -0.14704225352112676,
+        "hit_rate": 0.4154929577464789,
+        "mean_price": 2.7833802816901407,
+        "mean_lead_minutes": 1017.4297985333333
+      },
+      "side_price_standardized": {
+        "controls": [
+          "selection",
+          "price_bin"
+        ],
+        "min_each": 3,
+        "eligible_cells": 7,
+        "covered_near": 50,
+        "covered_far": 96,
+        "near_minus_far_roi": -0.3602386452297814,
+        "bootstrap_ci95": [
+          -0.6899196820280623,
+          -0.04042919176803141
+        ]
+      }
+    },
+    "late": {
+      "raw_near": {
+        "n": 13,
+        "roi": -0.08846153846153842,
+        "hit_rate": 0.46153846153846156,
+        "mean_price": 2.6076923076923078,
+        "mean_lead_minutes": 123.53912170897435
+      },
+      "raw_far": {
+        "n": 183,
+        "roi": 0.2591256830601093,
+        "hit_rate": 0.48633879781420764,
+        "mean_price": 2.5993989071038253,
+        "mean_lead_minutes": 961.4408372426229
+      },
+      "side_price_standardized": {
+        "controls": [
+          "selection",
+          "price_bin"
+        ],
+        "min_each": 3,
+        "eligible_cells": 1,
+        "covered_near": 6,
+        "covered_far": 50,
+        "near_minus_far_roi": 0.25473333333333326,
+        "bootstrap_ci95": [
+          -0.6047333333333335,
+          1.0635333333333332
+        ]
+      }
+    }
+  },
+  "decision": "RESIDUAL_DRIFT_NOT_ROBUST_AFTER_COUNTRY_CONTROL",
+  "interpretation": "Competition and chronology are diagnostic controls only. No positive subgroup is eligible for promotion from this discovery sample."
+}
