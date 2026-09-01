@@ -19,7 +19,13 @@ def fetch_json(url):
     errors = []
     for attempt in range(1, 5):
         try:
-            req = Request(url, headers={"User-Agent": "radar-historical-backtest/1.0"})
+            req = Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/140 Safari/537.36",
+                "Accept": "application/json, text/plain, */*",
+                "Origin": "https://www.sofascore.com",
+                "Referer": "https://www.sofascore.com/",
+                "Accept-Language": "en-US,en;q=0.9",
+            })
             with urlopen(req, timeout=45) as response:
                 body = response.read()
                 return json.loads(body), body, getattr(response, "status", 200), attempt, errors
