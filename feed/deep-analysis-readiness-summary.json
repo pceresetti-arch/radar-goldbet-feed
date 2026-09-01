@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-01T12:43:02.051058+00:00",
+  "generated_at": "2026-09-01T12:43:25.531170+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 1.1,
-    "tactical": 0.6,
-    "betflag_fixture_feed": 15.2,
-    "betflag_standard_source": 15.4,
-    "betflag_player_source": 15.3,
-    "player_context": 0.6
+    "lineups": 1.4,
+    "tactical": 1.0,
+    "betflag_fixture_feed": 0.5,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.6,
+    "player_context": 1.0
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,10 +36,25 @@
   "match_count": 17,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 16,
-    "STALE_BETFLAG_STANDARD_CURRENT": 1
+    "READY_DEEP_ANALYSIS": 1
   },
-  "ready_count": 0,
-  "ready_matches": [],
+  "ready_count": 1,
+  "ready_matches": [
+    {
+      "match_market_id": "36361.31190",
+      "match": "Bandirmaspor - Antalyaspor",
+      "league": "TFF First League",
+      "start_time": "01-09-2026 15:00",
+      "minutes_to_start": 18.0,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "betflag_standard_count": 34,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_lane_ready": false,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    }
+  ],
   "player_lane_ready_count": 0,
   "player_lane_ready_matches": []
 }
