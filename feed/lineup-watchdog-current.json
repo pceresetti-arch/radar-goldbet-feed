@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-01T12:24:30.034170+00:00",
+  "generated_at": "2026-09-01T12:41:59.413938+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,96 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-01T12:21:28.855133+00:00",
-      "finished_at": "2026-09-01T12:21:32.828149+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T12:22:07.828275+00:00",
-      "finished_at": "2026-09-01T12:22:08.200149+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T12:22:43.200327+00:00",
-      "finished_at": "2026-09-01T12:22:43.665407+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T12:23:18.665593+00:00",
-      "finished_at": "2026-09-01T12:23:19.071303+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T12:23:54.071547+00:00",
-      "finished_at": "2026-09-01T12:23:54.646883+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-01T12:24:29.647090+00:00",
-      "finished_at": "2026-09-01T12:24:30.034092+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-01T12:41:55.806313+00:00",
+      "finished_at": "2026-09-01T12:41:59.413916+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 13,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-01T12:41:59.413557+00:00",
+          "match": "Bandirmaspor - Antalyaspor",
+          "league": "TFF First League",
+          "start_time": "01-09-2026 15:00",
+          "minutes_to_start": 18.0,
+          "match_market_id": "36361.31190",
+          "match_event_id": 16067061,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5908913,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "72ef2a4896928c1b2bcd",
+          "current_xi_fingerprint": "d7f74e7a588e05b2943a",
+          "confirmed_at": "2026-09-01T12:41:58.973670+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-01T12:41:59.413557+00:00",
+          "match": "Bandirmaspor - Antalyaspor",
+          "league": "TFF First League",
+          "start_time": "01-09-2026 15:00",
+          "minutes_to_start": 18.0,
+          "match_market_id": "36361.31190",
+          "match_event_id": 16067061,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5908913,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "72ef2a4896928c1b2bcd",
+          "current_xi_fingerprint": "d7f74e7a588e05b2943a",
+          "confirmed_at": "2026-09-01T12:41:58.973670+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
+  "observed_events": [
     {
-      "match": "Korona II - Radomiak Radom",
-      "match_market_id": "36361.55018",
-      "match_event_id": 16085215,
-      "minutes_to_start": 5.5,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-01T12:41:59.413557+00:00",
       "match": "Bandirmaspor - Antalyaspor",
+      "league": "TFF First League",
+      "start_time": "01-09-2026 15:00",
+      "minutes_to_start": 18.0,
       "match_market_id": "36361.31190",
       "match_event_id": 16067061,
-      "minutes_to_start": 35.5,
-      "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
-      "fotmob_match_id": 5908913
-    },
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5908913,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "72ef2a4896928c1b2bcd",
+      "current_xi_fingerprint": "d7f74e7a588e05b2943a",
+      "confirmed_at": "2026-09-01T12:41:58.973670+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-01T12:41:59.413557+00:00",
+      "match": "Bandirmaspor - Antalyaspor",
+      "league": "TFF First League",
+      "start_time": "01-09-2026 15:00",
+      "minutes_to_start": 18.0,
+      "match_market_id": "36361.31190",
+      "match_event_id": 16067061,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5908913,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "72ef2a4896928c1b2bcd",
+      "current_xi_fingerprint": "d7f74e7a588e05b2943a",
+      "confirmed_at": "2026-09-01T12:41:58.973670+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
     {
       "match": "Gadafi FC - Updf FC",
       "match_market_id": "36361.20767",
       "match_event_id": 16090333,
-      "minutes_to_start": 35.5,
+      "minutes_to_start": 18.0,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +135,7 @@
       "match": "NEC FC - Lugazi Municipal",
       "match_market_id": "36363.2940",
       "match_event_id": 16087440,
-      "minutes_to_start": 35.5,
+      "minutes_to_start": 18.0,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -128,7 +144,7 @@
       "match": "Progresul Spartac - Concordia Chiajna",
       "match_market_id": "36361.57824",
       "match_event_id": 16076205,
-      "minutes_to_start": 35.5,
+      "minutes_to_start": 18.0,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6093739
@@ -137,11 +153,92 @@
       "match": "Podhale Nowy Targ - Grodzisk Mazowiecki",
       "match_market_id": "36362.35220",
       "match_event_id": 16083815,
-      "minutes_to_start": 65.5,
+      "minutes_to_start": 48.0,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
+    },
+    {
+      "match": "Boston River - CA River Plate (URU)",
+      "match_market_id": "36362.44242",
+      "match_event_id": 16085247,
+      "minutes_to_start": 78.0,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "CA San Miguel II - Nueva Chicago Reserve",
+      "match_market_id": "36363.20509",
+      "match_event_id": 16089465,
+      "minutes_to_start": 78.0,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Chemik Bydgoszcz - Gliwice",
+      "match_market_id": "36362.44240",
+      "match_event_id": 16085244,
+      "minutes_to_start": 78.0,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "El Mahallah - Al Sharqiya Enppi",
+      "match_market_id": "36361.39655",
+      "match_event_id": 16069966,
+      "minutes_to_start": 78.0,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5996706
+    },
+    {
+      "match": "Talaea El Gaish - Zed",
+      "match_market_id": "36361.33401",
+      "match_event_id": 16069135,
+      "minutes_to_start": 78.0,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5996705
+    },
+    {
+      "match": "Tarnobrzeg - Zaglebie Lubin",
+      "match_market_id": "36361.55030",
+      "match_event_id": 16085243,
+      "minutes_to_start": 78.0,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Wisla Plock II - Niepolomice",
+      "match_market_id": "36361.55027",
+      "match_event_id": 16084470,
+      "minutes_to_start": 78.0,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Zks Kluczevia Stargard - Pogon Siedlce",
+      "match_market_id": "36361.55025",
+      "match_event_id": 16085245,
+      "minutes_to_start": 78.0,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Ümraniyespor - Mugla",
+      "match_market_id": "36361.31191",
+      "match_event_id": 16067066,
+      "minutes_to_start": 78.0,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5908915
     }
   ],
-  "target_count": 16
+  "target_count": 17
 }
