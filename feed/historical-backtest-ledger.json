@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v30",
-  "generated_at": "2026-09-01T16:42:51.354Z",
+  "schema_version": "radar-historical-backtest-ledger-v31",
+  "generated_at": "2026-09-01T17:37:52.821Z",
   "local_timezone": "Europe/Rome",
-  "status": "CROSS_LEAGUE_FATIGUE_ABLATION_COMPLETE_MODULE_REJECTED",
+  "status": "AUSTRIA1_STRUCTURAL_OOS_COMPLETE_NO_RULE_PROMOTION",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,8 +66,8 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 11536,
-    "total_structural_oos_holdout_rows": 2884,
+    "total_external_market_close_benchmark_rows": 12304,
+    "total_structural_oos_holdout_rows": 3076,
     "pooled_sweden_norway_holdout_rows": 480,
     "cross_league_classwise_calibration_rows": 480,
     "eligible_denmark_regular_fixture_rows": 768,
@@ -106,7 +106,7 @@
     "netherlands_holdout_rows": 306,
     "netherlands_source_files": 4,
     "netherlands_missing_avg_close_triplets": 0,
-    "total_structural_regular_fixture_rows": 11536,
+    "total_structural_regular_fixture_rows": 12304,
     "goldbet_true_open_rows_with_exact_observed_current": 9188,
     "goldbet_events_with_pre_kickoff_observed_current": 642,
     "goldbet_primary_market_open_current_rows": 4931,
@@ -181,7 +181,13 @@
     "scotland1_holdout_rows": 228,
     "fatigue_ablation_leagues": 10,
     "fatigue_ablation_development_rows": 8652,
-    "fatigue_ablation_holdout_rows": 2884
+    "fatigue_ablation_holdout_rows": 2884,
+    "eligible_austria1_regular_fixture_rows": 768,
+    "austria1_development_rows": 576,
+    "austria1_holdout_rows": 192,
+    "austria1_source_selected_rows": 774,
+    "austria1_excluded_european_playoff_rows": 6,
+    "austria1_missing_avg_close_triplets": 0
   },
   "quarantined_evidence": [
     {
@@ -350,7 +356,11 @@
     "Built a frozen ten-league freshness/fatigue ablation from strictly prior calendar dates only: rest-day differential plus prior 7/14/21-day league-fixture congestion, with no same-date updates.",
     "Evaluated 8,652 development and 2,884 untouched holdout fixtures; ELO_PLUS_FATIGUE worsens pooled Brier from 0.596217 to 0.599239 and log-loss from 0.999328 to 1.004456.",
     "Paired bootstrap intervals are entirely unfavorable to the fatigue bundle for both Brier and log-loss; only 3/10 leagues show positive point direction and Portugal has significant harm on both losses.",
-    "Rejected promotion of the schedule-only fatigue module; travel, cross-competition matches, extra time, player minutes, rotation and injury recovery remain unavailable and were not invented."
+    "Rejected promotion of the schedule-only fatigue module; travel, cross-competition matches, extra time, player minutes, rotation and injury recovery remain unavailable and were not invented.",
+    "Audited Austrian Bundesliga 2022/2023-2025/2026 and identified six chronologically subsequent European playoff fixtures in the first two seasons.",
+    "Frozen a result-blind core rule retaining the earliest 192 fixtures only when they yield 12 clubs and exactly 32 appearances per club; the rule passes all four seasons.",
+    "Built the Austrian structural block on 768 accepted fixtures with 576 development and untouched 192-match 2025/2026 holdout.",
+    "Austria OOS: Elo, form and full structural variants all underperform the development prior on point estimates; every paired interval versus prior includes zero, so no structural module is promoted."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1803,6 +1813,42 @@
         "Portugal:log_loss"
       ],
       "decision": "NOT_PROMOTED"
+    },
+    "austria1_structural_oos_2025_2026": {
+      "report": "feed/historical/austria1/structural-oos-v1.json",
+      "format_audit": "feed/historical/austria1/format-audit-v1.json",
+      "sample": {
+        "development": 576,
+        "holdout": 192,
+        "regular_total": 768,
+        "excluded_european_playoffs": 6
+      },
+      "development_prior": {
+        "brier": 0.6547369309413574,
+        "log_loss": 1.08080565156514,
+        "accuracy": 0.421875
+      },
+      "elo_only": {
+        "brier": 0.6607043331309591,
+        "log_loss": 1.0910519082903958,
+        "accuracy": 0.40625
+      },
+      "elo_plus_form": {
+        "brier": 0.6623690135574632,
+        "log_loss": 1.0945099800135274,
+        "accuracy": 0.4166666666666667
+      },
+      "full_structural": {
+        "brier": 0.6628011916091129,
+        "log_loss": 1.0951395342362826,
+        "accuracy": 0.4114583333333333
+      },
+      "external_market_close": {
+        "brier": 0.6494172334293994,
+        "log_loss": 1.073882939699939,
+        "accuracy": 0.4479166666666667
+      },
+      "decision": "NO_ELO_FORM_FULL_OR_OPERATIONAL_RULE_PROMOTION"
     }
   },
   "ablation_plan": {
@@ -1820,9 +1866,9 @@
     "promotion_rule": "No module becomes an autonomous edge without replicable OOS improvement."
   },
   "next_increment": {
-    "priority": "Continue league expansion with a frozen format audit for the next Radar competition; keep schedule-only fatigue rejected pending richer verified pre-match workload data.",
-    "structural_lane": "Ten completed league OOS blocks remain frozen at 11,536 fixtures and 2,884 holdout rows. Belgium remains excluded from the four-season full-phase model.",
-    "fatigue_lane": "Do not operationalize calendar-only fatigue. Reopen only with verified cross-competition schedules and, separately, pre-match player minutes/rotation evidence.",
+    "priority": "Audit the next Radar competition with sufficient four-season coverage; prioritize J1 source availability and format integrity before modeling.",
+    "structural_lane": "Eleven completed league OOS blocks now contain 12,304 fixtures and 3,076 holdout rows. Belgium remains excluded from the four-season full-phase model.",
+    "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1859,7 +1905,10 @@
       "Premier League v1: reject a definitive closing-market superiority claim versus Elo; closing point estimates are better but paired Brier and log-loss intervals include zero.",
       "Scottish Premiership form and full structural bundles: no reliable incremental improvement over Elo on the frozen 2025/2026 holdout.",
       "Belgian Pro League full-season four-year model: rejected because club count and playoff exposure drift materially, with 2025/2026 full-phase source incompleteness.",
-      "Cross-league schedule-fatigue v1: reject promotion of rest-day and prior 7/14/21-day league-fixture congestion features beyond Elo; pooled Brier and log-loss worsen with paired IC95 entirely below zero, only 3/10 leagues improve directionally, and Portugal shows significant harm."
+      "Cross-league schedule-fatigue v1: reject promotion of rest-day and prior 7/14/21-day league-fixture congestion features beyond Elo; pooled Brier and log-loss worsen with paired IC95 entirely below zero, only 3/10 leagues improve directionally, and Portugal shows significant harm.",
+      "Austria Bundesliga v1: reject the claim that Elo robustly improves the development prior; Elo has worse Brier/log-loss point estimates and paired intervals include zero.",
+      "Austria Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
+      "Austria Bundesliga v1: reject a definitive external closing-market superiority claim versus Elo; closing point estimates are better but paired intervals include zero."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -1893,7 +1942,8 @@
       "Scottish Premiership must retain its post-split phase and must not be modeled as a balanced round robin; partial source seasons are forbidden.",
       "Scottish Premiership post-split phase retained; schedule treated as asymmetric, not a balanced round robin.",
       "Multi-phase leagues require a frozen phase definition and identical schedule exposure across development and holdout; total-season rows cannot be pooled across Belgian format changes.",
-      "Freshness/fatigue features derived from schedules must use strictly prior dates and date-batched updates; unavailable travel, cross-competition, extra-time, player-minute and rotation context must remain explicit missing modules."
+      "Freshness/fatigue features derived from schedules must use strictly prior dates and date-batched updates; unavailable travel, cross-competition, extra-time, player-minute and rotation context must remain explicit missing modules.",
+      "Austrian Bundesliga four-season comparability uses a frozen chronological 192-fixture core: accept only if all 12 clubs have exactly 32 appearances, and exclude only subsequent European playoff rows."
     ],
     "note": "Elo is promoted only as a research baseline. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
