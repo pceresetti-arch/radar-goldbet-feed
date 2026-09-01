@@ -49,7 +49,7 @@ MMS primario storico:
 - FIRST_SEEN solo diagnostico;
 - preservare ACTIVE_DROP e REBOUNDED_AFTER_DROP quando esistono snapshot intermedi validi.
 
-OPEN→T-30 può essere testato solo se lo snapshot T-30 esiste realmente. Non stimare T-30 dal CLOSE.
+OPEN→T-30 può essere testato solo se lo snapshot T-30 esiste realmente. Non stimare T-30 dal CLOSE. Ogni snapshot storico deve superare entrambi i gate temporali: `minutes_to_start >= 0` e `captured_at < kickoff` usando timestamp verificati; se i due campi divergono, la riga è `TIMESTAMP_INCONSISTENT` e va in quarantena. L'ultimo prezzo persistito prima del kickoff resta `LAST_PERSISTED_PRE_KICKOFF` e non diventa `CLOSE` senza prova di completezza della cattura.
 
 ## 5. Split temporale
 Ogni lega/stagione conserva ordine temporale. Soglie, pesi, feature selection e calibrazione vengono definiti soltanto sul development set e congelati prima del holdout/OOS. Sono vietati random split che mescolano futuro e passato quando possono introdurre leakage temporale.
