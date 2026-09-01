@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T23:57:06.609544+00:00",
+  "generated_at": "2026-09-01T00:10:30.158066+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 3.7,
-    "tactical": 3.3,
+    "lineups": 17.1,
+    "tactical": 16.7,
     "betflag_fixture_feed": 0.4,
     "betflag_standard_source": 0.5,
     "betflag_player_source": 0.5,
-    "player_context": 3.3
+    "player_context": 16.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,66 +36,10 @@
   "match_count": 10,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 8,
-    "READY_DEEP_ANALYSIS": 2
+    "STALE_LINEUP_FEED": 2
   },
-  "ready_count": 2,
-  "ready_matches": [
-    {
-      "match_market_id": "36351.10394",
-      "match": "Instituto Cordoba - San Lorenzo",
-      "league": "Primera Division",
-      "start_time": "01-09-2026 02:15",
-      "minutes_to_start": 21.6,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
-      "betflag_standard_count": 35,
-      "player_count": 60,
-      "player_quote_count": 479,
-      "player_lane_ready": true,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36351.10374",
-      "match": "Tigre - Barracas Central",
-      "league": "Primera Division",
-      "start_time": "01-09-2026 02:15",
-      "minutes_to_start": 21.6,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
-      "betflag_standard_count": 35,
-      "player_count": 61,
-      "player_quote_count": 488,
-      "player_lane_ready": true,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    }
-  ],
-  "player_lane_ready_count": 2,
-  "player_lane_ready_matches": [
-    {
-      "match_market_id": "36351.10394",
-      "match": "Instituto Cordoba - San Lorenzo",
-      "league": "Primera Division",
-      "start_time": "01-09-2026 02:15",
-      "minutes_to_start": 21.6,
-      "player_lane_ready": true,
-      "player_market_bet_ready": true,
-      "player_count": 60,
-      "player_quote_count": 479,
-      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
-      "player_exact_price_required_at_decision_time": true
-    },
-    {
-      "match_market_id": "36351.10374",
-      "match": "Tigre - Barracas Central",
-      "league": "Primera Division",
-      "start_time": "01-09-2026 02:15",
-      "minutes_to_start": 21.6,
-      "player_lane_ready": true,
-      "player_market_bet_ready": true,
-      "player_count": 61,
-      "player_quote_count": 488,
-      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
-      "player_exact_price_required_at_decision_time": true
-    }
-  ]
+  "ready_count": 0,
+  "ready_matches": [],
+  "player_lane_ready_count": 0,
+  "player_lane_ready_matches": []
 }
