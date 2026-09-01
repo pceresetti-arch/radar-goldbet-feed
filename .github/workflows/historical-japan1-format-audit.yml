@@ -1,0 +1,48 @@
+name: Historical J1 League Format Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-japan1-format-audit.yml'
+      - 'tools/historical_audit_japan1_format.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-japan1-format-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit J1 League format
+        run: python tools/historical_audit_japan1_format.py
+      - name: Preserve evidence
+        run: |
+          rm -rf /tmp/japan1-history
+          cp -R feed/historical/japan1 /tmp/japan1-history
+      - name: Commit format evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/japan1
+            mkdir -p feed/historical
+            cp -R /tmp/japan1-history feed/historical/japan1
+            git add feed/historical/japan1
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Add J1 League historical format audit"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
