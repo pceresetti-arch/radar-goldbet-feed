@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-01T12:34:36.333177+00:00",
+  "generated_at": "2026-09-01T12:43:02.051058+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 10.1,
-    "tactical": 9.7,
-    "betflag_fixture_feed": 6.8,
-    "betflag_standard_source": 6.9,
-    "betflag_player_source": 6.8,
-    "player_context": 0.7
+    "lineups": 1.1,
+    "tactical": 0.6,
+    "betflag_fixture_feed": 15.2,
+    "betflag_standard_source": 15.4,
+    "betflag_player_source": 15.3,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -33,9 +33,10 @@
     "exact_proof_required_at_decision_time": true
   },
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
-  "match_count": 16,
+  "match_count": 17,
   "readiness_counts": {
-    "WAIT_OFFICIAL_STANDARD_XI": 16
+    "WAIT_OFFICIAL_STANDARD_XI": 16,
+    "STALE_BETFLAG_STANDARD_CURRENT": 1
   },
   "ready_count": 0,
   "ready_matches": [],
@@ -43,72 +44,21 @@
   "player_lane_ready_matches": [],
   "matches": [
     {
-      "match_market_id": "36363.8121",
-      "match_event_id": 16087874,
-      "match": "Brunei DPMM - Terengganu",
-      "league": "Fa Cup",
-      "start_time": "01-09-2026 14:15",
-      "start_utc": "2026-09-01T12:15:00+00:00",
-      "minutes_to_start": -9.5,
-      "readiness": "WAIT_OFFICIAL_STANDARD_XI",
-      "analysis_scope": "NOT_READY",
-      "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "WAIT_BETFLAG_FIXTURE_MAPPING"
-      ],
-      "warnings": [
-        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
-        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-      ],
-      "lineup_status": "NOT_AVAILABLE",
-      "lineup_type": null,
-      "official_standard_xi": false,
-      "lineup_ready": false,
-      "xi_fingerprint": null,
-      "xi_changed_after_confirmation": false,
-      "tactical_status": null,
-      "tactical_confidence": null,
-      "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": true,
-      "tactical_ready": false,
-      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": false,
-      "betflag_fixture_file": null,
-      "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": false,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_props_available": false,
-      "player_props_ready": false,
-      "player_context_available": false,
-      "player_context_fresh": true,
-      "player_context_matches_current_xi": false,
-      "player_market_bet_ready": false,
-      "player_lane_ready": false,
-      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
-      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
-      "player_exact_price_required_at_decision_time": true,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
-      "true_open_blocks_current_analysis": false,
-      "strong_drop_count": 0,
-      "strong_drops": []
-    },
-    {
       "match_market_id": "36361.55018",
       "match_event_id": 16085215,
       "match": "Korona II - Radomiak Radom",
       "league": "Coppa",
       "start_time": "01-09-2026 14:30",
       "start_utc": "2026-09-01T12:30:00+00:00",
-      "minutes_to_start": 5.5,
+      "minutes_to_start": -12.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -126,8 +76,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/korona-ii-radomiak-radom.json",
       "betflag_standard_count": 14,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -152,40 +102,41 @@
       "league": "TFF First League",
       "start_time": "01-09-2026 15:00",
       "start_utc": "2026-09-01T13:00:00+00:00",
-      "minutes_to_start": 35.5,
-      "readiness": "WAIT_OFFICIAL_STANDARD_XI",
+      "minutes_to_start": 18.0,
+      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
+        "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
-      "lineup_status": "REFERENCE_PREVIOUS_XI",
-      "lineup_type": "lastStarting11",
-      "official_standard_xi": false,
-      "lineup_ready": false,
-      "xi_fingerprint": "2dd653ccf76af4d95349",
-      "xi_changed_after_confirmation": false,
-      "tactical_status": null,
-      "tactical_confidence": null,
+      "lineup_status": "SOURCE_CONFIRMED",
+      "lineup_type": "standard",
+      "official_standard_xi": true,
+      "lineup_ready": true,
+      "xi_fingerprint": "7745358d44c62746f474",
+      "xi_changed_after_confirmation": true,
+      "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
       "tactical_synced_to_current_lineup": true,
-      "tactical_ready": false,
+      "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/bandirmaspor-antalyaspor.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
       "player_props_ready": false,
-      "player_context_available": false,
+      "player_context_available": true,
       "player_context_fresh": true,
-      "player_context_matches_current_xi": false,
+      "player_context_matches_current_xi": true,
       "player_market_bet_ready": false,
       "player_lane_ready": false,
       "player_price_source_class": "BETFLAG_AAMS_DIRECT",
@@ -203,14 +154,15 @@
       "league": "Premier League",
       "start_time": "01-09-2026 15:00",
       "start_utc": "2026-09-01T13:00:00+00:00",
-      "minutes_to_start": 35.5,
+      "minutes_to_start": 18.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -228,8 +180,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/gadafi-fc-updf-fc.json",
       "betflag_standard_count": 16,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -254,14 +206,15 @@
       "league": "Premier League",
       "start_time": "01-09-2026 15:00",
       "start_utc": "2026-09-01T13:00:00+00:00",
-      "minutes_to_start": 35.5,
+      "minutes_to_start": 18.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -279,8 +232,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/nec-fc-lugazi-municipal.json",
       "betflag_standard_count": 16,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -305,14 +258,15 @@
       "league": "Coppa",
       "start_time": "01-09-2026 15:00",
       "start_utc": "2026-09-01T13:00:00+00:00",
-      "minutes_to_start": 35.5,
+      "minutes_to_start": 18.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -330,8 +284,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/progresul-spartac-concordia-chiajna.json",
       "betflag_standard_count": 21,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -356,14 +310,15 @@
       "league": "Coppa",
       "start_time": "01-09-2026 15:30",
       "start_utc": "2026-09-01T13:30:00+00:00",
-      "minutes_to_start": 65.5,
+      "minutes_to_start": 48.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -381,8 +336,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/podhale-nowy-targ-grodzisk-mazowiecki.json",
       "betflag_standard_count": 26,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -407,14 +362,15 @@
       "league": "Tercera Division Reserve",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -432,8 +388,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/boston-river-ca-river-plate-uru.json",
       "betflag_standard_count": 22,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -458,14 +414,15 @@
       "league": "Campeonato De Riserva De Primera Nacional",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -483,8 +440,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/ca-san-miguel-ii-nueva-chicago-reserve.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -509,14 +466,15 @@
       "league": "Coppa",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -534,8 +492,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/chemik-bydgoszcz-gliwice.json",
       "betflag_standard_count": 8,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -560,14 +518,15 @@
       "league": "Premier League",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -585,8 +544,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/el-mahallah-al-sharqiya-enppi.json",
       "betflag_standard_count": 28,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -611,14 +570,15 @@
       "league": "Premier League",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -636,8 +596,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/talaea-el-gaish-zed.json",
       "betflag_standard_count": 28,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -662,14 +622,15 @@
       "league": "Coppa",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -687,8 +648,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/tarnobrzeg-zaglebie-lubin.json",
       "betflag_standard_count": 26,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -713,14 +674,15 @@
       "league": "Coppa",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -738,8 +700,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/wisla-plock-ii-niepolomice.json",
       "betflag_standard_count": 26,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -764,14 +726,15 @@
       "league": "Coppa",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -789,8 +752,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/zks-kluczevia-stargard-pogon-siedlce.json",
       "betflag_standard_count": 29,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -815,14 +778,15 @@
       "league": "TFF First League",
       "start_time": "01-09-2026 16:00",
       "start_utc": "2026-09-01T14:00:00+00:00",
-      "minutes_to_start": 95.5,
+      "minutes_to_start": 78.0,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -840,8 +804,112 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/umraniyespor-mugla.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
+      "player_props_ready": false,
+      "player_context_available": false,
+      "player_context_fresh": true,
+      "player_context_matches_current_xi": false,
+      "player_market_bet_ready": false,
+      "player_lane_ready": false,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
+      "player_exact_price_required_at_decision_time": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
+      "true_open_blocks_current_analysis": false,
+      "strong_drop_count": 0,
+      "strong_drops": []
+    },
+    {
+      "match_market_id": "36363.22450",
+      "match_event_id": 16089619,
+      "match": "Primeiro de Agosto - Interclube",
+      "league": "Girabola",
+      "start_time": "01-09-2026 16:30",
+      "start_utc": "2026-09-01T14:30:00+00:00",
+      "minutes_to_start": 108.0,
+      "readiness": "WAIT_OFFICIAL_STANDARD_XI",
+      "analysis_scope": "NOT_READY",
+      "blocking_reasons": [
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
+      ],
+      "warnings": [
+        "PLAYER_PROPS_BETFLAG_STALE",
+        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+      ],
+      "lineup_status": "NOT_AVAILABLE",
+      "lineup_type": null,
+      "official_standard_xi": false,
+      "lineup_ready": false,
+      "xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "tactical_status": null,
+      "tactical_confidence": null,
+      "tactical_feed_fresh": true,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": false,
+      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/primeiro-de-agosto-interclube.json",
+      "betflag_standard_count": 16,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
+      "player_props_ready": false,
+      "player_context_available": false,
+      "player_context_fresh": true,
+      "player_context_matches_current_xi": false,
+      "player_market_bet_ready": false,
+      "player_lane_ready": false,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
+      "player_exact_price_required_at_decision_time": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
+      "true_open_blocks_current_analysis": false,
+      "strong_drop_count": 0,
+      "strong_drops": []
+    },
+    {
+      "match_market_id": "36361.55158",
+      "match_event_id": 16087590,
+      "match": "Tomasov - Inter Bratislava",
+      "league": "Coppa",
+      "start_time": "01-09-2026 16:30",
+      "start_utc": "2026-09-01T14:30:00+00:00",
+      "minutes_to_start": 108.0,
+      "readiness": "WAIT_OFFICIAL_STANDARD_XI",
+      "analysis_scope": "NOT_READY",
+      "blocking_reasons": [
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "STALE_BETFLAG_STANDARD_CURRENT"
+      ],
+      "warnings": [
+        "PLAYER_PROPS_BETFLAG_STALE",
+        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+      ],
+      "lineup_status": "NOT_AVAILABLE",
+      "lineup_type": null,
+      "official_standard_xi": false,
+      "lineup_ready": false,
+      "xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "tactical_status": null,
+      "tactical_confidence": null,
+      "tactical_feed_fresh": true,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": false,
+      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/tomasov-inter-bratislava.json",
+      "betflag_standard_count": 14,
+      "betflag_standard_current_fresh": false,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
