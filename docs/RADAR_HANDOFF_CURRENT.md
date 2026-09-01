@@ -124,6 +124,36 @@ Entrambi ora:
 - task preflight quote-path: aggiornato 30/08/2026 su entrambi i task automatici attivi;
 - hard gate di deep analysis POST-XI: aggiornato 30/08/2026 su entrambi i task automatici attivi.
 
+## Correzione consumer quote — 01/09/2026
+Il test reale su Wolfsberger–LASK ha dimostrato che produzione e pubblicazione erano sane, mentre l'analisi manuale aveva saltato il repository ed era ricaduta sul web pubblico. Al momento del test:
+- `main/feed/betflag-fixtures-index.json` era fresco e conteneva Wolfsberger–LASK;
+- il file esatto `main/feed/betflag-fixtures/wolfsberger-lask-linz.json` conteneva 41 mercati standard e 276 quote player aggregate;
+- il fallback residenziale `betflag-live/feed/betflag-residential-fixtures/wolfsberger-lask-linz.json` conteneva 41 mercati standard e 138 righe player;
+- la quota CURRENT BetFlag di Giacomo Vrioni marcatore era 3.10.
+
+È stato aggiunto un guardiano lato consumo:
+- script: `scripts/validate_radar_quote_consumer.py`;
+- test: `tests/test_validate_radar_quote_consumer.py`;
+- health output: `feed/radar-quote-consumer-health.json`;
+- il workflow `radar-betflag-v7-live-bridge.yml` ora fallisce se indice e file per-fixture non sono realmente leggibili, hanno identità incoerente o non contengono prezzi CURRENT.
+
+Percorso vincolante aggiornato per run automatici e analisi manuali/chat:
+1. leggere su `main` `feed/betflag-fixtures-index.json` e usare ESATTAMENTE il campo `file` della partita;
+2. validare `source_healthy`, freschezza, identità e presenza quote nel file;
+3. usare il CURRENT del file prima di qualsiasi ricerca web;
+4. se il percorso Worker/main è assente o degradato, usare il fallback residenziale su ref esplicito `betflag-live`;
+5. la ricerca web pubblica è soltanto ultimo fallback e non può giustificare “quota non recuperata” se uno dei due percorsi repository è sano.
+
+Distinzione directory/branch:
+- `feed/betflag-fixtures/*` è il percorso Worker-backed pubblicato su `main`;
+- `feed/betflag-residential-fixtures/*` è il percorso residenziale pubblicato su `betflag-live`;
+- non cercare mai la directory residenziale su `main`.
+
+## Freschezza/Fatica e Combo marcatori — regola operativa 01/09/2026
+Ogni FULL Radar deve includere un modulo quantitativo Freschezza/Fatica per squadra e giocatori, con Freshness Score, Freshness Delta e correzione esplicita di minuti attesi, P Radar, fair, gate e distribuzione 1T/2T quando il carico è materiale.
+
+Per ogni candidato scorer deve inoltre essere costruita la matrice dei mercati collegati e delle Combo marcatori disponibili. Le combo devono usare probabilità congiunte e correlazioni, non il prodotto cieco delle probabilità. Se una combo è modellabile ma non presente nel file BetFlag, lo stato corretto è `COMBO MODELLATA — QUOTA BETFLAG NON PRESENTE NEL FEED`; non inventare né sostituire una quota esterna.
+
 ## Prossimo controllo consigliato
 Osservare il prossimo run automatico su una partita imminente e verificare che l'output riporti:
 - `CURRENT BETFLAG RECUPERATA` con quota exact;
