@@ -1,0 +1,201 @@
+{
+  "schema_version": "radar-goldbet-true-open-calibration-v1",
+  "generated_at": "2026-09-01T00:39:52.820273+00:00",
+  "classification": "PROSPECTIVE_2026_EXACT_OUTCOME_DIAGNOSTIC_NOT_MULTI_SEASON_OOS",
+  "methodology": {
+    "identity_join": "EXACT_FLASHSCORE_EVENT_ID",
+    "same_bookmaker": true,
+    "bookmaker": "GoldBet",
+    "outcomes_attached_after_price_feature_freeze": true,
+    "post_kickoff_prices_used": false,
+    "observed_current_is_close": false,
+    "roi_calculated": false,
+    "metric_note": "Selection-level binary Brier/log-loss; correlated selections are clustered by fixture for paired intervals."
+  },
+  "sources": {
+    "index": {
+      "path": "feed/diretta-goldbet-true-open-index.json",
+      "sha256": "a0f070fbf8b4c6386d8dde899510df77004895fea3d53eee4772f195af69d7cd"
+    },
+    "outcomes": {
+      "path": "feed/historical/open-close/goldbet-exact-outcomes-v1.json",
+      "sha256": "b5e5fcba40f5e2669ee9da7f3007487e111b9dbe791ba044bcfe8eb4f0d6f788"
+    }
+  },
+  "coverage": {
+    "exact_outcome_events": 638,
+    "complete_price_groups": 4248,
+    "scored_selection_rows": 9134,
+    "invalid_groups": 0
+  },
+  "segments": [
+    {
+      "market": "ALL",
+      "period": "SUPPORTED",
+      "selection_rows": 9134,
+      "events": 638,
+      "true_open": {
+        "brier_selection_mean": 0.1895651137936562,
+        "log_loss_selection_mean": 0.5606885960055812
+      },
+      "observed_current": {
+        "brier_selection_mean": 0.1888848477390663,
+        "log_loss_selection_mean": 0.5590549575317396
+      },
+      "paired_brier": {
+        "observed_current_minus_true_open_mean": -0.0006802660545898757,
+        "cluster_bootstrap_ci95": [
+          -0.0014907839462039163,
+          0.00011438891968398868
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      },
+      "paired_logloss": {
+        "observed_current_minus_true_open_mean": -0.0016336384738414892,
+        "cluster_bootstrap_ci95": [
+          -0.0036187343099585156,
+          0.00033023743673576966
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      }
+    },
+    {
+      "market": "BOTH_TEAMS_TO_SCORE",
+      "period": "full_time",
+      "selection_rows": 1244,
+      "events": 622,
+      "true_open": {
+        "brier_selection_mean": 0.2391827915806651,
+        "log_loss_selection_mean": 0.6712144313982491
+      },
+      "observed_current": {
+        "brier_selection_mean": 0.23806540219376862,
+        "log_loss_selection_mean": 0.668899000782757
+      },
+      "paired_brier": {
+        "observed_current_minus_true_open_mean": -0.0011173893868965067,
+        "cluster_bootstrap_ci95": [
+          -0.002738975773557417,
+          0.0005772487973343399
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      },
+      "paired_logloss": {
+        "observed_current_minus_true_open_mean": -0.0023154306154921085,
+        "cluster_bootstrap_ci95": [
+          -0.005627593726609592,
+          0.0011438718029475048
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      }
+    },
+    {
+      "market": "HOME_DRAW_AWAY",
+      "period": "full_time",
+      "selection_rows": 1914,
+      "events": 638,
+      "true_open": {
+        "brier_selection_mean": 0.18981964095396137,
+        "log_loss_selection_mean": 0.5614764384789771
+      },
+      "observed_current": {
+        "brier_selection_mean": 0.18879000980357527,
+        "log_loss_selection_mean": 0.5587533298655637
+      },
+      "paired_brier": {
+        "observed_current_minus_true_open_mean": -0.001029631150386094,
+        "cluster_bootstrap_ci95": [
+          -0.0023961172903747274,
+          0.0003923884563554192
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      },
+      "paired_logloss": {
+        "observed_current_minus_true_open_mean": -0.002723108613413367,
+        "cluster_bootstrap_ci95": [
+          -0.006012677916298337,
+          0.0006344690344470827
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      }
+    },
+    {
+      "market": "OVER_UNDER",
+      "period": "full_time",
+      "selection_rows": 5976,
+      "events": 637,
+      "true_open": {
+        "brier_selection_mean": 0.17915488016717304,
+        "log_loss_selection_mean": 0.5374285441778437
+      },
+      "observed_current": {
+        "brier_selection_mean": 0.1786775033727477,
+        "log_loss_selection_mean": 0.5362857683665447
+      },
+      "paired_brier": {
+        "observed_current_minus_true_open_mean": -0.0004773767944253157,
+        "cluster_bootstrap_ci95": [
+          -0.0014985425405616981,
+          0.0005020810208528348
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      },
+      "paired_logloss": {
+        "observed_current_minus_true_open_mean": -0.0011427758112989952,
+        "cluster_bootstrap_ci95": [
+          -0.0037384389189510925,
+          0.0013544369619660213
+        ],
+        "draws": 5000,
+        "cluster": "flashscore_event_id"
+      }
+    }
+  ],
+  "lead_time_segments": [
+    {
+      "bin": "T_0_30",
+      "selection_rows": 58,
+      "events": 4,
+      "open_brier": 0.2044049532736719,
+      "current_brier": 0.20986340815515767,
+      "open_logloss": 0.5929535803832936,
+      "current_logloss": 0.6097961889773709
+    },
+    {
+      "bin": "T_30_120",
+      "selection_rows": 408,
+      "events": 30,
+      "open_brier": 0.1875322102007558,
+      "current_brier": 0.18704154905570106,
+      "open_logloss": 0.5525575722784859,
+      "current_logloss": 0.5513398632989716
+    },
+    {
+      "bin": "T_120_360",
+      "selection_rows": 819,
+      "events": 57,
+      "open_brier": 0.17734969235163786,
+      "current_brier": 0.17323847867322575,
+      "open_logloss": 0.5305971377987313,
+      "current_logloss": 0.5204403579043688
+    },
+    {
+      "bin": "T_360_PLUS",
+      "selection_rows": 7849,
+      "events": 547,
+      "open_brier": 0.19083573987813515,
+      "current_brier": 0.19045825653300225,
+      "open_logloss": 0.5640127128176792,
+      "current_logloss": 0.5631102670129398
+    }
+  ],
+  "invalid_groups": [],
+  "decision": "CALIBRATION_DIAGNOSTIC_ONLY_NO_RULE_OR_THRESHOLD_PROMOTED"
+}
