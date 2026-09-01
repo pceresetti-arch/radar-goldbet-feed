@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frozen cross-league OOS ablation for schedule-derived freshness/fatigue."""
+"""Frozen cross-league OOS ablation for schedule-derived freshness/fatigue.\n\nSpecification frozen before run 1; reruns must not alter features or promotion gate.\n"""
 import csv
 import json
 import math
