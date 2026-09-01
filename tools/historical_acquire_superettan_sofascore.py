@@ -12,7 +12,7 @@ OUT = Path("feed/historical/superettan")
 OUT.mkdir(parents=True, exist_ok=True)
 TOURNAMENT_ID = 46
 TARGET_YEARS = [2022, 2023, 2024, 2025]
-BASE = "https://www.sofascore.com/api/v1"
+BASE = "https://api.sofascore.com/api/v1"
 
 
 def fetch_json(url):
