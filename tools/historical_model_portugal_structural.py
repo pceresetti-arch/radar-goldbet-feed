@@ -9,7 +9,7 @@ from pathlib import Path
 
 DATA = Path("feed/historical/portugal/primeira-liga-2022-2026-regular.csv")
 BASELINE = Path("feed/historical/portugal/baseline-benchmark.json")
-FEATURES_OUT = Path("feed/historical/portugal/eredivisie-2022-2026-features.csv")
+FEATURES_OUT = Path("feed/historical/portugal/primeira-liga-2022-2026-features.csv")
 REPORT_OUT = Path("feed/historical/portugal/structural-oos-v1.json")
 OUTCOMES = ["H", "D", "A"]
 K_FACTOR = 20.0
@@ -279,7 +279,7 @@ def main():
             "holdout_used_for_training_or_tuning": False,
             "missing_feature_imputation": "development mean only",
             "hyperparameters": "copied unchanged from Sweden/Norway v1 before Portugal holdout evaluation",
-            "specification_source": "SWEDEN_NORWAY_V1_FROZEN_NO_NETHERLANDS_HOLDOUT_TUNING"
+            "specification_source": "SWEDEN_NORWAY_V1_FROZEN_NO_PORTUGAL_HOLDOUT_TUNING"
         },
         "feature_rules": {
             "elo": {"initial": 1500, "k": K_FACTOR, "home_advantage": HOME_ELO_ADVANTAGE, "season_mean_reversion": SEASON_MEAN_REVERSION},
@@ -309,7 +309,7 @@ def main():
             "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
         },
         "promotion_gate": "NO_AUTOMATIC_PROMOTION_REQUIRES_ROBUST_IMPROVEMENT_AND_REPLICATION",
-        "mms": "NOT_TESTED_NO_GOLDBET_TRUE_OPEN"
+        "mms": "NOT_TESTED_GOLDBET_TRUE_OPEN_NOT_JOINED_TO_THIS_STRUCTURAL_BLOCK"
     }
     REPORT_OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({name: value["holdout_metrics"] for name, value in results.items()}, indent=2))
