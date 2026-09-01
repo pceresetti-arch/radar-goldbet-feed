@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T19:24:59.236070+00:00",
+  "generated_at": "2026-09-01T19:35:40.707464+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 3,
+  "target_count": 5,
   "status_counts": {
-    "REFERENCE_PREVIOUS_XI": 1,
-    "NOT_AVAILABLE": 2
+    "SOURCE_CONFIRMED": 1,
+    "NOT_AVAILABLE": 2,
+    "REFERENCE_PREVIOUS_XI": 2
   },
   "schedule_stats": [
     {
@@ -23,7 +24,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-01T19:24:59.236070+00:00",
+    "generated_at": "2026-09-01T19:35:40.707464+00:00",
     "window_minutes": [
       0,
       85.0
@@ -39,18 +40,27 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Atletico Grau - FBC Melgar",
+        "minutes_to_start": 24.3,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
   "matches": [
     {
       "match": "Atletico Grau - FBC Melgar",
       "start_time": "01-09-2026 22:00",
       "league": "Primera Division",
-      "minutes_to_start": 35.0,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 24.3,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36351.2132",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-09-01T19:35:40.707464+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -58,7 +68,7 @@
       "match": "Envigado - Union Magdalena",
       "start_time": "01-09-2026 22:00",
       "league": "Primera B",
-      "minutes_to_start": 35.0,
+      "minutes_to_start": 24.3,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.38022",
       "confirmed_at": null,
@@ -70,12 +80,36 @@
       "match": "Orsomarso SC - Asociacion Deportivo Cali",
       "start_time": "01-09-2026 22:00",
       "league": "Liga Femenina",
-      "minutes_to_start": 35.0,
+      "minutes_to_start": 24.3,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.54188",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "CS 2 de Mayo - Sportivo Luqueno",
+      "start_time": "01-09-2026 23:30",
+      "league": "Primera Division",
+      "minutes_to_start": 114.3,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.5497",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Delfin SC - CD Tecnico Universitario",
+      "start_time": "01-09-2026 23:30",
+      "league": "Serie A",
+      "minutes_to_start": 114.3,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.1260",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
