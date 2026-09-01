@@ -1,0 +1,59 @@
+name: Historical Backtest England 1 Bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-backtest-england1-bootstrap.yml'
+      - 'tools/historical_ingest_england1.py'
+      - 'tools/historical_build_england1_baseline.py'
+      - 'tools/historical_model_england1_structural.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-backtest-england1-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover and profile England 1 historical source
+        run: python tools/historical_ingest_england1.py
+      - name: Build frozen England 1 baseline
+        run: python tools/historical_build_england1_baseline.py
+      - name: Build England 1 structural OOS model
+        run: python tools/historical_model_england1_structural.py
+      - name: Preserve generated evidence
+        run: |
+          rm -rf /tmp/england1-history
+          cp -R feed/historical/england1 /tmp/england1-history
+      - name: Commit historical discovery evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf feed/historical/england1
+            mkdir -p feed/historical
+            cp -R /tmp/england1-history feed/historical/england1
+            git add feed/historical/england1
+            if git diff --cached --quiet; then
+              echo "No discovery changes"
+              exit 0
+            fi
+            git commit -m "Update England 1 historical source discovery"
+            if git push; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          exit 1
