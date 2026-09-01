@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v25",
-  "generated_at": "2026-09-01T11:35:37.217Z",
+  "schema_version": "radar-historical-backtest-ledger-v26",
+  "generated_at": "2026-09-01T12:42:56.263Z",
   "local_timezone": "Europe/Rome",
-  "status": "SPAIN1_STRUCTURAL_OOS_COMPLETE",
+  "status": "ENGLAND1_STRUCTURAL_OOS_COMPLETE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -66,8 +66,8 @@
     "norway_excluded_cross_division_playoff_rows": 6,
     "norway_team_alias_field_corrections": 50,
     "total_sweden_norway_regular_fixture_rows": 1920,
-    "total_external_market_close_benchmark_rows": 9104,
-    "total_structural_oos_holdout_rows": 2276,
+    "total_external_market_close_benchmark_rows": 10624,
+    "total_structural_oos_holdout_rows": 2656,
     "pooled_sweden_norway_holdout_rows": 480,
     "cross_league_classwise_calibration_rows": 480,
     "eligible_denmark_regular_fixture_rows": 768,
@@ -106,7 +106,7 @@
     "netherlands_holdout_rows": 306,
     "netherlands_source_files": 4,
     "netherlands_missing_avg_close_triplets": 0,
-    "total_structural_regular_fixture_rows": 9104,
+    "total_structural_regular_fixture_rows": 10624,
     "goldbet_true_open_rows_with_exact_observed_current": 9188,
     "goldbet_events_with_pre_kickoff_observed_current": 642,
     "goldbet_primary_market_open_current_rows": 4931,
@@ -170,7 +170,12 @@
     "spain1_development_rows": 1140,
     "spain1_holdout_rows": 380,
     "spain1_source_files": 4,
-    "spain1_missing_avg_close_triplets": 0
+    "spain1_missing_avg_close_triplets": 0,
+    "eligible_england1_regular_fixture_rows": 1520,
+    "england1_development_rows": 1140,
+    "england1_holdout_rows": 380,
+    "england1_source_files": 4,
+    "england1_missing_avg_close_triplets": 0
   },
   "quarantined_evidence": [
     {
@@ -317,7 +322,13 @@
     "Frozen LaLiga temporal split before evaluation: 2022/2023-2024/2025 development (1,140), untouched 2025/2026 holdout (380).",
     "Verified 20 clubs and 38 matches per club in every frozen LaLiga season, zero duplicate fixture keys and zero missing average closing triplets.",
     "Replicated the unchanged structural specification on LaLiga; Elo robustly improves the development prior, while form/full add no reliable incremental value.",
-    "External de-vigged average closing odds significantly beat every LaLiga structural variant on Brier and log-loss."
+    "External de-vigged average closing odds significantly beat every LaLiga structural variant on Brier and log-loss.",
+    "Recovered from a transient GitHub connector write error without leaving partial pipeline files; the temporary bootstrap marker is closed and explicitly non-analytical.",
+    "Fetched four Football-Data Premier League season files for 2022/2023-2025/2026; each contains exactly 380 fixtures and is bound by SHA-256.",
+    "Frozen Premier League temporal split before evaluation: 2022/2023-2024/2025 development (1,140), untouched 2025/2026 holdout (380).",
+    "Verified 20 clubs and 38 matches per club in every frozen Premier League season, zero duplicate fixture keys and zero missing average closing triplets.",
+    "Replicated the unchanged structural specification on Premier League; Elo robustly improves the development prior, while form/full add no reliable incremental value.",
+    "External de-vigged average closing odds have better Premier League point estimates than Elo, but paired Brier/log-loss intervals versus Elo include zero; superiority is significant only against the full structural variant."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1544,6 +1555,103 @@
         }
       },
       "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_NOT_PROMOTED; EXTERNAL_MARKET_SIGNIFICANTLY_BETTER_THAN_ALL_STRUCTURAL_VARIANTS; NO_OPERATIONAL_PROMOTION"
+    },
+    "england1_structural_oos_2025_2026": {
+      "report": "feed/historical/england1/structural-oos-v1.json",
+      "sample": {
+        "development": 1140,
+        "holdout": 380,
+        "regular_total": 1520,
+        "source_files": 4
+      },
+      "development_prior": {
+        "brier": 0.6562511542012921,
+        "log_loss": 1.0845110721635958,
+        "accuracy": 0.4263157894736842
+      },
+      "external_market_close": {
+        "brier": 0.6077370146246495,
+        "log_loss": 1.0117668726695335,
+        "accuracy": 0.49473684210526314
+      },
+      "elo_only": {
+        "brier": 0.6213256651932421,
+        "log_loss": 1.0321098219412057,
+        "accuracy": 0.49473684210526314
+      },
+      "elo_plus_form": {
+        "brier": 0.6225193596956484,
+        "log_loss": 1.0341474104706094,
+        "accuracy": 0.4868421052631579
+      },
+      "full_structural": {
+        "brier": 0.6242809763950563,
+        "log_loss": 1.0383768618115023,
+        "accuracy": 0.4921052631578947
+      },
+      "paired_decisions": {
+        "elo_vs_prior": {
+          "brier_gain": 0.03492548900805022,
+          "brier_ci95": [
+            0.010037865378303784,
+            0.0594698508603403
+          ],
+          "log_loss_gain": 0.05240125022239033,
+          "log_loss_ci95": [
+            0.016537425825966227,
+            0.086632255994778
+          ]
+        },
+        "market_vs_elo": {
+          "brier_gain": 0.013588650568592613,
+          "brier_ci95": [
+            -0.0018174227174630833,
+            0.028845103715014447
+          ],
+          "log_loss_gain": 0.02034294927167179,
+          "log_loss_ci95": [
+            -0.0020616977996036566,
+            0.04288320536428796
+          ]
+        },
+        "form_vs_elo": {
+          "brier_gain": -0.0011936945024057823,
+          "brier_ci95": [
+            -0.0054934540479687375,
+            0.0030460956571560613
+          ],
+          "log_loss_gain": -0.002037588529404763,
+          "log_loss_ci95": [
+            -0.008205329620581549,
+            0.003942150060772866
+          ]
+        },
+        "full_vs_elo": {
+          "brier_gain": -0.002955311201813385,
+          "brier_ci95": [
+            -0.007695029815253839,
+            0.0016612741887718557
+          ],
+          "log_loss_gain": -0.006267039870296765,
+          "log_loss_ci95": [
+            -0.013469306069866639,
+            0.0007016976685578174
+          ]
+        },
+        "market_vs_full": {
+          "brier_gain": 0.016543961770405995,
+          "brier_ci95": [
+            0.0013108305674944365,
+            0.03173478020745472
+          ],
+          "log_loss_gain": 0.026609989141968556,
+          "log_loss_ci95": [
+            0.004421697973899108,
+            0.048839925380303045
+          ]
+        }
+      },
+      "decision": "ELO_REPLICATES_PRIOR_GAIN_RESEARCH_ONLY; FORM_AND_FULL_REJECTED; MARKET_POINT_BETTER_NOT_CONCLUSIVE_VS_ELO; MARKET_SIGNIFICANTLY_BETTER_VS_FULL; NO_OPERATIONAL_PROMOTION"
     }
   },
   "ablation_plan": {
@@ -1562,7 +1670,7 @@
   },
   "next_increment": {
     "priority": "Continue structural expansion with league-specific format validation; keep MMS thresholds frozen pending matched GoldBet T-30 coverage.",
-    "structural_lane": "Freeze all eight completed league OOS blocks; extend only where four completed seasons pass league-specific schedule gates.",
+    "structural_lane": "Freeze all nine completed league OOS blocks; extend only where four completed seasons pass league-specific schedule gates.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
@@ -1594,7 +1702,9 @@
       "Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; point estimates are worse and paired intervals include zero.",
       "Bundesliga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant.",
       "LaLiga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; paired intervals include zero and the full bundle has worse point estimates.",
-      "LaLiga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant."
+      "LaLiga v1: reject the claim that the structural model matches the external closing benchmark; de-vigged average close significantly beats every structural variant.",
+      "Premier League v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
+      "Premier League v1: reject a definitive closing-market superiority claim versus Elo; closing point estimates are better but paired Brier and log-loss intervals include zero."
     ],
     "operational_changes": [],
     "historical_method_changes": [
