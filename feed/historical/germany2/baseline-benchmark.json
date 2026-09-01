@@ -1,0 +1,120 @@
+{
+  "schema_version": "radar-historical-germany2-baseline-v1",
+  "generated_at": "2026-09-01T09:24:43.272620+00:00",
+  "source_snapshot": "feed/historical/germany2/football-data-DEU2.csv",
+  "normalized_dataset": "feed/historical/germany2/2-bundesliga-2022-2026-regular.csv",
+  "selection_rule_frozen_before_evaluation": "Latest four completed source seasons 2022/2023-2025/2026; 18-team 2. Bundesliga with 34 league matches per club; post-season European playoffs excluded chronologically after the 34-match cap.",
+  "seasons": [
+    "2022/2023",
+    "2023/2024",
+    "2024/2025",
+    "2025/2026"
+  ],
+  "split": {
+    "development": [
+      "2022/2023",
+      "2023/2024",
+      "2024/2025"
+    ],
+    "holdout": [
+      "2025/2026"
+    ]
+  },
+  "sample": {
+    "source_selected_rows": 1224,
+    "regular_rows": 1224,
+    "development_rows": 918,
+    "holdout_rows": 306,
+    "excluded_playoff_rows": 0,
+    "excluded": [],
+    "regular_team_counts": {
+      "2022/2023": 18,
+      "2023/2024": 18,
+      "2024/2025": 18,
+      "2025/2026": 18
+    },
+    "team_alias_map": {},
+    "team_alias_field_corrections": 0,
+    "season_match_cap_per_team": 34
+  },
+  "data_quality": {
+    "normalized_duplicate_fixture_keys": 0,
+    "identity_integrity": "Each frozen season must contain exactly 18 clubs and 34 accepted league matches per club; any subsequent playoff row is excluded chronologically without using its result.",
+    "missing_avg_close_triplets": 0,
+    "kickoff_utc_verified_rows": 0,
+    "kickoff_policy": "No UTC conversion is performed because the source documents Time as kickoff time but does not state timezone. Rolling structural features must use strictly prior source dates, excluding same-date information."
+  },
+  "development_outcome_prior": {
+    "H": 0.4422657952069717,
+    "D": 0.25054466230936817,
+    "A": 0.30718954248366015
+  },
+  "holdout_metrics": {
+    "development_prior_baseline": {
+      "n": 306,
+      "multiclass_brier_sum_mean": 0.6412728247919837,
+      "multiclass_brier_class_mean": 0.21375760826399454,
+      "log_loss": 1.0616509598377133,
+      "top_pick_accuracy": 0.46078431372549017,
+      "top_pick_calibration": {
+        "0.4-0.5": {
+          "n": 306,
+          "hits": 141,
+          "mean_confidence": 0.4422657952069743,
+          "hit_rate": 0.46078431372549017
+        }
+      }
+    },
+    "devigged_average_market_close_benchmark": {
+      "n": 306,
+      "multiclass_brier_sum_mean": 0.6183062484522203,
+      "multiclass_brier_class_mean": 0.20610208281740675,
+      "log_loss": 1.0300289301393188,
+      "top_pick_accuracy": 0.5,
+      "top_pick_calibration": {
+        "0.3-0.4": {
+          "n": 62,
+          "hits": 28,
+          "mean_confidence": 0.3810789044043484,
+          "hit_rate": 0.45161290322580644
+        },
+        "0.4-0.5": {
+          "n": 160,
+          "hits": 75,
+          "mean_confidence": 0.44269108336655955,
+          "hit_rate": 0.46875
+        },
+        "0.5-0.6": {
+          "n": 67,
+          "hits": 40,
+          "mean_confidence": 0.5380970845860913,
+          "hit_rate": 0.5970149253731343
+        },
+        "0.6-0.7": {
+          "n": 15,
+          "hits": 9,
+          "mean_confidence": 0.630972974863093,
+          "hit_rate": 0.6
+        },
+        "0.7-0.8": {
+          "n": 2,
+          "hits": 1,
+          "mean_confidence": 0.7327198762771621,
+          "hit_rate": 0.5
+        }
+      }
+    },
+    "average_market_close_overround": 1.0801704769589224
+  },
+  "economic_metrics": {
+    "clv": "NOT_CALCULABLE_NO_OPEN_PRICE",
+    "roi_yield": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY",
+    "drawdown": "NOT_CALCULATED_NO_EX_ANTE_STRATEGY"
+  },
+  "mms": {
+    "goldbet_primary_eligible": false,
+    "open_to_close_eligible": false,
+    "reason": "Only external closing 1X2 benchmark odds are present; no GoldBet TRUE OPEN or same-book OPEN series."
+  },
+  "rule_decision": "BENCHMARK_ONLY_NO_OPERATIONAL_PROMOTION"
+}
