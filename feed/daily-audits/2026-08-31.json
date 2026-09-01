@@ -1,0 +1,52 @@
+{
+  "schema_version": "radar-daily-audit-v2",
+  "generated_at": "2026-09-01T07:25:45.667Z",
+  "local_timezone": "Europe/Rome",
+  "local_date": "2026-08-31",
+  "status": "INCOMPLETE_NO_PREMATCH_MANIFEST_RECONCILIATION_REQUIRED",
+  "separation_policy": {
+    "historical_backtest_contaminated": false,
+    "outcomes_joined": false,
+    "decisions_reconstructed_from_outcomes": false,
+    "missing_bets_invented": false
+  },
+  "source_checks": [
+    {
+      "path": "feed/daily-audits/2026-08-31.json",
+      "state_before_run": "ABSENT"
+    },
+    {
+      "path": "feed/analysis-history/",
+      "finding": "NO_2026_08_31_PREMATCH_ANALYSIS_MANIFEST"
+    },
+    {
+      "path": "feed/bets/",
+      "finding": "NO_2026_08_31_CONFIRMED_BET_FILE"
+    },
+    {
+      "path": "feed/betting-ledger/",
+      "finding": "NO_2026_08_31_LEDGER_OR_RECONCILIATION_FILE"
+    }
+  ],
+  "eligibility": {
+    "documented_predictions": 0,
+    "confirmed_bets": 0,
+    "bet_no_bet_wait_discarded_candidates_recoverable": false,
+    "audit_allowed": false,
+    "reason": "The original pre-match decision manifest and confirmed-bet register are absent. Outcomes cannot be used to reconstruct them."
+  },
+  "metrics": {
+    "process_grade": null,
+    "stake": null,
+    "returns": null,
+    "profit_loss": null,
+    "roi": null,
+    "note": "Financial metrics are permitted only after the complete confirmed-bet manifest is reconciled."
+  },
+  "required_for_completion": [
+    "Original 2026-08-31 pre-match prediction manifest with BET/NO BET/WAIT/discarded candidates.",
+    "Complete confirmed-bet register with selection, market, bookmaker, taken price and stake.",
+    "Only after those are frozen may exact outcomes be joined."
+  ],
+  "decision": "NO_DAILY_AUDIT_PUBLISHED_AS_COMPLETE"
+}
