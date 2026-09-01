@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v18",
-  "generated_at": "2026-09-01T03:42:05.964Z",
+  "schema_version": "radar-historical-source-manifest-v19",
+  "generated_at": "2026-09-01T04:37:16.173Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "GOLDBET_1X2_TIMING_DRIFT_PERSISTS_AFTER_SIDE_PRICE_CONTROL",
+  "status": "GOLDBET_1X2_TIMING_COMMON_SUPPORT_FAILURE",
   "priority": [
     "Sweden",
     "Norway",
@@ -495,6 +495,45 @@
         "The 10,000-draw fixture bootstrap 95% interval is -82.97 to -28.96 points.",
         "Persistence is classified as instability/confounding; all timing subgroups remain rejected."
       ]
+    },
+    {
+      "name": "GoldBet 1X2 residual drift competition and chronology audit",
+      "path": "feed/historical/open-close/goldbet-1x2-residual-drift-v1.json",
+      "source_class": "GOLDBET_MMS_COMMON_SUPPORT_AUDIT",
+      "status": "ACCEPTED_NOT_IDENTIFIABLE_NO_COMPETITION_OVERLAP",
+      "sample": {
+        "events": 392,
+        "near": 67,
+        "far": 325,
+        "countries": 65,
+        "tournaments": 120
+      },
+      "overlap": {
+        "controls": [
+          "country",
+          "selection",
+          "price_band"
+        ],
+        "minimum_each_group": 3,
+        "eligible_cells": 0
+      },
+      "role": [
+        "COMPETITION_COMPOSITION_AUDIT",
+        "CHRONOLOGICAL_BLOCK_AUDIT",
+        "COMMON_SUPPORT_GATE"
+      ],
+      "forbidden_role": [
+        "CAUSAL_LEAD_TIME_EFFECT",
+        "TIMING_RULE_PROMOTION",
+        "CROSS_COMPETITION_EXTRAPOLATION",
+        "CERTIFIED_CLOSE"
+      ],
+      "quality_notes": [
+        "No country-by-side-by-price cell has sufficient observations in both lead groups.",
+        "Near observations are disproportionately EUROPE-labelled; far observations contain large England and Scotland blocks.",
+        "The early half retains a negative side-price adjusted difference, but competition confounding remains unresolved.",
+        "The late half has only one eligible side-price cell and is inconclusive."
+      ]
     }
   ],
   "required_blocks": {
@@ -624,12 +663,12 @@
     "league_drift_reporting_required": true
   },
   "next_source_block": {
-    "lane": "GOLDBET_1X2_RESIDUAL_DRIFT_AND_EXACT_CLOSE",
-    "goal": "Decompose residual timing drift by competition and ordered time block with fixed controls, and persist a genuine last-pre-kickoff GoldBet snapshot.",
-    "prior_claim_status": "1X2 PP1 lead-time drift persists after selected-side and observed-price-band standardization.",
+    "lane": "GOLDBET_WITHIN_COMPETITION_T30_COVERAGE",
+    "goal": "Acquire matched TRUE OPEN, genuine T-30/last-pre-kickoff and outcome rows within the same competitions and temporal blocks.",
+    "prior_claim_status": "Timing effect not identifiable because competition-by-side-by-price common support is zero.",
     "structural_next": "Hold all four league OOS blocks frozen.",
     "goldbet_true_open_status": "AVAILABLE_642_CERTIFIED_EVENTS",
     "historical_close_status": "NOT_CERTIFIED_SINGLE_OBSERVED_CURRENT_ONLY",
-    "outcome_status": "EXACT_638_OF_642_FLASHCORE_IDS"
+    "outcome_status": "EXACT_638_OF_642_FLASHSCORE_IDS"
   }
 }
