@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-09-01T03:28:35.322776+00:00",
+  "generated_at": "2026-09-01T06:34:09.953161+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "01-09-2026",
   "ready": false,
@@ -18,9 +18,9 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 4472,
-    "index_warm_elapsed_ms": 108,
-    "fallback_discovery_elapsed_ms": 204,
+    "index_first_elapsed_ms": 2748,
+    "index_warm_elapsed_ms": 105,
+    "fallback_discovery_elapsed_ms": 124,
     "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
     "index_warm_cache": "HIT"
   },
@@ -29,12 +29,12 @@
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 8922,
-    "scoped_source_rows": 8365,
-    "indexed_rows": 8365,
+    "source_rows": 8926,
+    "scoped_source_rows": 8363,
+    "indexed_rows": 8363,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 8365,
+      "standard_match": 8363,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
@@ -104,22 +104,22 @@
     "pagination_runtime": true,
     "dynamic_index_candidate_found": true,
     "player_lookup_runtime": true,
-    "exact_200": true,
-    "exact_unique": true,
-    "exact_source_healthy": true,
+    "exact_200": false,
+    "exact_unique": false,
+    "exact_source_healthy": false,
     "exact_fresh": true,
     "exact_fingerprint": true,
-    "exact_price_gate_eligible": true
+    "exact_price_gate_eligible": false
   },
   "sample_dynamic_exact": {
-    "match": "Parma - Cremonese",
-    "match_market_id": "36361.22357",
-    "player": "Abdou-Salam Konate",
-    "market": "1° Marcatore",
-    "selection": "Si",
-    "odd": 21,
+    "match": null,
+    "match_market_id": null,
+    "player": null,
+    "market": null,
+    "selection": null,
+    "odd": null,
     "scan_odd": 21,
-    "proof_id": "bf-2d687713f1cfb63ce706"
+    "proof_id": "bf-5de160372a2020bd89f2"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
