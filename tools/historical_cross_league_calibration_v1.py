@@ -107,37 +107,46 @@ def group_metrics(rows, key, group_fn):
 def bootstrap(rows):
     by_league = defaultdict(list)
     for r in rows:
-        by_league[r["league"]].append(r)
+        eb, el = losses(r, "elo")
+        mb, ml = losses(r, "market")
+        by_league[r["league"]].append((mb - eb, ml - el))
     leagues = sorted(by_league)
     rng = random.Random(SEED)
     fixture_samples = {"brier": [], "log_loss": []}
     league_samples = {"brier": [], "log_loss": []}
-    league_delta = {}
-    for league in leagues:
-        lr = by_league[league]
-        db = sum(losses(r, "market")[0] - losses(r, "elo")[0] for r in lr) / len(lr)
-        dl = sum(losses(r, "market")[1] - losses(r, "elo")[1] for r in lr) / len(lr)
-        league_delta[league] = (db, dl)
+    league_delta = {
+        league: (
+            sum(x[0] for x in values) / len(values),
+            sum(x[1] for x in values) / len(values),
+        )
+        for league, values in by_league.items()
+    }
+    total_n = sum(len(v) for v in by_league.values())
     for _ in range(DRAWS):
-        sampled = []
+        sum_b = sum_l = 0.0
         for league in leagues:
-            lr = by_league[league]
-            sampled.extend(lr[rng.randrange(len(lr))] for _ in range(len(lr)))
-        fixture_samples["brier"].append(sum(losses(r, "market")[0] - losses(r, "elo")[0] for r in sampled) / len(sampled))
-        fixture_samples["log_loss"].append(sum(losses(r, "market")[1] - losses(r, "elo")[1] for r in sampled) / len(sampled))
+            values = by_league[league]
+            for _ in range(len(values)):
+                db, dl = values[rng.randrange(len(values))]
+                sum_b += db
+                sum_l += dl
+        fixture_samples["brier"].append(sum_b / total_n)
+        fixture_samples["log_loss"].append(sum_l / total_n)
         picked = [leagues[rng.randrange(len(leagues))] for _ in leagues]
         league_samples["brier"].append(sum(league_delta[x][0] for x in picked) / len(picked))
         league_samples["log_loss"].append(sum(league_delta[x][1] for x in picked) / len(picked))
+    pooled_point = {
+        "brier": sum(sum(x[0] for x in v) for v in by_league.values()) / total_n,
+        "log_loss": sum(sum(x[1] for x in v) for v in by_league.values()) / total_n,
+    }
     out = {}
-    for metric in ("brier", "log_loss"):
-        point_fixture = sum(losses(r, "market")[0 if metric == "brier" else 1] - losses(r, "elo")[0 if metric == "brier" else 1] for r in rows) / len(rows)
-        point_league = sum(x[0 if metric == "brier" else 1] for x in league_delta.values()) / len(leagues)
+    for metric, pos in (("brier", 0), ("log_loss", 1)):
         fs = sorted(fixture_samples[metric])
         ls = sorted(league_samples[metric])
         out[metric] = {
-            "market_minus_elo_pooled_point": point_fixture,
+            "market_minus_elo_pooled_point": pooled_point[metric],
             "stratified_fixture_bootstrap_ci95": [fs[int(.025 * DRAWS)], fs[int(.975 * DRAWS) - 1]],
-            "market_minus_elo_equal_league_point": point_league,
+            "market_minus_elo_equal_league_point": sum(x[pos] for x in league_delta.values()) / len(leagues),
             "league_bootstrap_ci95": [ls[int(.025 * DRAWS)], ls[int(.975 * DRAWS) - 1]],
             "positive_means_elo_better": True,
         }
