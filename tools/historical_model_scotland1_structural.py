@@ -279,7 +279,7 @@ def main():
             "holdout_used_for_training_or_tuning": False,
             "missing_feature_imputation": "development mean only",
             "hyperparameters": "copied unchanged from Sweden/Norway v1 before Scotland 1 holdout evaluation",
-            "specification_source": "SWEDEN_NORWAY_V1_FROZEN_NO_ENGLAND1_HOLDOUT_TUNING"
+            "specification_source": "SWEDEN_NORWAY_V1_FROZEN_NO_SCOTLAND1_HOLDOUT_TUNING"
         },
         "feature_rules": {
             "elo": {"initial": 1500, "k": K_FACTOR, "home_advantage": HOME_ELO_ADVANTAGE, "season_mean_reversion": SEASON_MEAN_REVERSION},
