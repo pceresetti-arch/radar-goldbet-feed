@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T07:34:20.342868+00:00",
+  "generated_at": "2026-09-02T07:51:53.940972+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,15 +21,65 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
-      "mode": "FULL_DISCOVERY",
-      "started_at": "2026-09-02T07:34:18.436744+00:00",
-      "finished_at": "2026-09-02T07:34:20.342851+00:00",
+      "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
+      "started_at": "2026-09-02T07:48:55.077086+00:00",
+      "finished_at": "2026-09-02T07:48:57.548252+00:00",
       "official_count": 0,
-      "urgent_unconfirmed_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T07:49:32.548403+00:00",
+      "finished_at": "2026-09-02T07:49:32.796486+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T07:50:07.796665+00:00",
+      "finished_at": "2026-09-02T07:50:08.140850+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T07:50:43.141014+00:00",
+      "finished_at": "2026-09-02T07:50:43.351263+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T07:51:18.351423+00:00",
+      "finished_at": "2026-09-02T07:51:18.703304+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T07:51:53.703454+00:00",
+      "finished_at": "2026-09-02T07:51:53.940905+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
       "events": [],
       "actionable_events": []
     }
@@ -37,6 +87,16 @@
   "observed_events": [],
   "actionable_events": [],
   "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [],
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Gintra Siauliai - Sturm Graz",
+      "match_market_id": "36363.27687",
+      "match_event_id": 16090368,
+      "minutes_to_start": 68.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000019453
+    }
+  ],
   "target_count": 5
 }
