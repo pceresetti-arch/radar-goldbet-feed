@@ -1,0 +1,48 @@
+name: Historical Bet365 1X2 Movement OOS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-b365-1x2-movement-oos.yml'
+      - 'tools/historical_b365_1x2_movement_oos.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-b365-1x2-movement-oos
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test same-book 1X2 movement
+        run: python tools/historical_b365_1x2_movement_oos.py
+      - name: Preserve evidence
+        run: |
+          rm -rf /tmp/historical-markets
+          cp -R feed/historical/markets /tmp/historical-markets
+      - name: Commit evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p feed/historical
+            rm -rf feed/historical/markets
+            cp -R /tmp/historical-markets feed/historical/markets
+            git add feed/historical/markets
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Add Bet365 1X2 movement OOS evidence"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
