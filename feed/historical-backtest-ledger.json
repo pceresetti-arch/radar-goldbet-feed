@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v49",
-  "generated_at": "2026-09-02T13:27:59.205Z",
+  "schema_version": "radar-historical-backtest-ledger-v50",
+  "generated_at": "2026-09-02T14:27:04.995Z",
   "local_timezone": "Europe/Rome",
-  "status": "B365_EARLY_1X2_ELO_INCREMENT_REJECTED",
+  "status": "B365_EARLY_OU25_STRUCTURAL_INCREMENT_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -265,7 +265,11 @@
     "b365_1x2_elo_early_blend_rolling_folds": 14,
     "b365_1x2_elo_early_blend_development_validation_rows": 4424,
     "b365_1x2_elo_early_blend_holdout_rows": 2212,
-    "b365_1x2_elo_early_blend_missing_rows": 0
+    "b365_1x2_elo_early_blend_missing_rows": 0,
+    "b365_ou25_structural_early_blend_leagues": 7,
+    "b365_ou25_structural_early_blend_development_rows": 6636,
+    "b365_ou25_structural_early_blend_holdout_rows": 2212,
+    "b365_ou25_structural_early_blend_missing_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -527,7 +531,10 @@
     "Rejected every Elo-versus-provider-early 1X2 value threshold; four of five holdout ROI intervals are entirely below zero, while the 8pp interval crosses zero but also fails development and league-replication gates.",
     "Completed a seven-league rolling-development blend ablation of ELO_ONLY against de-vigged Bet365 provider-early 1X2 probabilities, then froze the selected weight for 2,212 holdout fixtures.",
     "Rolling-development proper-score selection assigns 100% weight to provider-early market probabilities and 0% to Elo; every positive Elo weight is inferior on log-loss.",
-    "Confirmed on holdout that provider-early probabilities outperform ELO_ONLY pointwise: Brier 0.58117 versus 0.59677, log-loss 0.97666 versus 1.00052 and accuracy 52.89% versus 50.86%."
+    "Confirmed on holdout that provider-early probabilities outperform ELO_ONLY pointwise: Brier 0.58117 versus 0.59677, log-loss 0.97666 versus 1.00052 and accuracy 52.89% versus 50.86%.",
+    "Completed a seven-league development-selected blend ablation of strictly prior-date structural Poisson O/U 2.5 probabilities against de-vigged Bet365 provider-early prices.",
+    "Development proper-score selection assigns 100% weight to provider-early and 0% to structural Poisson; the selected blend was frozen before 2,212 holdout fixtures.",
+    "Corrected inherited closing-market labels in the early-market report before acceptance; source semantics and tie-break naming now explicitly identify provider-early."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2831,6 +2838,30 @@
       },
       "decision": "REJECT_ELO_INCREMENT",
       "caveat": "Bet365 provider-early timestamps are uncertified; prices are neither TRUE OPEN nor GoldBet."
+    },
+    "b365_ou25_structural_early_blend_oos": {
+      "report": "feed/historical/markets/b365-ou25-structural-early-blend-oos-v1.json",
+      "leagues": 7,
+      "development_rows": 6636,
+      "holdout_rows": 2212,
+      "missing_rows": 0,
+      "selected_early_weight": 1,
+      "selected_structural_weight": 0,
+      "development": {
+        "provider_early_brier": 0.2359196345,
+        "provider_early_log_loss": 0.6643685371,
+        "provider_early_accuracy": 0.6027727547
+      },
+      "holdout": {
+        "provider_early_brier": 0.2398113845,
+        "provider_early_log_loss": 0.6721636167,
+        "provider_early_accuracy": 0.5691681736,
+        "structural_brier": 0.2413797636,
+        "structural_log_loss": 0.6755968558,
+        "structural_accuracy": 0.5809222423
+      },
+      "decision": "REJECT_STRUCTURAL_INCREMENT",
+      "caveat": "Bet365 provider-early timestamps are uncertified; prices are neither TRUE OPEN nor GoldBet."
     }
   },
   "ablation_plan": {
@@ -2853,7 +2884,7 @@
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
     "next_analysis_lane": "Prioritize verified market or direct tactical/player context. Do not add further coarse score-rate proxies without a predeclared development-only design and a new independent temporal holdout.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
-    "market_lane": "Current Elo adds zero development-selected weight to both provider-early and closing 1X2 markets, and its standalone price edges lose OOS; seek orthogonal verified pre-match features rather than further Elo-market blending.",
+    "market_lane": "Current structural Poisson adds zero development-selected weight to both provider-early and closing O/U 2.5 markets; seek verified orthogonal context, alternative markets with price history, or certified GoldBet OPEN-to-CLOSE data.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
   "rule_decisions": {
@@ -2947,7 +2978,8 @@
       "Multiclass argmax coverage is diagnostic only: a realized class may never be the top pick yet remain probabilistically calibrated. Failure claims require classwise probability bias, proper scoring rules and reliability analysis.",
       "Feature repairs motivated after viewing a final holdout must be designed and screened only on development rolling-origin folds; the viewed holdout cannot be reused as independent confirmation.",
       "Model-versus-market probability edge thresholds require positive rolling-development ROI before holdout consideration; a large nominal model edge is not evidence of value when the structural model is weaker than the market.",
-      "An Elo increment to an earlier market state must earn positive rolling-development weight before frozen-holdout evaluation; the current model earns zero weight even before close."
+      "An Elo increment to an earlier market state must earn positive rolling-development weight before frozen-holdout evaluation; the current model earns zero weight even before close.",
+      "For O/U probability blends, development proper scores govern component selection; higher holdout classification accuracy cannot override worse Brier and log-loss or justify post-hoc weight changes."
     ],
     "note": "No operational changes. The observed final structural holdout remains closed to candidate selection."
   },
@@ -2960,6 +2992,7 @@
     "Reject adding the current structural Poisson O/U probability to the external average closing benchmark; the frozen development selection assigns structure 0% weight.",
     "Reject adding current ELO_ONLY probabilities to the external average 1X2 closing benchmark; rolling-development selection assigns Elo 0% weight.",
     "Reject all tested ELO_ONLY minus de-vigged Bet365 provider-early 1X2 edge thresholds (1/2/3/5/8pp); every band has negative rolling-development and holdout ROI, with no cross-league replication.",
-    "Reject adding current ELO_ONLY probabilities to de-vigged Bet365 provider-early 1X2 probabilities; rolling-development selection assigns Elo 0% weight."
+    "Reject adding current ELO_ONLY probabilities to de-vigged Bet365 provider-early 1X2 probabilities; rolling-development selection assigns Elo 0% weight.",
+    "Reject adding the current strictly prior-date structural Poisson O/U 2.5 probability to de-vigged Bet365 provider-early probabilities; development selects structure 0% weight."
   ]
 }
