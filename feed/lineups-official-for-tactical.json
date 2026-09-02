@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T13:53:08.467596+00:00",
+  "generated_at": "2026-09-02T14:13:35.957687+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,12 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 50,
+  "target_count": 72,
   "status_counts": {
-    "LINEUP_PRESENT_UNCONFIRMED": 1,
-    "NOT_AVAILABLE": 44,
+    "NOT_AVAILABLE": 61,
     "SOURCE_CONFIRMED": 3,
-    "REFERENCE_PREVIOUS_XI": 2
+    "REFERENCE_PREVIOUS_XI": 8
   },
   "schedule_stats": [
     {
@@ -31,13 +30,13 @@
       "start_time": "02-09-2026 16:00",
       "start_utc": "2026-09-02T14:00:00+00:00",
       "league": "Coppa",
-      "minutes_to_start": 6.9,
+      "minutes_to_start": -13.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-02T13:53:08.467596+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": "bbe796b71b5011499bc3",
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "6a2a4b9b5b28ef177c0a",
       "source": "FotMob",
       "fotmob_match": {
         "id": 6106041,
@@ -65,7 +64,7 @@
                 "id": 819751,
                 "shirt_number": "14",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -352,7 +351,7 @@
                 "id": 299879,
                 "shirt_number": "91",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -613,7 +612,6 @@
           }
         ],
         "xi_fingerprint": "6a2a4b9b5b28ef177c0a",
-        "xi_name_fingerprint": "575eea9805e6b4f331b9",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -623,19 +621,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-02T13:53:08.467596+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 6106041,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.16131",
@@ -644,13 +630,13 @@
       "start_time": "02-09-2026 16:00",
       "start_utc": "2026-09-02T14:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 6.9,
+      "minutes_to_start": -13.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-02T13:53:08.467596+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "94d72aa8a03749b89690",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5996709,
@@ -678,7 +664,7 @@
                 "id": 1689373,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -933,6 +919,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -951,7 +938,7 @@
                 "id": 192331,
                 "shirt_number": "1",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -1206,6 +1193,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -1215,7 +1203,6 @@
           }
         ],
         "xi_fingerprint": "94d72aa8a03749b89690",
-        "xi_name_fingerprint": "9090895a157a88e1f444",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -1225,19 +1212,7 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-02T13:53:08.467596+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5996709,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     },
     {
       "match_market_id": "36361.32883",
@@ -1246,7 +1221,7 @@
       "start_time": "02-09-2026 16:00",
       "start_utc": "2026-09-02T14:00:00+00:00",
       "league": "TFF First League",
-      "minutes_to_start": 6.9,
+      "minutes_to_start": -13.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-02T13:38:08.532529+00:00",
@@ -1280,7 +1255,7 @@
                 "id": 784805,
                 "shirt_number": "22",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -1295,9 +1270,9 @@
                 }
               },
               {
-                "name": "Naby Oularé",
-                "id": 1395973,
-                "shirt_number": "13",
+                "name": "Mehmet Manis",
+                "id": 1393804,
+                "shirt_number": "11",
                 "position_id": 32,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -1333,9 +1308,9 @@
                 }
               },
               {
-                "name": "Mehmet Manis",
-                "id": 1393804,
-                "shirt_number": "11",
+                "name": "Naby Oularé",
+                "id": 1395973,
+                "shirt_number": "13",
                 "position_id": 36,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -1540,6 +1515,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -1558,7 +1534,7 @@
                 "id": 465921,
                 "shirt_number": "25",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -1573,9 +1549,9 @@
                 }
               },
               {
-                "name": "Ömürcan Artan",
-                "id": 1185295,
-                "shirt_number": "27",
+                "name": "Polat Yaldir",
+                "id": 1319207,
+                "shirt_number": "72",
                 "position_id": 32,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -1630,9 +1606,9 @@
                 }
               },
               {
-                "name": "Jo Jin-Ho",
-                "id": 1514516,
-                "shirt_number": "6",
+                "name": "Ömürcan Artan",
+                "id": 1185295,
+                "shirt_number": "27",
                 "position_id": 38,
                 "usual_position_id": 1,
                 "horizontal_layout": {
@@ -1668,9 +1644,9 @@
                 }
               },
               {
-                "name": "Polat Yaldir",
-                "id": 1319207,
-                "shirt_number": "72",
+                "name": "Benny",
+                "id": 1188586,
+                "shirt_number": "77",
                 "position_id": 82,
                 "usual_position_id": 3,
                 "horizontal_layout": {
@@ -1687,9 +1663,9 @@
                 }
               },
               {
-                "name": "Bugra Çagiran",
-                "id": 784808,
-                "shirt_number": "26",
+                "name": "Jo Jin-Ho",
+                "id": 1514516,
+                "shirt_number": "6",
                 "position_id": 84,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -1706,9 +1682,9 @@
                 }
               },
               {
-                "name": "Benny",
-                "id": 1188586,
-                "shirt_number": "77",
+                "name": "Bugra Çagiran",
+                "id": 784808,
+                "shirt_number": "26",
                 "position_id": 86,
                 "usual_position_id": 2,
                 "horizontal_layout": {
@@ -1818,6 +1794,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -1827,8 +1804,7 @@
             ]
           }
         ],
-        "xi_fingerprint": "df065bbe2785d59a088b",
-        "xi_name_fingerprint": "91fce096fc2796a02eca",
+        "xi_fingerprint": "c006a66ff66b72e26da6",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -1838,29 +1814,17 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-02T13:53:08.467596+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5908917,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     }
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-02T13:53:08.467596+00:00",
+    "generated_at": "2026-09-02T14:13:35.957687+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 43,
+    "target_count": 36,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -1871,32 +1835,7 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Chrysoupoli - AEK Athens",
-        "minutes_to_start": 6.9,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "El Gouna - AL Mokawloon AL Arab",
-        "minutes_to_start": 6.9,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Van Spor - Batman",
-        "minutes_to_start": 6.9,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
   "watchdog_identity_repairs": [
     {
@@ -1905,6 +1844,6 @@
     }
   ],
   "official_tactical_gate": true,
-  "source_match_count": 50,
+  "source_match_count": 72,
   "official_match_count": 3
 }
