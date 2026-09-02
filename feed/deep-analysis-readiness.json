@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-02T17:16:13.851894+00:00",
+  "generated_at": "2026-09-02T17:18:06.671669+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 1.3,
-    "tactical": 0.8,
-    "betflag_fixture_feed": 12.4,
-    "betflag_standard_source": 12.5,
-    "betflag_player_source": 12.5,
-    "player_context": 0.8
+    "lineups": 3.2,
+    "tactical": 2.7,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.5,
+    "player_context": 2.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -37,10 +37,161 @@
   "readiness_counts": {
     "WAIT_BETFLAG_FIXTURE_MAPPING": 9,
     "WAIT_OFFICIAL_STANDARD_XI": 74,
-    "STALE_BETFLAG_STANDARD_CURRENT": 3
+    "READY_DEEP_ANALYSIS": 3
   },
-  "ready_count": 0,
-  "ready_matches": [],
+  "ready_count": 3,
+  "ready_matches": [
+    {
+      "match_market_id": "36364.3324",
+      "match_event_id": 16097063,
+      "match": "AL Ula - Al Raed",
+      "league": "Division 1",
+      "start_time": "02-09-2026 19:40",
+      "start_utc": "2026-09-02T17:40:00+00:00",
+      "minutes_to_start": 25.1,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
+      "warnings": [
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
+        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+      ],
+      "lineup_status": "SOURCE_CONFIRMED",
+      "lineup_type": "standard",
+      "official_standard_xi": true,
+      "lineup_ready": true,
+      "xi_fingerprint": "5f4635e30d9ff0f15d48",
+      "xi_changed_after_confirmation": true,
+      "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "tactical_confidence": 0.94,
+      "tactical_feed_fresh": true,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
+      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/al-ula-al-raed.json",
+      "betflag_standard_count": 21,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
+      "player_props_ready": false,
+      "player_context_available": false,
+      "player_context_fresh": true,
+      "player_context_matches_current_xi": false,
+      "player_market_bet_ready": false,
+      "player_lane_ready": false,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
+      "player_exact_price_required_at_decision_time": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
+      "true_open_blocks_current_analysis": false,
+      "strong_drop_count": 0,
+      "strong_drops": []
+    },
+    {
+      "match_market_id": "36363.48341",
+      "match_event_id": 16093546,
+      "match": "Oud-Heverlee Leuven - Czarni Sosnowiec",
+      "league": "Champions League Femminile",
+      "start_time": "02-09-2026 20:00",
+      "start_utc": "2026-09-02T18:00:00+00:00",
+      "minutes_to_start": 45.1,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
+      "warnings": [
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
+        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+      ],
+      "lineup_status": "SOURCE_CONFIRMED",
+      "lineup_type": "standard",
+      "official_standard_xi": true,
+      "lineup_ready": true,
+      "xi_fingerprint": "cf11907d4f5129cf1cfa",
+      "xi_changed_after_confirmation": true,
+      "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "tactical_confidence": 0.94,
+      "tactical_feed_fresh": true,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
+      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/oud-heverlee-leuven-czarni-sosnowiec.json",
+      "betflag_standard_count": 29,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
+      "player_props_ready": false,
+      "player_context_available": false,
+      "player_context_fresh": true,
+      "player_context_matches_current_xi": false,
+      "player_market_bet_ready": false,
+      "player_lane_ready": false,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
+      "player_exact_price_required_at_decision_time": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
+      "true_open_blocks_current_analysis": false,
+      "strong_drop_count": 0,
+      "strong_drops": []
+    },
+    {
+      "match_market_id": "36363.31456",
+      "match_event_id": 16091067,
+      "match": "Real Madrid - AFC Ajax",
+      "league": "Champions League Femminile",
+      "start_time": "02-09-2026 20:00",
+      "start_utc": "2026-09-02T18:00:00+00:00",
+      "minutes_to_start": 45.1,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
+      "warnings": [
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
+        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+      ],
+      "lineup_status": "SOURCE_CONFIRMED",
+      "lineup_type": "standard",
+      "official_standard_xi": true,
+      "lineup_ready": true,
+      "xi_fingerprint": "7fd1dbd98d08ad116580",
+      "xi_changed_after_confirmation": true,
+      "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
+      "tactical_confidence": 0.94,
+      "tactical_feed_fresh": true,
+      "tactical_synced_to_current_lineup": true,
+      "tactical_ready": true,
+      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/real-madrid-afc-ajax.json",
+      "betflag_standard_count": 14,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
+      "player_props_ready": false,
+      "player_context_available": false,
+      "player_context_fresh": true,
+      "player_context_matches_current_xi": false,
+      "player_market_bet_ready": false,
+      "player_lane_ready": false,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
+      "player_exact_price_required_at_decision_time": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
+      "true_open_blocks_current_analysis": false,
+      "strong_drop_count": 0,
+      "strong_drops": []
+    }
+  ],
   "player_lane_ready_count": 0,
   "player_lane_ready_matches": [],
   "matches": [
@@ -76,7 +227,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -128,7 +279,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -180,7 +331,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -232,7 +383,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -284,7 +435,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -335,7 +486,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -386,7 +537,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -438,7 +589,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -489,7 +640,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -540,7 +691,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -592,7 +743,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -644,7 +795,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -695,7 +846,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -746,7 +897,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -797,7 +948,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -849,7 +1000,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -900,7 +1051,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -931,10 +1082,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -949,10 +1100,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/resovia-arka-gdynia.json",
-      "betflag_standard_count": 26,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -982,11 +1133,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1004,8 +1154,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/dinamo-minsk-naftan-novopolotsk.json",
       "betflag_standard_count": 14,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1034,11 +1184,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1056,8 +1205,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/hnk-cibalia-vinkovci-orijent-1919-rijeka.json",
       "betflag_standard_count": 22,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1086,11 +1235,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -1108,8 +1256,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/mamelodi-sundowns-milford.json",
       "betflag_standard_count": 29,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1138,11 +1286,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1160,8 +1307,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/sc-wiedenbruck-borussia-monchengladbach-ii.json",
       "betflag_standard_count": 29,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1187,13 +1334,11 @@
       "start_time": "02-09-2026 19:40",
       "start_utc": "2026-09-02T17:40:00+00:00",
       "minutes_to_start": 25.1,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
-      "analysis_scope": "NOT_READY",
-      "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
-      ],
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -1211,9 +1356,9 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/al-ula-al-raed.json",
-      "betflag_standard_count": 19,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_count": 21,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1242,11 +1387,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1264,8 +1408,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/madureira-boavista.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1294,11 +1438,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1316,8 +1459,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/sampaio-correa-nova-iguacu.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1346,11 +1489,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1368,12 +1510,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/aarhus-fc-midtjylland.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 48,
       "player_quote_count": 384,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -1398,11 +1540,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -1420,8 +1561,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/aluminij-kidricevo-nk-celje.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1450,11 +1591,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1472,8 +1612,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/america-resende.json",
       "betflag_standard_count": 22,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1502,11 +1642,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1524,8 +1663,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/aston-villa-broendby.json",
       "betflag_standard_count": 8,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1554,11 +1693,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1576,8 +1714,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/atletico-tucuman-reserve-san-lorenzo-de-almagro-res.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1606,11 +1744,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -1628,8 +1765,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/bohemians-prague-1905-jablonec.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1658,11 +1795,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1680,8 +1816,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/cd-godoy-cruz-ca-tigre-reserve.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1710,11 +1846,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1732,8 +1867,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/central-espanol-las-piedras.json",
       "betflag_standard_count": 28,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1762,11 +1897,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1784,8 +1918,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/cerrito-dep-maldonado.json",
       "betflag_standard_count": 28,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1814,11 +1948,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1836,8 +1969,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/crystal-palace-psg.json",
       "betflag_standard_count": 8,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1866,11 +1999,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1888,8 +2020,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/csd-flandria-reserve-comunicaciones-bsas-ii.json",
       "betflag_standard_count": 16,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1918,11 +2050,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1940,8 +2071,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/dongen-watergraafsmeer.json",
       "betflag_standard_count": 32,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1970,11 +2101,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1992,8 +2122,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/estudiantes-de-rio-cuarto-reserve-san-martin-de-san-juan-reserve.json",
       "betflag_standard_count": 21,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2022,11 +2152,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2044,8 +2173,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/fc-flenu-onhaye.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2074,11 +2203,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2096,8 +2224,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/ferro-carril-oeste-estudiantes-de-lp-reserve.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2126,11 +2254,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2148,8 +2275,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/groene-vv-heerjansdam.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2178,11 +2305,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2200,8 +2326,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/hibernians-fc-valletta.json",
       "betflag_standard_count": 16,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2230,11 +2356,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2252,8 +2377,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/hoogeveen-sv-zwaluwen-wierden.json",
       "betflag_standard_count": 32,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2282,11 +2407,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2304,8 +2428,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/independiente-reserve-ca-platense.json",
       "betflag_standard_count": 19,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2334,11 +2458,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2356,8 +2479,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/newells-old-boys-deportivo-riestra-afbc-reserve.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2386,11 +2509,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2408,8 +2530,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/olaria-ac-rj-perolas-negras-rj.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2435,13 +2557,11 @@
       "start_time": "02-09-2026 20:00",
       "start_utc": "2026-09-02T18:00:00+00:00",
       "minutes_to_start": 45.1,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
-      "analysis_scope": "NOT_READY",
-      "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
-      ],
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -2460,8 +2580,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/oud-heverlee-leuven-czarni-sosnowiec.json",
       "betflag_standard_count": 29,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2490,11 +2610,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2511,9 +2630,9 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/preston-north-end-u21-wolverhampton.json",
-      "betflag_standard_count": 26,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_count": 29,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2539,13 +2658,11 @@
       "start_time": "02-09-2026 20:00",
       "start_utc": "2026-09-02T18:00:00+00:00",
       "minutes_to_start": 45.1,
-      "readiness": "STALE_BETFLAG_STANDARD_CURRENT",
-      "analysis_scope": "NOT_READY",
-      "blocking_reasons": [
-        "STALE_BETFLAG_STANDARD_CURRENT"
-      ],
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -2564,8 +2681,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/real-madrid-afc-ajax.json",
       "betflag_standard_count": 14,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2594,11 +2711,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2616,8 +2732,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/staphorst-una.json",
       "betflag_standard_count": 32,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2646,11 +2762,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2668,8 +2783,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/usv-hercules-echt.json",
       "betflag_standard_count": 32,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2720,7 +2835,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -2750,11 +2865,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2772,8 +2886,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/champions-fc-arges-fcsb.json",
       "betflag_standard_count": 24,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2802,11 +2916,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2824,8 +2937,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/fk-borac-banja-luka-fk-zeljeznicar-sarajevo.json",
       "betflag_standard_count": 29,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2854,11 +2967,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -2876,8 +2988,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/grasshoppers-san-gallo-1879.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2906,11 +3018,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -2928,8 +3039,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/juventus-skn-st-polten.json",
       "betflag_standard_count": 8,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -2958,11 +3069,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -2980,8 +3090,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/lucerna-vaduz.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3010,11 +3120,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3032,8 +3141,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/nk-siroki-brijeg-sarajevo.json",
       "betflag_standard_count": 28,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3062,11 +3171,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3084,8 +3192,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/sabadell-barcelona-atletic.json",
       "betflag_standard_count": 14,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3114,11 +3222,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3136,12 +3243,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/salisburgo-rapid-vienna.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 52,
       "player_quote_count": 312,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3166,11 +3273,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3188,12 +3294,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/st-truidense-vv-union-saint-gilloise.json",
       "betflag_standard_count": 41,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 37,
       "player_quote_count": 222,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3218,11 +3324,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3239,9 +3344,9 @@
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/thun-losanna.json",
-      "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_count": 41,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3270,11 +3375,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3292,8 +3396,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/widzew-lodz-korona-kielce.json",
       "betflag_standard_count": 28,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3322,11 +3426,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3344,12 +3447,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/barnsley-blackpool-fc.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 47,
       "player_quote_count": 282,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3374,11 +3477,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3396,12 +3498,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/burton-albion-wimbledon.json",
       "betflag_standard_count": 31,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 41,
       "player_quote_count": 245,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3426,11 +3528,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3448,12 +3549,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/celtic-aberdeen.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 52,
       "player_quote_count": 312,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3478,11 +3579,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3500,12 +3600,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/fc-dundee-st-johnstone-fc.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 45,
       "player_quote_count": 270,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3530,11 +3630,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3552,12 +3651,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/kilmarnock-st-mirren.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 51,
       "player_quote_count": 306,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3582,11 +3681,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3604,12 +3702,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/luton-town-stockport-county-fc.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 51,
       "player_quote_count": 306,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3634,11 +3732,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3656,12 +3753,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/millwall-wrexham-afc.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 42,
       "player_quote_count": 336,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3686,11 +3783,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3708,12 +3804,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/motherwell-dundee-united.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 55,
       "player_quote_count": 330,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3738,11 +3834,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3760,12 +3855,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/queens-park-rangers-cardiff.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 49,
       "player_quote_count": 392,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3790,11 +3885,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3812,8 +3906,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/vfl-1899-osnabruck-bayern-monaco.json",
       "betflag_standard_count": 8,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3842,11 +3936,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3864,12 +3957,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/west-bromwich-charlton-athletic.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 40,
       "player_quote_count": 316,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3894,11 +3987,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -3916,12 +4008,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/wigan-milton-keynes-dons.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 44,
       "player_quote_count": 264,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -3946,11 +4038,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -3968,8 +4059,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/altamura-sambenedettese.json",
       "betflag_standard_count": 31,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -3998,11 +4089,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -4020,12 +4110,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/burnley-middlesbrough.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 41,
       "player_quote_count": 716,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -4050,11 +4140,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -4072,8 +4161,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/csd-macara-manta.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4102,11 +4191,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -4124,8 +4212,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/catania-ac-savoia-1908.json",
       "betflag_standard_count": 32,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4154,11 +4242,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -4176,8 +4263,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/club-nacional-club-libertad.json",
       "betflag_standard_count": 31,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4206,11 +4293,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -4228,12 +4314,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/falkirk-glasgow-rangers.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 55,
       "player_quote_count": 330,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -4258,11 +4344,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -4280,8 +4365,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/floriana-fc-gzira-united.json",
       "betflag_standard_count": 14,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4310,11 +4395,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -4332,8 +4416,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/gv-club-deportivo-san-jose-de-oruro-club-bolivar.json",
       "betflag_standard_count": 26,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4362,11 +4446,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_MARKETS_WAIT_MINUTES_POSITION_CONCESSION_CONTEXT",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -4384,12 +4467,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/reading-fc-mansfield-town.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 47,
       "player_quote_count": 282,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": false,
       "player_context_fresh": true,
       "player_context_matches_current_xi": false,
@@ -4414,11 +4497,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -4436,8 +4518,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/spezia-vado.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -4466,11 +4548,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -4488,8 +4569,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/sportivo-ameliano-sportivo-trinidense.json",
       "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
