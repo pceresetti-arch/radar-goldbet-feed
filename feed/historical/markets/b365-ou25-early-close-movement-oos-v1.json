@@ -1,0 +1,228 @@
+{
+  "schema_version": "radar-historical-b365-ou25-early-close-movement-oos-v1",
+  "generated_at": "2026-09-02T06:30:40.153624Z",
+  "status": "COMPLETE_SAME_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC",
+  "market": "FULL_TIME_OVER_UNDER_2_5",
+  "bookmaker": "Bet365",
+  "price_semantics": {
+    "early": "Football-Data B365>2.5/B365<2.5; provider early price without a certified timestamp",
+    "close": "Football-Data B365C>2.5/B365C<2.5",
+    "true_open_certified": false,
+    "same_bookmaker": true,
+    "goldbet": false
+  },
+  "anti_hindsight": {
+    "movement_bins_prefixed": [
+      "0-1pp",
+      "1-2pp",
+      "2-3pp",
+      ">=3pp"
+    ],
+    "development_and_holdout_separate": true,
+    "outcomes_evaluation_only": true,
+    "no_missing_price_reconstruction": true
+  },
+  "coverage": {
+    "development_rows": 6636,
+    "holdout_rows": 2212,
+    "total_rows": 8848,
+    "by_league": {
+      "Netherlands": {
+        "accepted_rows": 1224,
+        "joined_rows": 1224,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      },
+      "Portugal": {
+        "accepted_rows": 1224,
+        "joined_rows": 1224,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      },
+      "Germany2": {
+        "accepted_rows": 1224,
+        "joined_rows": 1224,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      },
+      "Germany1": {
+        "accepted_rows": 1224,
+        "joined_rows": 1224,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      },
+      "Spain1": {
+        "accepted_rows": 1520,
+        "joined_rows": 1520,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      },
+      "England1": {
+        "accepted_rows": 1520,
+        "joined_rows": 1520,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      },
+      "Scotland1": {
+        "accepted_rows": 912,
+        "joined_rows": 912,
+        "missing_identity_rows": 0,
+        "missing_price_rows": 0
+      }
+    }
+  },
+  "holdout_probability_quality": {
+    "early": {
+      "n": 2212,
+      "brier": 0.2398113845098299,
+      "log_loss": 0.6721636167325987
+    },
+    "close": {
+      "n": 2212,
+      "brier": 0.23838050583964454,
+      "log_loss": 0.6690988705400851
+    },
+    "delta_close_minus_early": {
+      "brier": -0.0014308786701853482,
+      "log_loss": -0.0030647461925136232
+    },
+    "paired_bootstrap": {
+      "draws": 10000,
+      "brier_delta_close_minus_early_ci95": [
+        -0.0026542155502324795,
+        -0.00022679526621020548
+      ],
+      "log_loss_delta_close_minus_early_ci95": [
+        -0.00563718136861498,
+        -0.0005472650583138417
+      ]
+    }
+  },
+  "movement_direction_strategy": {
+    "definition": "Choose Over at the early price when de-vigged Over probability rises by close; choose Under when it falls.",
+    "development": {
+      "0_to_1pp": {
+        "n": 1876,
+        "hit_rate": 0.4690831556503198,
+        "roi": -0.0632675906183369,
+        "mean_decimal_odds_clv": 0.004861843919186743,
+        "roi_ci95": [
+          -0.11000599680170577,
+          -0.016643656716417966
+        ],
+        "positive_roi_leagues": 1,
+        "league_count": 7
+      },
+      "1_to_2pp": {
+        "n": 1675,
+        "hit_rate": 0.4871641791044776,
+        "roi": -0.10151044776119403,
+        "mean_decimal_odds_clv": 0.032393836670685204,
+        "roi_ci95": [
+          -0.14734955223880597,
+          -0.05489522388059702
+        ],
+        "positive_roi_leagues": 0,
+        "league_count": 7
+      },
+      "2_to_3pp": {
+        "n": 1169,
+        "hit_rate": 0.5312232677502139,
+        "roi": -0.013832335329341304,
+        "mean_decimal_odds_clv": 0.048426804152579085,
+        "roi_ci95": [
+          -0.07053165098374678,
+          0.04026689478186483
+        ],
+        "positive_roi_leagues": 2,
+        "league_count": 7
+      },
+      "ge_3pp": {
+        "n": 1916,
+        "hit_rate": 0.5730688935281837,
+        "roi": 0.06235386221294363,
+        "mean_decimal_odds_clv": 0.0956987777546929,
+        "roi_ci95": [
+          0.01948238517745303,
+          0.1062484342379958
+        ],
+        "positive_roi_leagues": 7,
+        "league_count": 7
+      }
+    },
+    "holdout": {
+      "0_to_1pp": {
+        "n": 593,
+        "hit_rate": 0.47554806070826305,
+        "roi": -0.03411467116357503,
+        "mean_decimal_odds_clv": 0.003953255207535236,
+        "roi_ci95": [
+          -0.11887183811129848,
+          0.0508456998313659
+        ],
+        "positive_roi_leagues": 2,
+        "league_count": 7
+      },
+      "1_to_2pp": {
+        "n": 537,
+        "hit_rate": 0.547486033519553,
+        "roi": 0.046014897579143385,
+        "mean_decimal_odds_clv": 0.033839696785800344,
+        "roi_ci95": [
+          -0.04054189944134082,
+          0.13181145251396642
+        ],
+        "positive_roi_leagues": 5,
+        "league_count": 7
+      },
+      "2_to_3pp": {
+        "n": 421,
+        "hit_rate": 0.5225653206650831,
+        "roi": -0.018693586698337285,
+        "mean_decimal_odds_clv": 0.04994678347401383,
+        "roi_ci95": [
+          -0.1147755344418052,
+          0.0739216152019002
+        ],
+        "positive_roi_leagues": 3,
+        "league_count": 7
+      },
+      "ge_3pp": {
+        "n": 661,
+        "hit_rate": 0.5491679273827534,
+        "roi": 0.0421482602118003,
+        "mean_decimal_odds_clv": 0.09939724404850742,
+        "roi_ci95": [
+          -0.0329803328290469,
+          0.11891187594553705
+        ],
+        "positive_roi_leagues": 4,
+        "league_count": 7
+      }
+    },
+    "promotion_gate": {
+      "0_to_1pp": {
+        "eligible": true,
+        "passes": false,
+        "reason": "Requires n>=200 in both partitions, positive development ROI, holdout ROI CI95 above zero and positive ROI in at least 5 leagues."
+      },
+      "1_to_2pp": {
+        "eligible": true,
+        "passes": false,
+        "reason": "Requires n>=200 in both partitions, positive development ROI, holdout ROI CI95 above zero and positive ROI in at least 5 leagues."
+      },
+      "2_to_3pp": {
+        "eligible": true,
+        "passes": false,
+        "reason": "Requires n>=200 in both partitions, positive development ROI, holdout ROI CI95 above zero and positive ROI in at least 5 leagues."
+      },
+      "ge_3pp": {
+        "eligible": true,
+        "passes": false,
+        "reason": "Requires n>=200 in both partitions, positive development ROI, holdout ROI CI95 above zero and positive ROI in at least 5 leagues."
+      }
+    }
+  },
+  "source_failures": [],
+  "verdict": "This is a Bet365 same-book early-to-close diagnostic. No result may be relabelled GoldBet TRUE OPEN, and no operational GoldBet rule is promoted."
+}
