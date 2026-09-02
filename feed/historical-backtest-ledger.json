@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v42",
-  "generated_at": "2026-09-02T06:30:00Z",
+  "schema_version": "radar-historical-backtest-ledger-v43",
+  "generated_at": "2026-09-02T07:42:00Z",
   "local_timezone": "Europe/Rome",
-  "status": "B365_OU25_SAME_BOOK_MOVEMENT_THRESHOLDS_REJECTED",
+  "status": "B365_1X2_SAME_BOOK_MOVEMENT_THRESHOLDS_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -235,7 +235,12 @@
     "b365_ou25_same_book_rows": 8848,
     "b365_ou25_same_book_development_rows": 6636,
     "b365_ou25_same_book_holdout_rows": 2212,
-    "b365_ou25_missing_rows": 0
+    "b365_ou25_missing_rows": 0,
+    "b365_1x2_same_book_rows": 8846,
+    "b365_1x2_same_book_development_rows": 6634,
+    "b365_1x2_same_book_holdout_rows": 2212,
+    "b365_1x2_missing_development_price_rows": 2,
+    "b365_1x2_missing_holdout_price_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -466,7 +471,12 @@
     "Confirmed that Bet365 closing probabilities improve early-price holdout Brier from 0.23981 to 0.23838 and log-loss from 0.67216 to 0.66910; paired intervals exclude zero.",
     "Evaluated pre-specified movement bands below 1pp, 1-2pp, 2-3pp and at least 3pp without selecting thresholds on the final holdout.",
     "Rejected all movement-following thresholds. The at-least-3pp band returned +6.24% in development but only +4.21% OOS, with ROI CI95 crossing zero and positive ROI in 4/7 leagues.",
-    "Classified B365 early prices as timestamp-uncertified provider early prices, never GoldBet TRUE OPEN."
+    "Classified B365 early prices as timestamp-uncertified provider early prices, never GoldBet TRUE OPEN.",
+    "Completed a seven-league Bet365 same-book 1X2 early-to-close diagnostic on 8,846 fixtures: 6,634 development and 2,212 complete holdout rows.",
+    "Recorded two development fixtures with incomplete Bet365 early/close triplets and excluded them without reconstruction; holdout coverage is complete.",
+    "Found only a small, non-conclusive closing proper-score improvement over early prices on 1X2: Brier 0.58117 to 0.58030 and log-loss 0.97666 to 0.97523, with paired intervals crossing zero.",
+    "Rejected all pre-specified movement-following bands. The >=3pp band moved from +5.95% development ROI to -0.64% OOS and was positive in only 3/7 holdout leagues.",
+    "Kept Bet365 provider-early 1X2 prices separate from timestamp-certified TRUE OPEN and from GoldBet."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2517,6 +2527,39 @@
         "positive_holdout_leagues": 4
       },
       "decision": "ALL_PRE_SPECIFIED_MOVEMENT_THRESHOLDS_REJECTED"
+    },
+    "b365_1x2_same_book_movement_oos": {
+      "report": "feed/historical/markets/b365-1x2-early-close-movement-oos-v1.json",
+      "rows": 8846,
+      "development": 6634,
+      "holdout": 2212,
+      "missing_development_prices": 2,
+      "holdout_probability_quality": {
+        "early_brier": 0.5811713984587822,
+        "close_brier": 0.5803006601883438,
+        "early_log_loss": 0.9766645503661683,
+        "close_log_loss": 0.9752337019797307,
+        "brier_delta_ci95": [
+          -0.0029518507750711854,
+          0.0011968623159283216
+        ],
+        "log_loss_delta_ci95": [
+          -0.004438018755953496,
+          0.0015731655950146299
+        ]
+      },
+      "ge_3pp": {
+        "development_n": 1881,
+        "development_roi": 0.05950558213716108,
+        "holdout_n": 655,
+        "holdout_roi": -0.006427480916030533,
+        "holdout_roi_ci95": [
+          -0.10757328244274808,
+          0.09944083969465639
+        ],
+        "positive_holdout_leagues": 3
+      },
+      "decision": "ALL_PRE_SPECIFIED_1X2_MOVEMENT_THRESHOLDS_REJECTED"
     }
   },
   "ablation_plan": {
@@ -2633,6 +2676,7 @@
   },
   "rejected_rules": [
     "Reject pooled four-season Ligue 1 modeling or result-based downsampling across the 20-to-18-club format change.",
-    "Reject Bet365 O/U 2.5 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes the frozen OOS promotion gate."
+    "Reject Bet365 O/U 2.5 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes the frozen OOS promotion gate.",
+    "Reject Bet365 1X2 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes frozen OOS replication."
   ]
 }
