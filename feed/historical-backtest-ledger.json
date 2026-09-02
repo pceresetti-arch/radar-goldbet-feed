@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v35",
-  "generated_at": "2026-09-01T23:48:30Z",
+  "schema_version": "radar-historical-backtest-ledger-v36",
+  "generated_at": "2026-09-02T00:46:00Z",
   "local_timezone": "Europe/Rome",
-  "status": "CROSS_LEAGUE_ELO_CALIBRATION_COMPLETE_DRAW_CLASS_FAILURE",
+  "status": "DRAW_CLASS_CALIBRATION_CORRECTED_ABS_GAP_CANDIDATE_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -210,7 +210,12 @@
     "cross_league_elo_home_top_picks": 2084,
     "cross_league_elo_draw_top_picks": 0,
     "cross_league_elo_away_top_picks": 992,
-    "cross_league_realized_draws": 764
+    "cross_league_realized_draws": 764,
+    "development_draw_gap_leagues": 11,
+    "development_draw_gap_folds": 22,
+    "development_draw_gap_validation_fixtures": 6152,
+    "development_draw_gap_realized_draws": 1523,
+    "development_draw_gap_candidate_draw_top_picks": 0
   },
   "quarantined_evidence": [
     {
@@ -409,7 +414,11 @@
     "Passed exact metric-reproduction gates for every league at absolute tolerance 1e-12 before pooling.",
     "Completed pooled and league-level calibration on 9,228 outcome-probability rows.",
     "Confirmed that the external de-vigged average closing benchmark beats ELO_ONLY on Brier and log-loss under both stratified fixture and equal-league bootstrap intervals.",
-    "Detected a structural draw-class failure: ELO_ONLY selected DRAW as top probability zero times while 764 holdout fixtures ended drawn."
+    "Detected a structural draw-class failure: ELO_ONLY selected DRAW as top probability zero times while 764 holdout fixtures ended drawn.",
+    "Corrected the prior zero-DRAW-argmax interpretation: a realized class can be probabilistically calibrated without ever being the single most likely class.",
+    "Measured frozen OOS DRAW calibration across 3,076 fixtures: mean Elo probability 0.24058 versus observed prevalence 0.24837, bias +0.00779 and ECE 0.00789.",
+    "Completed a development-only rolling-origin audit of ELO_PLUS_ABS_GAP on 6,152 validation fixtures across 22 league-season folds; the final holdout was not loaded.",
+    "Rejected ELO_PLUS_ABS_GAP: it worsens both Brier and log-loss with stratified-fixture and equal-league intervals entirely below zero, and does not change DRAW argmax coverage."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -1948,7 +1957,55 @@
         "D": 764,
         "A": 951
       },
-      "decision": "NO_OPERATIONAL_PROMOTION_ELO_INCOMPLETE_AS_THREE_WAY_TOP_PICK_MODEL"
+      "decision": "EXTERNAL_CLOSE_ROBUSTLY_BETTER_ZERO_DRAW_ARGMAX_IS_NOT_A_PROBABILITY_FAILURE",
+      "draw_class": {
+        "mean_probability": 0.24058110819786951,
+        "observed_prevalence": 0.2483745123537061,
+        "prevalence_minus_mean_probability": 0.007793404155836597,
+        "one_vs_rest_brier": 0.1854338467249479,
+        "ece": 0.007885703557743257
+      }
+    },
+    "development_draw_gap_rolling_v1": {
+      "report": "feed/historical/calibration/development-draw-gap-rolling-v1.json",
+      "sample": {
+        "leagues": 11,
+        "folds": 22,
+        "validation_fixtures": 6152
+      },
+      "elo_only": {
+        "brier": 0.5978272716848794,
+        "log_loss": 1.0022793208163792,
+        "accuracy": 0.5172301690507152,
+        "draw_top_picks": 0
+      },
+      "elo_plus_abs_gap": {
+        "brier": 0.5988394319412437,
+        "log_loss": 1.0047673066144869,
+        "accuracy": 0.5159297789336801,
+        "draw_top_picks": 0
+      },
+      "elo_only_minus_candidate": {
+        "brier_point": -0.001012160256364258,
+        "brier_stratified_ci95": [
+          -0.0019251943336544147,
+          -0.00010987601158334473
+        ],
+        "brier_equal_league_ci95": [
+          -0.0016905638111507422,
+          -0.0002927287047654856
+        ],
+        "log_loss_point": -0.002487985798107788,
+        "log_loss_stratified_ci95": [
+          -0.004375712923951946,
+          -0.0006291513393573015
+        ],
+        "log_loss_equal_league_ci95": [
+          -0.004612306686515671,
+          -0.0007676751082267144
+        ]
+      },
+      "decision": "REJECT_CANDIDATE_NO_FUTURE_HOLDOUT_FREEZE"
     }
   },
   "ablation_plan": {
@@ -1969,7 +2026,7 @@
     "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
     "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by source absence/provider denial.",
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
-    "next_analysis_lane": "Design a development-only draw-class repair candidate, freeze it before evaluation, and require a new independent temporal holdout; never retrofit the current 3,076 OOS fixtures.",
+    "next_analysis_lane": "Do not force DRAW argmax. Advance classwise league/time stability and development-only structural candidates only when they target proper scoring rules; preserve the 2025/2025-26 holdout as audit-only after inspection.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -2012,8 +2069,9 @@
       "Austria Bundesliga v1: reject prior-five form and the full structural bundle as incremental improvements beyond Elo; both worsen point estimates and paired intervals include zero.",
       "Austria Bundesliga v1: reject a definitive external closing-market superiority claim versus Elo; closing point estimates are better but paired intervals include zero.",
       "J1 League four-season structural model: rejected because the source changes from an 18-club 306-fixture format in 2022-2023 to a 20-club 380-fixture format in 2024-2025, while 2022 also contains four playoff rows outside the phase-pure league schedule.",
-      "Cross-league ELO_ONLY v1: reject treatment as a complete 1X2 top-pick model; across 3,076 frozen OOS fixtures it never selects DRAW despite 764 realized draws.",
-      "Cross-league ELO_ONLY v1: reject the claim that the structural baseline matches the external average closing benchmark; Brier and log-loss disadvantages remain entirely below zero under both stratified fixture and equal-league bootstrap intervals."
+      "Cross-league ELO_ONLY v1: zero DRAW argmax is retained as a decision diagnostic, not a rejection criterion; pooled DRAW probability is close to observed prevalence and classwise ECE is low.",
+      "Cross-league ELO_ONLY v1: reject the claim that the structural baseline matches the external average closing benchmark; Brier and log-loss disadvantages remain entirely below zero under both stratified fixture and equal-league bootstrap intervals.",
+      "Development draw-gap rolling v1: reject ELO_PLUS_ABS_GAP; across 6,152 development-only rolling validation fixtures it worsens Brier and log-loss with both fixture-stratified and equal-league IC95 entirely below zero."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -2052,8 +2110,9 @@
       "Calendar-year leagues must be format-gated independently; J1 playoff rows and the 18-to-20-club expansion cannot be normalized by outcome-blind downsampling into the requested four-season design.",
       "A country-level consolidated source may not be assumed to cover lower divisions: league values and repository paths must be enumerated before scheduling a format audit or model.",
       "A blocked provider endpoint must not be retried indefinitely: after independent host/header attempts return zero payload, record the source failure and move to another analysis lane while preserving the acceptance gate.",
-      "Every multiclass structural model must pass a frozen top-pick class-coverage audit; zero argmax predictions for a realized class is a structural failure even when pooled calibration ECE is small."
+      "Multiclass argmax coverage is diagnostic only: a realized class may never be the top pick yet remain probabilistically calibrated. Failure claims require classwise probability bias, proper scoring rules and reliability analysis.",
+      "Feature repairs motivated after viewing a final holdout must be designed and screened only on development rolling-origin folds; the viewed holdout cannot be reused as independent confirmation."
     ],
-    "note": "Elo remains a useful strength feature/research baseline but is not accepted as a complete standalone 1X2 decision model because the frozen version has zero DRAW top picks. No betting threshold, GoldBet signal or operational Radar rule is promoted."
+    "note": "Elo remains a useful strength feature/research baseline. Its zero DRAW argmax is not itself a probability failure because pooled DRAW calibration is close; the abs-gap repair is rejected on development proper scores. No betting threshold, GoldBet signal or operational Radar rule is promoted."
   }
 }
