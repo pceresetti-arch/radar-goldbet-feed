@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v45",
-  "generated_at": "2026-09-02T09:35:00Z",
+  "schema_version": "radar-historical-source-manifest-v46",
+  "generated_at": "2026-09-02T10:48:00Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "OU25_STRUCTURAL_POISSON_CANDIDATE_NOT_PROMOTED",
+  "status": "OU25_STRUCTURAL_INCREMENT_TO_CLOSE_REJECTED",
   "priority": [
     "Sweden",
     "Norway",
@@ -1173,6 +1173,34 @@
         "Both fixture-paired and equal-league confidence intervals cross zero; the candidate is not promoted.",
         "No bookmaker price was used in this structural test and no economic or movement inference was made."
       ]
+    },
+    {
+      "name": "Seven-league O/U 2.5 structural versus external-close blend ablation",
+      "path": "feed/historical/markets/cross-league-ou25-structural-close-blend-oos-v1.json",
+      "source_class": "DERIVED_STRICTLY_PRIOR_DATE_PLUS_EXTERNAL_CLOSE_ABLATION",
+      "status": "COMPLETE_STRUCTURAL_INCREMENT_REJECTED",
+      "leagues": 7,
+      "development_rows": 6636,
+      "holdout_rows": 2212,
+      "missing_rows": 0,
+      "role": [
+        "OU25_MARKET_VERSUS_STRUCTURE_ABLATION",
+        "DEVELOPMENT_SELECTED_FROZEN_HOLDOUT"
+      ],
+      "forbidden_role": [
+        "GOLDBET_CLOSE_SUBSTITUTE",
+        "HOLDOUT_DRIVEN_WEIGHT_SELECTION",
+        "MMS_THRESHOLD_PROMOTION",
+        "OPERATIONAL_RULE"
+      ],
+      "qualitystandenotes": [],
+      "quality_notes": [
+        "The global blend weight was selected only on 6,636 development fixtures from a predeclared 0.05 grid.",
+        "Development selects 100% external average close and 0% structural Poisson; every positive structural weight has worse log-loss.",
+        "The selected blend was frozen before the 2,212-fixture holdout and therefore exactly equals the closing benchmark.",
+        "Identity and O/U closing pairs are complete across all seven leagues.",
+        "External average close is not GoldBet and cannot support a GoldBet operational rule."
+      ]
     }
   ],
   "required_blocks": {
@@ -1376,6 +1404,12 @@
       "source_class": "DERIVED_STRICTLY_PRIOR_DATE_STRUCTURAL_FEATURES",
       "rule": "Retain as diagnostic only; require independent temporal replication before any model promotion and separately verified prices before value, ROI, CLV or MMS inference.",
       "missing_rows": 0
+    },
+    "ou25_structural_close_ablation": {
+      "status": "COMPLETE_7_LEGUES_6636_DEV_2212_OOS_STRUCTURAL_INCREMENT_REJECTED",
+      "report": "feed/historical/markets/cross-league-ou25-structural-close-blend-oos-v1.json",
+      "rule": "Development-only blend selection assigns zero weight to the structural Poisson increment; retain external close as benchmark only.",
+      "missing_rows": 0
     }
   },
   "quarantine_rules": [
@@ -1411,7 +1445,8 @@
     "b365_1x2_movement_threshold_policy": "REJECT_ALL_TESTED_BANDS_NO_OOS_REPLICATION",
     "btts_structural_policy": "REJECT_FIXED_SHRINKAGE_INDEPENDENT_POISSON_NO_OOS_IMPROVEMENT",
     "btts_price_policy": "BLOCK_FAIR_VALUE_ROI_CLV_AND_MMS_UNTIL_VERIFIED_HISTORICAL_BTTS_PRICES_EXIST",
-    "ou25_structural_policy": "NOT_PROMOTED_POOLED_POINT_IMPROVEMENT_BUT_FIXTURE_AND_LEAGUE_INTERVALS_CROSS_ZERO"
+    "ou25_structural_policy": "NOT_PROMOTED_POOLED_POINT_IMPROVEMENT_BUT_FIXTURE_AND_LEAGUE_INTERVALS_CROSS_ZERO",
+    "ou25_structural_close_increment_policy": "REJECT_DEVELOPMENT_OPTIMUM_IS_100_PERCENT_CLOSE_ZERO_PERCENT_STRUCTURE"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1422,7 +1457,7 @@
       "J1 League: format drift",
       "Ligue 1: format drift from 20 to 18 clubs; only three comparable 18-club seasons"
     ],
-    "next_analysis_lane": "Seek independent temporal replication or verified direct context; do not retune the O/U Poisson candidate on the viewed final holdout.",
+    "next_analysis_lane": "Prioritize direct verified context or independent same-book timestamps; the current O/U structural Poisson increment to closing odds is rejected.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context.",
     "external_close_constraint": "External average close may benchmark proper scores but cannot substitute for GoldBet same-book TRUE OPEN-to-CLOSE evidence.",
