@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T14:50:19.403599+00:00",
+  "generated_at": "2026-09-02T15:05:48.610374+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,17 +8,18 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 54,
+  "target_count": 74,
   "status_counts": {
-    "NOT_AVAILABLE": 40,
-    "SOURCE_CONFIRMED": 1,
-    "REFERENCE_PREVIOUS_XI": 13
+    "LINEUP_PRESENT_UNCONFIRMED": 1,
+    "NOT_AVAILABLE": 52,
+    "SOURCE_CONFIRMED": 2,
+    "REFERENCE_PREVIOUS_XI": 19
   },
   "schedule_stats": [
     {
       "date": "2026-09-02",
       "status": 200,
-      "matches": 162
+      "matches": 157
     }
   ],
   "source_errors": {},
@@ -30,7 +31,7 @@
       "start_time": "02-09-2026 17:00",
       "start_utc": "2026-09-02T15:00:00+00:00",
       "league": "UEFA Europa Cup Femminile",
-      "minutes_to_start": 9.7,
+      "minutes_to_start": -5.8,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-02T14:29:14.138187+00:00",
@@ -64,7 +65,7 @@
                 "id": 2163665,
                 "shirt_number": "22",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -346,7 +347,7 @@
                 "id": 1811982,
                 "shirt_number": "12",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
@@ -610,7 +611,590 @@
           }
         ],
         "xi_fingerprint": "c2b6180ec37bd08718be",
-        "xi_name_fingerprint": "f6fb781a0ac714fba455",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null
+    },
+    {
+      "match_market_id": "36361.58319",
+      "match_event_id": 16090408,
+      "match": "Hafnarfjordur - Apollon Ladies",
+      "start_time": "02-09-2026 18:00",
+      "start_utc": "2026-09-02T16:00:00+00:00",
+      "league": "UEFA Europa Cup Femminile",
+      "minutes_to_start": 54.2,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-09-02T15:05:48.610374+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": true,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000019451,
+        "home": "FH Hafnarfjordur",
+        "away": "Apollon Limassol LFC",
+        "league": "UEFA Women's Europa Cup",
+        "score": 0.6902,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapi",
+        "teams": [
+          {
+            "team_id": 1155620,
+            "team_name": "FH Hafnarfjordur",
+            "formation": "4-5-1",
+            "starters": [
+              {
+                "name": "Aldís Gudlaugsdóttir",
+                "id": 1572338,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Jónína Linnet",
+                "id": 2032575,
+                "shirt_number": "37",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Deja Sandoval",
+                "id": 2032584,
+                "shirt_number": "13",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Mackenzie Smith",
+                "id": 2032582,
+                "shirt_number": "5",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Birna Björnsdóttir",
+                "id": 2032606,
+                "shirt_number": "2",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ingibjörg Magnúsdóttir",
+                "id": 2032577,
+                "shirt_number": "41",
+                "position_id": 71,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.89,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.11,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Hildur Snorradóttir",
+                "id": 2159281,
+                "shirt_number": "19",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.695,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.305,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Andrea Hauksdóttir",
+                "id": 1091709,
+                "shirt_number": "29",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Hrönn Haraldsdóttir",
+                "id": 2032572,
+                "shirt_number": "15",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.305,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.695,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Hafrún Helgadóttir",
+                "id": 2032613,
+                "shirt_number": "42",
+                "position_id": 79,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.11,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.89,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Helena Errington",
+                "id": 1611780,
+                "shirt_number": "8",
+                "position_id": 115,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 1
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Steinunn Birkisdóttir",
+                "id": 2032616,
+                "shirt_number": "12"
+              },
+              {
+                "name": "Sigurborg Sveinbjörnsdóttir",
+                "id": 2159283,
+                "shirt_number": "24"
+              },
+              {
+                "name": "Anna Óskarsdóttir",
+                "id": 2032617,
+                "shirt_number": "3"
+              },
+              {
+                "name": "Thelma Hermannsdottir",
+                "id": 1693606,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Ragnheidur Skúladóttir",
+                "id": 2032604,
+                "shirt_number": "33"
+              },
+              {
+                "name": "Elín Björg Símonardóttir",
+                "id": 2032610,
+                "shirt_number": "23"
+              },
+              {
+                "name": "Eva Marín Sæthórsdóttir",
+                "id": 2032615,
+                "shirt_number": "39"
+              },
+              {
+                "name": "Unnur Skúladóttir",
+                "id": 2032611,
+                "shirt_number": "36"
+              },
+              {
+                "name": "Nia Christopher",
+                "id": 1862503,
+                "shirt_number": "7"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge"
+            ]
+          },
+          {
+            "team_id": 401636,
+            "team_name": "Apollon Limassol LFC",
+            "formation": "4-3-3",
+            "starters": [
+              {
+                "name": "Bella Hara",
+                "id": null,
+                "shirt_number": "31",
+                "position_id": 11,
+                "usual_position_id": null,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Korina Paola Adamou",
+                "id": 1718469,
+                "shirt_number": "30",
+                "position_id": 32,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Maria Ficzay",
+                "id": 887887,
+                "shirt_number": "33",
+                "position_id": 34,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Steffi Hardy",
+                "id": 1718462,
+                "shirt_number": "6",
+                "position_id": 36,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Mallory Mooney",
+                "id": 2124495,
+                "shirt_number": "2",
+                "position_id": 38,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Olivia Pearse",
+                "id": 2159278,
+                "shirt_number": "15",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Filippa Savva",
+                "id": 1317118,
+                "shirt_number": "8",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Jelena Prvulovic",
+                "id": 1546324,
+                "shirt_number": "77",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Mackenzie Geigle",
+                "id": 2163671,
+                "shirt_number": "3",
+                "position_id": 103,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Krystyna Freda",
+                "id": 1003384,
+                "shirt_number": "21",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Tasha Hudson",
+                "id": 1677754,
+                "shirt_number": "11",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Laura Miranda",
+                "id": 2163669,
+                "shirt_number": "1"
+              },
+              {
+                "name": "Marilena Georgiou",
+                "id": 1555867,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Andriana Tsoukka",
+                "id": 1718467,
+                "shirt_number": "9"
+              },
+              {
+                "name": "Eleni Giannou",
+                "id": 888083,
+                "shirt_number": "7"
+              },
+              {
+                "name": "Lainey Higgins",
+                "id": 2159275,
+                "shirt_number": "10"
+              },
+              {
+                "name": "Maya Matesa",
+                "id": 2159274,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Mariam Yunus",
+                "id": 2159273,
+                "shirt_number": "18"
+              },
+              {
+                "name": "Rylee Howard",
+                "id": 2159272,
+                "shirt_number": "23"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge"
+            ]
+          }
+        ],
+        "xi_fingerprint": "71a26f3c219ac5689b93",
+        "xi_name_fingerprint": "c416d5df076788468e35",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -622,10 +1206,10 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-09-02T14:50:19.403599+00:00",
+        "polled_at": "2026-09-02T15:05:48.610374+00:00",
         "fotmob": {
           "provider": "FotMob",
-          "match_id": 1000019455,
+          "match_id": 1000019451,
           "http_status": 200
         },
         "sofascore": {
@@ -637,12 +1221,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-02T14:50:19.403599+00:00",
+    "generated_at": "2026-09-02T15:05:48.610374+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 45,
+    "target_count": 39,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -653,15 +1237,18 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Hafnarfjordur - Apollon Ladies",
+        "minutes_to_start": 54.2,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Slovan Lib. - SFK 2000",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "official_tactical_gate": true,
-  "source_match_count": 54,
-  "official_match_count": 1
+  "source_match_count": 74,
+  "official_match_count": 2
 }
