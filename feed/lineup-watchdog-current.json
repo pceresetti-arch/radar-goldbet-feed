@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T12:26:12.205624+00:00",
+  "generated_at": "2026-09-02T12:44:11.414267+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,87 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-02T12:23:08.978369+00:00",
-      "finished_at": "2026-09-02T12:23:15.109953+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 12,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T12:23:50.110059+00:00",
-      "finished_at": "2026-09-02T12:23:50.413237+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 12,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T12:24:25.413502+00:00",
-      "finished_at": "2026-09-02T12:24:25.991816+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 12,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T12:25:00.992016+00:00",
-      "finished_at": "2026-09-02T12:25:01.349710+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 13,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T12:25:36.349957+00:00",
-      "finished_at": "2026-09-02T12:25:36.866792+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 13,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T12:26:11.866998+00:00",
-      "finished_at": "2026-09-02T12:26:12.205539+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 13,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-02T12:44:00.370427+00:00",
+      "finished_at": "2026-09-02T12:44:11.414238+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 23,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T12:44:11.413954+00:00",
+          "match": "Sassuolo - Frosinone",
+          "league": "Coppa Italia",
+          "start_time": "02-09-2026 15:00",
+          "minutes_to_start": 15.8,
+          "match_market_id": "36361.18214",
+          "match_event_id": 16079920,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 6003657,
+          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "3df0e4c00a5f6526779c",
+          "current_xi_fingerprint": "3df0e4c00a5f6526779c",
+          "confirmed_at": "2026-09-02T12:44:10.982835+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T12:44:11.413954+00:00",
+          "match": "Sassuolo - Frosinone",
+          "league": "Coppa Italia",
+          "start_time": "02-09-2026 15:00",
+          "minutes_to_start": 15.8,
+          "match_market_id": "36361.18214",
+          "match_event_id": 16079920,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 6003657,
+          "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "3df0e4c00a5f6526779c",
+          "current_xi_fingerprint": "3df0e4c00a5f6526779c",
+          "confirmed_at": "2026-09-02T12:44:10.982835+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
+  "observed_events": [
     {
-      "match": "Wiked Luzino - Wisla Plock",
-      "match_market_id": "36362.25130",
-      "match_event_id": 16090356,
-      "minutes_to_start": 3.8,
-      "status": "NOT_AVAILABLE",
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T12:44:11.413954+00:00",
+      "match": "Sassuolo - Frosinone",
+      "league": "Coppa Italia",
+      "start_time": "02-09-2026 15:00",
+      "minutes_to_start": 15.8,
+      "match_market_id": "36361.18214",
+      "match_event_id": 16079920,
       "source": "FotMob",
-      "fotmob_match_id": null
-    },
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 6003657,
+      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "3df0e4c00a5f6526779c",
+      "current_xi_fingerprint": "3df0e4c00a5f6526779c",
+      "confirmed_at": "2026-09-02T12:44:10.982835+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T12:44:11.413954+00:00",
+      "match": "Sassuolo - Frosinone",
+      "league": "Coppa Italia",
+      "start_time": "02-09-2026 15:00",
+      "minutes_to_start": 15.8,
+      "match_market_id": "36361.18214",
+      "match_event_id": 16079920,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 6003657,
+      "previous_status": "LINEUP_PRESENT_UNCONFIRMED",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "3df0e4c00a5f6526779c",
+      "current_xi_fingerprint": "3df0e4c00a5f6526779c",
+      "confirmed_at": "2026-09-02T12:44:10.982835+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
     {
       "match": "Blacks Power - UGANDA POLICE FC",
       "match_market_id": "36364.7319",
       "match_event_id": 16098333,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -110,7 +135,7 @@
       "match": "Cape Town - Leicesterford City",
       "match_market_id": "36363.31339",
       "match_event_id": 16091047,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +144,7 @@
       "match": "Kedah FA - Immigration FC",
       "match_market_id": "36364.18369",
       "match_event_id": 16100631,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -128,7 +153,7 @@
       "match": "Kelantan City FC - Negeri Sembilan",
       "match_market_id": "36364.18358",
       "match_event_id": 16100630,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -137,7 +162,7 @@
       "match": "Minerul L - Uta Arad",
       "match_market_id": "36361.57830",
       "match_event_id": 16076217,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6093730
@@ -146,7 +171,7 @@
       "match": "Mitre Santiago Del Estero Reserve - Chacarita Juniors Reserve",
       "match_market_id": "36364.7300",
       "match_event_id": 16098331,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -155,25 +180,16 @@
       "match": "Ntugasaze FC - MAROONS FC",
       "match_market_id": "36361.58323",
       "match_event_id": 16100071,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Sassuolo - Frosinone",
-      "match_market_id": "36361.18214",
-      "match_event_id": 16079920,
-      "minutes_to_start": 33.8,
-      "status": "LINEUP_PRESENT_UNCONFIRMED",
-      "source": "FotMob",
-      "fotmob_match_id": 6003657
-    },
-    {
       "match": "Scottland FC - FC Platinum",
       "match_market_id": "36364.7257",
       "match_event_id": 16098302,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -182,7 +198,7 @@
       "match": "Villa Dalmine Reserve - Real Pilar FC Reserves",
       "match_market_id": "36364.7154",
       "match_event_id": 16098282,
-      "minutes_to_start": 33.8,
+      "minutes_to_start": 15.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -191,7 +207,7 @@
       "match": "HNK Vukovar 1991 - GNK DINAMO ZAGREB II",
       "match_market_id": "36363.27797",
       "match_event_id": 16090407,
-      "minutes_to_start": 63.8,
+      "minutes_to_start": 45.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -200,11 +216,119 @@
       "match": "Botosani - CS Corvinul Hunedoara",
       "match_market_id": "36361.57831",
       "match_event_id": 16076218,
-      "minutes_to_start": 78.8,
+      "minutes_to_start": 60.8,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 6093725
+    },
+    {
+      "match": "Arsenal de Sarandi - CA Villa San Carlos Reserve",
+      "match_market_id": "36363.20502",
+      "match_event_id": 16089469,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Beskid Andrychow - Slask II Wroclaw",
+      "match_market_id": "36362.27207",
+      "match_event_id": 16090602,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "CA Ituzaingo Reserves - CD Uai Urquiza Reserve",
+      "match_market_id": "36362.23782",
+      "match_event_id": 16098286,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Chernomorets Burgas - PFC Ludogorets Razgrad II",
+      "match_market_id": "36361.3641",
+      "match_event_id": 16089229,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5874191
+    },
+    {
+      "match": "Chrysoupoli - AEK Athens",
+      "match_market_id": "36361.57742",
+      "match_event_id": 16076155,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 6106041
+    },
+    {
+      "match": "El Gouna - AL Mokawloon AL Arab",
+      "match_market_id": "36361.16131",
+      "match_event_id": 16070043,
+      "minutes_to_start": 75.8,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5996709
+    },
+    {
+      "match": "Gornik Zabrze II - Grudziadz",
+      "match_market_id": "36364.7152",
+      "match_event_id": 16098284,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "KS Gornik Polkowice - Polonia Warszawa",
+      "match_market_id": "36363.27666",
+      "match_event_id": 16090357,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Marek Dupnica - PFC Nesebar",
+      "match_market_id": "36361.3648",
+      "match_event_id": 16083665,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5874195
+    },
+    {
+      "match": "Rilski Sportist - Sportist Svoge",
+      "match_market_id": "36361.58342",
+      "match_event_id": 16097062,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5874196
+    },
+    {
+      "match": "Slavija Sarajevo - Sutjeska Foca",
+      "match_market_id": "36364.3343",
+      "match_event_id": 16097074,
+      "minutes_to_start": 75.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Van Spor - Batman",
+      "match_market_id": "36361.32883",
+      "match_event_id": 16068963,
+      "minutes_to_start": 75.8,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5908917
     }
   ],
-  "target_count": 25
+  "target_count": 42
 }
