@@ -1,0 +1,248 @@
+{
+  "schema_version": "radar-historical-cross-league-ou25-close-oos-v1",
+  "generated_at": "2026-09-02T05:41:49.705015Z",
+  "status": "COMPLETE_EXTERNAL_CLOSE_BENCHMARK_ONLY",
+  "market": "FULL_TIME_OVER_UNDER_2_5",
+  "design": {
+    "leagues": 7,
+    "development_probability": "Per-league Over 2.5 rate frozen from the three development seasons only.",
+    "holdout": "Latest season already frozen by each accepted structural block.",
+    "market_probability": "De-vigged AvgC>2.5 / AvgC<2.5 from the external Football-Data average closing market.",
+    "outcome_boundary": "Final goals used only for evaluation after probability construction.",
+    "same_bookmaker_primary_signal": false,
+    "goldbet_status": "NOT_GOLDBET",
+    "roi_clv_mms_allowed": false
+  },
+  "coverage": {
+    "potential_holdout_rows": 2212,
+    "scored_rows": 2212,
+    "unscored_rows": 0
+  },
+  "pooled": {
+    "development_rate_baseline": {
+      "n": 2212,
+      "brier": 0.24467671170424887,
+      "log_loss": 0.6824208082218876,
+      "accuracy": 0.5632911392405063
+    },
+    "external_average_close": {
+      "n": 2212,
+      "brier": 0.2382928922325944,
+      "log_loss": 0.6689643486751796,
+      "accuracy": 0.5840867992766727
+    },
+    "delta_close_minus_baseline": {
+      "brier": -0.006383819471654478,
+      "log_loss": -0.013456459546707933
+    }
+  },
+  "uncertainty": {
+    "paired_fixture_bootstrap": {
+      "draws": 10000,
+      "brier_delta_close_minus_baseline_ci95": [
+        -0.009611252615004994,
+        -0.0030646633280966198
+      ],
+      "log_loss_delta_close_minus_baseline_ci95": [
+        -0.02019056630024113,
+        -0.006557091031678882
+      ]
+    },
+    "hierarchical_league_bootstrap": {
+      "draws": 10000,
+      "brier_delta_close_minus_baseline_ci95": [
+        -0.010511167058936807,
+        -0.001985556780652679
+      ],
+      "log_loss_delta_close_minus_baseline_ci95": [
+        -0.022122883006638814,
+        -0.004253164840885594
+      ]
+    }
+  },
+  "by_league": {
+    "Netherlands": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "joined_scored_rows": 306,
+      "development_over_rate_frozen": 0.5947712418300654,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 306,
+        "brier": 0.23668247255329147,
+        "log_loss": 0.6662968436736108,
+        "accuracy": 0.6176470588235294
+      },
+      "external_average_close": {
+        "n": 306,
+        "brier": 0.22743397062087958,
+        "log_loss": 0.6462093812716089,
+        "accuracy": 0.6078431372549019
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.00924850193241189,
+        "log_loss": -0.020087462402001877
+      }
+    },
+    "Portugal": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "joined_scored_rows": 306,
+      "development_over_rate_frozen": 0.5065359477124183,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 306,
+        "brier": 0.24953009526250589,
+        "log_loss": 0.692207319983165,
+        "accuracy": 0.5392156862745098
+      },
+      "external_average_close": {
+        "n": 306,
+        "brier": 0.24114769437547268,
+        "log_loss": 0.6750221245692052,
+        "accuracy": 0.5816993464052288
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.008382400887033209,
+        "log_loss": -0.017185195413959797
+      }
+    },
+    "Germany2": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "joined_scored_rows": 306,
+      "development_over_rate_frozen": 0.593681917211329,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 306,
+        "brier": 0.24408109891257396,
+        "log_loss": 0.681273528563476,
+        "accuracy": 0.5784313725490197
+      },
+      "external_average_close": {
+        "n": 306,
+        "brier": 0.2449102359130695,
+        "log_loss": 0.6828787666654443,
+        "accuracy": 0.5686274509803921
+      },
+      "delta_close_minus_baseline": {
+        "brier": 0.0008291370004955556,
+        "log_loss": 0.0016052381019683315
+      }
+    },
+    "Germany1": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "joined_scored_rows": 306,
+      "development_over_rate_frozen": 0.6089324618736384,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 306,
+        "brier": 0.23196325250022545,
+        "log_loss": 0.6566812717072771,
+        "accuracy": 0.6372549019607843
+      },
+      "external_average_close": {
+        "n": 306,
+        "brier": 0.22354894112996726,
+        "log_loss": 0.637419579734704,
+        "accuracy": 0.630718954248366
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.008414311370258193,
+        "log_loss": -0.019261691972573103
+      }
+    },
+    "Spain1": {
+      "development_rows": 1140,
+      "holdout_rows": 380,
+      "joined_scored_rows": 380,
+      "development_over_rate_frozen": 0.4745614035087719,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 380,
+        "brier": 0.25064712219144347,
+        "log_loss": 0.6944431029075757,
+        "accuracy": 0.5
+      },
+      "external_average_close": {
+        "n": 380,
+        "brier": 0.2395008423162192,
+        "log_loss": 0.671661205657935,
+        "accuracy": 0.5815789473684211
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.011146279875224263,
+        "log_loss": -0.022781897249640748
+      }
+    },
+    "England1": {
+      "development_rows": 1140,
+      "holdout_rows": 380,
+      "joined_scored_rows": 380,
+      "development_over_rate_frozen": 0.5798245614035088,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 380,
+        "brier": 0.24838950446291166,
+        "log_loss": 0.6899536606352019,
+        "accuracy": 0.55
+      },
+      "external_average_close": {
+        "n": 380,
+        "brier": 0.24518657858768567,
+        "log_loss": 0.6835927465061196,
+        "accuracy": 0.5710526315789474
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.003202925875225998,
+        "log_loss": -0.006360914129082351
+      }
+    },
+    "Scotland1": {
+      "development_rows": 684,
+      "holdout_rows": 228,
+      "joined_scored_rows": 228,
+      "development_over_rate_frozen": 0.5701754385964912,
+      "duplicate_raw_keys": 0,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "baseline": {
+        "n": 228,
+        "brier": 0.25061557402277623,
+        "log_loss": 0.6944193626260343,
+        "accuracy": 0.5307017543859649
+      },
+      "external_average_close": {
+        "n": 228,
+        "brier": 0.24643929829369232,
+        "log_loss": 0.686160099392203,
+        "accuracy": 0.5394736842105263
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.004176275729083911,
+        "log_loss": -0.008259263233831304
+      }
+    }
+  },
+  "source_failures": [],
+  "verdict": "External average closing O/U 2.5 probabilities are a benchmark only. Promote no GoldBet rule, threshold, MMS, CLV or ROI inference.",
+  "excluded_leagues": {
+    "Sweden": "Persisted consolidated source has no O/U price columns.",
+    "Norway": "Persisted consolidated source has no O/U price columns.",
+    "Denmark": "Persisted consolidated source has no O/U price columns.",
+    "Austria": "Persisted consolidated source has no O/U price columns."
+  }
+}
