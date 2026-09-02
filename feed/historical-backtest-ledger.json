@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v40",
-  "generated_at": "2026-09-02T04:20:40Z",
+  "schema_version": "radar-historical-backtest-ledger-v41",
+  "generated_at": "2026-09-02T05:42:20Z",
   "local_timezone": "Europe/Rome",
-  "status": "LIGUE1_FOUR_SEASON_FORMAT_DRIFT_NO_MODEL",
+  "status": "OU25_EXTERNAL_CLOSE_OOS_ROBUST_BENCHMARK_ONLY",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -226,7 +226,12 @@
     "france1_2024_2025_rows": 306,
     "france1_2025_2026_rows": 306,
     "france1_structural_rows_accepted": 0,
-    "france1_oos_rows": 0
+    "france1_oos_rows": 0,
+    "ou25_external_close_leagues": 7,
+    "ou25_external_close_holdout_rows": 2212,
+    "ou25_external_close_scored_rows": 2212,
+    "ou25_external_close_missing_identity_rows": 0,
+    "ou25_external_close_missing_price_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -447,7 +452,12 @@
     "Audited and SHA-bound four complete Football-Data Ligue 1 season files for 2022/2023-2025/2026, totaling 1,298 rows.",
     "Detected a structural format change from 20 clubs/380 fixtures/38 appearances in 2022/2023 to 18 clubs/306 fixtures/34 appearances in each of the following three seasons.",
     "Rejected the requested four-season Ligue 1 development/holdout design because only three seasons share the current 18-club format; no outcome- or odds-based downsampling was performed.",
-    "Calculated no Ligue 1 model, OOS metric or threshold and left the existing certified sample unchanged."
+    "Calculated no Ligue 1 model, OOS metric or threshold and left the existing certified sample unchanged.",
+    "Completed a frozen OOS Over/Under 2.5 benchmark on 2,212 holdout fixtures across seven accepted leagues with complete external average closing pairs.",
+    "Used only each league's three development seasons to freeze the baseline Over 2.5 rate, then evaluated the untouched latest-season holdout.",
+    "External average closing O/U 2.5 probabilities improved pooled Brier from 0.24468 to 0.23829 and log-loss from 0.68242 to 0.66896.",
+    "Confirmed the O/U closing advantage with paired fixture and hierarchical league bootstrap intervals entirely below zero.",
+    "Kept the result external-benchmark-only: no GoldBet same-book MMS, CLV, ROI or operational threshold was inferred."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2425,6 +2435,47 @@
       "four_season_directly_comparable": false,
       "accepted_model_rows": 0,
       "decision": "REJECT_FOUR_SEASON_MODEL_FORMAT_DRIFT_20_TO_18"
+    },
+    "cross_league_ou25_external_close_oos": {
+      "report": "feed/historical/markets/cross-league-ou25-close-oos-v1.json",
+      "leagues": 7,
+      "holdout_rows": 2212,
+      "scored_rows": 2212,
+      "baseline": {
+        "brier": 0.24467671170424887,
+        "log_loss": 0.6824208082218876,
+        "accuracy": 0.5632911392405063
+      },
+      "external_average_close": {
+        "brier": 0.2382928922325944,
+        "log_loss": 0.6689643486751796,
+        "accuracy": 0.5840867992766727
+      },
+      "delta_close_minus_baseline": {
+        "brier": -0.006383819471654478,
+        "log_loss": -0.013456459546707933
+      },
+      "paired_fixture_ci95": {
+        "brier": [
+          -0.009611252615004994,
+          -0.0030646633280966198
+        ],
+        "log_loss": [
+          -0.02019056630024113,
+          -0.006557091031678882
+        ]
+      },
+      "hierarchical_league_ci95": {
+        "brier": [
+          -0.010511167058936807,
+          -0.001985556780652679
+        ],
+        "log_loss": [
+          -0.022122883006638814,
+          -0.004253164840885594
+        ]
+      },
+      "decision": "ROBUST_EXTERNAL_BENCHMARK_NO_GOLDBET_RULE"
     }
   },
   "ablation_plan": {
@@ -2447,7 +2498,7 @@
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
     "next_analysis_lane": "Stop adding coarse aggregate proxies to Elo. Prioritize new versioned sources or a predeclared development-only candidate with direct tactical/player meaning; any model promotion still requires a new independent temporal holdout.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
-    "market_lane": "External average close remains a benchmark only. Persist genuine GoldBet TRUE OPEN, T-30 and last-pre-kickoff rows separately; never relabel the external average close or LAST_PERSISTED_PRE_KICKOFF as GoldBet CLOSE.",
+    "market_lane": "O/U 2.5 external close benchmark complete for seven leagues; primary movement inference still requires GoldBet same-book OPEN-to-certified-CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
   "rule_decisions": {
