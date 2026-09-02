@@ -1,0 +1,670 @@
+{
+  "schema_version": "radar-historical-cross-league-1x2-elo-close-blend-oos-v1",
+  "generated_at": "2026-09-02T11:35:03.490512+00:00",
+  "status": "COMPLETE_ROLLING_DEVELOPMENT_SELECTED_FROZEN_OOS",
+  "market": "FULL_TIME_1X2",
+  "design": {
+    "development_validation_rows": 6152,
+    "rolling_origin_folds": 22,
+    "holdout_rows": 3076,
+    "blend_formula": "w*external_average_close + (1-w)*ELO_ONLY",
+    "weight_grid": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "selection_metric": "rolling-development log-loss; Brier then larger close weight tie breakers",
+    "selected_close_weight": 1.0,
+    "selected_elo_weight": 0.0,
+    "final_holdout_used_for_weight_selection": false,
+    "external_price_semantics": "de-vigged external average close; not GoldBet",
+    "operational_rule_allowed": false
+  },
+  "development_selection": {
+    "selected": {
+      "close_weight": 1.0,
+      "n": 6152,
+      "brier": 0.5723972531086512,
+      "log_loss": 0.9635058444325996,
+      "accuracy": 0.5377113133940182
+    },
+    "grid": [
+      {
+        "close_weight": 0.0,
+        "n": 6152,
+        "brier": 0.5978272716848794,
+        "log_loss": 1.0022793208163792,
+        "accuracy": 0.5172301690507152
+      },
+      {
+        "close_weight": 0.05,
+        "n": 6152,
+        "brier": 0.5956999505100011,
+        "log_loss": 0.9988741805272234,
+        "accuracy": 0.5190182054616385
+      },
+      {
+        "close_weight": 0.1,
+        "n": 6152,
+        "brier": 0.5936627156768142,
+        "log_loss": 0.9956675153926029,
+        "accuracy": 0.5216189856957087
+      },
+      {
+        "close_weight": 0.15,
+        "n": 6152,
+        "brier": 0.5917155671853185,
+        "log_loss": 0.9926448308624254,
+        "accuracy": 0.5229193758127438
+      },
+      {
+        "close_weight": 0.2,
+        "n": 6152,
+        "brier": 0.589858505035514,
+        "log_loss": 0.9897948556498009,
+        "accuracy": 0.5232444733420026
+      },
+      {
+        "close_weight": 0.25,
+        "n": 6152,
+        "brier": 0.5880915292274007,
+        "log_loss": 0.9871085532704073,
+        "accuracy": 0.5253576072821846
+      },
+      {
+        "close_weight": 0.3,
+        "n": 6152,
+        "brier": 0.5864146397609787,
+        "log_loss": 0.9845785357696121,
+        "accuracy": 0.5264954486345904
+      },
+      {
+        "close_weight": 0.35,
+        "n": 6152,
+        "brier": 0.584827836636248,
+        "log_loss": 0.9821986888297761,
+        "accuracy": 0.5264954486345904
+      },
+      {
+        "close_weight": 0.4,
+        "n": 6152,
+        "brier": 0.5833311198532085,
+        "log_loss": 0.9799639189340819,
+        "accuracy": 0.5274707412223667
+      },
+      {
+        "close_weight": 0.45,
+        "n": 6152,
+        "brier": 0.5819244894118603,
+        "log_loss": 0.9778699762508803,
+        "accuracy": 0.5294213263979194
+      },
+      {
+        "close_weight": 0.5,
+        "n": 6152,
+        "brier": 0.5806079453122032,
+        "log_loss": 0.9759133272868106,
+        "accuracy": 0.5294213263979194
+      },
+      {
+        "close_weight": 0.55,
+        "n": 6152,
+        "brier": 0.5793814875542374,
+        "log_loss": 0.9740910619086479,
+        "accuracy": 0.5316970091027308
+      },
+      {
+        "close_weight": 0.6,
+        "n": 6152,
+        "brier": 0.5782451161379628,
+        "log_loss": 0.9724008252005842,
+        "accuracy": 0.5346228868660599
+      },
+      {
+        "close_weight": 0.65,
+        "n": 6152,
+        "brier": 0.5771988310633795,
+        "log_loss": 0.970840768095013,
+        "accuracy": 0.5365734720416124
+      },
+      {
+        "close_weight": 0.7,
+        "n": 6152,
+        "brier": 0.5762426323304874,
+        "log_loss": 0.9694095128961493,
+        "accuracy": 0.5373862158647594
+      },
+      {
+        "close_weight": 0.75,
+        "n": 6152,
+        "brier": 0.5753765199392866,
+        "log_loss": 0.9681061312815751,
+        "accuracy": 0.5377113133940182
+      },
+      {
+        "close_weight": 0.8,
+        "n": 6152,
+        "brier": 0.5746004938897771,
+        "log_loss": 0.9669301334409779,
+        "accuracy": 0.5370611183355006
+      },
+      {
+        "close_weight": 0.85,
+        "n": 6152,
+        "brier": 0.5739145541819587,
+        "log_loss": 0.9658814678986086,
+        "accuracy": 0.538036410923277
+      },
+      {
+        "close_weight": 0.9,
+        "n": 6152,
+        "brier": 0.5733187008158317,
+        "log_loss": 0.9649605324224341,
+        "accuracy": 0.5381989596879063
+      },
+      {
+        "close_weight": 0.95,
+        "n": 6152,
+        "brier": 0.5728129337913958,
+        "log_loss": 0.9641681974060717,
+        "accuracy": 0.5378738621586476
+      },
+      {
+        "close_weight": 1.0,
+        "n": 6152,
+        "brier": 0.5723972531086512,
+        "log_loss": 0.9635058444325996,
+        "accuracy": 0.5377113133940182
+      }
+    ],
+    "folds": [
+      {
+        "league": "Allsvenskan",
+        "train_seasons": [
+          "2022"
+        ],
+        "validation_season": "2023",
+        "train_n": 240,
+        "validation_n": 240
+      },
+      {
+        "league": "Allsvenskan",
+        "train_seasons": [
+          "2022",
+          "2023"
+        ],
+        "validation_season": "2024",
+        "train_n": 480,
+        "validation_n": 240
+      },
+      {
+        "league": "Eliteserien",
+        "train_seasons": [
+          "2022"
+        ],
+        "validation_season": "2023",
+        "train_n": 240,
+        "validation_n": 240
+      },
+      {
+        "league": "Eliteserien",
+        "train_seasons": [
+          "2022",
+          "2023"
+        ],
+        "validation_season": "2024",
+        "train_n": 480,
+        "validation_n": 240
+      },
+      {
+        "league": "Superliga",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 192,
+        "validation_n": 192
+      },
+      {
+        "league": "Superliga",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 384,
+        "validation_n": 192
+      },
+      {
+        "league": "Eredivisie",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 306,
+        "validation_n": 306
+      },
+      {
+        "league": "Eredivisie",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 612,
+        "validation_n": 306
+      },
+      {
+        "league": "Primeira Liga",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 306,
+        "validation_n": 306
+      },
+      {
+        "league": "Primeira Liga",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 612,
+        "validation_n": 306
+      },
+      {
+        "league": "2. Bundesliga",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 306,
+        "validation_n": 306
+      },
+      {
+        "league": "2. Bundesliga",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 612,
+        "validation_n": 306
+      },
+      {
+        "league": "Bundesliga",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 306,
+        "validation_n": 306
+      },
+      {
+        "league": "Bundesliga",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 612,
+        "validation_n": 306
+      },
+      {
+        "league": "LaLiga",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 380,
+        "validation_n": 380
+      },
+      {
+        "league": "LaLiga",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 760,
+        "validation_n": 380
+      },
+      {
+        "league": "Premier League",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 380,
+        "validation_n": 380
+      },
+      {
+        "league": "Premier League",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 760,
+        "validation_n": 380
+      },
+      {
+        "league": "Scottish Premiership",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 228,
+        "validation_n": 228
+      },
+      {
+        "league": "Scottish Premiership",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 456,
+        "validation_n": 228
+      },
+      {
+        "league": "Austrian Bundesliga",
+        "train_seasons": [
+          "2022/2023"
+        ],
+        "validation_season": "2023/2024",
+        "train_n": 192,
+        "validation_n": 192
+      },
+      {
+        "league": "Austrian Bundesliga",
+        "train_seasons": [
+          "2022/2023",
+          "2023/2024"
+        ],
+        "validation_season": "2024/2025",
+        "train_n": 384,
+        "validation_n": 192
+      }
+    ]
+  },
+  "holdout": {
+    "external_average_close": {
+      "n": 3076,
+      "brier": 0.5829934129060756,
+      "log_loss": 0.9792668118476726,
+      "accuracy": 0.5341352405721717
+    },
+    "elo_only": {
+      "n": 3076,
+      "brier": 0.6002423703022668,
+      "log_loss": 1.0050528376814343,
+      "accuracy": 0.5045513654096229
+    },
+    "frozen_blend": {
+      "n": 3076,
+      "brier": 0.5829934129060756,
+      "log_loss": 0.9792668118476726,
+      "accuracy": 0.5341352405721717
+    },
+    "delta_blend_minus_close": {
+      "brier": 0.0,
+      "log_loss": 0.0
+    }
+  },
+  "uncertainty": {
+    "paired_fixture": {
+      "draws": 10000,
+      "brier_delta_blend_minus_close_ci95": [
+        0.0,
+        0.0
+      ],
+      "log_loss_delta_blend_minus_close_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "hierarchical_league": {
+      "draws": 10000,
+      "brier_delta_blend_minus_close_ci95": [
+        0.0,
+        0.0
+      ],
+      "log_loss_delta_blend_minus_close_ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "by_league": {
+    "2. Bundesliga": {
+      "n": 306,
+      "close": {
+        "n": 306,
+        "brier": 0.6183062484522198,
+        "log_loss": 1.0300289301393202,
+        "accuracy": 0.5
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.6183062484522198,
+        "log_loss": 1.0300289301393202,
+        "accuracy": 0.5
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Allsvenskan": {
+      "n": 240,
+      "close": {
+        "n": 240,
+        "brier": 0.5908613334036068,
+        "log_loss": 0.9916574212366952,
+        "accuracy": 0.5416666666666666
+      },
+      "blend": {
+        "n": 240,
+        "brier": 0.5908613334036068,
+        "log_loss": 0.9916574212366952,
+        "accuracy": 0.5416666666666666
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Austrian Bundesliga": {
+      "n": 192,
+      "close": {
+        "n": 192,
+        "brier": 0.6494172334293994,
+        "log_loss": 1.0738829396999394,
+        "accuracy": 0.4479166666666667
+      },
+      "blend": {
+        "n": 192,
+        "brier": 0.6494172334293994,
+        "log_loss": 1.0738829396999394,
+        "accuracy": 0.4479166666666667
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Bundesliga": {
+      "n": 306,
+      "close": {
+        "n": 306,
+        "brier": 0.5618184045532181,
+        "log_loss": 0.9510054747507789,
+        "accuracy": 0.565359477124183
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.5618184045532181,
+        "log_loss": 0.9510054747507789,
+        "accuracy": 0.565359477124183
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Eliteserien": {
+      "n": 240,
+      "close": {
+        "n": 240,
+        "brier": 0.5309813270392499,
+        "log_loss": 0.9069699760355938,
+        "accuracy": 0.6041666666666666
+      },
+      "blend": {
+        "n": 240,
+        "brier": 0.5309813270392499,
+        "log_loss": 0.9069699760355938,
+        "accuracy": 0.6041666666666666
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Eredivisie": {
+      "n": 306,
+      "close": {
+        "n": 306,
+        "brier": 0.5819709995128839,
+        "log_loss": 0.9788572055659103,
+        "accuracy": 0.5326797385620915
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.5819709995128839,
+        "log_loss": 0.9788572055659103,
+        "accuracy": 0.5326797385620915
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "LaLiga": {
+      "n": 380,
+      "close": {
+        "n": 380,
+        "brier": 0.5716509492588124,
+        "log_loss": 0.9649804790839723,
+        "accuracy": 0.5447368421052632
+      },
+      "blend": {
+        "n": 380,
+        "brier": 0.5716509492588124,
+        "log_loss": 0.9649804790839723,
+        "accuracy": 0.5447368421052632
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Premier League": {
+      "n": 380,
+      "close": {
+        "n": 380,
+        "brier": 0.6077370146246498,
+        "log_loss": 1.0117668726695337,
+        "accuracy": 0.49473684210526314
+      },
+      "blend": {
+        "n": 380,
+        "brier": 0.6077370146246498,
+        "log_loss": 1.0117668726695337,
+        "accuracy": 0.49473684210526314
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Primeira Liga": {
+      "n": 306,
+      "close": {
+        "n": 306,
+        "brier": 0.5335996917454416,
+        "log_loss": 0.9038808045060407,
+        "accuracy": 0.5784313725490197
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.5335996917454416,
+        "log_loss": 0.9038808045060407,
+        "accuracy": 0.5784313725490197
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Scottish Premiership": {
+      "n": 228,
+      "close": {
+        "n": 228,
+        "brier": 0.5758910416100396,
+        "log_loss": 0.9684421006736641,
+        "accuracy": 0.5219298245614035
+      },
+      "blend": {
+        "n": 228,
+        "brier": 0.5758910416100396,
+        "log_loss": 0.9684421006736641,
+        "accuracy": 0.5219298245614035
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Superliga": {
+      "n": 192,
+      "close": {
+        "n": 192,
+        "brier": 0.6114793315981354,
+        "log_loss": 1.0212784472780634,
+        "accuracy": 0.53125
+      },
+      "blend": {
+        "n": 192,
+        "brier": 0.6114793315981354,
+        "log_loss": 1.0212784472780634,
+        "accuracy": 0.53125
+      },
+      "delta_blend_minus_close": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    }
+  },
+  "verdict": "Promote an Elo increment only if rolling-development selection gives it positive weight and the frozen holdout improves robustly. External average close remains a non-GoldBet benchmark."
+}
