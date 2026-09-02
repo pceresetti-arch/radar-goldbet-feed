@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v41",
-  "generated_at": "2026-09-02T05:42:20Z",
+  "schema_version": "radar-historical-backtest-ledger-v42",
+  "generated_at": "2026-09-02T06:30:00Z",
   "local_timezone": "Europe/Rome",
-  "status": "OU25_EXTERNAL_CLOSE_OOS_ROBUST_BENCHMARK_ONLY",
+  "status": "B365_OU25_SAME_BOOK_MOVEMENT_THRESHOLDS_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -231,7 +231,11 @@
     "ou25_external_close_holdout_rows": 2212,
     "ou25_external_close_scored_rows": 2212,
     "ou25_external_close_missing_identity_rows": 0,
-    "ou25_external_close_missing_price_rows": 0
+    "ou25_external_close_missing_price_rows": 0,
+    "b365_ou25_same_book_rows": 8848,
+    "b365_ou25_same_book_development_rows": 6636,
+    "b365_ou25_same_book_holdout_rows": 2212,
+    "b365_ou25_missing_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -457,7 +461,12 @@
     "Used only each league's three development seasons to freeze the baseline Over 2.5 rate, then evaluated the untouched latest-season holdout.",
     "External average closing O/U 2.5 probabilities improved pooled Brier from 0.24468 to 0.23829 and log-loss from 0.68242 to 0.66896.",
     "Confirmed the O/U closing advantage with paired fixture and hierarchical league bootstrap intervals entirely below zero.",
-    "Kept the result external-benchmark-only: no GoldBet same-book MMS, CLV, ROI or operational threshold was inferred."
+    "Kept the result external-benchmark-only: no GoldBet same-book MMS, CLV, ROI or operational threshold was inferred.",
+    "Completed a seven-league Bet365 same-book O/U 2.5 early-to-close diagnostic on 8,848 exactly joined fixtures: 6,636 development and 2,212 holdout.",
+    "Confirmed that Bet365 closing probabilities improve early-price holdout Brier from 0.23981 to 0.23838 and log-loss from 0.67216 to 0.66910; paired intervals exclude zero.",
+    "Evaluated pre-specified movement bands below 1pp, 1-2pp, 2-3pp and at least 3pp without selecting thresholds on the final holdout.",
+    "Rejected all movement-following thresholds. The at-least-3pp band returned +6.24% in development but only +4.21% OOS, with ROI CI95 crossing zero and positive ROI in 4/7 leagues.",
+    "Classified B365 early prices as timestamp-uncertified provider early prices, never GoldBet TRUE OPEN."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2476,6 +2485,38 @@
         ]
       },
       "decision": "ROBUST_EXTERNAL_BENCHMARK_NO_GOLDBET_RULE"
+    },
+    "b365_ou25_same_book_movement_oos": {
+      "report": "feed/historical/markets/b365-ou25-early-close-movement-oos-v1.json",
+      "rows": 8848,
+      "development": 6636,
+      "holdout": 2212,
+      "holdout_probability_quality": {
+        "early_brier": 0.2398113845098299,
+        "close_brier": 0.23838050583964454,
+        "early_log_loss": 0.6721636167325987,
+        "close_log_loss": 0.6690988705400851,
+        "brier_delta_ci95": [
+          -0.0026542155502324795,
+          -0.00022679526621020548
+        ],
+        "log_loss_delta_ci95": [
+          -0.00563718136861498,
+          -0.0005472650583138417
+        ]
+      },
+      "ge_3pp": {
+        "development_n": 1916,
+        "development_roi": 0.06235386221294363,
+        "holdout_n": 661,
+        "holdout_roi": 0.0421482602118003,
+        "holdout_roi_ci95": [
+          -0.0329803328290469,
+          0.11891187594553705
+        ],
+        "positive_holdout_leagues": 4
+      },
+      "decision": "ALL_PRE_SPECIFIED_MOVEMENT_THRESHOLDS_REJECTED"
     }
   },
   "ablation_plan": {
@@ -2591,6 +2632,7 @@
     "note": "No operational changes. The observed final structural holdout remains closed to candidate selection."
   },
   "rejected_rules": [
-    "Reject pooled four-season Ligue 1 modeling or result-based downsampling across the 20-to-18-club format change."
+    "Reject pooled four-season Ligue 1 modeling or result-based downsampling across the 20-to-18-club format change.",
+    "Reject Bet365 O/U 2.5 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes the frozen OOS promotion gate."
   ]
 }
