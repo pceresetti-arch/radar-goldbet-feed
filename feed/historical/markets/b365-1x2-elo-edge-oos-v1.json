@@ -1,0 +1,301 @@
+{
+  "schema_version": "radar-historical-b365-1x2-elo-edge-oos-v1",
+  "generated_at": "2026-09-02T12:38:57.438793+00:00",
+  "status": "COMPLETE_ROLLING_DEVELOPMENT_AND_FROZEN_HOLDOUT",
+  "market": "FULL_TIME_1X2",
+  "bookmaker": "Bet365",
+  "design": {
+    "rolling_development_rows": 4424,
+    "holdout_rows": 2212,
+    "thresholds_pp": [
+      1,
+      2,
+      3,
+      5,
+      8
+    ],
+    "one_selection_per_fixture": true,
+    "selection": "Outcome with maximum ELO_ONLY probability minus de-vigged Bet365 provider-early probability, if edge meets threshold",
+    "development_predictions": "Out-of-fold from two rolling-origin folds per league",
+    "holdout_predictions": "Persisted model fitted on all three development seasons",
+    "provider_early_timestamp_certified": false,
+    "true_open": false,
+    "goldbet": false,
+    "outcomes_evaluation_only": true
+  },
+  "coverage": {
+    "Netherlands": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Portugal": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Germany2": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Germany1": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Spain1": {
+      "rolling_development_expected": 760,
+      "rolling_development_scored": 760,
+      "holdout_expected": 380,
+      "holdout_scored": 380,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "England1": {
+      "rolling_development_expected": 760,
+      "rolling_development_scored": 760,
+      "holdout_expected": 380,
+      "holdout_scored": 380,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Scotland1": {
+      "rolling_development_expected": 456,
+      "rolling_development_scored": 456,
+      "holdout_expected": 228,
+      "holdout_scored": 228,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    }
+  },
+  "development": {
+    "1pp": {
+      "n": 4305,
+      "hit_rate": 0.3419279907084785,
+      "mean_edge": 0.07789202034890207,
+      "mean_odds": 3.503993031358885,
+      "roi": -0.13296864111498255,
+      "roi_ci95": [
+        -0.17637311265969804,
+        -0.08901033681765393
+      ],
+      "max_drawdown_units": 588.8100000000002,
+      "positive_roi_leagues": 0,
+      "league_count": 7,
+      "side_counts": {
+        "H": 2354,
+        "D": 521,
+        "A": 1430
+      }
+    },
+    "2pp": {
+      "n": 3980,
+      "hit_rate": 0.3449748743718593,
+      "mean_edge": 0.08299553816720573,
+      "mean_odds": 3.4800226130653265,
+      "roi": -0.129248743718593,
+      "roi_ci95": [
+        -0.17386708542713566,
+        -0.08394202261306533
+      ],
+      "max_drawdown_units": 530.7899999999996,
+      "positive_roi_leagues": 0,
+      "league_count": 7,
+      "side_counts": {
+        "H": 2221,
+        "D": 439,
+        "A": 1320
+      }
+    },
+    "3pp": {
+      "n": 3609,
+      "hit_rate": 0.3480188417844278,
+      "mean_edge": 0.08895255119246515,
+      "mean_odds": 3.4551288445552784,
+      "roi": -0.12099750623441398,
+      "roi_ci95": [
+        -0.167431906345248,
+        -0.07385667775006925
+      ],
+      "max_drawdown_units": 454.0599999999997,
+      "positive_roi_leagues": 0,
+      "league_count": 7,
+      "side_counts": {
+        "H": 2061,
+        "D": 363,
+        "A": 1185
+      }
+    },
+    "5pp": {
+      "n": 2740,
+      "hit_rate": 0.3470802919708029,
+      "mean_edge": 0.10446934337026177,
+      "mean_odds": 3.3550000000000004,
+      "roi": -0.15016058394160584,
+      "roi_ci95": [
+        -0.20224844890510943,
+        -0.09788275547445253
+      ],
+      "max_drawdown_units": 423.2499999999998,
+      "positive_roi_leagues": 0,
+      "league_count": 7,
+      "side_counts": {
+        "H": 1663,
+        "D": 194,
+        "A": 883
+      }
+    },
+    "8pp": {
+      "n": 1713,
+      "hit_rate": 0.35434909515469937,
+      "mean_edge": 0.12892784720589887,
+      "mean_odds": 3.212702860478692,
+      "roi": -0.15063047285464096,
+      "roi_ci95": [
+        -0.21408143607705785,
+        -0.0841687098657327
+      ],
+      "max_drawdown_units": 281.18999999999994,
+      "positive_roi_leagues": 0,
+      "league_count": 7,
+      "side_counts": {
+        "H": 1114,
+        "D": 77,
+        "A": 522
+      }
+    }
+  },
+  "holdout": {
+    "1pp": {
+      "n": 2139,
+      "hit_rate": 0.3468910705937354,
+      "mean_edge": 0.06677134324820581,
+      "mean_odds": 3.3553903693314635,
+      "roi": -0.10544647031323047,
+      "roi_ci95": [
+        -0.16456778868630206,
+        -0.0445943197755961
+      ],
+      "max_drawdown_units": 249.26000000000005,
+      "positive_roi_leagues": 1,
+      "league_count": 7,
+      "side_counts": {
+        "H": 1053,
+        "D": 314,
+        "A": 772
+      }
+    },
+    "2pp": {
+      "n": 1945,
+      "hit_rate": 0.35012853470437016,
+      "mean_edge": 0.07189096704988497,
+      "mean_odds": 3.3442724935732646,
+      "roi": -0.09939845758354754,
+      "roi_ci95": [
+        -0.1634814910025707,
+        -0.03698020565552701
+      ],
+      "max_drawdown_units": 217.85000000000016,
+      "positive_roi_leagues": 1,
+      "league_count": 7,
+      "side_counts": {
+        "H": 986,
+        "D": 265,
+        "A": 694
+      }
+    },
+    "3pp": {
+      "n": 1674,
+      "hit_rate": 0.34647550776583036,
+      "mean_edge": 0.07948696621330657,
+      "mean_odds": 3.3192891278375147,
+      "roi": -0.11459976105137397,
+      "roi_ci95": [
+        -0.1818408004778973,
+        -0.04722715053763442
+      ],
+      "max_drawdown_units": 220.2400000000003,
+      "positive_roi_leagues": 2,
+      "league_count": 7,
+      "side_counts": {
+        "H": 881,
+        "D": 200,
+        "A": 593
+      }
+    },
+    "5pp": {
+      "n": 1191,
+      "hit_rate": 0.34676742233417296,
+      "mean_edge": 0.09565868666099259,
+      "mean_odds": 3.2685390428211587,
+      "roi": -0.14198992443324937,
+      "roi_ci95": [
+        -0.21660894206549122,
+        -0.06304534005037785
+      ],
+      "max_drawdown_units": 182.13000000000028,
+      "positive_roi_leagues": 1,
+      "league_count": 7,
+      "side_counts": {
+        "H": 675,
+        "D": 83,
+        "A": 433
+      }
+    },
+    "8pp": {
+      "n": 656,
+      "hit_rate": 0.3871951219512195,
+      "mean_edge": 0.1215934621896238,
+      "mean_odds": 3.167423780487805,
+      "roi": -0.0398780487804878,
+      "roi_ci95": [
+        -0.14552019817073172,
+        0.0678357469512195
+      ],
+      "max_drawdown_units": 47.10000000000002,
+      "positive_roi_leagues": 2,
+      "league_count": 7,
+      "side_counts": {
+        "H": 393,
+        "D": 30,
+        "A": 233
+      }
+    }
+  },
+  "promotion_gates": {
+    "1pp": {
+      "passes": false,
+      "rule": "n>=200 both partitions, positive rolling-development ROI, holdout ROI CI95 above zero, positive ROI in >=5/7 leagues"
+    },
+    "2pp": {
+      "passes": false,
+      "rule": "n>=200 both partitions, positive rolling-development ROI, holdout ROI CI95 above zero, positive ROI in >=5/7 leagues"
+    },
+    "3pp": {
+      "passes": false,
+      "rule": "n>=200 both partitions, positive rolling-development ROI, holdout ROI CI95 above zero, positive ROI in >=5/7 leagues"
+    },
+    "5pp": {
+      "passes": false,
+      "rule": "n>=200 both partitions, positive rolling-development ROI, holdout ROI CI95 above zero, positive ROI in >=5/7 leagues"
+    },
+    "8pp": {
+      "passes": false,
+      "rule": "n>=200 both partitions, positive rolling-development ROI, holdout ROI CI95 above zero, positive ROI in >=5/7 leagues"
+    }
+  },
+  "verdict": "No threshold may be operationally promoted unless it passes the frozen gate; Bet365 provider-early prices are not certified TRUE OPEN and cannot be relabelled GoldBet."
+}
