@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T21:58:49.757386+00:00",
+  "generated_at": "2026-09-02T22:18:55.596934+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -25,18 +25,193 @@
   "attempts": [
     {
       "attempt": 1,
-      "mode": "FULL_DISCOVERY",
-      "started_at": "2026-09-02T21:58:49.540921+00:00",
-      "finished_at": "2026-09-02T21:58:49.757372+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 0,
-      "events": [],
-      "actionable_events": []
+      "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
+      "started_at": "2026-09-02T22:18:48.484820+00:00",
+      "finished_at": "2026-09-02T22:18:55.596917+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 10,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T22:18:55.596504+00:00",
+          "match": "Flamengo - Mirassol FC SP",
+          "league": "Serie A",
+          "start_time": "03-09-2026 00:30",
+          "minutes_to_start": 11.1,
+          "match_market_id": "36361.20425",
+          "match_event_id": 16073677,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5103394,
+          "previous_status": null,
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": null,
+          "current_xi_fingerprint": "0b19e9276d80316e4995",
+          "confirmed_at": "2026-09-02T22:18:55.316954+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T22:18:55.596504+00:00",
+          "match": "Flamengo - Mirassol FC SP",
+          "league": "Serie A",
+          "start_time": "03-09-2026 00:30",
+          "minutes_to_start": 11.1,
+          "match_market_id": "36361.20425",
+          "match_event_id": 16073677,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5103394,
+          "previous_status": null,
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": null,
+          "current_xi_fingerprint": "0b19e9276d80316e4995",
+          "confirmed_at": "2026-09-02T22:18:55.316954+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [],
-  "target_count": 0
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T22:18:55.596504+00:00",
+      "match": "Flamengo - Mirassol FC SP",
+      "league": "Serie A",
+      "start_time": "03-09-2026 00:30",
+      "minutes_to_start": 11.1,
+      "match_market_id": "36361.20425",
+      "match_event_id": 16073677,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5103394,
+      "previous_status": null,
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": null,
+      "current_xi_fingerprint": "0b19e9276d80316e4995",
+      "confirmed_at": "2026-09-02T22:18:55.316954+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T22:18:55.596504+00:00",
+      "match": "Flamengo - Mirassol FC SP",
+      "league": "Serie A",
+      "start_time": "03-09-2026 00:30",
+      "minutes_to_start": 11.1,
+      "match_market_id": "36361.20425",
+      "match_event_id": 16073677,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5103394,
+      "previous_status": null,
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": null,
+      "current_xi_fingerprint": "0b19e9276d80316e4995",
+      "confirmed_at": "2026-09-02T22:18:55.316954+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Deportes Quindio - Llaneros",
+      "match_market_id": "36361.6887",
+      "match_event_id": 16089531,
+      "minutes_to_start": 11.1,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 5991789
+    },
+    {
+      "match": "Indep. Santa Fe - America de Cali Sa",
+      "match_market_id": "36363.31279",
+      "match_event_id": 16091036,
+      "minutes_to_start": 11.1,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Atenas San Carlos - Penarol",
+      "match_market_id": "36363.20850",
+      "match_event_id": 16089529,
+      "minutes_to_start": 41.1,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "CA Colegiales - Ferrocarril Midland",
+      "match_market_id": "36361.18013",
+      "match_event_id": 16073676,
+      "minutes_to_start": 41.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5113005
+    },
+    {
+      "match": "Caracas - Portuguesa",
+      "match_market_id": "36361.25504",
+      "match_event_id": 16090225,
+      "minutes_to_start": 41.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000018900
+    },
+    {
+      "match": "Charleston Battery - Hartford Athletic",
+      "match_market_id": "36361.789",
+      "match_event_id": 16073988,
+      "minutes_to_start": 41.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5109923
+    },
+    {
+      "match": "Westchester SC - Chattanooga Red Wolves SC",
+      "match_market_id": "36362.28724",
+      "match_event_id": 16090583,
+      "minutes_to_start": 41.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5109534
+    },
+    {
+      "match": "Charlotte Independence - Portland Hearts of Pine",
+      "match_market_id": "36362.28727",
+      "match_event_id": 16090591,
+      "minutes_to_start": 71.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5109530
+    },
+    {
+      "match": "Fort Wayne FC - Richmond Kickers",
+      "match_market_id": "36363.28232",
+      "match_event_id": 16090487,
+      "minutes_to_start": 71.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5109535
+    },
+    {
+      "match": "NY Cosmos - Sarasota Paradise",
+      "match_market_id": "36363.28613",
+      "match_event_id": 16090585,
+      "minutes_to_start": 71.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 5109533
+    }
+  ],
+  "target_count": 15
 }
