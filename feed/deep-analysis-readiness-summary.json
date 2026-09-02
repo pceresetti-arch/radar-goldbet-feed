@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-02T23:46:01.608473+00:00",
+  "generated_at": "2026-09-02T23:46:22.640572+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.8,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 6.1,
-    "betflag_standard_source": 6.3,
-    "betflag_player_source": 6.2,
-    "player_context": 12.7
+    "lineups": 1.1,
+    "tactical": 0.7,
+    "betflag_fixture_feed": 6.5,
+    "betflag_standard_source": 6.6,
+    "betflag_player_source": 6.6,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -75,11 +75,11 @@
       "start_time": "03-09-2026 02:30",
       "minutes_to_start": 44.7,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 34,
       "player_count": 26,
       "player_quote_count": 156,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     },
     {
@@ -97,8 +97,21 @@
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 1,
+  "player_lane_ready_count": 2,
   "player_lane_ready_matches": [
+    {
+      "match_market_id": "36361.16922",
+      "match": "Santos SP - Palmeiras",
+      "league": "Coppa Brasiliana",
+      "start_time": "03-09-2026 02:30",
+      "minutes_to_start": 44.7,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 26,
+      "player_quote_count": 156,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    },
     {
       "match_market_id": "36361.30372",
       "match": "Deportivo Toluca - Club Leon",
