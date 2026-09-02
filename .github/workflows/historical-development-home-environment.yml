@@ -31,6 +31,15 @@ jobs:
             echo "No report changes"
           else
             git commit -m "Add development-only home-environment rolling audit"
-            git pull --rebase origin main
-            git push
+            published=false
+            for attempt in 1 2 3 4 5 6 7 8; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                published=true
+                break
+              fi
+              sleep 3
+            done
+            test "$published" = true
           fi
