@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T23:22:03.087682+00:00",
+  "generated_at": "2026-09-02T23:32:54.690086+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,9 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 12,
+  "target_count": 13,
   "status_counts": {
-    "SOURCE_CONFIRMED": 4,
+    "SOURCE_CONFIRMED": 5,
     "REFERENCE_PREVIOUS_XI": 6,
     "NOT_AVAILABLE": 2
   },
@@ -23,54 +23,45 @@
     {
       "date": "2026-09-03",
       "status": 200,
-      "matches": 76
+      "matches": 74
     }
   ],
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-02T23:22:03.087682+00:00",
+    "generated_at": "2026-09-02T23:32:54.690086+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 10,
+    "target_count": 7,
     "sources": [
       "FotMob",
       "Sofascore"
     ],
     "schedule_meta": {
-      "2026-09-02": {
-        "provider": "Sofascore",
-        "error": "SCHEDULE_UNAVAILABLE"
-      },
       "2026-09-03": {
         "provider": "Sofascore",
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Forward Madison FC - One Knoxville SC",
+        "minutes_to_start": 27.1,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Charlotte Independence - Portland Hearts of Pine",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Fort Wayne FC - Richmond Kickers",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "NY Cosmos - Sarasota Paradise",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "matches": [
     {
       "match": "Charlotte Independence - Portland Hearts of Pine",
       "start_time": "03-09-2026 01:30",
       "league": "USL League One",
-      "minutes_to_start": 7.9,
+      "minutes_to_start": -2.9,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36362.28727",
       "confirmed_at": "2026-09-02T22:49:06.100003+00:00",
@@ -82,11 +73,11 @@
       "match": "Fort Wayne FC - Richmond Kickers",
       "start_time": "03-09-2026 01:30",
       "league": "USL League One",
-      "minutes_to_start": 7.9,
+      "minutes_to_start": -2.9,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36363.28232",
-      "confirmed_at": "2026-09-02T22:49:06.100003+00:00",
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-09-02T23:32:48.283942+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -94,7 +85,7 @@
       "match": "NY Cosmos - Sarasota Paradise",
       "start_time": "03-09-2026 01:30",
       "league": "USL League One",
-      "minutes_to_start": 7.9,
+      "minutes_to_start": -2.9,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36363.28613",
       "confirmed_at": "2026-09-02T23:02:27.659365+00:00",
@@ -106,7 +97,7 @@
       "match": "Barcelona Guayaquil - Independiente del Valle",
       "start_time": "03-09-2026 02:00",
       "league": "Serie A",
-      "minutes_to_start": 37.9,
+      "minutes_to_start": 27.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.1245",
       "confirmed_at": null,
@@ -118,11 +109,11 @@
       "match": "Forward Madison FC - One Knoxville SC",
       "start_time": "03-09-2026 02:00",
       "league": "USL League One",
-      "minutes_to_start": 37.9,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 27.1,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.766",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-09-02T23:32:54.690086+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -130,7 +121,7 @@
       "match": "Salcedo FC - Mount Pleasant FC",
       "start_time": "03-09-2026 02:00",
       "league": "Concacaf Caribbean Club Shield",
-      "minutes_to_start": 37.9,
+      "minutes_to_start": 27.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.3394",
       "confirmed_at": null,
@@ -142,7 +133,7 @@
       "match": "Velez Sarsfield - Boca Juniors",
       "start_time": "03-09-2026 02:15",
       "league": "Coppa Argentina",
-      "minutes_to_start": 52.9,
+      "minutes_to_start": 42.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.16147",
       "confirmed_at": null,
@@ -154,7 +145,7 @@
       "match": "Deportes Limache - Nublense",
       "start_time": "03-09-2026 02:30",
       "league": "Primera Division",
-      "minutes_to_start": 67.9,
+      "minutes_to_start": 57.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.16886",
       "confirmed_at": null,
@@ -166,7 +157,7 @@
       "match": "Santos SP - Palmeiras",
       "start_time": "03-09-2026 02:30",
       "league": "Coppa Brasiliana",
-      "minutes_to_start": 67.9,
+      "minutes_to_start": 57.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.16922",
       "confirmed_at": null,
@@ -178,7 +169,7 @@
       "match": "Vitoria - CR Vasco da Gama RJ",
       "start_time": "03-09-2026 02:30",
       "league": "Coppa Brasiliana",
-      "minutes_to_start": 67.9,
+      "minutes_to_start": 57.1,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.32670",
       "confirmed_at": null,
@@ -190,7 +181,7 @@
       "match": "Deportivo Toluca - Club Leon",
       "start_time": "03-09-2026 03:00",
       "league": "Leagues Cup",
-      "minutes_to_start": 97.9,
+      "minutes_to_start": 87.1,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.30372",
       "confirmed_at": "2026-09-02T23:19:02.878640+00:00",
@@ -202,12 +193,24 @@
       "match": "Esteli - San Marcos FC",
       "start_time": "03-09-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 97.9,
+      "minutes_to_start": 87.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.3502",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "Independiente Santa Fe - Millonarios",
+      "start_time": "03-09-2026 03:25",
+      "league": "Primera A",
+      "minutes_to_start": 112.1,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.3433",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
