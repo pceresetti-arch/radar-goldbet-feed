@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T10:00:37.239164+00:00",
+  "generated_at": "2026-09-02T10:24:53.033989+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,15 +21,65 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
-      "mode": "FULL_DISCOVERY",
-      "started_at": "2026-09-02T10:00:25.400723+00:00",
-      "finished_at": "2026-09-02T10:00:37.239128+00:00",
-      "official_count": 23,
-      "urgent_unconfirmed_count": 0,
+      "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
+      "started_at": "2026-09-02T10:21:55.892549+00:00",
+      "finished_at": "2026-09-02T10:21:57.163008+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T10:22:32.163151+00:00",
+      "finished_at": "2026-09-02T10:22:32.308930+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T10:23:07.309086+00:00",
+      "finished_at": "2026-09-02T10:23:07.496711+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T10:23:42.496873+00:00",
+      "finished_at": "2026-09-02T10:23:42.641151+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T10:24:17.641297+00:00",
+      "finished_at": "2026-09-02T10:24:17.885538+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-02T10:24:52.885702+00:00",
+      "finished_at": "2026-09-02T10:24:53.033944+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 1,
       "events": [],
       "actionable_events": []
     }
@@ -37,6 +87,16 @@
   "observed_events": [],
   "actionable_events": [],
   "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [],
-  "target_count": 31
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Sabah - Selangor FC",
+      "match_market_id": "36363.45295",
+      "match_event_id": 16093020,
+      "minutes_to_start": 65.1,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    }
+  ],
+  "target_count": 3
 }
