@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v49",
-  "generated_at": "2026-09-02T13:28:21.535Z",
+  "schema_version": "radar-historical-source-manifest-v50",
+  "generated_at": "2026-09-02T14:27:25.564Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "B365_EARLY_1X2_ELO_INCREMENT_REJECTED",
+  "status": "B365_EARLY_OU25_STRUCTURAL_INCREMENT_REJECTED",
   "priority": [
     "Sweden",
     "Norway",
@@ -1283,6 +1283,33 @@
         "Provider-early probabilities outperform Elo pointwise on holdout Brier, log-loss and accuracy.",
         "Provider-early timestamps are uncertified; prices are not TRUE OPEN and cannot be relabelled GoldBet."
       ]
+    },
+    {
+      "name": "Seven-league Bet365 provider-early O/U 2.5 structural blend ablation",
+      "path": "feed/historical/markets/b365-ou25-structural-early-blend-oos-v1.json",
+      "source_class": "STRICTLY_PRIOR_DATE_STRUCTURE_PLUS_B365_PROVIDER_EARLY_ABLATION",
+      "status": "COMPLETE_STRUCTURAL_INCREMENT_REJECTED",
+      "leagues": 7,
+      "development_rows": 6636,
+      "holdout_rows": 2212,
+      "missing_rows": 0,
+      "role": [
+        "OU25_EARLY_MARKET_VERSUS_STRUCTURE_ABLATION",
+        "DEVELOPMENT_SELECTED_FROZEN_HOLDOUT"
+      ],
+      "forbidden_role": [
+        "TRUE_OPEN_SUBSTITUTE",
+        "GOLDBET_PRICE_SUBSTITUTE",
+        "HOLDOUT_DRIVEN_WEIGHT_SELECTION",
+        "OPERATIONAL_RULE"
+      ],
+      "quality_notes": [
+        "The global blend weight was selected from a predeclared 0.05 grid on 6,636 development fixtures only.",
+        "Development selects 100% de-vigged Bet365 provider-early probability and 0% structural Poisson.",
+        "The selected blend was frozen before the 2,212-fixture holdout and exactly equals provider-early.",
+        "Structural Poisson has higher holdout classification accuracy but worse Brier and log-loss; no post-hoc retuning is allowed.",
+        "Inherited closing labels were corrected before acceptance; provider-early timestamps remain uncertified and non-GoldBet."
+      ]
     }
   ],
   "required_blocks": {
@@ -1509,6 +1536,12 @@
       "report": "feed/historical/markets/b365-1x2-elo-early-blend-oos-v1.json",
       "rule": "Rolling-development selection assigns zero weight to Elo; retain provider-early as a non-GoldBet diagnostic benchmark only.",
       "missing_rows": 0
+    },
+    "ou25_structural_provider_early_ablation": {
+      "status": "COMPLETE_7_LEAGUES_6636_DEV_2212_OOS_STRUCTURAL_INCREMENT_REJECTED",
+      "report": "feed/historical/markets/b365-ou25-structural-early-blend-oos-v1.json",
+      "rule": "Development proper-score selection assigns zero weight to structural Poisson; retain Bet365 provider-early only as a non-GoldBet diagnostic benchmark.",
+      "missing_rows": 0
     }
   },
   "quarantine_rules": [
@@ -1548,7 +1581,8 @@
     "ou25_structural_close_increment_policy": "REJECT_DEVELOPMENT_OPTIMUM_IS_100_PERCENT_CLOSE_ZERO_PERCENT_STRUCTURE",
     "one_x_two_elo_close_increment_policy": "REJECT_ROLLING_DEVELOPMENT_OPTIMUM_IS_100_PERCENT_CLOSE_ZERO_PERCENT_ELO",
     "b365_1x2_elo_edge_policy": "REJECT_ALL_TESTED_THRESHOLDS_NEGATIVE_ROLLING_DEVELOPMENT_AND_HOLDOUT_ROI",
-    "b365_1x2_elo_early_increment_policy": "REJECT_ROLLING_DEVELOPMENT_OPTIMUM_IS_100_PERCENT_PROVIDER_EARLY_ZERO_PERCENT_ELO"
+    "b365_1x2_elo_early_increment_policy": "REJECT_ROLLING_DEVELOPMENT_OPTIMUM_IS_100_PERCENT_PROVIDER_EARLY_ZERO_PERCENT_ELO",
+    "b365_ou25_structural_early_increment_policy": "REJECT_DEVELOPMENT_OPTIMUM_IS_100_PERCENT_PROVIDER_EARLY_ZERO_PERCENT_STRUCTURE"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1559,7 +1593,7 @@
       "J1 League: format drift",
       "Ligue 1: format drift from 20 to 18 clubs; only three comparable 18-club seasons"
     ],
-    "next_analysis_lane": "Current Elo adds zero weight to provider-early and closing 1X2 markets; prioritize orthogonal verified pre-match context or certified GoldBet OPEN-to-CLOSE history.",
+    "next_analysis_lane": "Current Poisson adds zero weight to provider-early and closing O/U 2.5 markets; prioritize orthogonal verified pre-match context, other priced markets, or certified GoldBet OPEN-to-CLOSE history.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context.",
     "external_close_constraint": "External average close may benchmark proper scores but cannot substitute for GoldBet same-book TRUE OPEN-to-CLOSE evidence.",
