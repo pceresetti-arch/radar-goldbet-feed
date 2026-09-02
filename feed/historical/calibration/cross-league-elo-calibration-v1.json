@@ -1,6 +1,6 @@
 {
   "schema_version": "radar-historical-cross-league-elo-calibration-v1",
-  "generated_at": "2026-09-01T23:47:34.834517+00:00",
+  "generated_at": "2026-09-02T00:44:56.163279+00:00",
   "anti_hindsight": {
     "models_retrained_or_retuned": false,
     "predictions_reconstructed_from": "persisted feature rows plus persisted development-only means/scales and frozen weights",
@@ -206,6 +206,176 @@
       },
       "all_class_ece": 0.010766071066484742
     },
+    "elo_classwise_calibration": {
+      "H": {
+        "n": 3076,
+        "mean_probability": 0.4449506894127662,
+        "observed_prevalence": 0.44245773732119636,
+        "prevalence_minus_mean_probability": -0.0024929520915698555,
+        "one_vs_rest_brier": 0.22079813251484892,
+        "ece": 0.0149562704970441,
+        "bins": {
+          "0.0-0.1": {
+            "n": 44,
+            "mean_probability": 0.06498082507572177,
+            "observed_rate": 0.18181818181818182,
+            "observed_minus_probability": 0.11683735674246006
+          },
+          "0.1-0.2": {
+            "n": 189,
+            "mean_probability": 0.15662127920914837,
+            "observed_rate": 0.17989417989417988,
+            "observed_minus_probability": 0.023272900685031517
+          },
+          "0.2-0.3": {
+            "n": 362,
+            "mean_probability": 0.25555148718448023,
+            "observed_rate": 0.2596685082872928,
+            "observed_minus_probability": 0.00411702110281259
+          },
+          "0.3-0.4": {
+            "n": 612,
+            "mean_probability": 0.3525290226498972,
+            "observed_rate": 0.3349673202614379,
+            "observed_minus_probability": -0.017561702388459333
+          },
+          "0.4-0.5": {
+            "n": 764,
+            "mean_probability": 0.44945755608658916,
+            "observed_rate": 0.4476439790575916,
+            "observed_minus_probability": -0.0018135770289975373
+          },
+          "0.5-0.6": {
+            "n": 559,
+            "mean_probability": 0.5460774156970591,
+            "observed_rate": 0.5474060822898033,
+            "observed_minus_probability": 0.00132866659274411
+          },
+          "0.6-0.7": {
+            "n": 334,
+            "mean_probability": 0.6444089728750635,
+            "observed_rate": 0.6047904191616766,
+            "observed_minus_probability": -0.03961855371338685
+          },
+          "0.7-0.8": {
+            "n": 150,
+            "mean_probability": 0.7437199252668526,
+            "observed_rate": 0.7666666666666667,
+            "observed_minus_probability": 0.02294674139981412
+          },
+          "0.8-0.9": {
+            "n": 56,
+            "mean_probability": 0.8401059945188191,
+            "observed_rate": 0.9107142857142857,
+            "observed_minus_probability": 0.07060829119546663
+          },
+          "0.9-1.0": {
+            "n": 6,
+            "mean_probability": 0.9118287815209399,
+            "observed_rate": 0.6666666666666666,
+            "observed_minus_probability": -0.2451621148542733
+          }
+        }
+      },
+      "D": {
+        "n": 3076,
+        "mean_probability": 0.24058110819786951,
+        "observed_prevalence": 0.2483745123537061,
+        "prevalence_minus_mean_probability": 0.007793404155836597,
+        "one_vs_rest_brier": 0.1854338467249479,
+        "ece": 0.007885703557743257,
+        "bins": {
+          "0.0-0.1": {
+            "n": 11,
+            "mean_probability": 0.08053233936403274,
+            "observed_rate": 0.2727272727272727,
+            "observed_minus_probability": 0.19219493336323995
+          },
+          "0.1-0.2": {
+            "n": 361,
+            "mean_probability": 0.169368300498981,
+            "observed_rate": 0.16897506925207756,
+            "observed_minus_probability": -0.000393231246903436
+          },
+          "0.2-0.3": {
+            "n": 2704,
+            "mean_probability": 0.2507395253711204,
+            "observed_rate": 0.2588757396449704,
+            "observed_minus_probability": 0.008136214273850029
+          }
+        }
+      },
+      "A": {
+        "n": 3076,
+        "mean_probability": 0.31446820238936474,
+        "observed_prevalence": 0.3091677503250975,
+        "prevalence_minus_mean_probability": -0.005300452064267214,
+        "one_vs_rest_brier": 0.19401039106247006,
+        "ece": 0.012497290493350594,
+        "bins": {
+          "0.0-0.1": {
+            "n": 196,
+            "mean_probability": 0.06581553526915157,
+            "observed_rate": 0.061224489795918366,
+            "observed_minus_probability": -0.0045910454732332046
+          },
+          "0.1-0.2": {
+            "n": 544,
+            "mean_probability": 0.15672161119818312,
+            "observed_rate": 0.1636029411764706,
+            "observed_minus_probability": 0.00688132997828747
+          },
+          "0.2-0.3": {
+            "n": 817,
+            "mean_probability": 0.2535115925086917,
+            "observed_rate": 0.2594859241126071,
+            "observed_minus_probability": 0.005974331603915417
+          },
+          "0.3-0.4": {
+            "n": 743,
+            "mean_probability": 0.34651071110270465,
+            "observed_rate": 0.34320323014804843,
+            "observed_minus_probability": -0.0033074809546562167
+          },
+          "0.4-0.5": {
+            "n": 409,
+            "mean_probability": 0.4458780283633737,
+            "observed_rate": 0.42053789731051344,
+            "observed_minus_probability": -0.02534013105286026
+          },
+          "0.5-0.6": {
+            "n": 210,
+            "mean_probability": 0.5464030949041567,
+            "observed_rate": 0.5285714285714286,
+            "observed_minus_probability": -0.017831666332728147
+          },
+          "0.6-0.7": {
+            "n": 106,
+            "mean_probability": 0.6434520174210038,
+            "observed_rate": 0.5943396226415094,
+            "observed_minus_probability": -0.04911239477949436
+          },
+          "0.7-0.8": {
+            "n": 37,
+            "mean_probability": 0.7447495925582798,
+            "observed_rate": 0.8108108108108109,
+            "observed_minus_probability": 0.06606121825253108
+          },
+          "0.8-0.9": {
+            "n": 12,
+            "mean_probability": 0.8243842463371248,
+            "observed_rate": 0.5833333333333334,
+            "observed_minus_probability": -0.24105091300379144
+          },
+          "0.9-1.0": {
+            "n": 2,
+            "mean_probability": 0.9041682291937811,
+            "observed_rate": 0.0,
+            "observed_minus_probability": -0.9041682291937811
+          }
+        }
+      }
+    },
     "external_average_close_calibration": {
       "top_pick_bins": {
         "0.3-0.4": {
@@ -315,6 +485,176 @@
         }
       },
       "all_class_ece": 0.009611610019421808
+    },
+    "external_average_close_classwise_calibration": {
+      "H": {
+        "n": 3076,
+        "mean_probability": 0.4369024811957528,
+        "observed_prevalence": 0.44245773732119636,
+        "prevalence_minus_mean_probability": 0.005555256125443553,
+        "one_vs_rest_brier": 0.21214888502221368,
+        "ece": 0.022822759238412673,
+        "bins": {
+          "0.0-0.1": {
+            "n": 32,
+            "mean_probability": 0.08207189785142775,
+            "observed_rate": 0.0625,
+            "observed_minus_probability": -0.019571897851427753
+          },
+          "0.1-0.2": {
+            "n": 205,
+            "mean_probability": 0.15890990140315525,
+            "observed_rate": 0.1073170731707317,
+            "observed_minus_probability": -0.051592828232423546
+          },
+          "0.2-0.3": {
+            "n": 417,
+            "mean_probability": 0.2574450581986912,
+            "observed_rate": 0.22062350119904076,
+            "observed_minus_probability": -0.03682155699965042
+          },
+          "0.3-0.4": {
+            "n": 674,
+            "mean_probability": 0.3526313883417785,
+            "observed_rate": 0.36350148367952523,
+            "observed_minus_probability": 0.010870095337746744
+          },
+          "0.4-0.5": {
+            "n": 717,
+            "mean_probability": 0.4471773264213693,
+            "observed_rate": 0.47419804741980476,
+            "observed_minus_probability": 0.027020720998435444
+          },
+          "0.5-0.6": {
+            "n": 517,
+            "mean_probability": 0.5460540555998087,
+            "observed_rate": 0.5493230174081238,
+            "observed_minus_probability": 0.0032689618083151517
+          },
+          "0.6-0.7": {
+            "n": 287,
+            "mean_probability": 0.6476422759993898,
+            "observed_rate": 0.662020905923345,
+            "observed_minus_probability": 0.01437862992395511
+          },
+          "0.7-0.8": {
+            "n": 167,
+            "mean_probability": 0.7464817489073142,
+            "observed_rate": 0.7904191616766467,
+            "observed_minus_probability": 0.043937412769332496
+          },
+          "0.8-0.9": {
+            "n": 59,
+            "mean_probability": 0.835475754525571,
+            "observed_rate": 0.8983050847457628,
+            "observed_minus_probability": 0.06282933022019177
+          },
+          "0.9-1.0": {
+            "n": 1,
+            "mean_probability": 0.9161120424527721,
+            "observed_rate": 1.0,
+            "observed_minus_probability": 0.08388795754722789
+          }
+        }
+      },
+      "D": {
+        "n": 3076,
+        "mean_probability": 0.2470069796622442,
+        "observed_prevalence": 0.2483745123537061,
+        "prevalence_minus_mean_probability": 0.0013675326914619201,
+        "one_vs_rest_brier": 0.18378819273978758,
+        "ece": 0.007685354326737629,
+        "bins": {
+          "0.0-0.1": {
+            "n": 17,
+            "mean_probability": 0.08929035251847393,
+            "observed_rate": 0.11764705882352941,
+            "observed_minus_probability": 0.028356706305055476
+          },
+          "0.1-0.2": {
+            "n": 409,
+            "mean_probability": 0.16409320007922837,
+            "observed_rate": 0.14180929095354522,
+            "observed_minus_probability": -0.02228390912568315
+          },
+          "0.2-0.3": {
+            "n": 2453,
+            "mean_probability": 0.25664848095116,
+            "observed_rate": 0.26212800652262536,
+            "observed_minus_probability": 0.00547952557146536
+          },
+          "0.3-0.4": {
+            "n": 197,
+            "mean_probability": 0.31270401442969575,
+            "observed_rate": 0.3096446700507614,
+            "observed_minus_probability": -0.0030593443789343477
+          }
+        }
+      },
+      "A": {
+        "n": 3076,
+        "mean_probability": 0.31609053914200225,
+        "observed_prevalence": 0.3091677503250975,
+        "prevalence_minus_mean_probability": -0.006922788816904724,
+        "one_vs_rest_brier": 0.18705633514407477,
+        "ece": 0.014917675940459618,
+        "bins": {
+          "0.0-0.1": {
+            "n": 155,
+            "mean_probability": 0.07300505223700963,
+            "observed_rate": 0.03870967741935484,
+            "observed_minus_probability": -0.034295374817654795
+          },
+          "0.1-0.2": {
+            "n": 528,
+            "mean_probability": 0.15452844289287782,
+            "observed_rate": 0.15151515151515152,
+            "observed_minus_probability": -0.003013291377726296
+          },
+          "0.2-0.3": {
+            "n": 885,
+            "mean_probability": 0.24937058677884316,
+            "observed_rate": 0.23163841807909605,
+            "observed_minus_probability": -0.017732168699747114
+          },
+          "0.3-0.4": {
+            "n": 727,
+            "mean_probability": 0.345686134562814,
+            "observed_rate": 0.33700137551581844,
+            "observed_minus_probability": -0.00868475904699556
+          },
+          "0.4-0.5": {
+            "n": 410,
+            "mean_probability": 0.4457322618396342,
+            "observed_rate": 0.43658536585365854,
+            "observed_minus_probability": -0.009146895985975678
+          },
+          "0.5-0.6": {
+            "n": 204,
+            "mean_probability": 0.5464268449044752,
+            "observed_rate": 0.5441176470588235,
+            "observed_minus_probability": -0.002309197845651756
+          },
+          "0.6-0.7": {
+            "n": 111,
+            "mean_probability": 0.6423047511945756,
+            "observed_rate": 0.7387387387387387,
+            "observed_minus_probability": 0.0964339875441631
+          },
+          "0.7-0.8": {
+            "n": 53,
+            "mean_probability": 0.7435478532334948,
+            "observed_rate": 0.7735849056603774,
+            "observed_minus_probability": 0.030037052426882593
+          },
+          "0.8-0.9": {
+            "n": 3,
+            "mean_probability": 0.8185803371486567,
+            "observed_rate": 0.6666666666666666,
+            "observed_minus_probability": -0.15191367048199012
+          }
+        }
+      }
     }
   },
   "paired_market_minus_elo_uncertainty": {
@@ -1642,7 +1982,8 @@
   "verdict": {
     "elo_calibration_status": "ACCEPTABLE_POOLED_DIAGNOSTIC_ONLY",
     "market_comparison_status": "EXTERNAL_AVERAGE_CLOSE_ROBUSTLY_BETTER",
-    "draw_top_pick_status": "STRUCTURAL_MODEL_FAILURE_ZERO_DRAW_TOP_PICKS",
+    "draw_top_pick_status": "ZERO_DRAW_ARGMAX_DIAGNOSTIC_NOT_PROBABILISTIC_FAILURE_BY_ITSELF",
+    "methodological_correction": "A realized class may be calibrated without ever being the argmax; classwise probability calibration, not top-pick coverage alone, determines probabilistic failure.",
     "predicted_side_counts": {
       "H": 2084,
       "D": 0,
@@ -1654,7 +1995,7 @@
       "A": 951
     },
     "operational_rule_promoted": false,
-    "reason": "Frozen OOS evidence exposes a no-draw top-pick failure and robust market superiority; recalibration or class-rule changes require a new independent temporal block."
+    "reason": "Frozen OOS evidence confirms robust market superiority. Zero DRAW argmax is retained as a decision diagnostic, but cannot be called a probability-model failure without classwise miscalibration evidence."
   },
   "economic_metrics": {
     "clv": "NOT_CALCULATED_EXTERNAL_AVERAGE_CLOSE_IS_NOT_GOLDBET_CLOSE",
