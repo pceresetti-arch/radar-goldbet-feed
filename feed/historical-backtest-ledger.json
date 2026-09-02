@@ -424,10 +424,10 @@
     "No league-specific DRAW recalibration was promoted because the single nominal finding does not survive an eleven-league multiplicity-aware interpretation and lacks an independent temporal replica.",
     "Completed frozen OOS decomposition of external average closing-market advantage by outcome class, realized outcome, Elo top pick and Elo confidence band across 3,076 fixtures.",
     "Confirmed one-v-rest Brier improvement for external average close in all three classes: H -0.00865, D -0.00165 and A -0.00695 versus Elo; all pooled nominal 95% intervals exclude zero.",
-    "Confirmed cross-league directional replication: H and A market-minus-Elo classwise Brier are negative in 11/11 leagues, while D is negative in 9/11.",
     "Located the largest robust subgroup gap when Elo top-picks AWAY: external average close minus Elo is -0.02983 Brier and -0.04711 log-loss.",
     "Confirmed the external benchmark advantage across Elo top-confidence bands 0.3-0.7; bands above 0.7 remain inconclusive because of smaller samples.",
-    "Kept the result diagnostic only: external average close is neither GoldBet same-book CLOSE nor a predeclared betting signal, so no MMS threshold, CLV claim or operational rule was promoted."
+    "Kept the result diagnostic only: external average close is neither GoldBet same-book CLOSE nor a predeclared betting signal, so no MMS threshold, CLV claim or operational rule was promoted.",
+    "Confirmed cross-league directional replication from the report's by_league block: H and A market-minus-Elo classwise Brier are negative in 11/11 leagues, while D is negative in 9/11."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2092,16 +2092,16 @@
       },
       "cross_league_directional_replication": {
         "H": {
-          "negative": 0,
-          "total": 0
+          "negative": 11,
+          "total": 11
         },
         "D": {
-          "negative": 0,
-          "total": 0
+          "negative": 9,
+          "total": 11
         },
         "A": {
-          "negative": 0,
-          "total": 0
+          "negative": 11,
+          "total": 11
         }
       },
       "realized_outcome_multiclass": {
@@ -2230,7 +2230,64 @@
         "0.9-1.0"
       ],
       "interpretation": "External average close contains broad predictive information beyond frozen Elo; the advantage is not draw-only and is not confined to low-confidence fixtures.",
-      "operational_rule_promoted": false
+      "operational_rule_promoted": false,
+      "league_one_vs_rest_brier_market_minus_elo": {
+        "Allsvenskan": {
+          "H": -0.007396878950871183,
+          "D": -0.0009128841095629447,
+          "A": -0.0035825565164232243
+        },
+        "Eliteserien": {
+          "H": -0.013496615418595065,
+          "D": -0.0028847045131568105,
+          "A": -0.008398838801984387
+        },
+        "Superliga": {
+          "H": -0.007721868468909765,
+          "D": -0.0026796872024331952,
+          "A": -0.010365662060607544
+        },
+        "Eredivisie": {
+          "H": -0.007226258379104261,
+          "D": 0.0011353593874694756,
+          "A": -0.006444604226829048
+        },
+        "Primeira Liga": {
+          "H": -0.015399727740235097,
+          "D": -0.005883935346538194,
+          "A": -0.010632360390961437
+        },
+        "2. Bundesliga": {
+          "H": -0.007257874191581276,
+          "D": -0.00021164092097175624,
+          "A": -0.008396669334457652
+        },
+        "Bundesliga": {
+          "H": -0.009877916628055566,
+          "D": -0.003112041005014804,
+          "A": -0.008200488656862487
+        },
+        "LaLiga": {
+          "H": -0.00967145418722748,
+          "D": 0.0007339942822495726,
+          "A": -0.0075359928460501935
+        },
+        "Premier League": {
+          "H": -0.007709328681853811,
+          "D": -0.0024441056358650015,
+          "A": -0.003435216250873979
+        },
+        "Scottish Premiership": {
+          "H": -0.0017032748773058715,
+          "D": -0.0018861887947962397,
+          "A": -0.00402840375294139
+        },
+        "Austrian Bundesliga": {
+          "H": -0.00493697909916313,
+          "D": -0.0004484696542679245,
+          "A": -0.0059016509481286394
+        }
+      }
     }
   },
   "ablation_plan": {
