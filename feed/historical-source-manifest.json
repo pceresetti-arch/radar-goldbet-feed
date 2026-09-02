@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v44",
-  "generated_at": "2026-09-02T08:30:00Z",
+  "schema_version": "radar-historical-source-manifest-v45",
+  "generated_at": "2026-09-02T09:35:00Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "BTTS_STRUCTURAL_POISSON_MODULE_REJECTED",
+  "status": "OU25_STRUCTURAL_POISSON_CANDIDATE_NOT_PROMOTED",
   "priority": [
     "Sweden",
     "Norway",
@@ -1146,6 +1146,33 @@
         "Equal-league hierarchical intervals cross zero, so the pooled deterioration is not overstated as conclusive under every league-weighting scheme.",
         "No verified historical BTTS price series exists in the accepted structural blocks; no odds-dependent metric was calculated."
       ]
+    },
+    {
+      "name": "Eleven-league structural O/U 2.5 frozen OOS diagnostic",
+      "path": "feed/historical/markets/cross-league-ou25-structural-oos-v1.json",
+      "source_class": "DERIVED_STRICTLY_PRIOR_DATE_STRUCTURAL_FEATURES",
+      "status": "COMPLETE_CANDIDATE_NOT_PROMOTED",
+      "leagues": 11,
+      "holdout_rows": 3076,
+      "missing_rows": 0,
+      "role": [
+        "OU25_STRUCTURAL_PROBABILITY_DIAGNOSTIC",
+        "FROZEN_OOS_ABLATION"
+      ],
+      "forbidden_role": [
+        "HOLDOUT_DRIVEN_RETUNING",
+        "FAIR_VALUE_INFERENCE",
+        "ROI_OR_CLV_INFERENCE",
+        "MMS_THRESHOLD_PROMOTION",
+        "OPERATIONAL_RULE"
+      ],
+      "quality_notes": [
+        "Probabilities use only home/away goals for and against from strictly earlier source dates, with updates after each complete date batch.",
+        "Fixed shrinkage parameters were inherited before this O/U evaluation and were not tuned on the holdout.",
+        "Pooled Brier, log-loss and accuracy improve pointwise, with improvement in 7/11 leagues.",
+        "Both fixture-paired and equal-league confidence intervals cross zero; the candidate is not promoted.",
+        "No bookmaker price was used in this structural test and no economic or movement inference was made."
+      ]
     }
   ],
   "required_blocks": {
@@ -1342,6 +1369,13 @@
       "source_class": "DERIVED_STRICTLY_PRIOR_DATE_STRUCTURAL_FEATURES",
       "rule": "Reject the coarse independent-Poisson module as an incremental BTTS predictor; no operational or price-based inference without verified historical BTTS odds.",
       "missing_rows": 0
+    },
+    "ou25_structural": {
+      "status": "COMPLETE_11_LEAGUES_3076_OOS_ROWS_NOT_PROMOTED",
+      "report": "feed/historical/markets/cross-league-ou25-structural-oos-v1.json",
+      "source_class": "DERIVED_STRICTLY_PRIOR_DATE_STRUCTURAL_FEATURES",
+      "rule": "Retain as diagnostic only; require independent temporal replication before any model promotion and separately verified prices before value, ROI, CLV or MMS inference.",
+      "missing_rows": 0
     }
   },
   "quarantine_rules": [
@@ -1376,7 +1410,8 @@
     "b365_ou25_movement_threshold_policy": "REJECT_ALL_TESTED_BANDS_NO_ROBUST_HOLDOUT_ROI",
     "b365_1x2_movement_threshold_policy": "REJECT_ALL_TESTED_BANDS_NO_OOS_REPLICATION",
     "btts_structural_policy": "REJECT_FIXED_SHRINKAGE_INDEPENDENT_POISSON_NO_OOS_IMPROVEMENT",
-    "btts_price_policy": "BLOCK_FAIR_VALUE_ROI_CLV_AND_MMS_UNTIL_VERIFIED_HISTORICAL_BTTS_PRICES_EXIST"
+    "btts_price_policy": "BLOCK_FAIR_VALUE_ROI_CLV_AND_MMS_UNTIL_VERIFIED_HISTORICAL_BTTS_PRICES_EXIST",
+    "ou25_structural_policy": "NOT_PROMOTED_POOLED_POINT_IMPROVEMENT_BUT_FIXTURE_AND_LEAGUE_INTERVALS_CROSS_ZERO"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1387,7 +1422,7 @@
       "J1 League: format drift",
       "Ligue 1: format drift from 20 to 18 clubs; only three comparable 18-club seasons"
     ],
-    "next_analysis_lane": "Prioritize verified market or direct tactical/player context; coarse structural BTTS Poisson is rejected and historical BTTS price inference remains blocked.",
+    "next_analysis_lane": "Seek independent temporal replication or verified direct context; do not retune the O/U Poisson candidate on the viewed final holdout.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context.",
     "external_close_constraint": "External average close may benchmark proper scores but cannot substitute for GoldBet same-book TRUE OPEN-to-CLOSE evidence.",
