@@ -1,0 +1,49 @@
+name: Historical 1X2 Elo-Close Blend OOS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/historical-1x2-elo-close-blend-oos.yml'
+      - 'tools/historical_cross_league_1x2_elo_close_blend_oos.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-1x2-elo-close-blend-oos
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install numpy
+      - name: Evaluate rolling-development-selected frozen blend
+        run: python tools/historical_cross_league_1x2_elo_close_blend_oos.py
+      - name: Preserve evidence
+        run: |
+          rm -rf /tmp/historical-markets
+          cp -R feed/historical/markets /tmp/historical-markets
+      - name: Commit evidence
+        run: |
+          git config user.name "radar-backtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p feed/historical
+            rm -rf feed/historical/markets
+            cp -R /tmp/historical-markets feed/historical/markets
+            git add feed/historical/markets
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Add 1X2 Elo-close blend OOS evidence"
+            if git push; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
