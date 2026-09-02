@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T20:48:46.605110+00:00",
+  "generated_at": "2026-09-02T20:58:03.855859+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,96 +21,121 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-02T20:45:47.894898+00:00",
-      "finished_at": "2026-09-02T20:45:49.560121+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T20:46:24.560298+00:00",
-      "finished_at": "2026-09-02T20:46:24.842168+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T20:46:59.842435+00:00",
-      "finished_at": "2026-09-02T20:47:00.347458+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T20:47:35.347646+00:00",
-      "finished_at": "2026-09-02T20:47:35.740323+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T20:48:10.740498+00:00",
-      "finished_at": "2026-09-02T20:48:11.297967+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T20:48:46.298156+00:00",
-      "finished_at": "2026-09-02T20:48:46.605072+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-02T20:58:01.974495+00:00",
+      "finished_at": "2026-09-02T20:58:03.855848+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 2,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T20:58:03.855732+00:00",
+          "match": "CD Cuenca - Guayaquil City FC",
+          "league": "Serie A",
+          "start_time": "02-09-2026 23:30",
+          "minutes_to_start": 31.9,
+          "match_market_id": "36361.1254",
+          "match_event_id": 16073159,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000009090,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "08756aed3342d385df0d",
+          "current_xi_fingerprint": "7082d3a8059768be1094",
+          "confirmed_at": "2026-09-02T20:58:03.376085+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T20:58:03.855732+00:00",
+          "match": "CD Cuenca - Guayaquil City FC",
+          "league": "Serie A",
+          "start_time": "02-09-2026 23:30",
+          "minutes_to_start": 31.9,
+          "match_market_id": "36361.1254",
+          "match_event_id": 16073159,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000009090,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "08756aed3342d385df0d",
+          "current_xi_fingerprint": "7082d3a8059768be1094",
+          "confirmed_at": "2026-09-02T20:58:03.376085+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T20:58:03.855732+00:00",
+      "match": "CD Cuenca - Guayaquil City FC",
+      "league": "Serie A",
+      "start_time": "02-09-2026 23:30",
+      "minutes_to_start": 31.9,
+      "match_market_id": "36361.1254",
+      "match_event_id": 16073159,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000009090,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "08756aed3342d385df0d",
+      "current_xi_fingerprint": "7082d3a8059768be1094",
+      "confirmed_at": "2026-09-02T20:58:03.376085+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T20:58:03.855732+00:00",
+      "match": "CD Cuenca - Guayaquil City FC",
+      "league": "Serie A",
+      "start_time": "02-09-2026 23:30",
+      "minutes_to_start": 31.9,
+      "match_market_id": "36361.1254",
+      "match_event_id": 16073159,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000009090,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "08756aed3342d385df0d",
+      "current_xi_fingerprint": "7082d3a8059768be1094",
+      "confirmed_at": "2026-09-02T20:58:03.376085+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "HYH Sebaco FC - C.D. Walter Ferretti",
       "match_market_id": "36361.28061",
       "match_event_id": 16094440,
-      "minutes_to_start": 11.2,
+      "minutes_to_start": 1.9,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "CD Cuenca - Guayaquil City FC",
-      "match_market_id": "36361.1254",
-      "match_event_id": 16073159,
-      "minutes_to_start": 41.2,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000009090
-    },
-    {
       "match": "Club Olimpia - Club Guarani",
       "match_market_id": "36361.5501",
       "match_event_id": 16081070,
-      "minutes_to_start": 41.2,
+      "minutes_to_start": 31.9,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 1000017394
