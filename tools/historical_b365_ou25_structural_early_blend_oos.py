@@ -95,11 +95,11 @@ mc=metric(hold,"p_early");ms=metric(hold,"p_struct");mb=metric(hold,"p_blend")
 by={}
 for g in sorted({x["league"] for x in hold}):
  v=[x for x in hold if x["league"]==g];a=metric(v,"p_early");b=metric(v,"p_blend")
- by[g]={"n":len(v),"close":a,"blend":b,"delta_blend_minus_early":{"brier":b["brier"]-a["brier"],"log_loss":b["log_loss"]-a["log_loss"]}}
+ by[g]={"n":len(v),"provider_early":a,"blend":b,"delta_blend_minus_early":{"brier":b["brier"]-a["brier"],"log_loss":b["log_loss"]-a["log_loss"]}}
 report={"schema_version":"radar-historical-b365-ou25-structural-early-blend-oos-v1","generated_at":datetime.utcnow().isoformat()+"Z",
  "status":"COMPLETE_DEVELOPMENT_SELECTED_FROZEN_OOS","market":"FULL_TIME_OVER_UNDER_2_5",
  "design":{"development_rows":len(dev),"holdout_rows":len(hold),"blend_formula":"w*b365_provider_early + (1-w)*structural_poisson",
- "weight_grid":[i/20 for i in range(21)],"selection_metric":"development log-loss; Brier then larger close weight as deterministic tie breakers",
+ "weight_grid":[i/20 for i in range(21)],"selection_metric":"development log-loss; Brier then larger provider-early weight as deterministic tie breakers",
  "selected_early_weight":w,"selected_structural_weight":1-w,"holdout_used_for_weight_selection":False,
  "structural_features":"Strictly prior-date home/away goals for and against with fixed shrinkage and date-batch updates",
  "market_probability":"De-vigged Bet365 provider-early O/U 2.5 pair; timestamp uncertified, not TRUE OPEN or GoldBet","operational_rule_allowed":False},
