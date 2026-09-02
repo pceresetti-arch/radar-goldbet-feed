@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-02T14:22:22.084738+00:00",
+  "generated_at": "2026-09-02T14:29:23.913230+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 8.8,
-    "tactical": 8.3,
-    "betflag_fixture_feed": 0.5,
-    "betflag_standard_source": 0.6,
-    "betflag_player_source": 0.6,
-    "player_context": 8.3
+    "lineups": 15.8,
+    "tactical": 15.3,
+    "betflag_fixture_feed": 7.5,
+    "betflag_standard_source": 7.6,
+    "betflag_player_source": 7.6,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,7 +36,7 @@
   "match_count": 72,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 69,
-    "WAIT_BETFLAG_FIXTURE_MAPPING": 3
+    "STALE_LINEUP_FEED": 3
   },
   "ready_count": 0,
   "ready_matches": [],
@@ -259,9 +259,10 @@
       "start_time": "02-09-2026 16:00",
       "start_utc": "2026-09-02T14:00:00+00:00",
       "minutes_to_start": -13.6,
-      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
@@ -271,7 +272,7 @@
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "6a2a4b9b5b28ef177c0a",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
@@ -310,9 +311,10 @@
       "start_time": "02-09-2026 16:00",
       "start_utc": "2026-09-02T14:00:00+00:00",
       "minutes_to_start": -13.6,
-      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
@@ -322,7 +324,7 @@
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "94d72aa8a03749b89690",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
@@ -621,9 +623,10 @@
       "start_time": "02-09-2026 16:00",
       "start_utc": "2026-09-02T14:00:00+00:00",
       "minutes_to_start": -13.6,
-      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
@@ -633,7 +636,7 @@
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "c006a66ff66b72e26da6",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
