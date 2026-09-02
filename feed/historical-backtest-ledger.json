@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v36",
-  "generated_at": "2026-09-02T00:46:00Z",
+  "schema_version": "radar-historical-backtest-ledger-v37",
+  "generated_at": "2026-09-02T01:34:30Z",
   "local_timezone": "Europe/Rome",
-  "status": "DRAW_CLASS_CALIBRATION_CORRECTED_ABS_GAP_CANDIDATE_REJECTED",
+  "status": "DRAW_CLASS_LEAGUE_STABILITY_AUDITED_NO_MULTIPLICITY_ROBUST_DRIFT",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -418,7 +418,10 @@
     "Corrected the prior zero-DRAW-argmax interpretation: a realized class can be probabilistically calibrated without ever being the single most likely class.",
     "Measured frozen OOS DRAW calibration across 3,076 fixtures: mean Elo probability 0.24058 versus observed prevalence 0.24837, bias +0.00779 and ECE 0.00789.",
     "Completed a development-only rolling-origin audit of ELO_PLUS_ABS_GAP on 6,152 validation fixtures across 22 league-season folds; the final holdout was not loaded.",
-    "Rejected ELO_PLUS_ABS_GAP: it worsens both Brier and log-loss with stratified-fixture and equal-league intervals entirely below zero, and does not change DRAW argmax coverage."
+    "Rejected ELO_PLUS_ABS_GAP: it worsens both Brier and log-loss with stratified-fixture and equal-league intervals entirely below zero, and does not change DRAW argmax coverage.",
+    "Completed league-level frozen DRAW calibration diagnostics across all eleven OOS blocks.",
+    "Observed DRAW residual bias ranges from -3.67pp in Superliga to +5.24pp in Primeira Liga; only Primeira's unadjusted single-season normal interval excludes zero.",
+    "No league-specific DRAW recalibration was promoted because the single nominal finding does not survive an eleven-league multiplicity-aware interpretation and lacks an independent temporal replica."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2006,6 +2009,42 @@
         ]
       },
       "decision": "REJECT_CANDIDATE_NO_FUTURE_HOLDOUT_FREEZE"
+    },
+    "draw_class_league_stability_v1": {
+      "report": "feed/historical/calibration/cross-league-elo-calibration-v1.json",
+      "sample": {
+        "leagues": 11,
+        "holdout_fixtures": 3076
+      },
+      "pooled": {
+        "mean_probability": 0.24058110819786951,
+        "observed_prevalence": 0.2483745123537061,
+        "bias": 0.007793404155836597,
+        "ece": 0.007885703557743257
+      },
+      "league_bias_range": {
+        "min": {
+          "league": "Superliga",
+          "bias": -0.03673272956545734,
+          "ci95": [
+            -0.09692063308110946,
+            0.02345517395019478
+          ]
+        },
+        "max": {
+          "league": "Primeira Liga",
+          "bias": 0.0524380981288865,
+          "ci95": [
+            0.0029084035352578905,
+            0.1019677927225151
+          ]
+        }
+      },
+      "unadjusted_ci_excludes_zero": [
+        "Primeira Liga"
+      ],
+      "multiplicity_robust_findings": [],
+      "decision": "NO_LEAGUE_DRAW_RECALIBRATION"
     }
   },
   "ablation_plan": {
@@ -2026,7 +2065,7 @@
     "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
     "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by source absence/provider denial.",
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
-    "next_analysis_lane": "Do not force DRAW argmax. Advance classwise league/time stability and development-only structural candidates only when they target proper scoring rules; preserve the 2025/2025-26 holdout as audit-only after inspection.",
+    "next_analysis_lane": "Decompose the robust external-close advantage by outcome class and confidence region, using frozen OOS probabilities only; do not derive an operational betting rule.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -2071,7 +2110,8 @@
       "J1 League four-season structural model: rejected because the source changes from an 18-club 306-fixture format in 2022-2023 to a 20-club 380-fixture format in 2024-2025, while 2022 also contains four playoff rows outside the phase-pure league schedule.",
       "Cross-league ELO_ONLY v1: zero DRAW argmax is retained as a decision diagnostic, not a rejection criterion; pooled DRAW probability is close to observed prevalence and classwise ECE is low.",
       "Cross-league ELO_ONLY v1: reject the claim that the structural baseline matches the external average closing benchmark; Brier and log-loss disadvantages remain entirely below zero under both stratified fixture and equal-league bootstrap intervals.",
-      "Development draw-gap rolling v1: reject ELO_PLUS_ABS_GAP; across 6,152 development-only rolling validation fixtures it worsens Brier and log-loss with both fixture-stratified and equal-league IC95 entirely below zero."
+      "Development draw-gap rolling v1: reject ELO_PLUS_ABS_GAP; across 6,152 development-only rolling validation fixtures it worsens Brier and log-loss with both fixture-stratified and equal-league IC95 entirely below zero.",
+      "League DRAW recalibration v1: no promotion; only Primeira Liga has an unadjusted single-season residual interval excluding zero, which is insufficient across eleven simultaneous league diagnostics and has no independent temporal replication."
     ],
     "operational_changes": [],
     "historical_method_changes": [
