@@ -130,6 +130,20 @@ def classwise_calibration(rows, key):
         }
     return result
 
+def draw_bias_diagnostic(rows, key):
+    residuals = [(1.0 if r["y"] == 1 else 0.0) - r[key][1] for r in rows]
+    mean = sum(residuals) / len(residuals)
+    variance = sum((x - mean) ** 2 for x in residuals) / (len(residuals) - 1)
+    se = math.sqrt(variance / len(residuals))
+    return {
+        "n": len(residuals),
+        "observed_minus_probability": mean,
+        "standard_error": se,
+        "normal_ci95": [mean - 1.96 * se, mean + 1.96 * se],
+        "ci_excludes_zero": mean - 1.96 * se > 0 or mean + 1.96 * se < 0,
+        "method": "fixture residual mean with sample-variance standard error; diagnostic single-season interval",
+    }
+
 def group_metrics(rows, key, group_fn):
     groups = defaultdict(list)
     for r in rows:
@@ -226,7 +240,9 @@ def main():
         leagues[league] = {"elo": reproduced, "external_average_close": metrics(league_rows, "market"),
                            "elo_calibration": calibration(league_rows, "elo"),
                            "elo_classwise_calibration": classwise_calibration(league_rows, "elo"),
-                           "external_average_close_classwise_calibration": classwise_calibration(league_rows, "market")}
+                           "external_average_close_classwise_calibration": classwise_calibration(league_rows, "market"),
+                           "elo_draw_bias_diagnostic": draw_bias_diagnostic(league_rows, "elo"),
+                           "external_average_close_draw_bias_diagnostic": draw_bias_diagnostic(league_rows, "market")}
         all_rows.extend(league_rows)
 
     overall_elo = metrics(all_rows, "elo")
