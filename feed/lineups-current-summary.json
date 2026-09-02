@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T19:12:18.065248+00:00",
+  "generated_at": "2026-09-02T19:30:00.762519+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 19,
+  "target_count": 8,
   "status_counts": {
-    "NOT_AVAILABLE": 11,
-    "SOURCE_CONFIRMED": 8
+    "NOT_AVAILABLE": 6,
+    "SOURCE_CONFIRMED": 2
   },
   "schedule_stats": [
     {
@@ -23,12 +23,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-02T19:12:18.065248+00:00",
+    "generated_at": "2026-09-02T19:30:00.762519+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 7,
+    "target_count": 3,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -39,163 +39,20 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Zamora - Tachira",
-        "minutes_to_start": 47.7,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "PAOK - Crete",
-        "minutes_to_start": 2.7,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Zamora - Tachira",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
-    {
-      "match": "Altamura - Sambenedettese",
-      "start_time": "02-09-2026 21:00",
-      "league": "Coppa Italia Serie C",
-      "minutes_to_start": -12.3,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36363.31176",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Burnley - Middlesbrough",
-      "start_time": "02-09-2026 21:00",
-      "league": "Championship",
-      "minutes_to_start": -12.3,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.3463",
-      "confirmed_at": "2026-09-02T17:56:49.960599+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "CSD Macara - Manta",
-      "start_time": "02-09-2026 21:00",
-      "league": "Serie A",
-      "minutes_to_start": -12.3,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.1250",
-      "confirmed_at": "2026-09-02T19:12:11.570877+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Catania - AC Savoia 1908",
-      "start_time": "02-09-2026 21:00",
-      "league": "Coppa Italia Serie C",
-      "minutes_to_start": -12.3,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36364.3389",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Club Nacional - Club Libertad",
-      "start_time": "02-09-2026 21:00",
-      "league": "Primera Division",
-      "minutes_to_start": -12.3,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.5496",
-      "confirmed_at": "2026-09-02T18:21:52.633774+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Falkirk - Glasgow Rangers",
-      "start_time": "02-09-2026 21:00",
-      "league": "Premiership",
-      "minutes_to_start": -12.3,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.3238",
-      "confirmed_at": "2026-09-02T18:21:52.633774+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "GV Club Deportivo San Jose de Oruro - Club Bolivar",
-      "start_time": "02-09-2026 21:00",
-      "league": "Bolivia Coppa",
-      "minutes_to_start": -12.3,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.58412",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Reading FC - Mansfield Town",
-      "start_time": "02-09-2026 21:00",
-      "league": "League One",
-      "minutes_to_start": -12.3,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.3506",
-      "confirmed_at": "2026-09-02T18:21:52.633774+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Spezia - Vado",
-      "start_time": "02-09-2026 21:00",
-      "league": "Coppa Italia Serie C",
-      "minutes_to_start": -12.3,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36362.23976",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Sportivo Ameliano - Sportivo Trinidense",
-      "start_time": "02-09-2026 21:00",
-      "league": "Primera Division",
-      "minutes_to_start": -12.3,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.5500",
-      "confirmed_at": "2026-09-02T19:12:11.570877+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Floriana FC - Gzira United",
-      "start_time": "02-09-2026 21:00",
-      "league": "Premier League",
-      "minutes_to_start": -12.3,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.3869",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Arborg - Alftanes",
       "start_time": "02-09-2026 21:15",
       "league": "4 Deild",
-      "minutes_to_start": 2.7,
+      "minutes_to_start": -15.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.33849",
       "confirmed_at": null,
@@ -207,11 +64,11 @@
       "match": "PAOK - Crete",
       "start_time": "02-09-2026 21:15",
       "league": "Coppa",
-      "minutes_to_start": 2.7,
+      "minutes_to_start": -15.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.57761",
-      "confirmed_at": "2026-09-02T19:12:18.065248+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-09-02T18:54:36.741258+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -219,7 +76,7 @@
       "match": "Real Frontera FC - Zamora FC Barinas II",
       "start_time": "02-09-2026 21:30",
       "league": "Segunda Division",
-      "minutes_to_start": 17.7,
+      "minutes_to_start": -0.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.9104",
       "confirmed_at": null,
@@ -231,7 +88,7 @@
       "match": "Atl. El Vigia - Club Atletico Barinas",
       "start_time": "02-09-2026 21:30",
       "league": "Segunda Division",
-      "minutes_to_start": 17.7,
+      "minutes_to_start": -0.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.15711",
       "confirmed_at": null,
@@ -243,7 +100,7 @@
       "match": "Liverpool M - Boston River",
       "start_time": "02-09-2026 22:00",
       "league": "Coppa",
-      "minutes_to_start": 47.7,
+      "minutes_to_start": 30.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.8275",
       "confirmed_at": null,
@@ -255,7 +112,7 @@
       "match": "Yaracuyanos - Urena",
       "start_time": "02-09-2026 22:00",
       "league": "Segunda Division",
-      "minutes_to_start": 47.7,
+      "minutes_to_start": 30.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.9106",
       "confirmed_at": null,
@@ -267,11 +124,11 @@
       "match": "Zamora - Tachira",
       "start_time": "02-09-2026 22:00",
       "league": "Primera Division",
-      "minutes_to_start": 47.7,
+      "minutes_to_start": 30.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36363.25794",
       "confirmed_at": "2026-09-02T19:12:18.065248+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -279,12 +136,12 @@
       "match": "HYH Sebaco FC - C.D. Walter Ferretti",
       "start_time": "02-09-2026 23:00",
       "league": "Primera Division",
-      "minutes_to_start": 107.7,
+      "minutes_to_start": 90.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.28061",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     }
   ]
