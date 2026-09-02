@@ -1,0 +1,298 @@
+{
+  "schema_version": "radar-historical-cross-league-ou25-structural-oos-v1",
+  "generated_at": "2026-09-02T09:29:33.365061Z",
+  "status": "COMPLETE_FROZEN_STRUCTURAL_OOS",
+  "market": "OVER_2_5_GOALS",
+  "design": {
+    "features": "Strictly prior-date home/away goals for and against with league and team shrinkage",
+    "prior_matches": 12.0,
+    "prior_home_goals": 1.45,
+    "prior_away_goals": 1.15,
+    "date_batch_update": true,
+    "holdout_parameter_tuning": false,
+    "outcomes_joined_after_probability_freeze": true,
+    "price_data_available": false,
+    "roi_clv_mms_allowed": false
+  },
+  "coverage": {
+    "leagues": 11,
+    "holdout_rows": 3076,
+    "missing_rows": 0
+  },
+  "pooled": {
+    "baseline": {
+      "n": 3076,
+      "brier": 0.2444931721069277,
+      "log_loss": 0.682050380723839,
+      "accuracy": 0.5633940182054616
+    },
+    "structural_poisson": {
+      "n": 3076,
+      "brier": 0.2422016180185455,
+      "log_loss": 0.6774301080681244,
+      "accuracy": 0.5770481144343304
+    },
+    "delta_model_minus_baseline": {
+      "brier": -0.0022915540883821917,
+      "log_loss": -0.004620272655714519
+    }
+  },
+  "uncertainty": {
+    "paired_fixture": {
+      "draws": 10000,
+      "brier_delta_model_minus_baseline_ci95": [
+        -0.005262765828113058,
+        0.0007230545582736757
+      ],
+      "log_loss_delta_model_minus_baseline_ci95": [
+        -0.010801530528399345,
+        0.00169831349894188
+      ]
+    },
+    "hierarchical_league": {
+      "draws": 10000,
+      "brier_delta_model_minus_baseline_ci95": [
+        -0.006055663582738732,
+        0.0018211908189128656
+      ],
+      "log_loss_delta_model_minus_baseline_ci95": [
+        -0.012503175232265022,
+        0.0040950031575926376
+      ]
+    }
+  },
+  "by_league": {
+    "Sweden": {
+      "development_rows": 720,
+      "holdout_rows": 240,
+      "development_over25_rate_frozen": 0.5402777777777777,
+      "baseline": {
+        "n": 240,
+        "brier": 0.25027970679012346,
+        "log_loss": 0.69371133637499,
+        "accuracy": 0.5166666666666667
+      },
+      "structural_poisson": {
+        "n": 240,
+        "brier": 0.25327765120489665,
+        "log_loss": 0.7013334386776215,
+        "accuracy": 0.5375
+      },
+      "delta_model_minus_baseline": {
+        "brier": 0.0029979444147731904,
+        "log_loss": 0.007622102302631495
+      }
+    },
+    "Norway": {
+      "development_rows": 720,
+      "holdout_rows": 240,
+      "development_over25_rate_frozen": 0.6027777777777777,
+      "baseline": {
+        "n": 240,
+        "brier": 0.23486882716049381,
+        "log_loss": 0.6626014491399032,
+        "accuracy": 0.625
+      },
+      "structural_poisson": {
+        "n": 240,
+        "brier": 0.23653603636310513,
+        "log_loss": 0.6662595974762389,
+        "accuracy": 0.6
+      },
+      "delta_model_minus_baseline": {
+        "brier": 0.0016672092026113194,
+        "log_loss": 0.0036581483363357092
+      }
+    },
+    "Denmark": {
+      "development_rows": 576,
+      "holdout_rows": 192,
+      "development_over25_rate_frozen": 0.5590277777777778,
+      "baseline": {
+        "n": 192,
+        "brier": 0.241186824845679,
+        "log_loss": 0.6754546212346404,
+        "accuracy": 0.6041666666666666
+      },
+      "structural_poisson": {
+        "n": 192,
+        "brier": 0.23832634003821937,
+        "log_loss": 0.6695383038997668,
+        "accuracy": 0.5885416666666666
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.0028604848074596234,
+        "log_loss": -0.005916317334873633
+      }
+    },
+    "Netherlands": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "development_over25_rate_frozen": 0.5947712418300654,
+      "baseline": {
+        "n": 306,
+        "brier": 0.23668247255329147,
+        "log_loss": 0.6662968436736108,
+        "accuracy": 0.6176470588235294
+      },
+      "structural_poisson": {
+        "n": 306,
+        "brier": 0.228898954248753,
+        "log_loss": 0.6490311711704075,
+        "accuracy": 0.6241830065359477
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.007783518304538467,
+        "log_loss": -0.01726567250320321
+      }
+    },
+    "Portugal": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "development_over25_rate_frozen": 0.5065359477124183,
+      "baseline": {
+        "n": 306,
+        "brier": 0.24953009526250589,
+        "log_loss": 0.692207319983165,
+        "accuracy": 0.5392156862745098
+      },
+      "structural_poisson": {
+        "n": 306,
+        "brier": 0.238396900596639,
+        "log_loss": 0.6694142385889384,
+        "accuracy": 0.5816993464052288
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.011133194665866875,
+        "log_loss": -0.022793081394226533
+      }
+    },
+    "Germany2": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "development_over25_rate_frozen": 0.593681917211329,
+      "baseline": {
+        "n": 306,
+        "brier": 0.24408109891257396,
+        "log_loss": 0.681273528563476,
+        "accuracy": 0.5784313725490197
+      },
+      "structural_poisson": {
+        "n": 306,
+        "brier": 0.24697779406782672,
+        "log_loss": 0.687317148578648,
+        "accuracy": 0.5555555555555556
+      },
+      "delta_model_minus_baseline": {
+        "brier": 0.0028966951552527598,
+        "log_loss": 0.006043620015172002
+      }
+    },
+    "Germany1": {
+      "development_rows": 918,
+      "holdout_rows": 306,
+      "development_over25_rate_frozen": 0.6089324618736384,
+      "baseline": {
+        "n": 306,
+        "brier": 0.23196325250022545,
+        "log_loss": 0.6566812717072771,
+        "accuracy": 0.6372549019607843
+      },
+      "structural_poisson": {
+        "n": 306,
+        "brier": 0.22988992840939929,
+        "log_loss": 0.6514125981401832,
+        "accuracy": 0.6209150326797386
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.0020733240908261674,
+        "log_loss": -0.005268673567093929
+      }
+    },
+    "Spain1": {
+      "development_rows": 1140,
+      "holdout_rows": 380,
+      "development_over25_rate_frozen": 0.4745614035087719,
+      "baseline": {
+        "n": 380,
+        "brier": 0.25064712219144347,
+        "log_loss": 0.6944431029075757,
+        "accuracy": 0.5
+      },
+      "structural_poisson": {
+        "n": 380,
+        "brier": 0.24737678448136724,
+        "log_loss": 0.6883455502311379,
+        "accuracy": 0.5552631578947368
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.003270337710076232,
+        "log_loss": -0.006097552676437856
+      }
+    },
+    "England1": {
+      "development_rows": 1140,
+      "holdout_rows": 380,
+      "development_over25_rate_frozen": 0.5798245614035088,
+      "baseline": {
+        "n": 380,
+        "brier": 0.24838950446291166,
+        "log_loss": 0.6899536606352019,
+        "accuracy": 0.55
+      },
+      "structural_poisson": {
+        "n": 380,
+        "brier": 0.24663822194244206,
+        "log_loss": 0.6867365738943073,
+        "accuracy": 0.5842105263157895
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.0017512825204696048,
+        "log_loss": -0.0032170867408946036
+      }
+    },
+    "Scotland1": {
+      "development_rows": 684,
+      "holdout_rows": 228,
+      "development_over25_rate_frozen": 0.5701754385964912,
+      "baseline": {
+        "n": 228,
+        "brier": 0.25061557402277623,
+        "log_loss": 0.6944193626260343,
+        "accuracy": 0.5307017543859649
+      },
+      "structural_poisson": {
+        "n": 228,
+        "brier": 0.2512819302152085,
+        "log_loss": 0.6964624557761099,
+        "accuracy": 0.5394736842105263
+      },
+      "delta_model_minus_baseline": {
+        "brier": 0.0006663561924322714,
+        "log_loss": 0.002043093150075559
+      }
+    },
+    "Austria1": {
+      "development_rows": 576,
+      "holdout_rows": 192,
+      "development_over25_rate_frozen": 0.5277777777777778,
+      "baseline": {
+        "n": 192,
+        "brier": 0.25048225308641975,
+        "log_loss": 0.694113476661916,
+        "accuracy": 0.5052083333333334
+      },
+      "structural_poisson": {
+        "n": 192,
+        "brier": 0.24878227880495415,
+        "log_loss": 0.6905264813798171,
+        "accuracy": 0.5416666666666666
+      },
+      "delta_model_minus_baseline": {
+        "brier": -0.0016999742814655938,
+        "log_loss": -0.003586995282098937
+      }
+    }
+  },
+  "verdict": "Structural O/U 2.5 probability test only. This is not a same-book price-movement test; no operational fair-price, value, CLV, ROI or MMS conclusion is permitted."
+}
