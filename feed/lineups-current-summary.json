@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T07:00:54.707032+00:00",
+  "generated_at": "2026-09-02T07:18:37.279829+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 1,
+  "target_count": 2,
   "status_counts": {
-    "NOT_AVAILABLE": 1
+    "NOT_AVAILABLE": 1,
+    "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
     {
@@ -20,38 +21,28 @@
     }
   ],
   "source_errors": {},
-  "urgent_refresh": {
-    "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-02T07:00:54.707032+00:00",
-    "window_minutes": [
-      0,
-      85.0
-    ],
-    "target_count": 1,
-    "sources": [
-      "FotMob",
-      "Sofascore"
-    ],
-    "schedule_meta": {
-      "2026-09-02": {
-        "provider": "Sofascore",
-        "error": "SCHEDULE_UNAVAILABLE"
-      }
-    },
-    "changes": []
-  },
   "matches": [
     {
       "match": "Bay Olympic - Birkenhead United AFC",
       "start_time": "02-09-2026 09:15",
       "league": "Premiership",
-      "minutes_to_start": 14.1,
+      "minutes_to_start": -3.6,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.55823",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
+      "target_origin": "PREVIOUS_LINEUP_FEED"
+    },
+    {
+      "match": "Gintra Siauliai - Sturm Graz",
+      "start_time": "02-09-2026 11:00",
+      "league": "UEFA Europa Cup Femminile",
+      "minutes_to_start": 101.4,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36363.27687",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX"
     }
   ]
 }
