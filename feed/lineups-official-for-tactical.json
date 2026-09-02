@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T07:51:53.789659+00:00",
+  "generated_at": "2026-09-02T08:02:40.857371+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 5,
+  "target_count": 33,
   "status_counts": {
-    "REFERENCE_PREVIOUS_XI": 3,
-    "NOT_AVAILABLE": 2
+    "SOURCE_CONFIRMED": 1,
+    "NOT_AVAILABLE": 7,
+    "REFERENCE_PREVIOUS_XI": 25
   },
   "schedule_stats": [
     {
@@ -21,28 +22,597 @@
     }
   ],
   "source_errors": {},
-  "matches": [],
-  "urgent_refresh": {
-    "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-02T07:51:53.789659+00:00",
-    "window_minutes": [
-      0,
-      85.0
-    ],
-    "target_count": 1,
-    "sources": [
-      "FotMob",
-      "Sofascore"
-    ],
-    "schedule_meta": {
-      "2026-09-02": {
-        "provider": "Sofascore",
-        "error": "SCHEDULE_UNAVAILABLE"
-      }
-    },
-    "changes": []
-  },
+  "matches": [
+    {
+      "match_market_id": "36363.27687",
+      "match_event_id": 16090368,
+      "match": "Gintra Siauliai - Sturm Graz",
+      "start_time": "02-09-2026 11:00",
+      "start_utc": "2026-09-02T09:00:00+00:00",
+      "league": "UEFA Europa Cup Femminile",
+      "minutes_to_start": 57.3,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "status": "SOURCE_CONFIRMED",
+      "confirmed_at": "2026-09-02T08:02:40.857371+00:00",
+      "retained_from_previous": false,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": null,
+      "source": "FotMob",
+      "fotmob_match": {
+        "id": 1000019453,
+        "home": "FK Gintra Universitetas",
+        "away": "Sturm Graz",
+        "league": "UEFA Women's Europa Cup",
+        "score": 0.7553,
+        "time_delta_min": 0.0
+      },
+      "lineup": {
+        "present": true,
+        "complete_11v11": true,
+        "confirmed": true,
+        "historical_reference": false,
+        "lineup_type": "standard",
+        "provider_source": "optaSdapi",
+        "teams": [
+          {
+            "team_id": 401628,
+            "team_name": "FK Gintra Universitetas",
+            "formation": "3-4-3",
+            "starters": [
+              {
+                "name": "Alla Herasymchuk",
+                "id": 1399066,
+                "shirt_number": "81",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Makeila Yancey",
+                "id": null,
+                "shirt_number": "2",
+                "position_id": 33,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Sabrina Amorim",
+                "id": 1822133,
+                "shirt_number": "5",
+                "position_id": 35,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Tamara Brown",
+                "id": 1822145,
+                "shirt_number": "24",
+                "position_id": 37,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Laura Kubiliute",
+                "id": 1832830,
+                "shirt_number": "29",
+                "position_id": 72,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Algimante Mikutaite",
+                "id": 887930,
+                "shirt_number": "44",
+                "position_id": 74,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Marija Galkina",
+                "id": 1554584,
+                "shirt_number": "10",
+                "position_id": 76,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Lidiane Ribeiro",
+                "id": 1806065,
+                "shirt_number": "8",
+                "position_id": 78,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Khrystyna Pereviznyk",
+                "id": 1555639,
+                "shirt_number": "88",
+                "position_id": 103,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.79,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Elizabeth Mideva",
+                "id": 1962132,
+                "shirt_number": "48",
+                "position_id": 105,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.5,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Justina Blazeviciute",
+                "id": 1737439,
+                "shirt_number": "15",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Gabriele Vasilenko",
+                "id": 1737437,
+                "shirt_number": "1"
+              },
+              {
+                "name": "Aiste Sveckute",
+                "id": 2159192,
+                "shirt_number": "23"
+              },
+              {
+                "name": "Athena Diachenko",
+                "id": 1918536,
+                "shirt_number": "22"
+              },
+              {
+                "name": "Tereza Romanovskaja",
+                "id": 1554583,
+                "shirt_number": "17"
+              },
+              {
+                "name": "Agnieska Kazarina",
+                "id": 1554581,
+                "shirt_number": "16"
+              },
+              {
+                "name": "Julia Dias",
+                "id": 2159190,
+                "shirt_number": "13"
+              },
+              {
+                "name": "Viktoriia Lavreniuk",
+                "id": 2159188,
+                "shirt_number": "95"
+              },
+              {
+                "name": "Meida Prosceviciute",
+                "id": 1822148,
+                "shirt_number": "7"
+              },
+              {
+                "name": "Ugne Grinceviciute",
+                "id": null,
+                "shirt_number": "14"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge"
+            ]
+          },
+          {
+            "team_id": 644409,
+            "team_name": "Sturm Graz",
+            "formation": "3-5-2",
+            "starters": [
+              {
+                "name": "Sarah-Lisa Dübel",
+                "id": 1345222,
+                "shirt_number": "1",
+                "position_id": 11,
+                "usual_position_id": 0,
+                "horizontal_layout": {
+                  "x": 0.1,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.2
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.1,
+                  "height": 0.2,
+                  "width": 1
+                }
+              },
+              {
+                "name": "Stefanie Großgasteiger",
+                "id": 1812102,
+                "shirt_number": "19",
+                "position_id": 33,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.79,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.21,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Julia Wattilete",
+                "id": 1910426,
+                "shirt_number": "29",
+                "position_id": 35,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Merel Bormans",
+                "id": 1365834,
+                "shirt_number": "3",
+                "position_id": 37,
+                "usual_position_id": 1,
+                "horizontal_layout": {
+                  "x": 0.357,
+                  "y": 0.21,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Marie Spieß",
+                "id": 1812094,
+                "shirt_number": "28",
+                "position_id": 71,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.89,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.11,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Lena Breznik",
+                "id": 1812095,
+                "shirt_number": "17",
+                "position_id": 73,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.695,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.305,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Sophie Maierhofer",
+                "id": 856540,
+                "shirt_number": "15",
+                "position_id": 75,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.5,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Sara Pavlovic",
+                "id": 1091756,
+                "shirt_number": "16",
+                "position_id": 77,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.305,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.695,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Lilla Sipos",
+                "id": 2159138,
+                "shirt_number": "77",
+                "position_id": 79,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.11,
+                  "height": 0.195,
+                  "width": 0.773
+                },
+                "vertical_layout": {
+                  "x": 0.89,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.195
+                }
+              },
+              {
+                "name": "Laura Krumböck",
+                "id": 888134,
+                "shirt_number": "10",
+                "position_id": 104,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.7,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.3,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              },
+              {
+                "name": "Brigitta Pulins",
+                "id": 1904185,
+                "shirt_number": "7",
+                "position_id": 106,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.3,
+                  "height": 0.195,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.7,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.4
+                }
+              }
+            ],
+            "bench": [
+              {
+                "name": "Vanessa Gritzner",
+                "id": 1812105,
+                "shirt_number": "21"
+              },
+              {
+                "name": "Nina Wippel",
+                "id": 2032578,
+                "shirt_number": "5"
+              },
+              {
+                "name": "Emma Kaiser",
+                "id": 2032576,
+                "shirt_number": "18"
+              },
+              {
+                "name": "Lucie Krejcová",
+                "id": 1822515,
+                "shirt_number": "4"
+              },
+              {
+                "name": "Leonie Tragl",
+                "id": 1812099,
+                "shirt_number": "26"
+              },
+              {
+                "name": "Katja Weber",
+                "id": 1983579,
+                "shirt_number": "14"
+              },
+              {
+                "name": "Julia Keutz",
+                "id": 1812096,
+                "shirt_number": "8"
+              },
+              {
+                "name": "Ruzica Krajinovic",
+                "id": 1555552,
+                "shirt_number": "11"
+              },
+              {
+                "name": "Johanna Riedler",
+                "id": null,
+                "shirt_number": "9"
+              }
+            ],
+            "raw_keys": [
+              "id",
+              "name",
+              "formation",
+              "starters",
+              "coach",
+              "subs",
+              "averageStarterAge"
+            ]
+          }
+        ],
+        "xi_fingerprint": "cf6383e1ff9b02bab476",
+        "raw_keys": [
+          "matchId",
+          "lineupType",
+          "source",
+          "availableFilters",
+          "homeTeam",
+          "awayTeam"
+        ]
+      },
+      "error": null
+    }
+  ],
   "official_tactical_gate": true,
-  "source_match_count": 5,
-  "official_match_count": 0
+  "source_match_count": 33,
+  "official_match_count": 1
 }
