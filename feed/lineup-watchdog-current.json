@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T14:13:36.173129+00:00",
+  "generated_at": "2026-09-02T14:29:14.413757+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-02T14:10:20.920453+00:00",
-      "finished_at": "2026-09-02T14:10:39.350317+00:00",
-      "official_count": 3,
+      "started_at": "2026-09-02T14:29:02.554486+00:00",
+      "finished_at": "2026-09-02T14:29:14.413714+00:00",
+      "official_count": 1,
       "urgent_unconfirmed_count": 36,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T14:11:14.350520+00:00",
-      "finished_at": "2026-09-02T14:11:14.703696+00:00",
-      "official_count": 3,
-      "urgent_unconfirmed_count": 36,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T14:11:49.704097+00:00",
-      "finished_at": "2026-09-02T14:11:50.040687+00:00",
-      "official_count": 3,
-      "urgent_unconfirmed_count": 36,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T14:12:25.041041+00:00",
-      "finished_at": "2026-09-02T14:12:25.297688+00:00",
-      "official_count": 3,
-      "urgent_unconfirmed_count": 36,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T14:13:00.298134+00:00",
-      "finished_at": "2026-09-02T14:13:00.848728+00:00",
-      "official_count": 3,
-      "urgent_unconfirmed_count": 36,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T14:13:35.849113+00:00",
-      "finished_at": "2026-09-02T14:13:36.172951+00:00",
-      "official_count": 3,
-      "urgent_unconfirmed_count": 36,
-      "events": [],
-      "actionable_events": []
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T14:29:14.412901+00:00",
+          "match": "Slovan Lib. - SFK 2000",
+          "league": "UEFA Europa Cup Femminile",
+          "start_time": "02-09-2026 17:00",
+          "minutes_to_start": 30.8,
+          "match_market_id": "36363.27774",
+          "match_event_id": 16090398,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000019455,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "3ccb48640a2bef6f58cd",
+          "current_xi_fingerprint": "6554c24afe1d70b4b097",
+          "confirmed_at": "2026-09-02T14:29:14.138187+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T14:29:14.412901+00:00",
+          "match": "Slovan Lib. - SFK 2000",
+          "league": "UEFA Europa Cup Femminile",
+          "start_time": "02-09-2026 17:00",
+          "minutes_to_start": 30.8,
+          "match_market_id": "36363.27774",
+          "match_event_id": 16090398,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000019455,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "3ccb48640a2bef6f58cd",
+          "current_xi_fingerprint": "6554c24afe1d70b4b097",
+          "confirmed_at": "2026-09-02T14:29:14.138187+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T14:29:14.412901+00:00",
+      "match": "Slovan Lib. - SFK 2000",
+      "league": "UEFA Europa Cup Femminile",
+      "start_time": "02-09-2026 17:00",
+      "minutes_to_start": 30.8,
+      "match_market_id": "36363.27774",
+      "match_event_id": 16090398,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000019455,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "3ccb48640a2bef6f58cd",
+      "current_xi_fingerprint": "6554c24afe1d70b4b097",
+      "confirmed_at": "2026-09-02T14:29:14.138187+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T14:29:14.412901+00:00",
+      "match": "Slovan Lib. - SFK 2000",
+      "league": "UEFA Europa Cup Femminile",
+      "start_time": "02-09-2026 17:00",
+      "minutes_to_start": 30.8,
+      "match_market_id": "36363.27774",
+      "match_event_id": 16090398,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000019455,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "3ccb48640a2bef6f58cd",
+      "current_xi_fingerprint": "6554c24afe1d70b4b097",
+      "confirmed_at": "2026-09-02T14:29:14.138187+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "Beltinci - Mura Murska Sobota",
       "match_market_id": "36363.31087",
       "match_event_id": 16090990,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,7 +135,7 @@
       "match": "Brezno - Zvolen",
       "match_market_id": "36364.9844",
       "match_event_id": 16098832,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6106072
@@ -110,7 +144,7 @@
       "match": "Brno - FC Vsetin",
       "match_market_id": "36364.7413",
       "match_event_id": 16098334,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +153,7 @@
       "match": "FK Blansko - Polanka Nad Odrou",
       "match_market_id": "36363.20524",
       "match_event_id": 16089474,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -128,7 +162,7 @@
       "match": "FK Majevica Lopare - Kozara",
       "match_market_id": "36364.7432",
       "match_event_id": 16098342,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -137,25 +171,16 @@
       "match": "Hodonin-Sardice - SK SIGMA OLOMOUC B",
       "match_market_id": "36363.20519",
       "match_event_id": 16089472,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Kysucke Nove Mesto - Cadca",
-      "match_market_id": "36364.7212",
-      "match_event_id": 16098303,
-      "minutes_to_start": 16.4,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": 6106070
-    },
-    {
       "match": "Lokomotiva Kosice - Slavia Tu Kosice",
       "match_market_id": "36364.1583",
       "match_event_id": 16096339,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6106076
@@ -164,7 +189,7 @@
       "match": "MFk Karvina B - Frydek Mistek",
       "match_market_id": "36364.7409",
       "match_event_id": 16098332,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -173,7 +198,7 @@
       "match": "Nomme United - Parnu Vaprus",
       "match_market_id": "36363.19051",
       "match_event_id": 16089249,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -182,7 +207,7 @@
       "match": "Samtredia - Iberia",
       "match_market_id": "36363.31086",
       "match_event_id": 16090987,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -191,7 +216,7 @@
       "match": "Slovacko B - Vrchovina",
       "match_market_id": "36363.20514",
       "match_event_id": 16089468,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -200,7 +225,7 @@
       "match": "Svaty Jur - D. Luzna",
       "match_market_id": "36364.8575",
       "match_event_id": 16100617,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6106063
@@ -209,7 +234,7 @@
       "match": "Tj Tatran O. Vesele - Povazska Bystrica",
       "match_market_id": "36364.8530",
       "match_event_id": 16098527,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6106060
@@ -218,7 +243,7 @@
       "match": "Velez Nevesinje - Drina Zvornik",
       "match_market_id": "36364.3357",
       "match_event_id": 16097075,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -227,16 +252,25 @@
       "match": "Vitkovice - SK Unicov",
       "match_market_id": "36363.20528",
       "match_event_id": 16089475,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
+      "match": "Kysucke Nove Mesto - Cadca",
+      "match_market_id": "36364.7212",
+      "match_event_id": 16098303,
+      "minutes_to_start": 0.8,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": 6106070
+    },
+    {
       "match": "Tatran Krasno - Trencin",
       "match_market_id": "36364.7181",
       "match_event_id": 16098300,
-      "minutes_to_start": 16.4,
+      "minutes_to_start": 0.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6106069
@@ -245,7 +279,7 @@
       "match": "Bistrita Nasaud - AFK Csikszereda Miercurea Ciuc",
       "match_market_id": "36361.57833",
       "match_event_id": 16076219,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6093744
@@ -254,7 +288,7 @@
       "match": "CA San Telmo Reserve - Acassuso Reserve",
       "match_market_id": "36364.7308",
       "match_event_id": 16098335,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -263,7 +297,7 @@
       "match": "CD Armenio Reserve - CS Dock Sud Reserve",
       "match_market_id": "36362.23783",
       "match_event_id": 16098371,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -272,7 +306,7 @@
       "match": "Dugopolje - Karlovac",
       "match_market_id": "36362.23911",
       "match_event_id": 16090980,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -281,7 +315,7 @@
       "match": "FASTAV ZLIN - CSK Uhersky Brod",
       "match_market_id": "36361.4435",
       "match_event_id": 16098343,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -290,7 +324,7 @@
       "match": "FK Komarov - Senco",
       "match_market_id": "36364.15500",
       "match_event_id": 16100058,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -299,7 +333,7 @@
       "match": "Gornik Leczna - Stal Mielec",
       "match_market_id": "36363.27712",
       "match_event_id": 16090377,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -308,7 +342,7 @@
       "match": "Ittihad AL Ramtha - Al Aqaba",
       "match_market_id": "36364.7230",
       "match_event_id": 16098299,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -317,7 +351,7 @@
       "match": "Mladost Zdralovi - NK Sesvete",
       "match_market_id": "36361.58359",
       "match_event_id": 16090390,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -326,7 +360,7 @@
       "match": "NK CROATIA ZMIJAVCI - NK BSK Bijelo Brdo",
       "match_market_id": "36361.5285",
       "match_event_id": 16090388,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -335,7 +369,7 @@
       "match": "NK Jadran LP - NK Dubrava Zagreb",
       "match_market_id": "36363.31032",
       "match_event_id": 16090983,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -344,7 +378,7 @@
       "match": "Narpes Kraft - FF Jaro Akademia",
       "match_market_id": "36363.27755",
       "match_event_id": 16090397,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -353,25 +387,16 @@
       "match": "Segesta - Kustosija Zagreb",
       "match_market_id": "36363.27733",
       "match_event_id": 16090386,
-      "minutes_to_start": 46.4,
+      "minutes_to_start": 30.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Slovan Lib. - SFK 2000",
-      "match_market_id": "36363.27774",
-      "match_event_id": 16090398,
-      "minutes_to_start": 46.4,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000019455
-    },
-    {
       "match": "Espoon Palloseura - FC Honka",
       "match_market_id": "36362.23908",
       "match_event_id": 16098622,
-      "minutes_to_start": 76.4,
+      "minutes_to_start": 60.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -380,7 +405,7 @@
       "match": "HJS - Tampereen Ilves 2",
       "match_market_id": "36362.23905",
       "match_event_id": 16089467,
-      "minutes_to_start": 76.4,
+      "minutes_to_start": 60.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -389,7 +414,7 @@
       "match": "MKS Znicz Pruszkow - Cracovia Krakow",
       "match_market_id": "36363.28346",
       "match_event_id": 16090501,
-      "minutes_to_start": 76.4,
+      "minutes_to_start": 60.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -398,7 +423,7 @@
       "match": "Maxline Rogachev - Belshina",
       "match_market_id": "36363.19183",
       "match_event_id": 16089291,
-      "minutes_to_start": 76.4,
+      "minutes_to_start": 60.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -407,11 +432,20 @@
       "match": "OPATIJA - Hrvace",
       "match_market_id": "36363.27735",
       "match_event_id": 16090396,
-      "minutes_to_start": 76.4,
+      "minutes_to_start": 60.8,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
+    },
+    {
+      "match": "Hajer - AL Anwar",
+      "match_market_id": "36363.27725",
+      "match_event_id": 16090385,
+      "minutes_to_start": 70.8,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "source": "FotMob",
+      "fotmob_match_id": 1000018438
     }
   ],
-  "target_count": 72
+  "target_count": 61
 }
