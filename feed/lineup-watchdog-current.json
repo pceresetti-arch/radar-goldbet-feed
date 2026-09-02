@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T00:26:29.940293+00:00",
+  "generated_at": "2026-09-02T00:44:08.639388+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,82 +21,106 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-02T00:23:31.139415+00:00",
-      "finished_at": "2026-09-02T00:23:32.748898+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T00:24:07.749030+00:00",
-      "finished_at": "2026-09-02T00:24:08.106327+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T00:24:43.106495+00:00",
-      "finished_at": "2026-09-02T00:24:43.661598+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T00:25:18.661750+00:00",
-      "finished_at": "2026-09-02T00:25:19.028402+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T00:25:54.028588+00:00",
-      "finished_at": "2026-09-02T00:25:54.533067+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T00:26:29.533227+00:00",
-      "finished_at": "2026-09-02T00:26:29.940253+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 1,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-02T00:44:07.395277+00:00",
+      "finished_at": "2026-09-02T00:44:08.639379+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 0,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T00:44:08.639356+00:00",
+          "match": "Fortaleza - Once Caldas",
+          "league": "Primera A",
+          "start_time": "02-09-2026 03:00",
+          "minutes_to_start": 15.9,
+          "match_market_id": "36361.3440",
+          "match_event_id": 16074183,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000014120,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "d9d263044a92a7019176",
+          "current_xi_fingerprint": "83ddd9a7e2ed6eef8d69",
+          "confirmed_at": "2026-09-02T00:44:07.540270+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T00:44:08.639356+00:00",
+          "match": "Fortaleza - Once Caldas",
+          "league": "Primera A",
+          "start_time": "02-09-2026 03:00",
+          "minutes_to_start": 15.9,
+          "match_market_id": "36361.3440",
+          "match_event_id": 16074183,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000014120,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "d9d263044a92a7019176",
+          "current_xi_fingerprint": "83ddd9a7e2ed6eef8d69",
+          "confirmed_at": "2026-09-02T00:44:07.540270+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [
+  "observed_events": [
     {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T00:44:08.639356+00:00",
       "match": "Fortaleza - Once Caldas",
+      "league": "Primera A",
+      "start_time": "02-09-2026 03:00",
+      "minutes_to_start": 15.9,
       "match_market_id": "36361.3440",
       "match_event_id": 16074183,
-      "minutes_to_start": 33.5,
-      "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
-      "fotmob_match_id": 1000014120
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000014120,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "d9d263044a92a7019176",
+      "current_xi_fingerprint": "83ddd9a7e2ed6eef8d69",
+      "confirmed_at": "2026-09-02T00:44:07.540270+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
     }
   ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T00:44:08.639356+00:00",
+      "match": "Fortaleza - Once Caldas",
+      "league": "Primera A",
+      "start_time": "02-09-2026 03:00",
+      "minutes_to_start": 15.9,
+      "match_market_id": "36361.3440",
+      "match_event_id": 16074183,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000014120,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "d9d263044a92a7019176",
+      "current_xi_fingerprint": "83ddd9a7e2ed6eef8d69",
+      "confirmed_at": "2026-09-02T00:44:07.540270+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
+  "urgent_unconfirmed_remaining": [],
   "target_count": 1
 }
