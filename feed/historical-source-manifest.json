@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v40",
-  "generated_at": "2026-09-02T04:20:40Z",
+  "schema_version": "radar-historical-source-manifest-v41",
+  "generated_at": "2026-09-02T05:42:20Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "LIGUE1_FORMAT_DRIFT_AUDITED_NO_FOUR_SEASON_MODEL",
+  "status": "OU25_EXTERNAL_CLOSE_OOS_ROBUST_BENCHMARK_ONLY",
   "priority": [
     "Sweden",
     "Norway",
@@ -1026,6 +1026,42 @@
         "Only three seasons share the current 18-club format, insufficient for the requested three-season development plus one-season holdout design.",
         "No outcomes or odds were used to choose a favorable subset; no model or OOS metric was calculated."
       ]
+    },
+    {
+      "name": "Seven-league external average closing O/U 2.5 OOS benchmark",
+      "path": "feed/historical/markets/cross-league-ou25-close-oos-v1.json",
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "status": "COMPLETE_ROBUST_OOS_BENCHMARK_NOT_GOLDBET",
+      "leagues": [
+        "Netherlands",
+        "Portugal",
+        "Germany2",
+        "Germany1",
+        "Spain1",
+        "England1",
+        "Scotland1"
+      ],
+      "development_design": "Per-league Over 2.5 rate frozen on three development seasons",
+      "holdout_rows": 2212,
+      "scored_rows": 2212,
+      "missing_identity_rows": 0,
+      "missing_close_pair_rows": 0,
+      "role": [
+        "OU25_PROPER_SCORE_BENCHMARK",
+        "FROZEN_OOS_MARKET_CALIBRATION"
+      ],
+      "forbidden_role": [
+        "GOLDBET_SAME_BOOK_OPEN_CLOSE",
+        "MMS_THRESHOLD_PROMOTION",
+        "CLV_INFERENCE",
+        "ROI_INFERENCE"
+      ],
+      "quality_notes": [
+        "All 2,212 frozen holdout fixtures joined exactly to a complete AvgC>2.5 / AvgC<2.5 pair.",
+        "De-vigging was performed within each external average closing pair.",
+        "The closing benchmark improves pooled Brier and log-loss with fixture and league bootstrap intervals entirely favorable.",
+        "Sweden, Norway, Denmark and Austria are excluded because their persisted consolidated sources do not contain O/U price columns."
+      ]
     }
   ],
   "required_blocks": {
@@ -1198,6 +1234,13 @@
     },
     "player_props": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_MATCH_PRICE_AND_IDENTITY_ARE_VERIFIABLE"
+    },
+    "ou25_external_close_benchmark": {
+      "status": "ACCEPTED_7_LEAGUES_2212_OOS_ROWS",
+      "report": "feed/historical/markets/cross-league-ou25-close-oos-v1.json",
+      "source_class": "EXTERNAL_HISTORICAL_MARKET_BENCHMARK",
+      "rule": "Benchmark only; never substitute for GoldBet same-book OPEN-to-certified-CLOSE evidence.",
+      "missing_rows": 0
     }
   },
   "quarantine_rules": [
@@ -1227,7 +1270,8 @@
     "coarse_environment_proxy_policy": "REJECTED_UNLESS_NEW_DIRECT_EVIDENCE_AND_NEW_INDEPENDENT_HOLDOUT",
     "daily_audit_policy": "REQUIRE_VERSIONED_PREKICKOFF_PREDICTION_MANIFEST_NO_MEMORY_RECONSTRUCTION",
     "france1_four_season_model_allowed": false,
-    "france1_four_season_model_reason": "2022/2023 uses 20 clubs; 2023/2024-2025/2026 use 18 clubs, leaving only three comparable current-format seasons."
+    "france1_four_season_model_reason": "2022/2023 uses 20 clubs; 2023/2024-2025/2026 use 18 clubs, leaving only three comparable current-format seasons.",
+    "ou25_external_close_policy": "PROPER_SCORE_BENCHMARK_ONLY_NO_GOLDBET_MMS_CLV_ROI_OR_THRESHOLD_PROMOTION"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1238,7 +1282,7 @@
       "J1 League: format drift",
       "Ligue 1: format drift from 20 to 18 clubs; only three comparable 18-club seasons"
     ],
-    "next_analysis_lane": "Continue with another stable, versioned league or direct verified pre-match context; do not force Ligue 1 into the four-season design.",
+    "next_analysis_lane": "Seek direct versioned same-book historical prices or another required market with complete pre-match provenance; avoid relabelling external close as GoldBet.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context.",
     "external_close_constraint": "External average close may benchmark proper scores but cannot substitute for GoldBet same-book TRUE OPEN-to-CLOSE evidence.",
