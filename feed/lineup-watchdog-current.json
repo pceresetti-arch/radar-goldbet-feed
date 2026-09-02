@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-02T11:13:03.979173+00:00",
+  "generated_at": "2026-09-02T11:27:44.053483+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-02T11:10:05.067616+00:00",
-      "finished_at": "2026-09-02T11:10:07.714190+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T11:10:42.714338+00:00",
-      "finished_at": "2026-09-02T11:10:42.885745+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T11:11:17.885957+00:00",
-      "finished_at": "2026-09-02T11:11:18.225072+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T11:11:53.225277+00:00",
-      "finished_at": "2026-09-02T11:11:53.405585+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T11:12:28.405767+00:00",
-      "finished_at": "2026-09-02T11:12:28.690298+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-02T11:13:03.690535+00:00",
-      "finished_at": "2026-09-02T11:13:03.979107+00:00",
-      "official_count": 0,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-02T11:27:41.049721+00:00",
+      "finished_at": "2026-09-02T11:27:44.053468+00:00",
+      "official_count": 1,
+      "urgent_unconfirmed_count": 3,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T11:27:44.053337+00:00",
+          "match": "Yunnan Yukun - Chongqing Tonglianglong FC",
+          "league": "FA Cup",
+          "start_time": "02-09-2026 14:00",
+          "minutes_to_start": 32.3,
+          "match_market_id": "36362.46606",
+          "match_event_id": 16085564,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5961060,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "aac8732113327c91b314",
+          "current_xi_fingerprint": "a6065ef508c64854b4c5",
+          "confirmed_at": "2026-09-02T11:27:43.761379+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-02T11:27:44.053337+00:00",
+          "match": "Yunnan Yukun - Chongqing Tonglianglong FC",
+          "league": "FA Cup",
+          "start_time": "02-09-2026 14:00",
+          "minutes_to_start": 32.3,
+          "match_market_id": "36362.46606",
+          "match_event_id": 16085564,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5961060,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "aac8732113327c91b314",
+          "current_xi_fingerprint": "a6065ef508c64854b4c5",
+          "confirmed_at": "2026-09-02T11:27:43.761379+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T11:27:44.053337+00:00",
+      "match": "Yunnan Yukun - Chongqing Tonglianglong FC",
+      "league": "FA Cup",
+      "start_time": "02-09-2026 14:00",
+      "minutes_to_start": 32.3,
+      "match_market_id": "36362.46606",
+      "match_event_id": 16085564,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5961060,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "aac8732113327c91b314",
+      "current_xi_fingerprint": "a6065ef508c64854b4c5",
+      "confirmed_at": "2026-09-02T11:27:43.761379+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-02T11:27:44.053337+00:00",
+      "match": "Yunnan Yukun - Chongqing Tonglianglong FC",
+      "league": "FA Cup",
+      "start_time": "02-09-2026 14:00",
+      "minutes_to_start": 32.3,
+      "match_market_id": "36362.46606",
+      "match_event_id": 16085564,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5961060,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "aac8732113327c91b314",
+      "current_xi_fingerprint": "a6065ef508c64854b4c5",
+      "confirmed_at": "2026-09-02T11:27:43.761379+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "Sabah - Selangor FC",
       "match_market_id": "36363.45295",
       "match_event_id": 16093020,
-      "minutes_to_start": 16.9,
+      "minutes_to_start": 2.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,25 +135,16 @@
       "match": "Melaka FC - Penang FA",
       "match_market_id": "36364.7403",
       "match_event_id": 16098330,
-      "minutes_to_start": 46.9,
+      "minutes_to_start": 32.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Yunnan Yukun - Chongqing Tonglianglong FC",
-      "match_market_id": "36362.46606",
-      "match_event_id": 16085564,
-      "minutes_to_start": 46.9,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 5961060
-    },
-    {
       "match": "Wiked Luzino - Wisla Plock",
       "match_market_id": "36362.25130",
       "match_event_id": 16090356,
-      "minutes_to_start": 76.9,
+      "minutes_to_start": 62.3,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
