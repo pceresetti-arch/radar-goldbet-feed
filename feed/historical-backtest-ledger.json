@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v46",
-  "generated_at": "2026-09-02T10:48:00Z",
+  "schema_version": "radar-historical-backtest-ledger-v47",
+  "generated_at": "2026-09-02T11:48:00Z",
   "local_timezone": "Europe/Rome",
-  "status": "OU25_STRUCTURAL_INCREMENT_TO_CLOSE_REJECTED",
+  "status": "1X2_ELO_INCREMENT_TO_CLOSE_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -251,7 +251,11 @@
     "ou25_structural_close_blend_leagues": 7,
     "ou25_structural_close_blend_development_rows": 6636,
     "ou25_structural_close_blend_holdout_rows": 2212,
-    "ou25_structural_close_blend_missing_rows": 0
+    "ou25_structural_close_blend_missing_rows": 0,
+    "one_x_two_elo_close_blend_leagues": 11,
+    "one_x_two_elo_close_blend_rolling_folds": 22,
+    "one_x_two_elo_close_blend_development_validation_rows": 6152,
+    "one_x_two_elo_close_blend_holdout_rows": 3076
   },
   "quarantined_evidence": [
     {
@@ -502,7 +506,12 @@
     "Selected a single global blend weight on development only from a predeclared 0.05 grid, minimizing log-loss with deterministic Brier and larger-closing-weight tie breakers.",
     "Development selected 100% external average closing probability and 0% structural Poisson: closing Brier/log-loss 0.23501/0.66242 versus structural-only 0.24318/0.67959.",
     "Froze the selected 100%-closing blend before holdout evaluation; holdout therefore exactly reproduces the external-close benchmark at Brier 0.23829, log-loss 0.66896 and accuracy 58.41%.",
-    "Rejected the structural Poisson increment to O/U closing probabilities. The external close remains a non-GoldBet benchmark and no operational rule was promoted."
+    "Rejected the structural Poisson increment to O/U closing probabilities. The external close remains a non-GoldBet benchmark and no operational rule was promoted.",
+    "Completed an eleven-league 1X2 Elo-versus-external-close blend ablation using 22 rolling-origin development folds, 6,152 out-of-fold development predictions and 3,076 frozen holdout fixtures.",
+    "Selected a single global blend weight only from rolling-development predictions on a predeclared 0.05 grid; the final holdout was not used for weight selection.",
+    "Rolling development selected 100% external average close and 0% ELO_ONLY: closing Brier/log-loss 0.57240/0.96351 versus Elo-only 0.59783/1.00228.",
+    "The frozen holdout blend therefore exactly reproduces external close at Brier 0.58299, log-loss 0.97927 and accuracy 53.41%; Elo alone scores 0.60024, 1.00505 and 50.46%.",
+    "Rejected Elo as an incremental probability component once external average closing information is available; retained it only as a structural research baseline."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2691,6 +2700,34 @@
         "blend_minus_close_log_loss": 0
       },
       "decision": "REJECT_STRUCTURAL_INCREMENT_DEVELOPMENT_SELECTS_ZERO_WEIGHT"
+    },
+    "cross_league_1x2_elo_close_blend_oos": {
+      "report": "feed/historical/markets/cross-league-1x2-elo-close-blend-oos-v1.json",
+      "leagues": 11,
+      "rolling_folds": 22,
+      "development_validation_rows": 6152,
+      "holdout_rows": 3076,
+      "selection": {
+        "metric": "rolling_development_log_loss",
+        "grid_step": 0.05,
+        "selected_close_weight": 1,
+        "selected_elo_weight": 0,
+        "elo_only_brier": 0.5978272716848794,
+        "elo_only_log_loss": 1.0022793208163792,
+        "close_only_brier": 0.5723972531086512,
+        "close_only_log_loss": 0.9635058444325996
+      },
+      "holdout": {
+        "close_brier": 0.5829934129060756,
+        "close_log_loss": 0.9792668118476726,
+        "close_accuracy": 0.5341352405721717,
+        "elo_brier": 0.6002423703022668,
+        "elo_log_loss": 1.0050528376814343,
+        "elo_accuracy": 0.5045513654096229,
+        "blend_minus_close_brier": 0,
+        "blend_minus_close_log_loss": 0
+      },
+      "decision": "REJECT_ELO_INCREMENT_ROLLING_DEVELOPMENT_SELECTS_ZERO_WEIGHT"
     }
   },
   "ablation_plan": {
@@ -2713,7 +2750,7 @@
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
     "next_analysis_lane": "Prioritize verified market or direct tactical/player context. Do not add further coarse score-rate proxies without a predeclared development-only design and a new independent temporal holdout.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
-    "market_lane": "Current structural Poisson adds no development-validated information to external O/U 2.5 closing probabilities and is rejected as an increment; seek direct verified context or independently timestamped same-book data.",
+    "market_lane": "Elo and structural Poisson add zero development-selected weight to external 1X2 and O/U 2.5 close respectively; seek genuinely orthogonal verified pre-match context rather than further coarse blends.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
   "rule_decisions": {
@@ -2764,7 +2801,8 @@
       "Rejected any hindsight reconstruction of the 2026-09-01 daily audit without a persisted pre-kickoff prediction manifest.",
       "Cross-league BTTS structural v1: reject the fixed-shrinkage independent-Poisson module based only on strictly prior home/away goals; it worsens the frozen development-rate baseline in pooled proper scores and in 10/11 leagues, while equal-league uncertainty does not support promotion.",
       "Cross-league O/U 2.5 structural v1: do not promote the fixed-shrinkage independent-Poisson module; pooled estimates improve and accuracy rises, but fixture-paired and equal-league intervals cross zero and only 7/11 leagues improve.",
-      "O/U 2.5 structural-close blend v1: reject the fixed-shrinkage Poisson increment; development-only selection assigns it zero weight and retains 100% external average close."
+      "O/U 2.5 structural-close blend v1: reject the fixed-shrinkage Poisson increment; development-only selection assigns it zero weight and retains 100% external average close.",
+      "Cross-league 1X2 Elo-close blend v1: reject ELO_ONLY as an increment to external average closing probabilities; 22 rolling-origin development folds assign Elo zero weight."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -2814,6 +2852,7 @@
     "Reject Bet365 1X2 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes frozen OOS replication.",
     "Reject the fixed-shrinkage independent-Poisson BTTS module based only on prior home/away goals; it does not improve the frozen league-rate baseline OOS.",
     "Do not promote the fixed-shrinkage independent-Poisson O/U 2.5 module from this holdout; the point improvement is not statistically conclusive across fixtures or leagues.",
-    "Reject adding the current structural Poisson O/U probability to the external average closing benchmark; the frozen development selection assigns structure 0% weight."
+    "Reject adding the current structural Poisson O/U probability to the external average closing benchmark; the frozen development selection assigns structure 0% weight.",
+    "Reject adding current ELO_ONLY probabilities to the external average 1X2 closing benchmark; rolling-development selection assigns Elo 0% weight."
   ]
 }
