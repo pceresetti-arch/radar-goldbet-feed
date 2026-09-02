@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v42",
-  "generated_at": "2026-09-02T06:30:00Z",
+  "schema_version": "radar-historical-source-manifest-v43",
+  "generated_at": "2026-09-02T07:42:00Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "B365_OU25_SAME_BOOK_MOVEMENT_THRESHOLDS_REJECTED",
+  "status": "B365_1X2_SAME_BOOK_MOVEMENT_THRESHOLDS_REJECTED",
   "priority": [
     "Sweden",
     "Norway",
@@ -1090,6 +1090,35 @@
         "Closing proper scores improve robustly over early prices on holdout.",
         "No pre-specified movement band passes the economic OOS promotion gate; the >=3pp ROI interval crosses zero and replicates in only 4/7 leagues."
       ]
+    },
+    {
+      "name": "Bet365 same-book 1X2 early-to-close movement OOS",
+      "path": "feed/historical/markets/b365-1x2-early-close-movement-oos-v1.json",
+      "source_class": "EXTERNAL_SAME_BOOK_EARLY_TO_CLOSE_DIAGNOSTIC",
+      "status": "COMPLETE_THRESHOLDS_REJECTED",
+      "bookmaker": "Bet365",
+      "market": "1X2",
+      "rows": 8846,
+      "development_rows": 6634,
+      "holdout_rows": 2212,
+      "missing_development_price_rows": 2,
+      "missing_holdout_price_rows": 0,
+      "role": [
+        "SAME_BOOK_MOVEMENT_DIAGNOSTIC",
+        "FROZEN_OOS_THRESHOLD_TEST"
+      ],
+      "forbidden_role": [
+        "GOLDBET_TRUE_OPEN",
+        "GOLDBET_MMS_PROMOTION",
+        "CERTIFIED_TIMESTAMPED_OPEN",
+        "OPERATIONAL_RULE"
+      ],
+      "quality_notes": [
+        "Two development fixtures lack a complete Bet365 early/close price sextet and were excluded without reconstruction.",
+        "All 2,212 frozen holdout fixtures have complete identity and prices.",
+        "Closing proper-score improvements over provider early prices are small and paired confidence intervals cross zero.",
+        "All movement bands fail OOS promotion; the >=3pp band changes from +5.95% development ROI to -0.64% holdout ROI."
+      ]
     }
   ],
   "required_blocks": {
@@ -1274,6 +1303,11 @@
       "status": "COMPLETE_EXTERNAL_B365_THRESHOLDS_REJECTED",
       "report": "feed/historical/markets/b365-ou25-early-close-movement-oos-v1.json",
       "rule": "Same-book diagnostic only; require certified GoldBet timestamps and independent replication before any operational promotion."
+    },
+    "same_book_1x2_movement": {
+      "status": "COMPLETE_EXTERNAL_B365_THRESHOLDS_REJECTED",
+      "report": "feed/historical/markets/b365-1x2-early-close-movement-oos-v1.json",
+      "rule": "Same-book diagnostic only; no GoldBet or operational inference from provider-early prices."
     }
   },
   "quarantine_rules": [
@@ -1305,7 +1339,8 @@
     "france1_four_season_model_allowed": false,
     "france1_four_season_model_reason": "2022/2023 uses 20 clubs; 2023/2024-2025/2026 use 18 clubs, leaving only three comparable current-format seasons.",
     "ou25_external_close_policy": "PROPER_SCORE_BENCHMARK_ONLY_NO_GOLDBET_MMS_CLV_ROI_OR_THRESHOLD_PROMOTION",
-    "b365_ou25_movement_threshold_policy": "REJECT_ALL_TESTED_BANDS_NO_ROBUST_HOLDOUT_ROI"
+    "b365_ou25_movement_threshold_policy": "REJECT_ALL_TESTED_BANDS_NO_ROBUST_HOLDOUT_ROI",
+    "b365_1x2_movement_threshold_policy": "REJECT_ALL_TESTED_BANDS_NO_OOS_REPLICATION"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
