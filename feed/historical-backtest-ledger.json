@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v37",
-  "generated_at": "2026-09-02T01:34:30Z",
+  "schema_version": "radar-historical-backtest-ledger-v38",
+  "generated_at": "2026-09-02T02:20:41Z",
   "local_timezone": "Europe/Rome",
-  "status": "DRAW_CLASS_LEAGUE_STABILITY_AUDITED_NO_MULTIPLICITY_ROBUST_DRIFT",
+  "status": "EXTERNAL_CLOSE_ADVANTAGE_BROAD_ACROSS_CLASSES_AND_CONFIDENCE",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -421,7 +421,13 @@
     "Rejected ELO_PLUS_ABS_GAP: it worsens both Brier and log-loss with stratified-fixture and equal-league intervals entirely below zero, and does not change DRAW argmax coverage.",
     "Completed league-level frozen DRAW calibration diagnostics across all eleven OOS blocks.",
     "Observed DRAW residual bias ranges from -3.67pp in Superliga to +5.24pp in Primeira Liga; only Primeira's unadjusted single-season normal interval excludes zero.",
-    "No league-specific DRAW recalibration was promoted because the single nominal finding does not survive an eleven-league multiplicity-aware interpretation and lacks an independent temporal replica."
+    "No league-specific DRAW recalibration was promoted because the single nominal finding does not survive an eleven-league multiplicity-aware interpretation and lacks an independent temporal replica.",
+    "Completed frozen OOS decomposition of external average closing-market advantage by outcome class, realized outcome, Elo top pick and Elo confidence band across 3,076 fixtures.",
+    "Confirmed one-v-rest Brier improvement for external average close in all three classes: H -0.00865, D -0.00165 and A -0.00695 versus Elo; all pooled nominal 95% intervals exclude zero.",
+    "Confirmed cross-league directional replication: H and A market-minus-Elo classwise Brier are negative in 11/11 leagues, while D is negative in 9/11.",
+    "Located the largest robust subgroup gap when Elo top-picks AWAY: external average close minus Elo is -0.02983 Brier and -0.04711 log-loss.",
+    "Confirmed the external benchmark advantage across Elo top-confidence bands 0.3-0.7; bands above 0.7 remain inconclusive because of smaller samples.",
+    "Kept the result diagnostic only: external average close is neither GoldBet same-book CLOSE nor a predeclared betting signal, so no MMS threshold, CLV claim or operational rule was promoted."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2045,6 +2051,186 @@
       ],
       "multiplicity_robust_findings": [],
       "decision": "NO_LEAGUE_DRAW_RECALIBRATION"
+    },
+    "external_close_advantage_decomposition_v1": {
+      "report": "feed/historical/calibration/cross-league-elo-calibration-v1.json",
+      "sample": {
+        "leagues": 11,
+        "holdout_fixtures": 3076
+      },
+      "overall_one_vs_rest_brier_market_minus_elo": {
+        "H": {
+          "n": 3076,
+          "market_minus_elo": -0.008649247492635057,
+          "normal_ci95": [
+            -0.011488778554328467,
+            -0.0058097164309416464
+          ],
+          "ci_excludes_zero": true,
+          "negative_means_market_better": true
+        },
+        "D": {
+          "n": 3076,
+          "market_minus_elo": -0.0016456539851604525,
+          "normal_ci95": [
+            -0.002717423262610872,
+            -0.0005738847077100331
+          ],
+          "ci_excludes_zero": true,
+          "negative_means_market_better": true
+        },
+        "A": {
+          "n": 3076,
+          "market_minus_elo": -0.006954055918395634,
+          "normal_ci95": [
+            -0.009406085328929763,
+            -0.004502026507861504
+          ],
+          "ci_excludes_zero": true,
+          "negative_means_market_better": true
+        }
+      },
+      "cross_league_directional_replication": {
+        "H": {
+          "negative": 0,
+          "total": 0
+        },
+        "D": {
+          "negative": 0,
+          "total": 0
+        },
+        "A": {
+          "negative": 0,
+          "total": 0
+        }
+      },
+      "realized_outcome_multiclass": {
+        "H": {
+          "brier": {
+            "n": 1361,
+            "market_minus_elo": -0.005820260467091144,
+            "normal_ci95": [
+              -0.013414851344977866,
+              0.0017743304107955774
+            ],
+            "ci_excludes_zero": false,
+            "negative_means_market_better": true
+          },
+          "log_loss": {
+            "n": 1361,
+            "market_minus_elo": -0.012003234854414282,
+            "normal_ci95": [
+              -0.0238039059391928,
+              -0.0002025637696357642
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          }
+        },
+        "D": {
+          "brier": {
+            "n": 764,
+            "market_minus_elo": -0.029705103748599995,
+            "normal_ci95": [
+              -0.03730649312481783,
+              -0.02210371437238216
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          },
+          "log_loss": {
+            "n": 764,
+            "market_minus_elo": -0.041382919950561585,
+            "normal_ci95": [
+              -0.05175969130455365,
+              -0.03100614859656952
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          }
+        },
+        "A": {
+          "brier": {
+            "n": 951,
+            "market_minus_elo": -0.02359802228290485,
+            "normal_ci95": [
+              -0.03359972448688055,
+              -0.01359632007892915
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          },
+          "log_loss": {
+            "n": 951,
+            "market_minus_elo": -0.032980927429614684,
+            "normal_ci95": [
+              -0.04823440929315534,
+              -0.017727445566074026
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          }
+        }
+      },
+      "elo_top_pick_multiclass": {
+        "H": {
+          "brier": {
+            "n": 2084,
+            "market_minus_elo": -0.011261730480750227,
+            "normal_ci95": [
+              -0.016966579216590054,
+              -0.005556881744910401
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          },
+          "log_loss": {
+            "n": 2084,
+            "market_minus_elo": -0.015635448563506012,
+            "normal_ci95": [
+              -0.024052538400184287,
+              -0.007218358726827738
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          }
+        },
+        "A": {
+          "brier": {
+            "n": 992,
+            "market_minus_elo": -0.029826962327419843,
+            "normal_ci95": [
+              -0.039391669118927844,
+              -0.020262255535911843
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          },
+          "log_loss": {
+            "n": 992,
+            "market_minus_elo": -0.04711042405070961,
+            "normal_ci95": [
+              -0.06215548209599214,
+              -0.03206536600542707
+            ],
+            "ci_excludes_zero": true,
+            "negative_means_market_better": true
+          }
+        }
+      },
+      "robust_confidence_bands": [
+        "0.3-0.4",
+        "0.4-0.5",
+        "0.5-0.6",
+        "0.6-0.7"
+      ],
+      "inconclusive_high_confidence_bands": [
+        "0.7-0.8",
+        "0.8-0.9",
+        "0.9-1.0"
+      ],
+      "interpretation": "External average close contains broad predictive information beyond frozen Elo; the advantage is not draw-only and is not confined to low-confidence fixtures.",
+      "operational_rule_promoted": false
     }
   },
   "ablation_plan": {
@@ -2065,9 +2251,9 @@
     "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
     "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by source absence/provider denial.",
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
-    "next_analysis_lane": "Decompose the robust external-close advantage by outcome class and confidence region, using frozen OOS probabilities only; do not derive an operational betting rule.",
+    "next_analysis_lane": "Return to source and development-only feature lanes. Any richer structural candidate must be selected without the observed final holdout and requires a new independent temporal holdout before promotion.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
-    "market_lane": "Persist genuine T-30 and last-pre-kickoff rows separately; never label last persisted as certified CLOSE.",
+    "market_lane": "External average close remains a benchmark only. Persist genuine GoldBet TRUE OPEN, T-30 and last-pre-kickoff rows separately; never relabel the external average close or LAST_PERSISTED_PRE_KICKOFF as GoldBet CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
   "rule_decisions": {
@@ -2111,7 +2297,9 @@
       "Cross-league ELO_ONLY v1: zero DRAW argmax is retained as a decision diagnostic, not a rejection criterion; pooled DRAW probability is close to observed prevalence and classwise ECE is low.",
       "Cross-league ELO_ONLY v1: reject the claim that the structural baseline matches the external average closing benchmark; Brier and log-loss disadvantages remain entirely below zero under both stratified fixture and equal-league bootstrap intervals.",
       "Development draw-gap rolling v1: reject ELO_PLUS_ABS_GAP; across 6,152 development-only rolling validation fixtures it worsens Brier and log-loss with both fixture-stratified and equal-league IC95 entirely below zero.",
-      "League DRAW recalibration v1: no promotion; only Primeira Liga has an unadjusted single-season residual interval excluding zero, which is insufficient across eleven simultaneous league diagnostics and has no independent temporal replication."
+      "League DRAW recalibration v1: no promotion; only Primeira Liga has an unadjusted single-season residual interval excluding zero, which is insufficient across eleven simultaneous league diagnostics and has no independent temporal replication.",
+      "Rejected the claim that external-close superiority is draw-only or confined to low-confidence fixtures.",
+      "Rejected any conversion of external-average-close decomposition into a GoldBet MMS/CLV/ROI rule because bookmaker identity and certified GoldBet CLOSE are absent."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -2153,6 +2341,6 @@
       "Multiclass argmax coverage is diagnostic only: a realized class may never be the top pick yet remain probabilistically calibrated. Failure claims require classwise probability bias, proper scoring rules and reliability analysis.",
       "Feature repairs motivated after viewing a final holdout must be designed and screened only on development rolling-origin folds; the viewed holdout cannot be reused as independent confirmation."
     ],
-    "note": "Elo remains a useful strength feature/research baseline. Its zero DRAW argmax is not itself a probability failure because pooled DRAW calibration is close; the abs-gap repair is rejected on development proper scores. No betting threshold, GoldBet signal or operational Radar rule is promoted."
+    "note": "No operational changes. The new result is a frozen OOS benchmark decomposition, not a betting strategy."
   }
 }
