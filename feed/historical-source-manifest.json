@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v39",
-  "generated_at": "2026-09-02T03:37:13Z",
+  "schema_version": "radar-historical-source-manifest-v40",
+  "generated_at": "2026-09-02T04:20:40Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "HOME_DRAW_ENVIRONMENT_PROXY_REJECTED_DAILY_AUDIT_EVIDENCE_MISSING",
+  "status": "LIGUE1_FORMAT_DRIFT_AUDITED_NO_FOUR_SEASON_MODEL",
   "priority": [
     "Sweden",
     "Norway",
@@ -994,6 +994,38 @@
       ],
       "http_403_runs": 3,
       "api_payloads_received": 0
+    },
+    {
+      "name": "Football-Data Ligue 1 format audit 2022/23-2025/26",
+      "path": "feed/historical/france1/format-audit-v1.json",
+      "source_class": "EXTERNAL_FORMAT_DISCOVERY",
+      "status": "FORMAT_DRIFT_20_TO_18_NO_FOUR_SEASON_MODEL",
+      "seasons": [
+        "2022/2023",
+        "2023/2024",
+        "2024/2025",
+        "2025/2026"
+      ],
+      "source_files": 4,
+      "source_rows": 1298,
+      "accepted_model_rows": 0,
+      "role": [
+        "FORMAT_DRIFT_AUDIT",
+        "SOURCE_COMPLETENESS_GATE"
+      ],
+      "forbidden_role": [
+        "FOUR_SEASON_OOS_MODEL",
+        "RESULT_BASED_DOWNSAMPLING",
+        "GOLDBET_TRUE_OPEN",
+        "THRESHOLD_PROMOTION"
+      ],
+      "quality_notes": [
+        "2022/2023 has 20 clubs, 380 fixtures and 38 appearances per club.",
+        "Each season from 2023/2024 through 2025/2026 has 18 clubs, 306 fixtures and 34 appearances per club.",
+        "Zero duplicate fixture keys and zero missing average closing 1X2 triplets were found.",
+        "Only three seasons share the current 18-club format, insufficient for the requested three-season development plus one-season holdout design.",
+        "No outcomes or odds were used to choose a favorable subset; no model or OOS metric was calculated."
+      ]
     }
   ],
   "required_blocks": {
@@ -1193,7 +1225,9 @@
     "external_close_decomposition_policy": "DIAGNOSTIC_BENCHMARK_ONLY_NOT_GOLDBET_MMS_CLV_OR_ROI",
     "external_close_subgroup_rule": "NO_SUBGROUP_PROMOTION_FROM_OBSERVED_FINAL_HOLDOUT",
     "coarse_environment_proxy_policy": "REJECTED_UNLESS_NEW_DIRECT_EVIDENCE_AND_NEW_INDEPENDENT_HOLDOUT",
-    "daily_audit_policy": "REQUIRE_VERSIONED_PREKICKOFF_PREDICTION_MANIFEST_NO_MEMORY_RECONSTRUCTION"
+    "daily_audit_policy": "REQUIRE_VERSIONED_PREKICKOFF_PREDICTION_MANIFEST_NO_MEMORY_RECONSTRUCTION",
+    "france1_four_season_model_allowed": false,
+    "france1_four_season_model_reason": "2022/2023 uses 20 clubs; 2023/2024-2025/2026 use 18 clubs, leaving only three comparable current-format seasons."
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1201,9 +1235,10 @@
     "blocked_source_blocks": [
       "Superettan: repository source absent and provider HTTP 403",
       "Belgian Pro League: format drift",
-      "J1 League: format drift"
+      "J1 League: format drift",
+      "Ligue 1: format drift from 20 to 18 clubs; only three comparable 18-club seasons"
     ],
-    "next_analysis_lane": "Prioritize recoverable versioned sources or direct pre-match tactical/player context. Do not continue arbitrary aggregate-proxy expansion.",
+    "next_analysis_lane": "Continue with another stable, versioned league or direct verified pre-match context; do not force Ligue 1 into the four-season design.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
     "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context.",
     "external_close_constraint": "External average close may benchmark proper scores but cannot substitute for GoldBet same-book TRUE OPEN-to-CLOSE evidence.",
