@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-09-02T15:32:00.513912+00:00",
+  "generated_at": "2026-09-02T18:31:03.262501+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "02-09-2026",
   "ready": false,
@@ -18,9 +18,9 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 4596,
-    "index_warm_elapsed_ms": 4022,
-    "fallback_discovery_elapsed_ms": 540,
+    "index_first_elapsed_ms": 5508,
+    "index_warm_elapsed_ms": 2717,
+    "fallback_discovery_elapsed_ms": 521,
     "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
     "index_warm_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY"
   },
@@ -29,22 +29,22 @@
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 8068,
-    "scoped_source_rows": 7606,
-    "indexed_rows": 7606,
+    "source_rows": 8259,
+    "scoped_source_rows": 4688,
+    "indexed_rows": 4688,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 7606,
+      "standard_match": 4688,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
       "missing_stable_identity": 0,
       "missing_player": 0
     },
-    "fixtures": 20,
-    "exact_fixtures": 20,
+    "fixtures": 14,
+    "exact_fixtures": 14,
     "fallback_fixtures": 0,
-    "player_fixtures": 943,
+    "player_fixtures": 660,
     "markets_present": [
       "1° Marcatore",
       "1° Marcatore o Sostituto",
@@ -55,13 +55,10 @@
       "Marc",
       "Marcatore 1T",
       "Marcatore 2T",
-      "Marcatore Plus",
       "Marcatore o Sostituto",
       "Tripletta",
       "U/O Tiri In Porta Giocatore",
-      "U/O Tiri Totali Giocatore",
-      "U/O Tiri Totali Plus",
-      "U/O Tiri in porta Plus"
+      "U/O Tiri Totali Giocatore"
     ]
   },
   "checks": {
@@ -97,29 +94,29 @@
     "index_warm_fast": false,
     "index_warm_same_generation": false,
     "fallback_discovery_200": true,
-    "fallback_discovery_source_healthy": true,
+    "fallback_discovery_source_healthy": false,
     "fallback_discovery_fresh": true,
     "fallback_discovery_mode_full": true,
-    "fallback_discovery_nonempty": true,
+    "fallback_discovery_nonempty": false,
     "pagination_runtime": true,
     "dynamic_index_candidate_found": true,
     "player_lookup_runtime": true,
-    "exact_200": false,
-    "exact_unique": false,
-    "exact_source_healthy": false,
+    "exact_200": true,
+    "exact_unique": true,
+    "exact_source_healthy": true,
     "exact_fresh": true,
     "exact_fingerprint": true,
-    "exact_price_gate_eligible": false
+    "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": null,
-    "match_market_id": null,
-    "player": null,
-    "market": null,
-    "selection": null,
-    "odd": null,
-    "scan_odd": 7.5,
-    "proof_id": "bf-63ca0e40bb8150818271"
+    "match": "Barnsley - Blackpool FC",
+    "match_market_id": "36361.3501",
+    "player": "Albie Morgan",
+    "market": "1° Marcatore",
+    "selection": "Si",
+    "odd": 15,
+    "scan_odd": 15,
+    "proof_id": "bf-c41fdbaf58df833a2dd7"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
