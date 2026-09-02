@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v38",
-  "generated_at": "2026-09-02T02:20:41Z",
+  "schema_version": "radar-historical-backtest-ledger-v39",
+  "generated_at": "2026-09-02T03:37:13Z",
   "local_timezone": "Europe/Rome",
-  "status": "EXTERNAL_CLOSE_ADVANTAGE_BROAD_ACROSS_CLASSES_AND_CONFIDENCE",
+  "status": "RECENT_LEAGUE_HOME_DRAW_ENVIRONMENT_PROXY_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -215,7 +215,11 @@
     "development_draw_gap_folds": 22,
     "development_draw_gap_validation_fixtures": 6152,
     "development_draw_gap_realized_draws": 1523,
-    "development_draw_gap_candidate_draw_top_picks": 0
+    "development_draw_gap_candidate_draw_top_picks": 0,
+    "development_home_environment_leagues": 11,
+    "development_home_environment_folds": 22,
+    "development_home_environment_validation_fixtures": 6152,
+    "daily_audit_2026_09_01_persisted_prediction_manifests": 0
   },
   "quarantined_evidence": [
     {
@@ -427,7 +431,12 @@
     "Located the largest robust subgroup gap when Elo top-picks AWAY: external average close minus Elo is -0.02983 Brier and -0.04711 log-loss.",
     "Confirmed the external benchmark advantage across Elo top-confidence bands 0.3-0.7; bands above 0.7 remain inconclusive because of smaller samples.",
     "Kept the result diagnostic only: external average close is neither GoldBet same-book CLOSE nor a predeclared betting signal, so no MMS threshold, CLV claim or operational rule was promoted.",
-    "Confirmed cross-league directional replication from the report's by_league block: H and A market-minus-Elo classwise Brier are negative in 11/11 leagues, while D is negative in 9/11."
+    "Confirmed cross-league directional replication from the report's by_league block: H and A market-minus-Elo classwise Brier are negative in 11/11 leagues, while D is negative in 9/11.",
+    "Completed a development-only rolling-origin audit of recent league home/draw environment on 6,152 validation fixtures across 22 league-season folds; the observed final holdout was never loaded.",
+    "Constructed HOME and DRAW environment features from only the preceding 120 completed league fixtures, Laplace-smoothed and updated after the complete source-date batch.",
+    "Rejected ELO_PLUS_HOME_ENV: Brier worsens from 0.59783 to 0.61042 and log-loss from 1.00228 to 1.02747.",
+    "Confirmed the deterioration with intervals wholly below zero under both stratified league-fold fixture resampling and equal-league bootstrap.",
+    "Recorded the 2026-09-01 daily audit as not executable because no versioned pre-match prediction manifest or betting ledger exists in the repository; no decision, price, result or process grade was reconstructed."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2288,6 +2297,93 @@
           "A": -0.0059016509481286394
         }
       }
+    },
+    "development_home_environment_rolling_v1": {
+      "report": "feed/historical/calibration/development-home-environment-rolling-v1.json",
+      "sample": {
+        "leagues": 11,
+        "folds": 22,
+        "validation_fixtures": 6152
+      },
+      "feature_definition": "last 120 completed league fixtures before the full source-date batch, Laplace-smoothed",
+      "baseline": {
+        "n": 6152,
+        "brier": 0.5978272716848794,
+        "log_loss": 1.0022793208163792,
+        "accuracy": 0.5172301690507152,
+        "top_pick_counts": {
+          "H": 4250,
+          "D": 0,
+          "A": 1902
+        },
+        "realized_counts": {
+          "H": 2682,
+          "D": 1523,
+          "A": 1947
+        },
+        "draw_top_pick_precision": null,
+        "draw_top_pick_recall": 0
+      },
+      "candidate": {
+        "n": 6152,
+        "brier": 0.6104154697299485,
+        "log_loss": 1.0274675385477654,
+        "accuracy": 0.5100780234070221,
+        "top_pick_counts": {
+          "H": 4349,
+          "D": 13,
+          "A": 1790
+        },
+        "realized_counts": {
+          "H": 2682,
+          "D": 1523,
+          "A": 1947
+        },
+        "draw_top_pick_precision": 0.3076923076923077,
+        "draw_top_pick_recall": 0.0026263952724885093
+      },
+      "paired_uncertainty": {
+        "draws": 20000,
+        "seed": 20260903,
+        "results": {
+          "brier": {
+            "elo_only_minus_candidate_point": -0.012588198045069143,
+            "stratified_league_fold_fixture_ci95": [
+              -0.015308424948311715,
+              -0.009840324253293021
+            ],
+            "equal_league_point": -0.013991524205468599,
+            "league_bootstrap_ci95": [
+              -0.021114677922034423,
+              -0.008029445884074145
+            ],
+            "positive_means_candidate_better": true
+          },
+          "log_loss": {
+            "elo_only_minus_candidate_point": -0.02518821773138611,
+            "stratified_league_fold_fixture_ci95": [
+              -0.030327666543455364,
+              -0.020114143425447064
+            ],
+            "equal_league_point": -0.026933631870031317,
+            "league_bootstrap_ci95": [
+              -0.04087891373824467,
+              -0.015195045444985357
+            ],
+            "positive_means_candidate_better": true
+          }
+        }
+      },
+      "decision": "REJECT_CANDIDATE",
+      "final_holdout_loaded": false,
+      "operational_rule_promoted": false
+    },
+    "daily_audit_2026_09_01_eligibility": {
+      "report": "feed/daily-audits/2026-09-01.json",
+      "status": "NOT_EXECUTED_NO_PERSISTED_PREMATCH_MANIFEST",
+      "outcomes_joined": false,
+      "process_grade_assigned": false,
+      "pl_roi_calculated": false
     }
   },
   "ablation_plan": {
@@ -2308,7 +2404,7 @@
     "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
     "structural_lane": "Eleven completed league OOS blocks remain at 12,304 fixtures and 3,076 holdout rows. Belgium and J1 are excluded for format drift; Superettan is blocked by source absence/provider denial.",
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
-    "next_analysis_lane": "Return to source and development-only feature lanes. Any richer structural candidate must be selected without the observed final holdout and requires a new independent temporal holdout before promotion.",
+    "next_analysis_lane": "Stop adding coarse aggregate proxies to Elo. Prioritize new versioned sources or a predeclared development-only candidate with direct tactical/player meaning; any model promotion still requires a new independent temporal holdout.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
     "market_lane": "External average close remains a benchmark only. Persist genuine GoldBet TRUE OPEN, T-30 and last-pre-kickoff rows separately; never relabel the external average close or LAST_PERSISTED_PRE_KICKOFF as GoldBet CLOSE.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
@@ -2356,7 +2452,9 @@
       "Development draw-gap rolling v1: reject ELO_PLUS_ABS_GAP; across 6,152 development-only rolling validation fixtures it worsens Brier and log-loss with both fixture-stratified and equal-league IC95 entirely below zero.",
       "League DRAW recalibration v1: no promotion; only Primeira Liga has an unadjusted single-season residual interval excluding zero, which is insufficient across eleven simultaneous league diagnostics and has no independent temporal replication.",
       "Rejected the claim that external-close superiority is draw-only or confined to low-confidence fixtures.",
-      "Rejected any conversion of external-average-close decomposition into a GoldBet MMS/CLV/ROI rule because bookmaker identity and certified GoldBet CLOSE are absent."
+      "Rejected any conversion of external-average-close decomposition into a GoldBet MMS/CLV/ROI rule because bookmaker identity and certified GoldBet CLOSE are absent.",
+      "Rejected ELO_PLUS_HOME_ENV using trailing-120 league HOME/DRAW frequencies: both proper scores deteriorate robustly across fixtures and leagues.",
+      "Rejected any hindsight reconstruction of the 2026-09-01 daily audit without a persisted pre-kickoff prediction manifest."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -2398,6 +2496,6 @@
       "Multiclass argmax coverage is diagnostic only: a realized class may never be the top pick yet remain probabilistically calibrated. Failure claims require classwise probability bias, proper scoring rules and reliability analysis.",
       "Feature repairs motivated after viewing a final holdout must be designed and screened only on development rolling-origin folds; the viewed holdout cannot be reused as independent confirmation."
     ],
-    "note": "No operational changes. The new result is a frozen OOS benchmark decomposition, not a betting strategy."
+    "note": "No operational changes. The observed final structural holdout remains closed to candidate selection."
   }
 }
