@@ -98,6 +98,38 @@ def calibration(rows, key):
     return {"top_pick_bins": top, "top_pick_ece": top_ece,
             "all_class_probability_bins": classes, "all_class_ece": class_ece}
 
+def classwise_calibration(rows, key):
+    result = {}
+    for k, outcome in enumerate(OUTCOMES):
+        bins = {}
+        probability_sum = observed_sum = brier_sum = 0.0
+        for r in rows:
+            p = r[key][k]
+            y = 1 if r["y"] == k else 0
+            probability_sum += p
+            observed_sum += y
+            brier_sum += (p - y) ** 2
+            lo = min(0.9, math.floor(p * 10) / 10)
+            label = f"{lo:.1f}-{min(1.0, lo + 0.1):.1f}"
+            b = bins.setdefault(label, {"n": 0, "probability_sum": 0.0, "observed_sum": 0})
+            b["n"] += 1; b["probability_sum"] += p; b["observed_sum"] += y
+        ece, final_bins = 0.0, {}
+        for label in sorted(bins):
+            b = bins[label]
+            mean_p = b["probability_sum"] / b["n"]
+            observed = b["observed_sum"] / b["n"]
+            ece += b["n"] / len(rows) * abs(mean_p - observed)
+            final_bins[label] = {"n": b["n"], "mean_probability": mean_p, "observed_rate": observed,
+                                 "observed_minus_probability": observed - mean_p}
+        mean_p = probability_sum / len(rows)
+        prevalence = observed_sum / len(rows)
+        result[outcome] = {
+            "n": len(rows), "mean_probability": mean_p, "observed_prevalence": prevalence,
+            "prevalence_minus_mean_probability": prevalence - mean_p,
+            "one_vs_rest_brier": brier_sum / len(rows), "ece": ece, "bins": final_bins,
+        }
+    return result
+
 def group_metrics(rows, key, group_fn):
     groups = defaultdict(list)
     for r in rows:
@@ -211,11 +243,12 @@ def main():
     verdict = {
         "elo_calibration_status": "ACCEPTABLE_POOLED_DIAGNOSTIC_ONLY",
         "market_comparison_status": "EXTERNAL_AVERAGE_CLOSE_ROBUSTLY_BETTER" if market_robust else "INCONCLUSIVE",
-        "draw_top_pick_status": "STRUCTURAL_MODEL_FAILURE_ZERO_DRAW_TOP_PICKS",
+        "draw_top_pick_status": "ZERO_DRAW_ARGMAX_DIAGNOSTIC_NOT_PROBABILISTIC_FAILURE_BY_ITSELF",
+        "methodological_correction": "A realized class may be calibrated without ever being the argmax; classwise probability calibration, not top-pick coverage alone, determines probabilistic failure.",
         "predicted_side_counts": predicted_side_counts,
         "realized_outcome_counts": realized_outcome_counts,
         "operational_rule_promoted": False,
-        "reason": "Frozen OOS evidence exposes a no-draw top-pick failure and robust market superiority; recalibration or class-rule changes require a new independent temporal block.",
+        "reason": "Frozen OOS evidence confirms robust market superiority. Zero DRAW argmax is retained as a decision diagnostic, but cannot be called a probability-model failure without classwise miscalibration evidence.",
     }
     report = {
         "schema_version": "radar-historical-cross-league-elo-calibration-v1",
@@ -233,7 +266,9 @@ def main():
             "elo": overall_elo,
             "external_average_close": overall_market,
             "elo_calibration": calibration(all_rows, "elo"),
+            "elo_classwise_calibration": classwise_calibration(all_rows, "elo"),
             "external_average_close_calibration": calibration(all_rows, "market"),
+            "external_average_close_classwise_calibration": classwise_calibration(all_rows, "market"),
         },
         "paired_market_minus_elo_uncertainty": {
             "draws": DRAWS, "seed": SEED,
