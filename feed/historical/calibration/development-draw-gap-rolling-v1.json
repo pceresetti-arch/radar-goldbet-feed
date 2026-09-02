@@ -1,0 +1,2435 @@
+{
+  "schema_version": "radar-historical-development-draw-gap-rolling-v1",
+  "generated_at": "2026-09-02T00:41:24.964760+00:00",
+  "anti_hindsight": {
+    "final_holdout_rows_loaded": false,
+    "eligible_rows": "DEVELOPMENT only",
+    "rolling_origin": "train prior development seasons; validate next development season",
+    "current_2025_or_2025_2026_holdout_used_for_candidate_choice": false,
+    "candidate_rationale": "absolute pre-match Elo gap permits draw probability to peak for closely matched teams",
+    "features_known_pre_kickoff": true
+  },
+  "training": {
+    "l2": 0.01,
+    "learning_rate": 0.08,
+    "iterations": 1800,
+    "models": {
+      "ELO_ONLY": [
+        "elo_diff"
+      ],
+      "ELO_PLUS_ABS_GAP": [
+        "elo_diff",
+        "abs_elo_diff"
+      ]
+    }
+  },
+  "sample": {
+    "leagues": 11,
+    "folds": 22,
+    "validation_fixtures": 6152
+  },
+  "pooled": {
+    "ELO_ONLY": {
+      "n": 6152,
+      "brier": 0.5978272716848794,
+      "log_loss": 1.0022793208163792,
+      "accuracy": 0.5172301690507152,
+      "top_pick_counts": {
+        "H": 4250,
+        "D": 0,
+        "A": 1902
+      },
+      "realized_counts": {
+        "H": 2682,
+        "D": 1523,
+        "A": 1947
+      },
+      "draw_top_pick_precision": null,
+      "draw_top_pick_recall": 0.0
+    },
+    "ELO_PLUS_ABS_GAP": {
+      "n": 6152,
+      "brier": 0.5988394319412437,
+      "log_loss": 1.0047673066144869,
+      "accuracy": 0.5159297789336801,
+      "top_pick_counts": {
+        "H": 4247,
+        "D": 0,
+        "A": 1905
+      },
+      "realized_counts": {
+        "H": 2682,
+        "D": 1523,
+        "A": 1947
+      },
+      "draw_top_pick_precision": null,
+      "draw_top_pick_recall": 0.0
+    }
+  },
+  "paired_uncertainty": {
+    "draws": 20000,
+    "seed": 20260902,
+    "results": {
+      "brier": {
+        "elo_only_minus_candidate_point": -0.001012160256364258,
+        "stratified_league_fold_fixture_ci95": [
+          -0.0019251943336544147,
+          -0.00010987601158334473
+        ],
+        "equal_league_point": -0.0009798458792233983,
+        "league_bootstrap_ci95": [
+          -0.0016905638111507422,
+          -0.0002927287047654856
+        ],
+        "positive_means_candidate_better": true
+      },
+      "log_loss": {
+        "elo_only_minus_candidate_point": -0.002487985798107788,
+        "stratified_league_fold_fixture_ci95": [
+          -0.004375712923951946,
+          -0.0006291513393573015
+        ],
+        "equal_league_point": -0.0025796389988223425,
+        "league_bootstrap_ci95": [
+          -0.004612306686515671,
+          -0.0007676751082267144
+        ],
+        "positive_means_candidate_better": true
+      }
+    }
+  },
+  "folds": [
+    {
+      "league": "Allsvenskan",
+      "train_seasons": [
+        "2022"
+      ],
+      "validation_season": "2023",
+      "train_n": 240,
+      "validation_n": 240,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.23305916091221376
+          },
+          "scales": {
+            "elo_diff": 60.701800378810006
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3138351708509173,
+              0.41149045638969073
+            ],
+            "D": [
+              -0.2039229775247059,
+              0.04680687337531837
+            ],
+            "A": [
+              -0.10991219332621156,
+              -0.4582973297650098
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.23305916091221376,
+            "abs_elo_diff": 44.76491004463719
+          },
+          "scales": {
+            "elo_diff": 60.701800378810006,
+            "abs_elo_diff": 40.99836233920722
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3113769520314604,
+              0.4364829788537315,
+              -0.04364261190845395
+            ],
+            "D": [
+              -0.1961233450188546,
+              0.04150263161689549,
+              0.08681685310275554
+            ],
+            "A": [
+              -0.11525360701260567,
+              -0.47798561047062776,
+              -0.04317424119430144
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 240,
+          "brier": 0.6075960999167819,
+          "log_loss": 1.0186791926208159,
+          "accuracy": 0.5125,
+          "top_pick_counts": {
+            "H": 162,
+            "D": 0,
+            "A": 78
+          },
+          "realized_counts": {
+            "H": 112,
+            "D": 47,
+            "A": 81
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 240,
+          "brier": 0.6116195992274107,
+          "log_loss": 1.028224672516466,
+          "accuracy": 0.5125,
+          "top_pick_counts": {
+            "H": 160,
+            "D": 0,
+            "A": 80
+          },
+          "realized_counts": {
+            "H": 112,
+            "D": 47,
+            "A": 81
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Allsvenskan",
+      "train_seasons": [
+        "2022",
+        "2023"
+      ],
+      "validation_season": "2024",
+      "train_n": 480,
+      "validation_n": 240,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.3114774737036313
+          },
+          "scales": {
+            "elo_diff": 65.35067270966678
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3557920115646219,
+              0.3326462505808181
+            ],
+            "D": [
+              -0.31840053492061426,
+              0.07392534503963018
+            ],
+            "A": [
+              -0.03739147664400866,
+              -0.40657159562044765
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.3114774737036313,
+            "abs_elo_diff": 50.01163342254187
+          },
+          "scales": {
+            "elo_diff": 65.35067270966678,
+            "abs_elo_diff": 42.06713639210429
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3646312608988743,
+              0.32029295657618034,
+              0.08541920385043507
+            ],
+            "D": [
+              -0.3220405127780186,
+              0.09574848861331438,
+              -0.05735371354073575
+            ],
+            "A": [
+              -0.0425907481208576,
+              -0.4160414451894946,
+              -0.028065490309699223
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 240,
+          "brier": 0.6261027619166951,
+          "log_loss": 1.0381865378049946,
+          "accuracy": 0.49583333333333335,
+          "top_pick_counts": {
+            "H": 171,
+            "D": 0,
+            "A": 69
+          },
+          "realized_counts": {
+            "H": 109,
+            "D": 52,
+            "A": 79
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 240,
+          "brier": 0.6280341525770055,
+          "log_loss": 1.0424398453287282,
+          "accuracy": 0.4875,
+          "top_pick_counts": {
+            "H": 164,
+            "D": 0,
+            "A": 76
+          },
+          "realized_counts": {
+            "H": 109,
+            "D": 52,
+            "A": 79
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Eliteserien",
+      "train_seasons": [
+        "2022"
+      ],
+      "validation_season": "2023",
+      "train_n": 240,
+      "validation_n": 240,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.2964839243796187
+          },
+          "scales": {
+            "elo_diff": 62.18450519439219
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3487895288421989,
+              0.4439898423176935
+            ],
+            "D": [
+              -0.23839318684813693,
+              0.0671555531107869
+            ],
+            "A": [
+              -0.11039634199406087,
+              -0.5111453954284798
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.2964839243796187,
+            "abs_elo_diff": 45.43466189899181
+          },
+          "scales": {
+            "elo_diff": 62.18450519439219,
+            "abs_elo_diff": 42.458121568353754
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3613713572210976,
+              0.43476516384923686,
+              0.07568619354398136
+            ],
+            "D": [
+              -0.24191736670471212,
+              0.08780121947075287,
+              -0.041245741589078205
+            ],
+            "A": [
+              -0.11945399051638513,
+              -0.52256638331999,
+              -0.03444045195490309
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 240,
+          "brier": 0.5928307718957951,
+          "log_loss": 0.9943056281968697,
+          "accuracy": 0.525,
+          "top_pick_counts": {
+            "H": 157,
+            "D": 0,
+            "A": 83
+          },
+          "realized_counts": {
+            "H": 122,
+            "D": 42,
+            "A": 76
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 240,
+          "brier": 0.5912863216919388,
+          "log_loss": 0.9928762271332785,
+          "accuracy": 0.525,
+          "top_pick_counts": {
+            "H": 155,
+            "D": 0,
+            "A": 85
+          },
+          "realized_counts": {
+            "H": 122,
+            "D": 42,
+            "A": 76
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Eliteserien",
+      "train_seasons": [
+        "2022",
+        "2023"
+      ],
+      "validation_season": "2024",
+      "train_n": 480,
+      "validation_n": 240,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.08305482517245935
+          },
+          "scales": {
+            "elo_diff": 69.82726443329254
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4278225750117143,
+              0.394153647273835
+            ],
+            "D": [
+              -0.3738267102472433,
+              0.008552391670907376
+            ],
+            "A": [
+              -0.053995864764470235,
+              -0.40270603894474216
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.08305482517245935,
+            "abs_elo_diff": 52.927592435251576
+          },
+          "scales": {
+            "elo_diff": 69.82726443329254,
+            "abs_elo_diff": 45.54693969246283
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4372432516683666,
+              0.39906693953534045,
+              0.05759102050424245
+            ],
+            "D": [
+              -0.3692588440534501,
+              0.030187495851889744,
+              0.01409265300449339
+            ],
+            "A": [
+              -0.06798440761491663,
+              -0.42925443538723046,
+              -0.07168367350873572
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 240,
+          "brier": 0.6259248684130881,
+          "log_loss": 1.0399523034023903,
+          "accuracy": 0.5041666666666667,
+          "top_pick_counts": {
+            "H": 172,
+            "D": 0,
+            "A": 68
+          },
+          "realized_counts": {
+            "H": 100,
+            "D": 60,
+            "A": 80
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 240,
+          "brier": 0.6256993553631375,
+          "log_loss": 1.039412281677126,
+          "accuracy": 0.5,
+          "top_pick_counts": {
+            "H": 169,
+            "D": 0,
+            "A": 71
+          },
+          "realized_counts": {
+            "H": 100,
+            "D": 60,
+            "A": 80
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Superliga",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 192,
+      "validation_n": 192,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.43644210496447755
+          },
+          "scales": {
+            "elo_diff": 43.388338820718396
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.18929772885983825,
+              0.23459945561953774
+            ],
+            "D": [
+              -0.14546999498790295,
+              -0.04184877064308767
+            ],
+            "A": [
+              -0.04382773387193769,
+              -0.19275068497645045
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.43644210496447755,
+            "abs_elo_diff": 34.197799356706206
+          },
+          "scales": {
+            "elo_diff": 43.388338820718396,
+            "abs_elo_diff": 26.70672099848481
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.188370975198773,
+              0.24575128001857174,
+              -0.04976828065635013
+            ],
+            "D": [
+              -0.1449468770276677,
+              -0.042770552444629385,
+              0.0825929407211776
+            ],
+            "A": [
+              -0.04342409817110712,
+              -0.20298072757394267,
+              -0.03282466006482816
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 192,
+          "brier": 0.625124790681645,
+          "log_loss": 1.0388308355670632,
+          "accuracy": 0.4739583333333333,
+          "top_pick_counts": {
+            "H": 127,
+            "D": 0,
+            "A": 65
+          },
+          "realized_counts": {
+            "H": 77,
+            "D": 49,
+            "A": 66
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 192,
+          "brier": 0.6280025800553567,
+          "log_loss": 1.041827666999542,
+          "accuracy": 0.4739583333333333,
+          "top_pick_counts": {
+            "H": 127,
+            "D": 0,
+            "A": 65
+          },
+          "realized_counts": {
+            "H": 77,
+            "D": 49,
+            "A": 66
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Superliga",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 384,
+      "validation_n": 192,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.8040888632974189
+          },
+          "scales": {
+            "elo_diff": 53.88394232694788
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.19143105283822495,
+              0.30132468135968343
+            ],
+            "D": [
+              -0.17452009712564862,
+              0.009142774767729824
+            ],
+            "A": [
+              -0.016910955712577933,
+              -0.310467456127414
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.8040888632974189,
+            "abs_elo_diff": 42.33929264649788
+          },
+          "scales": {
+            "elo_diff": 53.88394232694788,
+            "abs_elo_diff": 33.33931759631764
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.18984653673528312,
+              0.3106695479187099,
+              -0.02995532795972625
+            ],
+            "D": [
+              -0.17263875540435422,
+              0.005524951684424159,
+              0.04516631245370615
+            ],
+            "A": [
+              -0.017207781330928512,
+              -0.31619449960313506,
+              -0.015210984493980007
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 192,
+          "brier": 0.6163809189481567,
+          "log_loss": 1.0247798669657286,
+          "accuracy": 0.5208333333333334,
+          "top_pick_counts": {
+            "H": 117,
+            "D": 0,
+            "A": 75
+          },
+          "realized_counts": {
+            "H": 87,
+            "D": 54,
+            "A": 51
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 192,
+          "brier": 0.6140268476148547,
+          "log_loss": 1.0214576099802046,
+          "accuracy": 0.5208333333333334,
+          "top_pick_counts": {
+            "H": 117,
+            "D": 0,
+            "A": 75
+          },
+          "realized_counts": {
+            "H": 87,
+            "D": 54,
+            "A": 51
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Eredivisie",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 306,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.6618440766573067
+          },
+          "scales": {
+            "elo_diff": 73.23019806020388
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3218911434190164,
+              0.624645139667203
+            ],
+            "D": [
+              -0.19523931989690815,
+              0.03702177222845345
+            ],
+            "A": [
+              -0.12665182352210813,
+              -0.6616669118956563
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.6618440766573067,
+            "abs_elo_diff": 54.629755504943724
+          },
+          "scales": {
+            "elo_diff": 73.23019806020388,
+            "abs_elo_diff": 48.771813160764935
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.33930122822873526,
+              0.618604037990327,
+              0.06566657599895077
+            ],
+            "D": [
+              -0.19610364276761316,
+              0.06031763013753782,
+              -0.01799521770954853
+            ],
+            "A": [
+              -0.14319758546112243,
+              -0.6789216681278623,
+              -0.0476713582894021
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.5449742985630517,
+          "log_loss": 0.9196715293540396,
+          "accuracy": 0.5784313725490197,
+          "top_pick_counts": {
+            "H": 191,
+            "D": 0,
+            "A": 115
+          },
+          "realized_counts": {
+            "H": 132,
+            "D": 76,
+            "A": 98
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.5460324946085304,
+          "log_loss": 0.9212099376875151,
+          "accuracy": 0.5718954248366013,
+          "top_pick_counts": {
+            "H": 185,
+            "D": 0,
+            "A": 121
+          },
+          "realized_counts": {
+            "H": 132,
+            "D": 76,
+            "A": 98
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Eredivisie",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 612,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.4869407843517804
+          },
+          "scales": {
+            "elo_diff": 87.72425760203174
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.2787445971667016,
+              0.7640613034610519
+            ],
+            "D": [
+              -0.16595764514382066,
+              -0.07734222904788607
+            ],
+            "A": [
+              -0.11278695202288118,
+              -0.6867190744131667
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.4869407843517804,
+            "abs_elo_diff": 65.79745517947259
+          },
+          "scales": {
+            "elo_diff": 87.72425760203174,
+            "abs_elo_diff": 58.021352751037995
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.28422182428764053,
+              0.7630110658722148,
+              0.016501857314861923
+            ],
+            "D": [
+              -0.1652853371906929,
+              -0.06993034409585198,
+              0.000556659668762589
+            ],
+            "A": [
+              -0.11893648709694603,
+              -0.6930807217763618,
+              -0.01705851698362451
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.5883106190335408,
+          "log_loss": 0.991763137952029,
+          "accuracy": 0.5326797385620915,
+          "top_pick_counts": {
+            "H": 185,
+            "D": 0,
+            "A": 121
+          },
+          "realized_counts": {
+            "H": 139,
+            "D": 77,
+            "A": 90
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.5880999411148271,
+          "log_loss": 0.9912423546992654,
+          "accuracy": 0.5326797385620915,
+          "top_pick_counts": {
+            "H": 185,
+            "D": 0,
+            "A": 121
+          },
+          "realized_counts": {
+            "H": 139,
+            "D": 77,
+            "A": 90
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Primeira Liga",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 306,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.08685236786698763
+          },
+          "scales": {
+            "elo_diff": 79.44107299908423
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.47313254276489813,
+              0.6570964883161904
+            ],
+            "D": [
+              -0.43885920228874914,
+              -0.018859368736316957
+            ],
+            "A": [
+              -0.03427334047614929,
+              -0.6382371195798725
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.08685236786698763,
+            "abs_elo_diff": 57.749311996344176
+          },
+          "scales": {
+            "elo_diff": 79.44107299908423,
+            "abs_elo_diff": 54.55188893639276
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.491483468306477,
+              0.6250718685487456,
+              0.07904882030802715
+            ],
+            "D": [
+              -0.5031482704427476,
+              -0.058709072434598095,
+              -0.23213455839207206
+            ],
+            "A": [
+              0.011664802136269838,
+              -0.5663627961141495,
+              0.15308573808404521
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.5661958247256449,
+          "log_loss": 0.958820341228738,
+          "accuracy": 0.5555555555555556,
+          "top_pick_counts": {
+            "H": 207,
+            "D": 0,
+            "A": 99
+          },
+          "realized_counts": {
+            "H": 133,
+            "D": 75,
+            "A": 98
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.5670665592859265,
+          "log_loss": 0.965899801955669,
+          "accuracy": 0.5588235294117647,
+          "top_pick_counts": {
+            "H": 209,
+            "D": 0,
+            "A": 97
+          },
+          "realized_counts": {
+            "H": 133,
+            "D": 75,
+            "A": 98
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Primeira Liga",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 612,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.36369658257158977
+          },
+          "scales": {
+            "elo_diff": 91.09487565600196
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.37075340273698854,
+              0.6811740476605923
+            ],
+            "D": [
+              -0.2929903271437936,
+              -0.021958164736565058
+            ],
+            "A": [
+              -0.07776307559319635,
+              -0.6592158829240273
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.36369658257158977,
+            "abs_elo_diff": 67.27470800966061
+          },
+          "scales": {
+            "elo_diff": 91.09487565600196,
+            "abs_elo_diff": 61.42086215775174
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.37518818251934766,
+              0.6533069338505392,
+              0.03054494031317038
+            ],
+            "D": [
+              -0.3301038974971642,
+              -0.0528770019882414,
+              -0.14222993895509312
+            ],
+            "A": [
+              -0.045084285022184235,
+              -0.6004299318622984,
+              0.1116849986419227
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.5733730793137076,
+          "log_loss": 0.9659998388998405,
+          "accuracy": 0.5261437908496732,
+          "top_pick_counts": {
+            "H": 195,
+            "D": 0,
+            "A": 111
+          },
+          "realized_counts": {
+            "H": 132,
+            "D": 79,
+            "A": 95
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.5726955328379782,
+          "log_loss": 0.9642324461122191,
+          "accuracy": 0.5326797385620915,
+          "top_pick_counts": {
+            "H": 200,
+            "D": 0,
+            "A": 106
+          },
+          "realized_counts": {
+            "H": 132,
+            "D": 79,
+            "A": 95
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "2. Bundesliga",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 306,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.19716107746076958
+          },
+          "scales": {
+            "elo_diff": 51.761926114037614
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3687763969436768,
+              0.22998713522101383
+            ],
+            "D": [
+              -0.2797366788340292,
+              -0.014170882237198286
+            ],
+            "A": [
+              -0.08903971810965093,
+              -0.21581625298381465
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.19716107746076958,
+            "abs_elo_diff": 39.61914940678251
+          },
+          "scales": {
+            "elo_diff": 51.761926114037614,
+            "abs_elo_diff": 33.31154256122942
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3707962679677339,
+              0.2300199777695994,
+              0.04377314264122193
+            ],
+            "D": [
+              -0.28312721951645237,
+              -0.02197258345847174,
+              -0.06208233398447022
+            ],
+            "A": [
+              -0.08766904845128588,
+              -0.20804739431112973,
+              0.018309191343248342
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.6180072044754169,
+          "log_loss": 1.0310183433163416,
+          "accuracy": 0.49019607843137253,
+          "top_pick_counts": {
+            "H": 256,
+            "D": 0,
+            "A": 50
+          },
+          "realized_counts": {
+            "H": 140,
+            "D": 71,
+            "A": 95
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.6181894569398154,
+          "log_loss": 1.0305309662315847,
+          "accuracy": 0.48366013071895425,
+          "top_pick_counts": {
+            "H": 259,
+            "D": 0,
+            "A": 47
+          },
+          "realized_counts": {
+            "H": 140,
+            "D": 71,
+            "A": 95
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "2. Bundesliga",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 612,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.1774861163899543
+          },
+          "scales": {
+            "elo_diff": 55.43821085479586
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3596547583083504,
+              0.27319835833010575
+            ],
+            "D": [
+              -0.2909986597729551,
+              -0.03931346886048095
+            ],
+            "A": [
+              -0.06865609853539804,
+              -0.23388488946962205
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.1774861163899543,
+            "abs_elo_diff": 42.71104605330097
+          },
+          "scales": {
+            "elo_diff": 55.43821085479586,
+            "abs_elo_diff": 35.34392832064823
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3608817421132255,
+              0.2696104293375795,
+              0.012669010196608274
+            ],
+            "D": [
+              -0.2957776205953229,
+              -0.05286662457223048,
+              -0.0709336032077519
+            ],
+            "A": [
+              -0.06510412151790389,
+              -0.21674380476534985,
+              0.05826459301114378
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.6598650152835692,
+          "log_loss": 1.088718629170221,
+          "accuracy": 0.4117647058823529,
+          "top_pick_counts": {
+            "H": 244,
+            "D": 0,
+            "A": 62
+          },
+          "realized_counts": {
+            "H": 124,
+            "D": 86,
+            "A": 96
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.6610037605613299,
+          "log_loss": 1.0902141497228008,
+          "accuracy": 0.4117647058823529,
+          "top_pick_counts": {
+            "H": 247,
+            "D": 0,
+            "A": 59
+          },
+          "realized_counts": {
+            "H": 124,
+            "D": 86,
+            "A": 96
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Bundesliga",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 306,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.9092969936409347
+          },
+          "scales": {
+            "elo_diff": 60.068215402957655
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.40345633751962007,
+              0.27130006472505186
+            ],
+            "D": [
+              -0.23351656986004132,
+              0.07575741190189467
+            ],
+            "A": [
+              -0.16993976765957958,
+              -0.3470574766269465
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.9092969936409347,
+            "abs_elo_diff": 44.98212285121213
+          },
+          "scales": {
+            "elo_diff": 60.068215402957655,
+            "abs_elo_diff": 39.81991896673352
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.41066441642977614,
+              0.2857089114035983,
+              0.030777830833776124
+            ],
+            "D": [
+              -0.22669862104291233,
+              0.09196516244914635,
+              0.06599234875268484
+            ],
+            "A": [
+              -0.18396579538686358,
+              -0.37767407385274393,
+              -0.09677017958646106
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.5903310714365033,
+          "log_loss": 0.9855716832254261,
+          "accuracy": 0.5130718954248366,
+          "top_pick_counts": {
+            "H": 236,
+            "D": 0,
+            "A": 70
+          },
+          "realized_counts": {
+            "H": 134,
+            "D": 81,
+            "A": 91
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.5930805478914907,
+          "log_loss": 0.9882608174151721,
+          "accuracy": 0.5130718954248366,
+          "top_pick_counts": {
+            "H": 236,
+            "D": 0,
+            "A": 70
+          },
+          "realized_counts": {
+            "H": 134,
+            "D": 81,
+            "A": 91
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Bundesliga",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 612,
+      "validation_n": 306,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.22259801701489834
+          },
+          "scales": {
+            "elo_diff": 73.0863812718166
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3624063009135114,
+              0.3944256562212042
+            ],
+            "D": [
+              -0.17292418292070572,
+              0.12088515743199701
+            ],
+            "A": [
+              -0.18948211799280698,
+              -0.5153108136532005
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.22259801701489834,
+            "abs_elo_diff": 55.17071692099094
+          },
+          "scales": {
+            "elo_diff": 73.0863812718166,
+            "abs_elo_diff": 47.93600600498968
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3756412486683089,
+              0.394699776424257,
+              0.07873780256396763
+            ],
+            "D": [
+              -0.17006018819290253,
+              0.1489941884066195,
+              -0.015215649105872423
+            ],
+            "A": [
+              -0.2055810604754071,
+              -0.5436939648308777,
+              -0.06352215345809516
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 306,
+          "brier": 0.6265769691206474,
+          "log_loss": 1.0497186127158862,
+          "accuracy": 0.48366013071895425,
+          "top_pick_counts": {
+            "H": 215,
+            "D": 0,
+            "A": 91
+          },
+          "realized_counts": {
+            "H": 118,
+            "D": 77,
+            "A": 111
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 306,
+          "brier": 0.6282393310901756,
+          "log_loss": 1.0578948777194346,
+          "accuracy": 0.4869281045751634,
+          "top_pick_counts": {
+            "H": 209,
+            "D": 0,
+            "A": 97
+          },
+          "realized_counts": {
+            "H": 118,
+            "D": 77,
+            "A": 111
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "LaLiga",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 380,
+      "validation_n": 380,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.6531399677794633
+          },
+          "scales": {
+            "elo_diff": 66.01545006443035
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4104438127758179,
+              0.28081752679579053
+            ],
+            "D": [
+              -0.2807222107884811,
+              0.005231196925288581
+            ],
+            "A": [
+              -0.12972160198734095,
+              -0.28604872372108253
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.6531399677794633,
+            "abs_elo_diff": 48.775676806414985
+          },
+          "scales": {
+            "elo_diff": 66.01545006443035,
+            "abs_elo_diff": 44.4904438177791
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4221940959607843,
+              0.29129816146150045,
+              0.13677134115431686
+            ],
+            "D": [
+              -0.2761883341165215,
+              0.03462214599893717,
+              -0.028354572292117478
+            ],
+            "A": [
+              -0.14600576184426384,
+              -0.3259203074604374,
+              -0.1084167688621994
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 380,
+          "brier": 0.5889875618631255,
+          "log_loss": 0.9892567812685665,
+          "accuracy": 0.5131578947368421,
+          "top_pick_counts": {
+            "H": 292,
+            "D": 0,
+            "A": 88
+          },
+          "realized_counts": {
+            "H": 167,
+            "D": 107,
+            "A": 106
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 380,
+          "brier": 0.5924705196598888,
+          "log_loss": 0.9950833990450962,
+          "accuracy": 0.5026315789473684,
+          "top_pick_counts": {
+            "H": 306,
+            "D": 0,
+            "A": 74
+          },
+          "realized_counts": {
+            "H": 167,
+            "D": 107,
+            "A": 106
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "LaLiga",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 760,
+      "validation_n": 380,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.6678143284718544
+          },
+          "scales": {
+            "elo_diff": 79.71153734401526
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3468749820327753,
+              0.48855038559479447
+            ],
+            "D": [
+              -0.16937388527713335,
+              -0.06552372852037959
+            ],
+            "A": [
+              -0.17750109675564232,
+              -0.4230266570744141
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.6678143284718544,
+            "abs_elo_diff": 59.68782530153746
+          },
+          "scales": {
+            "elo_diff": 79.71153734401526,
+            "abs_elo_diff": 52.83690634865742
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.36139977605163387,
+              0.49315495485287664,
+              0.0748898020095012
+            ],
+            "D": [
+              -0.16449729416175235,
+              -0.036644638096519695,
+              0.008310981879779612
+            ],
+            "A": [
+              -0.19690248188988244,
+              -0.4565103167563559,
+              -0.08320078388928079
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 380,
+          "brier": 0.5827150057078824,
+          "log_loss": 0.9804867844671572,
+          "accuracy": 0.5368421052631579,
+          "top_pick_counts": {
+            "H": 277,
+            "D": 0,
+            "A": 103
+          },
+          "realized_counts": {
+            "H": 169,
+            "D": 97,
+            "A": 114
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 380,
+          "brier": 0.5832846342774909,
+          "log_loss": 0.9812759969879288,
+          "accuracy": 0.5394736842105263,
+          "top_pick_counts": {
+            "H": 268,
+            "D": 0,
+            "A": 112
+          },
+          "realized_counts": {
+            "H": 169,
+            "D": 97,
+            "A": 114
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Premier League",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 380,
+      "validation_n": 380,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.16652290763081748
+          },
+          "scales": {
+            "elo_diff": 72.45619747140388
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4269873915518251,
+              0.46849533767598844
+            ],
+            "D": [
+              -0.2723815462549492,
+              -0.04337131322139347
+            ],
+            "A": [
+              -0.15460584529687635,
+              -0.42512402445459374
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.16652290763081748,
+            "abs_elo_diff": 53.802820992768666
+          },
+          "scales": {
+            "elo_diff": 72.45619747140388,
+            "abs_elo_diff": 48.530245570303194
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4252902851029172,
+              0.48836871772785007,
+              -0.04512622023618669
+            ],
+            "D": [
+              -0.2612534750401884,
+              -0.02486107132550291,
+              0.10999240733424981
+            ],
+            "A": [
+              -0.164036810062728,
+              -0.4635076464023469,
+              -0.064866187098063
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 380,
+          "brier": 0.5652876911769267,
+          "log_loss": 0.9546532396995788,
+          "accuracy": 0.5631578947368421,
+          "top_pick_counts": {
+            "H": 265,
+            "D": 0,
+            "A": 115
+          },
+          "realized_counts": {
+            "H": 175,
+            "D": 82,
+            "A": 123
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 380,
+          "brier": 0.567941503025708,
+          "log_loss": 0.9589817287357034,
+          "accuracy": 0.5605263157894737,
+          "top_pick_counts": {
+            "H": 262,
+            "D": 0,
+            "A": 118
+          },
+          "realized_counts": {
+            "H": 175,
+            "D": 82,
+            "A": 123
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Premier League",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 760,
+      "validation_n": 380,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.420848784520773
+          },
+          "scales": {
+            "elo_diff": 82.62020277092688
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.3981988792270916,
+              0.5198994236874029
+            ],
+            "D": [
+              -0.2823261539186045,
+              -0.0028109710524487157
+            ],
+            "A": [
+              -0.11587272530848526,
+              -0.5170884526349542
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.420848784520773,
+            "abs_elo_diff": 63.54507444539719
+          },
+          "scales": {
+            "elo_diff": 82.62020277092688,
+            "abs_elo_diff": 52.804341993224725
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.39061903660671254,
+              0.525554092674482,
+              -0.041218417407506494
+            ],
+            "D": [
+              -0.27970235612030925,
+              -0.011101634338626945,
+              0.025722652506383954
+            ],
+            "A": [
+              -0.110916680486404,
+              -0.5144524583358545,
+              0.015495764901122509
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 380,
+          "brier": 0.5977471234851899,
+          "log_loss": 0.9980068979639339,
+          "accuracy": 0.5447368421052632,
+          "top_pick_counts": {
+            "H": 257,
+            "D": 0,
+            "A": 123
+          },
+          "realized_counts": {
+            "H": 155,
+            "D": 93,
+            "A": 132
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 380,
+          "brier": 0.5971219848949934,
+          "log_loss": 0.9968115041211083,
+          "accuracy": 0.5473684210526316,
+          "top_pick_counts": {
+            "H": 260,
+            "D": 0,
+            "A": 120
+          },
+          "realized_counts": {
+            "H": 155,
+            "D": 93,
+            "A": 132
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Scottish Premiership",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 228,
+      "validation_n": 228,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": -1.0579151588030125
+          },
+          "scales": {
+            "elo_diff": 78.5037616423973
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.5677610852431175,
+              0.46938798059413034
+            ],
+            "D": [
+              -0.4636746523487242,
+              0.23166085720345705
+            ],
+            "A": [
+              -0.10408643289439215,
+              -0.7010488377975872
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": -1.0579151588030125,
+            "abs_elo_diff": 54.35298288122513
+          },
+          "scales": {
+            "elo_diff": 78.5037616423973,
+            "abs_elo_diff": 56.654329299734904
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.5813322366403941,
+              0.44942652596526383,
+              0.06214191432128881
+            ],
+            "D": [
+              -0.4767562080508327,
+              0.2614317827470788,
+              -0.06760658553312623
+            ],
+            "A": [
+              -0.1045760285895599,
+              -0.7108583087123429,
+              0.005464671211837411
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 228,
+          "brier": 0.5874144437147049,
+          "log_loss": 1.005827530255344,
+          "accuracy": 0.5394736842105263,
+          "top_pick_counts": {
+            "H": 165,
+            "D": 0,
+            "A": 63
+          },
+          "realized_counts": {
+            "H": 98,
+            "D": 61,
+            "A": 69
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 228,
+          "brier": 0.586727224483669,
+          "log_loss": 1.0067684193201647,
+          "accuracy": 0.543859649122807,
+          "top_pick_counts": {
+            "H": 166,
+            "D": 0,
+            "A": 62
+          },
+          "realized_counts": {
+            "H": 98,
+            "D": 61,
+            "A": 69
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Scottish Premiership",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 456,
+      "validation_n": 228,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.5699966690305841
+          },
+          "scales": {
+            "elo_diff": 89.13455132333908
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4075836382895925,
+              0.5928157101903012
+            ],
+            "D": [
+              -0.25988514919060285,
+              0.05161184465262971
+            ],
+            "A": [
+              -0.14769848909898847,
+              -0.6444275548429305
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": -0.5699966690305841,
+            "abs_elo_diff": 64.54634166639786
+          },
+          "scales": {
+            "elo_diff": 89.13455132333908,
+            "abs_elo_diff": 61.474083265228984
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.4172727129989248,
+              0.5618798637569078,
+              0.05478084251941524
+            ],
+            "D": [
+              -0.28894609647015107,
+              0.04078837798502435,
+              -0.12671302040216348
+            ],
+            "A": [
+              -0.12832661652877297,
+              -0.6026682417419313,
+              0.07193217788274825
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 228,
+          "brier": 0.5838664670047256,
+          "log_loss": 0.991683331145898,
+          "accuracy": 0.5219298245614035,
+          "top_pick_counts": {
+            "H": 162,
+            "D": 0,
+            "A": 66
+          },
+          "realized_counts": {
+            "H": 108,
+            "D": 48,
+            "A": 72
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 228,
+          "brier": 0.5837649023554276,
+          "log_loss": 0.9889068069917868,
+          "accuracy": 0.5219298245614035,
+          "top_pick_counts": {
+            "H": 164,
+            "D": 0,
+            "A": 64
+          },
+          "realized_counts": {
+            "H": 108,
+            "D": 48,
+            "A": 72
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Austrian Bundesliga",
+      "train_seasons": [
+        "2022/2023"
+      ],
+      "validation_season": "2023/2024",
+      "train_n": 192,
+      "validation_n": 192,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.764265669851658
+          },
+          "scales": {
+            "elo_diff": 57.36688224147302
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.12361114613218893,
+              0.5167523986317756
+            ],
+            "D": [
+              -0.20619573769111055,
+              -0.1501081797889911
+            ],
+            "A": [
+              0.08258459155892106,
+              -0.36664421884278325
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.764265669851658,
+            "abs_elo_diff": 42.39152288596642
+          },
+          "scales": {
+            "elo_diff": 57.36688224147302,
+            "abs_elo_diff": 38.658790300909985
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.09267503198812818,
+              0.5873247393849996,
+              -0.1727188760573918
+            ],
+            "D": [
+              -0.18591073970853542,
+              -0.16070706733890414,
+              0.20344859445799712
+            ],
+            "A": [
+              0.09323570772040758,
+              -0.4266176720460945,
+              -0.030729718400605142
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 192,
+          "brier": 0.6230719528706624,
+          "log_loss": 1.0424842933593566,
+          "accuracy": 0.484375,
+          "top_pick_counts": {
+            "H": 97,
+            "D": 0,
+            "A": 95
+          },
+          "realized_counts": {
+            "H": 70,
+            "D": 59,
+            "A": 63
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 192,
+          "brier": 0.6278888324515006,
+          "log_loss": 1.061574969047676,
+          "accuracy": 0.484375,
+          "top_pick_counts": {
+            "H": 104,
+            "D": 0,
+            "A": 88
+          },
+          "realized_counts": {
+            "H": 70,
+            "D": 59,
+            "A": 63
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    },
+    {
+      "league": "Austrian Bundesliga",
+      "train_seasons": [
+        "2022/2023",
+        "2023/2024"
+      ],
+      "validation_season": "2024/2025",
+      "train_n": 384,
+      "validation_n": 192,
+      "models": {
+        "ELO_ONLY": {
+          "features": [
+            "elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.8313164573719689
+          },
+          "scales": {
+            "elo_diff": 69.15751044720086
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.09551595934541601,
+              0.48352943513102425
+            ],
+            "D": [
+              -0.09999354743903577,
+              -0.02932314730558683
+            ],
+            "A": [
+              0.004477588093620299,
+              -0.454206287825438
+            ]
+          }
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "features": [
+            "elo_diff",
+            "abs_elo_diff"
+          ],
+          "means": {
+            "elo_diff": 0.8313164573719689,
+            "abs_elo_diff": 53.05700820244891
+          },
+          "scales": {
+            "elo_diff": 69.15751044720086,
+            "abs_elo_diff": 44.36672423012842
+          },
+          "weights_by_outcome": {
+            "H": [
+              0.10280199512584773,
+              0.4934393705708464,
+              0.019419230222612948
+            ],
+            "D": [
+              -0.09163930276528952,
+              -0.00946878692602922,
+              0.0641170559135936
+            ],
+            "A": [
+              -0.011162692360558278,
+              -0.4839705836448176,
+              -0.0835362861362066
+            ]
+          }
+        }
+      },
+      "metrics": {
+        "ELO_ONLY": {
+          "n": 192,
+          "brier": 0.6150890714644165,
+          "log_loss": 1.0234596480204698,
+          "accuracy": 0.4947916666666667,
+          "top_pick_counts": {
+            "H": 100,
+            "D": 0,
+            "A": 92
+          },
+          "realized_counts": {
+            "H": 81,
+            "D": 50,
+            "A": 61
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        },
+        "ELO_PLUS_ABS_GAP": {
+          "n": 192,
+          "brier": 0.6150541383463366,
+          "log_loss": 1.0235005651463103,
+          "accuracy": 0.4791666666666667,
+          "top_pick_counts": {
+            "H": 95,
+            "D": 0,
+            "A": 97
+          },
+          "realized_counts": {
+            "H": 81,
+            "D": 50,
+            "A": 61
+          },
+          "draw_top_pick_precision": null,
+          "draw_top_pick_recall": 0.0
+        }
+      }
+    }
+  ],
+  "decision": {
+    "status": "REJECT_CANDIDATE",
+    "robust_brier_and_log_loss_improvement": false,
+    "nonzero_draw_top_pick_coverage": false,
+    "operational_rule_promoted": false,
+    "final_holdout_evaluated": false,
+    "next_gate": "A candidate may only be judged on a new temporal block not used to discover the zero-draw failure."
+  },
+  "economic_metrics": {
+    "roi_clv_yield_drawdown": "NOT_CALCULATED_NO_PRICE_RULE_AND_DEVELOPMENT_ONLY_MODEL_AUDIT"
+  }
+}
