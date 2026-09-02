@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-02T12:45:00.069050+00:00",
+  "generated_at": "2026-09-02T12:45:24.160813+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 0.8,
-    "tactical": 0.4,
-    "betflag_fixture_feed": 8.4,
-    "betflag_standard_source": 8.5,
-    "betflag_player_source": 8.4,
-    "player_context": 10.1
+    "lineups": 1.2,
+    "tactical": 0.8,
+    "betflag_fixture_feed": 8.8,
+    "betflag_standard_source": 8.9,
+    "betflag_player_source": 8.8,
+    "player_context": 0.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -47,14 +47,28 @@
       "start_time": "02-09-2026 15:00",
       "minutes_to_start": 15.8,
       "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_CONTEXT_PENDING",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
       "betflag_standard_count": 41,
       "player_count": 47,
       "player_quote_count": 1510,
-      "player_lane_ready": false,
+      "player_lane_ready": true,
       "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
     }
   ],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "player_lane_ready_count": 1,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36361.18214",
+      "match": "Sassuolo - Frosinone",
+      "league": "Coppa Italia",
+      "start_time": "02-09-2026 15:00",
+      "minutes_to_start": 15.8,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 47,
+      "player_quote_count": 1510,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
