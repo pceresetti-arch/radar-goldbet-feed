@@ -1,0 +1,28 @@
+{
+  "schema_version": "radar-daily-audit-eligibility-v1",
+  "local_date": "2026-09-01",
+  "timezone": "Europe/Rome",
+  "generated_at": "2026-09-02T03:37:13Z",
+  "status": "NOT_EXECUTED_NO_PERSISTED_PREMATCH_MANIFEST",
+  "separation_from_historical_backtest": true,
+  "repository_inventory": {
+    "paths_checked": 1281,
+    "expected_betting_ledger": "feed/betting-ledger/2026-09-01.json",
+    "expected_daily_audit": "feed/daily-audits/2026-09-01.json",
+    "persisted_prematch_prediction_manifest_found": false,
+    "persisted_betting_ledger_found": false
+  },
+  "anti_hindsight": {
+    "conversation_memory_used_as_prediction_source": false,
+    "outcomes_joined": false,
+    "prices_or_probabilities_reconstructed": false,
+    "process_grade_assigned": false,
+    "roi_or_pl_calculated": false
+  },
+  "missing_required_evidence": [
+    "timestamped pre-kickoff BET/NO BET/ATTESA and discarded-candidate manifest",
+    "observed bookmaker price and pre-match probability/fair/gate where applicable",
+    "persisted ledger of actually placed wagers"
+  ],
+  "next_gate": "Audit may be reopened only if a versioned pre-match artifact demonstrably created before kickoff is recovered; results alone are insufficient."
+}
