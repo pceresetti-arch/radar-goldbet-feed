@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-09-02T00:35:42.915856+00:00",
+  "generated_at": "2026-09-02T03:27:29.409138+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "02-09-2026",
   "ready": false,
@@ -18,23 +18,23 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 5135,
-    "index_warm_elapsed_ms": 111,
-    "fallback_discovery_elapsed_ms": 242,
+    "index_first_elapsed_ms": 7011,
+    "index_warm_elapsed_ms": 4522,
+    "fallback_discovery_elapsed_ms": 330,
     "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
-    "index_warm_cache": "HIT"
+    "index_warm_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY"
   },
   "coverage": {
     "targets_expected": 17,
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 8180,
-    "scoped_source_rows": 8180,
-    "indexed_rows": 8180,
+    "source_rows": 8182,
+    "scoped_source_rows": 8182,
+    "indexed_rows": 8182,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 8180,
+      "standard_match": 8182,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
@@ -93,9 +93,9 @@
     "index_all_scoped_rows_indexed": true,
     "index_nonempty": true,
     "index_warm_200": true,
-    "index_warm_cache_hit": true,
-    "index_warm_fast": true,
-    "index_warm_same_generation": true,
+    "index_warm_cache_hit": false,
+    "index_warm_fast": false,
+    "index_warm_same_generation": false,
     "fallback_discovery_200": true,
     "fallback_discovery_source_healthy": true,
     "fallback_discovery_fresh": true,
@@ -104,22 +104,22 @@
     "pagination_runtime": true,
     "dynamic_index_candidate_found": true,
     "player_lookup_runtime": true,
-    "exact_200": false,
-    "exact_unique": false,
-    "exact_source_healthy": false,
+    "exact_200": true,
+    "exact_unique": true,
+    "exact_source_healthy": true,
     "exact_fresh": true,
     "exact_fingerprint": true,
-    "exact_price_gate_eligible": false
+    "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": null,
-    "match_market_id": null,
-    "player": null,
-    "market": null,
-    "selection": null,
-    "odd": null,
+    "match": "Avispa Fukuoka - Urawa Red Diamonds",
+    "match_market_id": "36361.3135",
+    "player": "Ado Onaiwu",
+    "market": "1° Marcatore",
+    "selection": "Si",
+    "odd": 7,
     "scan_odd": 7,
-    "proof_id": "bf-d82e4f6462095ba0786b"
+    "proof_id": "bf-4e9700e81f234889224c"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
