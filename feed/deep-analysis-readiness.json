@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-02T20:26:48.236966+00:00",
+  "generated_at": "2026-09-02T20:29:40.100282+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 12.8,
-    "tactical": 12.4,
-    "betflag_fixture_feed": 0.5,
-    "betflag_standard_source": 0.6,
-    "betflag_player_source": 0.6,
-    "player_context": 12.4
+    "lineups": 15.7,
+    "tactical": 15.2,
+    "betflag_fixture_feed": 3.3,
+    "betflag_standard_source": 3.4,
+    "betflag_player_source": 3.4,
+    "player_context": 0.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,7 +36,7 @@
   "match_count": 6,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 5,
-    "WAIT_BETFLAG_FIXTURE_MAPPING": 1
+    "STALE_LINEUP_FEED": 1
   },
   "ready_count": 0,
   "ready_matches": [],
@@ -155,9 +155,10 @@
       "start_time": "02-09-2026 22:00",
       "start_utc": "2026-09-02T20:00:00+00:00",
       "minutes_to_start": -14.0,
-      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
+      "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
+        "STALE_LINEUP_FEED",
         "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
@@ -167,7 +168,7 @@
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": true,
+      "lineup_ready": false,
       "xi_fingerprint": "580efb30b2ca1866c13f",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
