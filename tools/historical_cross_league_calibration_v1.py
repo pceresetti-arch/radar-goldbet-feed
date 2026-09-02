@@ -224,7 +224,9 @@ def main():
             raise RuntimeError(f"{league}: frozen prediction reproduction failed: {checks}")
         validations[league] = checks
         leagues[league] = {"elo": reproduced, "external_average_close": metrics(league_rows, "market"),
-                           "elo_calibration": calibration(league_rows, "elo")}
+                           "elo_calibration": calibration(league_rows, "elo"),
+                           "elo_classwise_calibration": classwise_calibration(league_rows, "elo"),
+                           "external_average_close_classwise_calibration": classwise_calibration(league_rows, "market")}
         all_rows.extend(league_rows)
 
     overall_elo = metrics(all_rows, "elo")
