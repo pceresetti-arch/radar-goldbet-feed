@@ -1,8 +1,8 @@
 {
-  "schema_version": "radar-historical-backtest-ledger-v43",
-  "generated_at": "2026-09-02T07:42:00Z",
+  "schema_version": "radar-historical-backtest-ledger-v44",
+  "generated_at": "2026-09-02T08:30:00Z",
   "local_timezone": "Europe/Rome",
-  "status": "B365_1X2_SAME_BOOK_MOVEMENT_THRESHOLDS_REJECTED",
+  "status": "BTTS_STRUCTURAL_POISSON_MODULE_REJECTED",
   "objective": "Incremental multi-season historical backtest using only information demonstrably available before kickoff.",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
   "source_manifest": "feed/historical-source-manifest.json",
@@ -240,7 +240,11 @@
     "b365_1x2_same_book_development_rows": 6634,
     "b365_1x2_same_book_holdout_rows": 2212,
     "b365_1x2_missing_development_price_rows": 2,
-    "b365_1x2_missing_holdout_price_rows": 0
+    "b365_1x2_missing_holdout_price_rows": 0,
+    "btts_structural_oos_leagues": 11,
+    "btts_structural_oos_holdout_rows": 3076,
+    "btts_structural_oos_missing_rows": 0,
+    "btts_historical_price_rows": 0
   },
   "quarantined_evidence": [
     {
@@ -476,7 +480,12 @@
     "Recorded two development fixtures with incomplete Bet365 early/close triplets and excluded them without reconstruction; holdout coverage is complete.",
     "Found only a small, non-conclusive closing proper-score improvement over early prices on 1X2: Brier 0.58117 to 0.58030 and log-loss 0.97666 to 0.97523, with paired intervals crossing zero.",
     "Rejected all pre-specified movement-following bands. The >=3pp band moved from +5.95% development ROI to -0.64% OOS and was positive in only 3/7 holdout leagues.",
-    "Kept Bet365 provider-early 1X2 prices separate from timestamp-certified TRUE OPEN and from GoldBet."
+    "Kept Bet365 provider-early 1X2 prices separate from timestamp-certified TRUE OPEN and from GoldBet.",
+    "Completed a frozen structural BTTS OOS test across 11 leagues and 3,076 untouched holdout fixtures with zero missing joins.",
+    "Constructed independent-Poisson BTTS probabilities from strictly prior-date home/away goals for and against, using date-batch updates and fixed shrinkage; no holdout tuning was performed.",
+    "The structural BTTS model worsened the frozen per-league development-rate baseline: Brier 0.24496 to 0.24740, log-loss 0.68302 to 0.68803 and accuracy 56.92% to 53.84%.",
+    "The deterioration appeared in 10/11 leagues; only the Netherlands improved. Fixture-paired intervals are entirely unfavorable, while equal-league hierarchical intervals cross zero.",
+    "Rejected the coarse independent-Poisson BTTS module and withheld fair-price, value, ROI, CLV and MMS inference because no verified historical BTTS price series exists."
   ],
   "metrics": {
     "holdout_n": 240,
@@ -2560,6 +2569,47 @@
         "positive_holdout_leagues": 3
       },
       "decision": "ALL_PRE_SPECIFIED_1X2_MOVEMENT_THRESHOLDS_REJECTED"
+    },
+    "cross_league_btts_structural_oos": {
+      "report": "feed/historical/markets/cross-league-btts-structural-oos-v1.json",
+      "leagues": 11,
+      "holdout_rows": 3076,
+      "missing_rows": 0,
+      "frozen_development_rate_baseline": {
+        "brier": 0.244960306117291,
+        "log_loss": 0.6830198706308143,
+        "accuracy": 0.5692457737321196
+      },
+      "structural_independent_poisson": {
+        "brier": 0.24739700878712326,
+        "log_loss": 0.6880310278594803,
+        "accuracy": 0.5383615084525357
+      },
+      "model_minus_baseline": {
+        "brier": 0.002436702669832258,
+        "log_loss": 0.005011157228666074,
+        "fixture_paired_brier_ci95": [
+          0.00023718054231274465,
+          0.0046427016822125754
+        ],
+        "fixture_paired_log_loss_ci95": [
+          0.00044711936799929515,
+          0.009527161617539413
+        ],
+        "equal_league_brier_ci95": [
+          -0.0005160860674027394,
+          0.005300882364020132
+        ],
+        "equal_league_log_loss_ci95": [
+          -0.0011115924865287947,
+          0.01096560166229276
+        ]
+      },
+      "worse_leagues": 10,
+      "improved_leagues": 1,
+      "only_improved_league": "Netherlands",
+      "price_history_available": false,
+      "decision": "REJECT_COARSE_STRUCTURAL_POISSON_BTTS_MODULE"
     }
   },
   "ablation_plan": {
@@ -2580,9 +2630,9 @@
     "priority": "Keep Superettan blocked until a different permitted, versionable 2022-2025 source is available; do not repeatedly retry the same 403 endpoint.",
     "structural_lane": "Ligue 1 is blocked for the requested four-season design by 20-to-18-club format drift; only three comparable current-format seasons exist.",
     "superettan_acceptance_gate": "Require raw-source hashes, 16 clubs/240 phase-pure fixtures/30 appearances per club in every season and explicit playoff separation. Historical market metrics remain unavailable without a separately verified odds source.",
-    "next_analysis_lane": "Stop adding coarse aggregate proxies to Elo. Prioritize new versioned sources or a predeclared development-only candidate with direct tactical/player meaning; any model promotion still requires a new independent temporal holdout.",
+    "next_analysis_lane": "Prioritize verified market or direct tactical/player context. Do not add further coarse score-rate proxies without a predeclared development-only design and a new independent temporal holdout.",
     "fatigue_lane": "Calendar-only fatigue remains rejected; richer workload retest requires verified cross-competition schedules and separately documented player context.",
-    "market_lane": "O/U 2.5 external close benchmark complete for seven leagues; primary movement inference still requires GoldBet same-book OPEN-to-certified-CLOSE.",
+    "market_lane": "BTTS structural baseline test complete and rejected; historical BTTS price data remain absent, so fair/value/ROI/CLV/MMS inference is blocked.",
     "mms_lane": "No threshold retest until common-support T-30 coverage spans an independent temporal block."
   },
   "rule_decisions": {
@@ -2630,7 +2680,8 @@
       "Rejected the claim that external-close superiority is draw-only or confined to low-confidence fixtures.",
       "Rejected any conversion of external-average-close decomposition into a GoldBet MMS/CLV/ROI rule because bookmaker identity and certified GoldBet CLOSE are absent.",
       "Rejected ELO_PLUS_HOME_ENV using trailing-120 league HOME/DRAW frequencies: both proper scores deteriorate robustly across fixtures and leagues.",
-      "Rejected any hindsight reconstruction of the 2026-09-01 daily audit without a persisted pre-kickoff prediction manifest."
+      "Rejected any hindsight reconstruction of the 2026-09-01 daily audit without a persisted pre-kickoff prediction manifest.",
+      "Cross-league BTTS structural v1: reject the fixed-shrinkage independent-Poisson module based only on strictly prior home/away goals; it worsens the frozen development-rate baseline in pooled proper scores and in 10/11 leagues, while equal-league uncertainty does not support promotion."
     ],
     "operational_changes": [],
     "historical_method_changes": [
@@ -2677,6 +2728,7 @@
   "rejected_rules": [
     "Reject pooled four-season Ligue 1 modeling or result-based downsampling across the 20-to-18-club format change.",
     "Reject Bet365 O/U 2.5 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes the frozen OOS promotion gate.",
-    "Reject Bet365 1X2 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes frozen OOS replication."
+    "Reject Bet365 1X2 movement-following thresholds at <1pp, 1-2pp, 2-3pp and >=3pp; none passes frozen OOS replication.",
+    "Reject the fixed-shrinkage independent-Poisson BTTS module based only on prior home/away goals; it does not improve the frozen league-rate baseline OOS."
   ]
 }
