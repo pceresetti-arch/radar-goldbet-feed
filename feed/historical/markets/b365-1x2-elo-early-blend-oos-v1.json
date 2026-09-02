@@ -1,0 +1,444 @@
+{
+  "schema_version": "radar-historical-b365-1x2-elo-early-blend-oos-v1",
+  "generated_at": "2026-09-02T13:21:22.757110+00:00",
+  "status": "COMPLETE_ROLLING_DEVELOPMENT_SELECTED_FROZEN_OOS",
+  "market": "FULL_TIME_1X2",
+  "bookmaker": "Bet365",
+  "design": {
+    "rolling_development_rows": 4424,
+    "rolling_origin_folds": 14,
+    "holdout_rows": 2212,
+    "blend_formula": "w*de-vigged Bet365 provider-early + (1-w)*ELO_ONLY",
+    "weight_grid": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "selection_metric": "rolling-development log-loss; Brier then larger market weight tie breakers",
+    "selected_market_weight": 1.0,
+    "selected_elo_weight": 0.0,
+    "final_holdout_used_for_selection": false,
+    "provider_early_timestamp_certified": false,
+    "true_open": false,
+    "goldbet": false,
+    "operational_rule_allowed": false
+  },
+  "coverage": {
+    "Netherlands": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Portugal": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Germany2": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Germany1": {
+      "rolling_development_expected": 612,
+      "rolling_development_scored": 612,
+      "holdout_expected": 306,
+      "holdout_scored": 306,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Spain1": {
+      "rolling_development_expected": 760,
+      "rolling_development_scored": 760,
+      "holdout_expected": 380,
+      "holdout_scored": 380,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "England1": {
+      "rolling_development_expected": 760,
+      "rolling_development_scored": 760,
+      "holdout_expected": 380,
+      "holdout_scored": 380,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    },
+    "Scotland1": {
+      "rolling_development_expected": 456,
+      "rolling_development_scored": 456,
+      "holdout_expected": 228,
+      "holdout_scored": 228,
+      "missing_development_prices": 0,
+      "missing_holdout_prices": 0
+    }
+  },
+  "development_selection": {
+    "selected": {
+      "market_weight": 1.0,
+      "n": 4424,
+      "brier": 0.5668102753481132,
+      "log_loss": 0.9557216303124798,
+      "accuracy": 0.5438517179023508
+    },
+    "grid": [
+      {
+        "market_weight": 0.0,
+        "n": 4424,
+        "brier": 0.5906754706080367,
+        "log_loss": 0.9926035739478131,
+        "accuracy": 0.5230560578661845
+      },
+      {
+        "market_weight": 0.05,
+        "n": 4424,
+        "brier": 0.5887232191670043,
+        "log_loss": 0.9893844817421481,
+        "accuracy": 0.5239602169981917
+      },
+      {
+        "market_weight": 0.1,
+        "n": 4424,
+        "brier": 0.5868508615868179,
+        "log_loss": 0.9863575419251626,
+        "accuracy": 0.5264466546112115
+      },
+      {
+        "market_weight": 0.15,
+        "n": 4424,
+        "brier": 0.5850583978674774,
+        "log_loss": 0.9835067027247185,
+        "accuracy": 0.5287070524412296
+      },
+      {
+        "market_weight": 0.2,
+        "n": 4424,
+        "brier": 0.5833458280089827,
+        "log_loss": 0.9808198170651902,
+        "accuracy": 0.5298372513562387
+      },
+      {
+        "market_weight": 0.25,
+        "n": 4424,
+        "brier": 0.5817131520113341,
+        "log_loss": 0.9782873191267827,
+        "accuracy": 0.5296112115732369
+      },
+      {
+        "market_weight": 0.3,
+        "n": 4424,
+        "brier": 0.5801603698745312,
+        "log_loss": 0.9759014769583454,
+        "accuracy": 0.5311934900542495
+      },
+      {
+        "market_weight": 0.35,
+        "n": 4424,
+        "brier": 0.5786874815985743,
+        "log_loss": 0.9736559325844587,
+        "accuracy": 0.531871609403255
+      },
+      {
+        "market_weight": 0.4,
+        "n": 4424,
+        "brier": 0.5772944871834633,
+        "log_loss": 0.9715454011123419,
+        "accuracy": 0.5336799276672695
+      },
+      {
+        "market_weight": 0.45,
+        "n": 4424,
+        "brier": 0.5759813866291983,
+        "log_loss": 0.9695654648897114,
+        "accuracy": 0.5345840867992767
+      },
+      {
+        "market_weight": 0.5,
+        "n": 4424,
+        "brier": 0.5747481799357792,
+        "log_loss": 0.9677124281335362,
+        "accuracy": 0.5345840867992767
+      },
+      {
+        "market_weight": 0.55,
+        "n": 4424,
+        "brier": 0.573594867103206,
+        "log_loss": 0.9659832121154173,
+        "accuracy": 0.5368444846292948
+      },
+      {
+        "market_weight": 0.6,
+        "n": 4424,
+        "brier": 0.5725214481314786,
+        "log_loss": 0.9643752788863961,
+        "accuracy": 0.5384267631103075
+      },
+      {
+        "market_weight": 0.65,
+        "n": 4424,
+        "brier": 0.5715279230205972,
+        "log_loss": 0.962886576063481,
+        "accuracy": 0.5393309222423146
+      },
+      {
+        "market_weight": 0.7,
+        "n": 4424,
+        "brier": 0.5706142917705619,
+        "log_loss": 0.961515497979511,
+        "accuracy": 0.5397830018083183
+      },
+      {
+        "market_weight": 0.75,
+        "n": 4424,
+        "brier": 0.5697805543813722,
+        "log_loss": 0.9602608603253371,
+        "accuracy": 0.5395569620253164
+      },
+      {
+        "market_weight": 0.8,
+        "n": 4424,
+        "brier": 0.5690267108530286,
+        "log_loss": 0.9591218867335182,
+        "accuracy": 0.5411392405063291
+      },
+      {
+        "market_weight": 0.85,
+        "n": 4424,
+        "brier": 0.5683527611855309,
+        "log_loss": 0.9580982068421368,
+        "accuracy": 0.5415913200723327
+      },
+      {
+        "market_weight": 0.9,
+        "n": 4424,
+        "brier": 0.5677587053788791,
+        "log_loss": 0.9571898664458688,
+        "accuracy": 0.5411392405063291
+      },
+      {
+        "market_weight": 0.95,
+        "n": 4424,
+        "brier": 0.5672445434330731,
+        "log_loss": 0.9563973516028623,
+        "accuracy": 0.5440777576853526
+      },
+      {
+        "market_weight": 1.0,
+        "n": 4424,
+        "brier": 0.5668102753481132,
+        "log_loss": 0.9557216303124798,
+        "accuracy": 0.5438517179023508
+      }
+    ]
+  },
+  "holdout": {
+    "provider_early": {
+      "n": 2212,
+      "brier": 0.5811713984587822,
+      "log_loss": 0.9766645503661683,
+      "accuracy": 0.5289330922242315
+    },
+    "elo_only": {
+      "n": 2212,
+      "brier": 0.5967700399260506,
+      "log_loss": 1.0005218281160932,
+      "accuracy": 0.5085895117540687
+    },
+    "frozen_blend": {
+      "n": 2212,
+      "brier": 0.5811713984587822,
+      "log_loss": 0.9766645503661683,
+      "accuracy": 0.5289330922242315
+    },
+    "delta_blend_minus_early": {
+      "brier": 0.0,
+      "log_loss": 0.0
+    }
+  },
+  "uncertainty": {
+    "paired_fixture": {
+      "draws": 10000,
+      "brier_delta_blend_minus_early_ci95": [
+        0.0,
+        0.0
+      ],
+      "log_loss_delta_blend_minus_early_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "hierarchical_league": {
+      "draws": 10000,
+      "brier_delta_blend_minus_early_ci95": [
+        0.0,
+        0.0
+      ],
+      "log_loss_delta_blend_minus_early_ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "by_league": {
+    "England1": {
+      "n": 380,
+      "provider_early": {
+        "n": 380,
+        "brier": 0.6115122077213379,
+        "log_loss": 1.018547433594444,
+        "accuracy": 0.48947368421052634
+      },
+      "blend": {
+        "n": 380,
+        "brier": 0.6115122077213379,
+        "log_loss": 1.018547433594444,
+        "accuracy": 0.48947368421052634
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Germany1": {
+      "n": 306,
+      "provider_early": {
+        "n": 306,
+        "brier": 0.5621449479463795,
+        "log_loss": 0.9513731562857881,
+        "accuracy": 0.5490196078431373
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.5621449479463795,
+        "log_loss": 0.9513731562857881,
+        "accuracy": 0.5490196078431373
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Germany2": {
+      "n": 306,
+      "provider_early": {
+        "n": 306,
+        "brier": 0.6192951518072171,
+        "log_loss": 1.0316534883934043,
+        "accuracy": 0.5032679738562091
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.6192951518072171,
+        "log_loss": 1.0316534883934043,
+        "accuracy": 0.5032679738562091
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Netherlands": {
+      "n": 306,
+      "provider_early": {
+        "n": 306,
+        "brier": 0.5801597830731308,
+        "log_loss": 0.977407212659802,
+        "accuracy": 0.5326797385620915
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.5801597830731308,
+        "log_loss": 0.977407212659802,
+        "accuracy": 0.5326797385620915
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Portugal": {
+      "n": 306,
+      "provider_early": {
+        "n": 306,
+        "brier": 0.5398395739412191,
+        "log_loss": 0.9136707938783002,
+        "accuracy": 0.565359477124183
+      },
+      "blend": {
+        "n": 306,
+        "brier": 0.5398395739412191,
+        "log_loss": 0.9136707938783002,
+        "accuracy": 0.565359477124183
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Scotland1": {
+      "n": 228,
+      "provider_early": {
+        "n": 228,
+        "brier": 0.5786914413071141,
+        "log_loss": 0.9722169525696025,
+        "accuracy": 0.5131578947368421
+      },
+      "blend": {
+        "n": 228,
+        "brier": 0.5786914413071141,
+        "log_loss": 0.9722169525696025,
+        "accuracy": 0.5131578947368421
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    },
+    "Spain1": {
+      "n": 380,
+      "provider_early": {
+        "n": 380,
+        "brier": 0.5710378212308005,
+        "log_loss": 0.9636644004887207,
+        "accuracy": 0.55
+      },
+      "blend": {
+        "n": 380,
+        "brier": 0.5710378212308005,
+        "log_loss": 0.9636644004887207,
+        "accuracy": 0.55
+      },
+      "delta_blend_minus_early": {
+        "brier": 0.0,
+        "log_loss": 0.0
+      }
+    }
+  },
+  "verdict": "Promote an Elo increment only if rolling-development selection gives it positive weight and the frozen holdout improves robustly; provider-early prices are not certified TRUE OPEN or GoldBet."
+}\n
