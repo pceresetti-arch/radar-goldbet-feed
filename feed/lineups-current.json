@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T05:53:11.549388+00:00",
+  "generated_at": "2026-09-02T06:22:10.866871+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -28,7 +28,7 @@
       "start_time": "02-09-2026 09:15",
       "start_utc": "2026-09-02T07:15:00+00:00",
       "league": "Premiership",
-      "minutes_to_start": 81.8,
+      "minutes_to_start": 52.8,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -44,7 +44,35 @@
         "historical_reference": false,
         "teams": []
       },
-      "error": null
+      "error": null,
+      "urgent_source_evidence": {
+        "polled_at": "2026-09-02T06:22:10.866871+00:00",
+        "fotmob": null,
+        "sofascore": {
+          "provider": "Sofascore",
+          "error": "EVENT_NOT_MATCHED"
+        }
+      }
     }
-  ]
+  ],
+  "urgent_refresh": {
+    "schema": "radar-urgent-lineup-refresh-v1",
+    "generated_at": "2026-09-02T06:22:10.866871+00:00",
+    "window_minutes": [
+      0,
+      85.0
+    ],
+    "target_count": 1,
+    "sources": [
+      "FotMob",
+      "Sofascore"
+    ],
+    "schedule_meta": {
+      "2026-09-02": {
+        "provider": "Sofascore",
+        "error": "SCHEDULE_UNAVAILABLE"
+      }
+    },
+    "changes": []
+  }
 }
