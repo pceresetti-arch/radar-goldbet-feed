@@ -150,6 +150,51 @@ def group_metrics(rows, key, group_fn):
         groups[group_fn(r)].append(r)
     return {str(k): metrics(v, key) for k, v in sorted(groups.items())}
 
+def paired_delta_stats(rows):
+    values = {"brier": [], "log_loss": []}
+    class_values = {o: [] for o in OUTCOMES}
+    for r in rows:
+        eb, el = losses(r, "elo")
+        mb, ml = losses(r, "market")
+        values["brier"].append(mb - eb)
+        values["log_loss"].append(ml - el)
+        for k, outcome in enumerate(OUTCOMES):
+            y = 1.0 if r["y"] == k else 0.0
+            class_values[outcome].append((r["market"][k] - y) ** 2 - (r["elo"][k] - y) ** 2)
+    def summarize(xs):
+        mean = sum(xs) / len(xs)
+        if len(xs) > 1:
+            variance = sum((x - mean) ** 2 for x in xs) / (len(xs) - 1)
+            se = math.sqrt(variance / len(xs))
+        else:
+            se = 0.0
+        return {"n": len(xs), "market_minus_elo": mean, "normal_ci95": [mean - 1.96*se, mean + 1.96*se],
+                "ci_excludes_zero": mean - 1.96*se > 0 or mean + 1.96*se < 0,
+                "negative_means_market_better": True}
+    return {
+        "multiclass": {metric: summarize(xs) for metric, xs in values.items()},
+        "one_vs_rest_brier": {outcome: summarize(xs) for outcome, xs in class_values.items()},
+    }
+
+def comparison_decomposition(rows):
+    realized = defaultdict(list)
+    predicted = defaultdict(list)
+    confidence = defaultdict(list)
+    for r in rows:
+        realized[OUTCOMES[r["y"]]].append(r)
+        pick = max(range(3), key=lambda k: r["elo"][k])
+        predicted[OUTCOMES[pick]].append(r)
+        conf = max(r["elo"])
+        lo = min(.9, math.floor(conf*10)/10)
+        confidence[f"{lo:.1f}-{min(1.0,lo+.1):.1f}"].append(r)
+    return {
+        "by_realized_outcome": {k: paired_delta_stats(v) for k,v in sorted(realized.items())},
+        "by_elo_top_pick": {k: paired_delta_stats(v) for k,v in sorted(predicted.items())},
+        "by_elo_confidence_band": {k: paired_delta_stats(v) for k,v in sorted(confidence.items())},
+        "overall_classwise": paired_delta_stats(rows)["one_vs_rest_brier"],
+        "multiplicity_note": "Subgroup intervals are nominal diagnostics; no threshold or rule may be promoted from them.",
+    }
+
 def bootstrap(rows):
     by_league = defaultdict(list)
     for r in rows:
@@ -294,6 +339,7 @@ def main():
             "league_bootstrap": "resample leagues with replacement and equal league weight",
             "results": paired,
         },
+        "market_advantage_decomposition": comparison_decomposition(all_rows),
         "error_decomposition": {
             "elo_by_predicted_side": group_metrics(all_rows, "elo", lambda r: OUTCOMES[max(range(3), key=lambda k: r["elo"][k])]),
             "elo_by_realized_outcome": group_metrics(all_rows, "elo", lambda r: OUTCOMES[r["y"]]),
