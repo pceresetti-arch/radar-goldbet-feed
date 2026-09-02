@@ -1,9 +1,9 @@
 {
-  "schema_version": "radar-historical-source-manifest-v37",
-  "generated_at": "2026-09-02T01:34:30Z",
+  "schema_version": "radar-historical-source-manifest-v38",
+  "generated_at": "2026-09-02T02:20:41Z",
   "timezone": "Europe/Rome",
   "contract": "RADAR_HISTORICAL_BACKTEST_CONTRACT.md",
-  "status": "DRAW_CLASS_LEAGUE_STABILITY_AUDITED_NO_RECALIBRATION",
+  "status": "EXTERNAL_CLOSE_ADVANTAGE_DECOMPOSED_BROAD_BENCHMARK_ONLY",
   "priority": [
     "Sweden",
     "Norway",
@@ -1145,7 +1145,7 @@
       }
     },
     "pre_match_structural": {
-      "status": "ELEVEN_LEAGUE_OOS_COMPLETE_DRAW_CALIBRATED_ABS_GAP_REJECTED",
+      "status": "ELEVEN_LEAGUE_OOS_COMPLETE_EXTERNAL_CLOSE_ADVANTAGE_BROAD",
       "candidate_features": [
         "pre_match_elo_or_structural_proxy",
         "form_pre_match",
@@ -1153,11 +1153,12 @@
         "opponent_quality"
       ],
       "anti_leakage": "Features use strictly prior source dates; updates occur only after the complete date batch.",
-      "result": "Frozen ELO_ONLY remains robustly inferior to the external average close on pooled Brier/log-loss, but zero DRAW argmax is not a probabilistic failure: mean DRAW probability is 0.24058 versus 0.24837 observed with ECE 0.00789. A development-only rolling ELO_PLUS_ABS_GAP candidate worsens both proper scores and is rejected. League-level DRAW residuals show one nominal Primeira Liga deviation, but no multiplicity-robust or independently replicated drift; no league recalibration is allowed.",
+      "result": "Across 3,076 frozen OOS fixtures, external average close remains better than Elo in pooled one-v-rest Brier for H (-0.00865), D (-0.00165) and A (-0.00695), with all pooled nominal intervals below zero. Direction is replicated in 11/11 leagues for H and A and 9/11 for D; the largest robust gap occurs when Elo top-picks AWAY. The advantage persists through Elo confidence 0.3-0.7. This is an external-market benchmark, not GoldBet same-book CLOSE, and no operational rule is promoted.",
       "identity_gate": "League-specific schedule integrity required before metrics: 16 teams/240 matches for Sweden-Norway; 12 teams/32 matches per club for Denmark; 18 teams/34 matches per club for Netherlands, Portugal, Bundesliga and 2. Bundesliga; 20 teams/38 matches per club for LaLiga and Premier League; Scotland requires 12 teams/228 fixtures/38 matches per club with the asymmetric post-split phase retained.",
       "calibration_report": "feed/historical/calibration/cross-league-elo-calibration-v1.json",
       "draw_class_report": "feed/historical/calibration/cross-league-elo-calibration-v1.json",
-      "draw_gap_development_report": "feed/historical/calibration/development-draw-gap-rolling-v1.json"
+      "draw_gap_development_report": "feed/historical/calibration/development-draw-gap-rolling-v1.json",
+      "market_advantage_decomposition_report": "feed/historical/calibration/cross-league-elo-calibration-v1.json"
     },
     "official_xi": {
       "status": "OPTIONAL_ONLY_WHEN_PRE_KICKOFF_PUBLICATION_IS_VERIFIABLE"
@@ -1187,7 +1188,9 @@
     "top_pick_class_coverage_required": false,
     "zero_argmax_realized_class_policy": "REQUIRE_CLASSWISE_CALIBRATION_AND_PROPER_SCORE_EVIDENCE_BEFORE_FAILURE_CLAIM",
     "top_pick_class_coverage_policy": "DIAGNOSTIC_ONLY_NOT_FAILURE_CRITERION",
-    "league_classwise_recalibration_rule": "REQUIRE_MULTIPLICITY_ROBUST_SIGNAL_AND_INDEPENDENT_TEMPORAL_REPLICATION"
+    "league_classwise_recalibration_rule": "REQUIRE_MULTIPLICITY_ROBUST_SIGNAL_AND_INDEPENDENT_TEMPORAL_REPLICATION",
+    "external_close_decomposition_policy": "DIAGNOSTIC_BENCHMARK_ONLY_NOT_GOLDBET_MMS_CLV_OR_ROI",
+    "external_close_subgroup_rule": "NO_SUBGROUP_PROMOTION_FROM_OBSERVED_FINAL_HOLDOUT"
   },
   "next_source_block": {
     "priority": "Do not retry the blocked Superettan endpoint; require a different permitted, versionable raw source.",
@@ -1197,8 +1200,9 @@
       "Belgian Pro League: format drift",
       "J1 League: format drift"
     ],
-    "next_analysis_lane": "Frozen OOS decomposition of external-close advantage by outcome class and confidence region; diagnostic only, with no betting-rule derivation.",
+    "next_analysis_lane": "Return to new source acquisition or development-only candidates; any promotion requires an untouched independent temporal holdout.",
     "superettan_gate": "16 clubs, 240 phase-pure fixtures and 30 appearances per club per season; persist hashes and separate playoffs before freezing the temporal split.",
-    "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context."
+    "fatigue_constraint": "Calendar-only fatigue rejected; richer workload retest requires verified cross-competition schedules and player context.",
+    "external_close_constraint": "External average close may benchmark proper scores but cannot substitute for GoldBet same-book TRUE OPEN-to-CLOSE evidence."
   }
 }
