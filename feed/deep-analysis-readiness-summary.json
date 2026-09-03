@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-03T16:11:23.883225+00:00",
+  "generated_at": "2026-09-03T16:12:31.205739+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 16.5,
-    "tactical": 16.0,
-    "betflag_fixture_feed": 10.3,
-    "betflag_standard_source": 10.4,
-    "betflag_player_source": 10.4,
-    "player_context": 15.9
+    "lineups": 1.2,
+    "tactical": 0.7,
+    "betflag_fixture_feed": 11.4,
+    "betflag_standard_source": 11.5,
+    "betflag_player_source": 11.5,
+    "player_context": 0.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -33,13 +33,57 @@
     "exact_proof_required_at_decision_time": true
   },
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
-  "match_count": 36,
+  "match_count": 48,
   "readiness_counts": {
-    "WAIT_OFFICIAL_STANDARD_XI": 31,
-    "STALE_LINEUP_FEED": 5
+    "WAIT_BETFLAG_FIXTURE_MAPPING": 3,
+    "WAIT_OFFICIAL_STANDARD_XI": 43,
+    "READY_DEEP_ANALYSIS": 2
   },
-  "ready_count": 0,
-  "ready_matches": [],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "ready_count": 2,
+  "ready_matches": [
+    {
+      "match_market_id": "36362.23590",
+      "match": "Al Sailiya - Al-Arabi Doha",
+      "league": "Stars League",
+      "start_time": "03-09-2026 18:15",
+      "minutes_to_start": 3.6,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "betflag_standard_count": 14,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_lane_ready": false,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    },
+    {
+      "match_market_id": "36361.5829",
+      "match": "Neom SC - AL Khaleej Saihat FC",
+      "league": "Premier League",
+      "start_time": "03-09-2026 18:30",
+      "minutes_to_start": 18.6,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
+      "betflag_standard_count": 34,
+      "player_count": 32,
+      "player_quote_count": 192,
+      "player_lane_ready": true,
+      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
+    }
+  ],
+  "player_lane_ready_count": 1,
+  "player_lane_ready_matches": [
+    {
+      "match_market_id": "36361.5829",
+      "match": "Neom SC - AL Khaleej Saihat FC",
+      "league": "Premier League",
+      "start_time": "03-09-2026 18:30",
+      "minutes_to_start": 18.6,
+      "player_lane_ready": true,
+      "player_market_bet_ready": true,
+      "player_count": 32,
+      "player_quote_count": 192,
+      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
+      "player_exact_price_required_at_decision_time": true
+    }
+  ]
 }
