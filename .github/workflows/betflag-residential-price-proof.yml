@@ -134,7 +134,6 @@ jobs:
           git add feed/betflag-residential-current.json feed/betflag-residential-history feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-price-proof-latest.json feed/price-proofs
           if (-not (git diff --cached --quiet)) {
             git commit -m "Record residential BetFlag exact price and movement proof"
-            git rebase --abort 2>$null
             Remove-Item -Recurse -Force .git\rebase-merge -ErrorAction SilentlyContinue
             Remove-Item -Recurse -Force .git\rebase-apply -ErrorAction SilentlyContinue
             git fetch origin main
