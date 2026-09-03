@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-09-03T15:30:32.833455+00:00",
+  "generated_at": "2026-09-03T18:31:09.664183+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "03-09-2026",
   "ready": false,
@@ -18,33 +18,33 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 5017,
-    "index_warm_elapsed_ms": 2578,
-    "fallback_discovery_elapsed_ms": 691,
+    "index_first_elapsed_ms": 5153,
+    "index_warm_elapsed_ms": 247,
+    "fallback_discovery_elapsed_ms": 563,
     "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
-    "index_warm_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY"
+    "index_warm_cache": "HIT"
   },
   "coverage": {
     "targets_expected": 17,
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 12246,
-    "scoped_source_rows": 7534,
-    "indexed_rows": 7534,
+    "source_rows": 11108,
+    "scoped_source_rows": 4285,
+    "indexed_rows": 4285,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 7534,
+      "standard_match": 4285,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
       "missing_stable_identity": 0,
       "missing_player": 0
     },
-    "fixtures": 12,
-    "exact_fixtures": 12,
+    "fixtures": 4,
+    "exact_fixtures": 4,
     "fallback_fixtures": 0,
-    "player_fixtures": 522,
+    "player_fixtures": 177,
     "markets_present": [
       "1° Marcatore",
       "1° Marcatore o Sostituto",
@@ -94,17 +94,17 @@
     "index_all_scoped_rows_indexed": true,
     "index_nonempty": true,
     "index_warm_200": true,
-    "index_warm_cache_hit": false,
-    "index_warm_fast": false,
-    "index_warm_same_generation": false,
+    "index_warm_cache_hit": true,
+    "index_warm_fast": true,
+    "index_warm_same_generation": true,
     "fallback_discovery_200": true,
-    "fallback_discovery_source_healthy": true,
+    "fallback_discovery_source_healthy": false,
     "fallback_discovery_fresh": true,
     "fallback_discovery_mode_full": true,
-    "fallback_discovery_nonempty": true,
+    "fallback_discovery_nonempty": false,
     "pagination_runtime": true,
     "dynamic_index_candidate_found": true,
-    "player_lookup_runtime": true,
+    "player_lookup_runtime": false,
     "exact_200": true,
     "exact_unique": true,
     "exact_source_healthy": true,
@@ -113,14 +113,14 @@
     "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": "AL Fayha FC - AL Khlood",
-    "match_market_id": "36361.5828",
-    "player": "Abdulhadi Al-Harajin",
+    "match": "Hibernian FC - Heart of Midlothian FC",
+    "match_market_id": "36361.3240",
+    "player": "Adam Forrester",
     "market": "1° Marcatore",
     "selection": "Si",
-    "odd": 13,
-    "scan_odd": 13,
-    "proof_id": "bf-49596ee2e3707b1b0847"
+    "odd": 24,
+    "scan_odd": 24,
+    "proof_id": "bf-b6acbad2520e386da05f"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
