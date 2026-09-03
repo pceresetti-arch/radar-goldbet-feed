@@ -4,6 +4,7 @@ from scripts.radar_player_value_gates import (
     correlation_cluster_exposure,
     minutes_adjusted_event_probability,
     price_gate_verdict,
+    scorer_watch_status,
     scouting_hit,
 )
 
@@ -65,6 +66,53 @@ class RadarPlayerValueGateTests(unittest.TestCase):
     def test_scorer_audit_tracks_top_n_discovery(self):
         self.assertTrue(scouting_hit(["Tabakovic", "Konate", "Kara"], ["Tabakovic"], top_n=3))
         self.assertFalse(scouting_hit(["Kara", "Adamsen"], ["Tabakovic"], top_n=2))
+
+    def test_strong_scorer_below_anytime_gate_stays_for_alternative_markets(self):
+        price = price_gate_verdict(
+            current_price=2.40,
+            final_gate=2.65,
+            source_class="BETFLAG_AAMS_DIRECT",
+            fresh=True,
+            exact_identity=True,
+        )
+        watch = scorer_watch_status(
+            scouting_rank=2,
+            in_official_xi=True,
+            expected_minutes=78,
+            price_result=price,
+            alternative_markets_available=True,
+        )
+        self.assertEqual(watch.status, "WATCH_MARKET")
+        self.assertTrue(watch.retain)
+
+    def test_strong_scorer_missing_fresh_betflag_price_stays_on_watch(self):
+        price = price_gate_verdict(
+            current_price=None,
+            final_gate=2.65,
+            source_class="BETFLAG_AAMS_DIRECT",
+            fresh=True,
+            exact_identity=True,
+        )
+        watch = scorer_watch_status(
+            scouting_rank=1,
+            in_official_xi=True,
+            expected_minutes=82,
+            price_result=price,
+            alternative_markets_available=False,
+        )
+        self.assertEqual(watch.status, "WATCH_PRICE")
+        self.assertTrue(watch.retain)
+
+    def test_player_out_of_official_xi_can_be_dropped(self):
+        watch = scorer_watch_status(
+            scouting_rank=1,
+            in_official_xi=False,
+            expected_minutes=25,
+            price_result=None,
+            alternative_markets_available=True,
+        )
+        self.assertEqual(watch.status, "DROP_PLAYER")
+        self.assertFalse(watch.retain)
 
 
 if __name__ == "__main__":
