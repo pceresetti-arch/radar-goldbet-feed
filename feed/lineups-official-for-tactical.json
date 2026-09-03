@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T13:50:13.882292+00:00",
+  "generated_at": "2026-09-03T14:07:49.278912+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,10 +8,12 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 22,
+  "target_count": 36,
   "status_counts": {
-    "NOT_AVAILABLE": 21,
-    "SOURCE_CONFIRMED": 1
+    "NOT_AVAILABLE": 31,
+    "SOURCE_CONFIRMED": 1,
+    "LINEUP_PRESENT_UNCONFIRMED": 1,
+    "REFERENCE_PREVIOUS_XI": 3
   },
   "schedule_stats": [
     {
@@ -29,13 +31,13 @@
       "start_time": "03-09-2026 16:00",
       "start_utc": "2026-09-03T14:00:00+00:00",
       "league": "Stars League",
-      "minutes_to_start": 9.8,
+      "minutes_to_start": -7.8,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-03T13:50:13.882292+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "e191ecf74e6efb005a64",
       "source": "FotMob",
       "fotmob_match": {
         "id": 5952260,
@@ -56,24 +58,24 @@
           {
             "team_id": 179097,
             "team_name": "Al-Ahli",
-            "formation": "4-2-3-1",
+            "formation": "4-4-2",
             "starters": [
               {
                 "name": "Mohamed Lingliz",
                 "id": null,
                 "shirt_number": "13",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.2
                 },
                 "vertical_layout": {
                   "x": 0.5,
                   "y": 0.1,
-                  "height": 0.192,
+                  "height": 0.2,
                   "width": 1
                 }
               },
@@ -84,15 +86,15 @@
                 "position_id": 32,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.875,
                   "height": 0.25,
-                  "width": 0.385
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.125,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -103,15 +105,15 @@
                 "position_id": 34,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.625,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.375,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -122,15 +124,15 @@
                 "position_id": 36,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.375,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.625,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -141,15 +143,34 @@
                 "position_id": 38,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.125,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.875,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Ismael Mohammad",
+                "id": 309173,
+                "shirt_number": "77",
+                "position_id": 72,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.875,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.125,
+                  "y": 0.613,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -157,18 +178,75 @@
                 "name": "Benjamin Bourigeaud",
                 "id": 441871,
                 "shirt_number": "27",
-                "position_id": 64,
+                "position_id": 74,
                 "usual_position_id": 2,
                 "horizontal_layout": {
-                  "x": 0.485,
+                  "x": 0.613,
+                  "y": 0.625,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.375,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Driss Fettouhi",
+                "id": 148954,
+                "shirt_number": "33",
+                "position_id": 76,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.375,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.625,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Julian Draxler",
+                "id": 243164,
+                "shirt_number": "7",
+                "position_id": 78,
+                "usual_position_id": 2,
+                "horizontal_layout": {
+                  "x": 0.613,
+                  "y": 0.125,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.875,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.25
+                }
+              },
+              {
+                "name": "Erik Expósito",
+                "id": 821311,
+                "shirt_number": "10",
+                "position_id": 104,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
                   "y": 0.7,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.3,
-                  "y": 0.485,
-                  "height": 0.192,
+                  "y": 0.87,
+                  "height": 0.2,
                   "width": 0.4
                 }
               },
@@ -176,95 +254,19 @@
                 "name": "Michel Vlap",
                 "id": 662735,
                 "shirt_number": "14",
-                "position_id": 66,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.3,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.7,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.4
-                }
-              },
-              {
-                "name": "Ismael Mohammad",
-                "id": 309173,
-                "shirt_number": "77",
-                "position_id": 83,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.837,
-                  "height": 0.25,
-                  "width": 0.385
-                },
-                "vertical_layout": {
-                  "x": 0.162,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.325
-                }
-              },
-              {
-                "name": "Julian Draxler",
-                "id": 243164,
-                "shirt_number": "7",
-                "position_id": 85,
-                "usual_position_id": 2,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.5,
-                  "height": 0.25,
-                  "width": 0.192
-                },
-                "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.337
-                }
-              },
-              {
-                "name": "Driss Fettouhi",
-                "id": 148954,
-                "shirt_number": "33",
-                "position_id": 87,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.163,
-                  "height": 0.25,
-                  "width": 0.193
-                },
-                "vertical_layout": {
-                  "x": 0.837,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.325
-                }
-              },
-              {
-                "name": "Erik Expósito",
-                "id": 821311,
-                "shirt_number": "10",
-                "position_id": 115,
+                "position_id": 106,
                 "usual_position_id": 3,
                 "horizontal_layout": {
                   "x": 0.87,
-                  "y": 0.5,
+                  "y": 0.3,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
-                  "x": 0.5,
+                  "x": 0.7,
                   "y": 0.87,
-                  "height": 0.192,
-                  "width": 1
+                  "height": 0.2,
+                  "width": 0.4
                 }
               }
             ],
@@ -305,6 +307,11 @@
                 "shirt_number": "11"
               },
               {
+                "name": "Hugo Hernandez Moya",
+                "id": null,
+                "shirt_number": "25"
+              },
+              {
                 "name": "Yousef Abdulla",
                 "id": null,
                 "shirt_number": "15"
@@ -313,6 +320,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -324,43 +332,43 @@
           {
             "team_id": 101900,
             "team_name": "Qatar SC",
-            "formation": "4-2-3-1",
+            "formation": "4-3-3",
             "starters": [
               {
                 "name": "Ali Nader",
                 "id": 1553840,
                 "shirt_number": "17",
                 "position_id": 11,
-                "usual_position_id": null,
+                "usual_position_id": 0,
                 "horizontal_layout": {
                   "x": 0.1,
                   "y": 0.5,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.2
                 },
                 "vertical_layout": {
                   "x": 0.5,
                   "y": 0.1,
-                  "height": 0.192,
+                  "height": 0.2,
                   "width": 1
                 }
               },
               {
-                "name": "Ali Saoudi",
-                "id": 1478265,
-                "shirt_number": "4",
+                "name": "Abdullah Marafee",
+                "id": 308923,
+                "shirt_number": "21",
                 "position_id": 32,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.875,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.125,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -371,34 +379,34 @@
                 "position_id": 34,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.625,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.375,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
               {
-                "name": "Niall Mason",
-                "id": 723412,
-                "shirt_number": "24",
+                "name": "Ali Saoudi",
+                "id": 1478265,
+                "shirt_number": "4",
                 "position_id": 36,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.375,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.625,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -409,15 +417,15 @@
                 "position_id": 38,
                 "usual_position_id": 1,
                 "horizontal_layout": {
-                  "x": 0.292,
+                  "x": 0.357,
                   "y": 0.125,
                   "height": 0.25,
-                  "width": 0.385
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.875,
-                  "y": 0.292,
-                  "height": 0.192,
+                  "y": 0.357,
+                  "height": 0.2,
                   "width": 0.25
                 }
               },
@@ -425,114 +433,114 @@
                 "name": "Pau Prim",
                 "id": 1489544,
                 "shirt_number": "6",
-                "position_id": 64,
+                "position_id": 73,
                 "usual_position_id": 2,
                 "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.7,
+                  "x": 0.613,
+                  "y": 0.79,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
-                  "x": 0.3,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.4
+                  "x": 0.21,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
                 }
               },
               {
-                "name": "Faïz Selamani",
-                "id": 604870,
-                "shirt_number": "7",
-                "position_id": 66,
+                "name": "Niall Mason",
+                "id": 723412,
+                "shirt_number": "24",
+                "position_id": 75,
                 "usual_position_id": 2,
                 "horizontal_layout": {
-                  "x": 0.485,
-                  "y": 0.3,
+                  "x": 0.613,
+                  "y": 0.5,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
-                  "x": 0.7,
-                  "y": 0.485,
-                  "height": 0.192,
-                  "width": 0.4
-                }
-              },
-              {
-                "name": "Tabata",
-                "id": 777038,
-                "shirt_number": "10",
-                "position_id": 83,
-                "usual_position_id": 3,
-                "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.837,
-                  "height": 0.25,
-                  "width": 0.193
-                },
-                "vertical_layout": {
-                  "x": 0.162,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.325
+                  "x": 0.5,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
                 }
               },
               {
                 "name": "Mohamed Mushrinn",
                 "id": null,
                 "shirt_number": "18",
-                "position_id": 85,
+                "position_id": 77,
                 "usual_position_id": 2,
                 "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.5,
+                  "x": 0.613,
+                  "y": 0.21,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
-                  "x": 0.5,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.337
+                  "x": 0.79,
+                  "y": 0.613,
+                  "height": 0.2,
+                  "width": 0.29
                 }
               },
               {
-                "name": "Abdullah Marafee",
-                "id": 308923,
-                "shirt_number": "21",
-                "position_id": 87,
+                "name": "Tabata",
+                "id": 777038,
+                "shirt_number": "10",
+                "position_id": 103,
                 "usual_position_id": 3,
                 "horizontal_layout": {
-                  "x": 0.678,
-                  "y": 0.163,
+                  "x": 0.87,
+                  "y": 0.79,
                   "height": 0.25,
-                  "width": 0.385
+                  "width": 0.257
                 },
                 "vertical_layout": {
-                  "x": 0.837,
-                  "y": 0.678,
-                  "height": 0.192,
-                  "width": 0.325
+                  "x": 0.21,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
                 }
               },
               {
                 "name": "João Pedro",
                 "id": 500970,
                 "shirt_number": "9",
-                "position_id": 115,
+                "position_id": 105,
                 "usual_position_id": 3,
                 "horizontal_layout": {
                   "x": 0.87,
                   "y": 0.5,
                   "height": 0.25,
-                  "width": 0.192
+                  "width": 0.257
                 },
                 "vertical_layout": {
                   "x": 0.5,
                   "y": 0.87,
-                  "height": 0.192,
-                  "width": 1
+                  "height": 0.2,
+                  "width": 0.29
+                }
+              },
+              {
+                "name": "Faïz Selamani",
+                "id": 604870,
+                "shirt_number": "7",
+                "position_id": 107,
+                "usual_position_id": 3,
+                "horizontal_layout": {
+                  "x": 0.87,
+                  "y": 0.21,
+                  "height": 0.25,
+                  "width": 0.257
+                },
+                "vertical_layout": {
+                  "x": 0.79,
+                  "y": 0.87,
+                  "height": 0.2,
+                  "width": 0.29
                 }
               }
             ],
@@ -601,6 +609,7 @@
             "raw_keys": [
               "id",
               "name",
+              "rating",
               "formation",
               "starters",
               "coach",
@@ -610,8 +619,7 @@
             ]
           }
         ],
-        "xi_fingerprint": "e191ecf74e6efb005a64",
-        "xi_name_fingerprint": "ba4abef6c9d5d5203460",
+        "xi_fingerprint": "265113836d26e3eff7f7",
         "raw_keys": [
           "matchId",
           "lineupType",
@@ -621,29 +629,17 @@
           "awayTeam"
         ]
       },
-      "error": null,
-      "source_evidence": {
-        "polled_at": "2026-09-03T13:50:13.882292+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 5952260,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      }
+      "error": null
     }
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-03T13:50:13.882292+00:00",
+    "generated_at": "2026-09-03T14:07:49.278912+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 18,
+    "target_count": 8,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -654,18 +650,15 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Al-Ahli Doha - Qatar SC",
-        "minutes_to_start": 9.8,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Al-Ahli Doha - Qatar SC",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "official_tactical_gate": true,
-  "source_match_count": 22,
+  "source_match_count": 36,
   "official_match_count": 1
 }
