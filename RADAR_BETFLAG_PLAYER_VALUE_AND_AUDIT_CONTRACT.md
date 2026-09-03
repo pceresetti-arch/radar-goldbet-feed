@@ -235,3 +235,52 @@ Il Radar deve ottimizzare tre capacità separatamente:
 1. trovare i giocatori realmente pericolosi;
 2. scegliere il mercato BetFlag che remunera meglio quel profilo;
 3. comprare solo quando la quota BetFlag reale supera il prezzo minimo richiesto senza concentrare rischio eccessivo sulla stessa tesi.
+
+## 15. Persistent Scorer Watchlist — anti-lost-scorer gate
+Un candidato offensivo forte NON viene eliminato definitivamente perché il primo mercato controllato è `NO BET` o perché la quota BetFlag è temporaneamente assente/sotto gate.
+
+### Ingresso watchlist
+Entrano almeno:
+- i principali giocatori del `PLAYER DANGER / SCOUTING RANKING`;
+- rigoristi/piazzati ad alta rilevanza;
+- giocatori con ruolo XI offensivo migliore del previsto;
+- candidati con forte xG/npxG, SOT, big-chance o tocchi-area share;
+- scorer con matchup individuale favorevole;
+- candidati per cui un mercato alternativo BetFlag può remunerare meglio del semplice anytime.
+
+La dimensione target è **4–6 candidati offensivi per partita** quando esistono abbastanza profili credibili; non è un obbligo artificiale riempire sei nomi deboli.
+
+### Stati
+Ogni candidato resta in uno stato esplicito fino al kickoff:
+- `BET` — un mercato BetFlag supera tutti i gate;
+- `WATCH_PRICE` — player forte ma prezzo corrente sotto gate o vicino al gate;
+- `WATCH_MARKET` — anytime non value ma esistono/possono aprirsi mercati alternativi pertinenti;
+- `WATCH_XI` — ruolo/titolarità/minuti ancora da confermare;
+- `WATCH_MOVE` — nuova informazione o movimento BetFlag può cambiare la valutazione;
+- `NO_BET_FINAL` — rivalutato con XI/quote finali e nessun mercato BetFlag supera il gate;
+- `DROP_PLAYER` — motivazione calcistica forte: fuori XI, ruolo incompatibile, minuti insufficienti, infortunio o drastico peggioramento del profilo.
+
+`NO BET` su un singolo mercato non equivale a `DROP_PLAYER`.
+
+### Rivalutazioni obbligatorie
+I candidati in watchlist devono essere riesaminati almeno quando si verifica uno di questi eventi:
+1. pubblicazione XI ufficiali;
+2. variazione materiale di ruolo/modulo/minuti attesi;
+3. comparsa di nuovi player props BetFlag;
+4. variazione materiale della quota BetFlag;
+5. checkpoint T-40/T-30 quando disponibile;
+6. ultimo snapshot fresco utile prima del kickoff.
+
+Ad ogni rivalutazione, scandagliare di nuovo la matrice BetFlag completa del giocatore; non soltanto il mercato che aveva prodotto il primo NO BET.
+
+### Regola di retention
+Un player nel top scouting non può passare direttamente da `WATCH_*` a sparire dal report. Deve terminare in `BET`, `NO_BET_FINAL` o `DROP_PLAYER` con causa registrata.
+
+### Audit della watchlist
+Nel post-match misurare anche:
+- `watchlist_scorer_hit`: il marcatore reale era stato mantenuto nella watchlist?
+- `lost_scorer_rate`: marcatori reali identificati inizialmente ma eliminati prima del final scan;
+- `rescued_value_rate`: candidati inizialmente non giocabili diventati BET grazie a XI/mercato/prezzo successivo;
+- `alternative_market_rescue`: casi in cui anytime era NO BET ma Plus/1T/Gol-Assist/SOT/altro BetFlag era value.
+
+Obiettivo esplicito: ridurre `lost_scorer_rate` senza abbassare il price discipline e senza trasformare la watchlist in una lista indiscriminata di giocatori da scommettere.
