@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-03",
+  "status": "PARTIAL_CERTIFIED_AUDIT_V1",
+  "scope": "actual bets plus recoverable non-played Radar predictions",
+  "actual_bets_summary": {
+    "bets_total": 11,
+    "stake_total_eur": 53.00,
+    "won": 4,
+    "lost": 7,
+    "returns_eur": 45.30,
+    "net_pl_eur": -7.70,
+    "roi_pct": -14.53
+  },
+  "actual_bets": [
+    {"match":"Al Fayha-Al Kholood","selection":"Coba Gomes Da Costa","market":"Marcatore o Sostituto","odds":5.25,"stake_eur":5.00,"result":"LOST","process_grade":"C","notes":"Long price, high variance; insufficient certified player post-match detail retained in current archive."},
+    {"match":"NEOM SC-Al Khaleej","selection":"Alexandre Lacazette","market":"Marcatore","odds":2.00,"stake_eur":5.00,"result":"WON","process_grade":"B","notes":"Scorer thesis converted; price implied 50%."},
+    {"match":"Mjallby-Djurgarden","selection":"Kristian Lien","market":"Marcatore anytime","odds":2.00,"stake_eur":5.00,"result":"WON","process_grade":"B","notes":"Scorer thesis converted in a competitive chance environment."},
+    {"match":"Diriyah Club-Al-Qadisiyah","selection":"Mateo Retegui","market":"1° marcatore","odds":4.60,"stake_eur":3.00,"result":"WON","process_grade":"A-","notes":"High-variance market but strong price; first-scorer outcome landed."},
+    {"match":"FC Copenhagen-FC Nordsjaelland","selection":"Andreas Cornelius","market":"Marcatore Plus","odds":2.45,"stake_eur":5.00,"result":"LOST","process_grade":"C+","notes":"Major minutes-risk failure: Cornelius was substituted at 35'. Future Plus/scorer gates must penalize early substitution risk more aggressively."},
+    {"match":"Anderlecht-Kortrijk","selection":"Mihajlo Cvetkovic","market":"Primo marcatore casa","odds":3.30,"stake_eur":5.00,"result":"LOST","process_grade":"C+","notes":"Correctly identified Anderlecht scoring environment but wrong intra-team scorer allocation; Sikan scored the home goal."},
+    {"match":"Gent-OH Leuven","selection":"Over 2.5","market":"Over 2.5","odds":1.93,"stake_eur":5.00,"result":"LOST","process_grade":"C","notes":"Match finished low-scoring; team-goal environment was overestimated."},
+    {"match":"Gent-OH Leuven","selection":"Jose/Josue Vergara","market":"Marcatore","odds":2.45,"stake_eur":5.00,"result":"LOST","process_grade":"C","notes":"Same-match correlated exposure amplified the miss: scorer + Over 2.5 depended on a high-output Gent game script."},
+    {"match":"Toulouse-Lille","selection":"Olivier Giroud","market":"Marcatore Plus","odds":2.30,"stake_eur":5.00,"result":"WON","process_grade":"A","notes":"Strong market-selection lesson: Plus protected the scorer thesis through the direct substitute; superior to pure anytime under substitution risk."},
+    {"match":"Hibernian-Hearts","selection":"Martin Boyle","market":"Marcatore","odds":3.30,"stake_eur":5.00,"result":"LOST","process_grade":"C+","notes":"Hibs scored once but through Adam Mayor; Hearts controlled the derby and Hibs later went down to ten men."},
+    {"match":"Real Sociedad-Celta Vigo","selection":"Mikel Oyarzabal","market":"Over 3.5 tiri totali","odds":2.25,"stake_eur":5.00,"result":"LOST","process_grade":"B-","notes":"The Real dominated the first half and Oyarzabal was involved, but the volume threshold did not land. Earlier conflicting shot counts were discarded; settlement follows user-confirmed loss."}
+  ],
+  "recoverable_non_played_predictions": [
+    {"match":"Real Sociedad-Celta Vigo","selection":"Oyarzabal Marcatore","odds":2.50,"decision":"NOT_PLAYED / BELOW PRIMARY CHOICE","outcome":"LOST","process_note":"0-0 final; correctly inferior to the chosen volume market on price/variance basis, though chosen market also lost."},
+    {"match":"Real Sociedad-Celta Vigo","selection":"Oyarzabal Marcatore Plus","odds":2.20,"decision":"NOT_PLAYED","outcome":"LOST","process_note":"0-0 final."},
+    {"match":"Real Sociedad-Celta Vigo","selection":"Oyarzabal 1T scorer","odds":4.20,"decision":"NOT_PLAYED","outcome":"LOST","process_note":"No goals in first half despite Real pressure."},
+    {"match":"Real Sociedad-Celta Vigo","selection":"Take Kubo Marcatore","odds":4.00,"decision":"NOT_PLAYED","outcome":"LOST","process_note":"0-0 final."},
+    {"match":"Real Sociedad-Celta Vigo","selection":"Oskarsson Marcatore","odds":2.50,"decision":"NOT_PLAYED","outcome":"LOST","process_note":"0-0 final."},
+    {"match":"Hibernian-Hearts","selection":"Kieron Bowie/Lowe/McGrath alternative scorer group","decision":"NOT_PLAYED / alternatives","outcome":"NO RECOVERED WINNER","process_note":"Hibs goal was Adam Mayor, not the tracked main scorer names."},
+    {"match":"Toulouse-Lille","selection":"Giroud Marcatore","odds":2.65,"decision":"NOT_PLAYED; Plus preferred","outcome":"PURE ANYTIME LOST","process_note":"This is an important positive process result: Plus @2.30 won while pure Giroud scorer would have lost, validating linked-market matrix rather than defaulting to anytime."},
+    {"match":"Toulouse-Lille","selection":"Giroud 1T scorer","odds":4.50,"decision":"NOT_PLAYED","outcome":"LOST","process_note":"No Giroud goal."},
+    {"match":"Gent-OH Leuven","selection":"Gent standard win / low-scoring alternatives","decision":"PARTIAL RECOVERY ONLY","outcome":"Gent won 1-0","process_note":"The chosen Over 2.5 was the wrong expression of the match thesis; protected/low-total or team-result markets would have fit the actual game better, but no ex-post promotion without original documented gate."},
+    {"match":"Anderlecht-Kortrijk","selection":"Cvetkovic standard scorer","odds":2.00,"decision":"NOT_PLAYED / first-home-scorer chosen instead","outcome":"LOST","process_note":"Sikan was scorer; intra-team scorer allocation missed."}
+  ],
+  "day_level_findings": [
+    "Market structure mattered materially: Giroud Plus succeeded exactly where pure anytime would have failed.",
+    "Expected-minutes/substitution risk was underweighted on Cornelius, who exited at 35'.",
+    "Same-match correlation hurt Gent: Over 2.5 and Vergara scorer concentrated exposure on one high-scoring game-state thesis.",
+    "Intra-team scorer allocation needs stricter competition-share modeling: Cvetkovic lost to Sikan; Boyle lost to Mayor.",
+    "The Oyarzabal process was directionally defensible because Real created first-half pressure, but the 3.5-shot threshold was too demanding at the realized pace; exact final shot count remains intentionally not backfilled from conflicting indexed sources.",
+    "Winning high-variance first-scorer Retegui should not cause looser first-scorer gates; judge by pre-match price and allocation, not outcome alone."
+  ],
+  "archive_limitations": [
+    "The historical analysis archive was introduced only after this day's matches, so not every NO BET/ATTESA/WATCH from 2026-09-03 has a machine-readable pre-match snapshot.",
+    "Only non-played predictions recoverable from the conversation/project context are included; missing predictions are not invented retrospectively.",
+    "Future daily audits must read immutable pre-match analysis snapshots from data/analysis before evaluating outcomes."
+  ]
+}
