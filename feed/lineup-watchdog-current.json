@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-03T16:48:34.253557+00:00",
+  "generated_at": "2026-09-03T16:58:23.799880+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,78 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-03T16:45:24.946745+00:00",
-      "finished_at": "2026-09-03T16:45:37.303805+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 27,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T16:46:12.303934+00:00",
-      "finished_at": "2026-09-03T16:46:12.649223+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 27,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T16:46:47.649553+00:00",
-      "finished_at": "2026-09-03T16:46:48.080391+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 27,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T16:47:23.080645+00:00",
-      "finished_at": "2026-09-03T16:47:23.423608+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 27,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T16:47:58.423912+00:00",
-      "finished_at": "2026-09-03T16:47:58.944127+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 27,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T16:48:33.944442+00:00",
-      "finished_at": "2026-09-03T16:48:34.253394+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 27,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-03T16:58:13.913384+00:00",
+      "finished_at": "2026-09-03T16:58:23.799832+00:00",
+      "official_count": 5,
+      "urgent_unconfirmed_count": 26,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-03T16:58:23.799281+00:00",
+          "match": "Hapoel Tel Aviv FC - Beitar Gerusalemme",
+          "league": "Premier League",
+          "start_time": "03-09-2026 19:30",
+          "minutes_to_start": 31.6,
+          "match_market_id": "36341.3127",
+          "match_event_id": 16081125,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000015252,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "136223859a9f2a9cf948",
+          "current_xi_fingerprint": "055bc8d78e55db36d5a1",
+          "confirmed_at": "2026-09-03T16:58:23.329346+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-03T16:58:23.799281+00:00",
+          "match": "Hapoel Tel Aviv FC - Beitar Gerusalemme",
+          "league": "Premier League",
+          "start_time": "03-09-2026 19:30",
+          "minutes_to_start": 31.6,
+          "match_market_id": "36341.3127",
+          "match_event_id": 16081125,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000015252,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "136223859a9f2a9cf948",
+          "current_xi_fingerprint": "055bc8d78e55db36d5a1",
+          "confirmed_at": "2026-09-03T16:58:23.329346+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-03T16:58:23.799281+00:00",
+      "match": "Hapoel Tel Aviv FC - Beitar Gerusalemme",
+      "league": "Premier League",
+      "start_time": "03-09-2026 19:30",
+      "minutes_to_start": 31.6,
+      "match_market_id": "36341.3127",
+      "match_event_id": 16081125,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000015252,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "136223859a9f2a9cf948",
+      "current_xi_fingerprint": "055bc8d78e55db36d5a1",
+      "confirmed_at": "2026-09-03T16:58:23.329346+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-03T16:58:23.799281+00:00",
+      "match": "Hapoel Tel Aviv FC - Beitar Gerusalemme",
+      "league": "Premier League",
+      "start_time": "03-09-2026 19:30",
+      "minutes_to_start": 31.6,
+      "match_market_id": "36341.3127",
+      "match_event_id": 16081125,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000015252,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "136223859a9f2a9cf948",
+      "current_xi_fingerprint": "055bc8d78e55db36d5a1",
+      "confirmed_at": "2026-09-03T16:58:23.329346+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "All Boys Reserve - Deportivo Moron Reserve",
       "match_market_id": "36365.17744",
       "match_event_id": 16108503,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -101,7 +135,7 @@
       "match": "CA Argentino de Merlo Reserves - Csd San Martin Reserves",
       "match_market_id": "36365.17932",
       "match_event_id": 16108530,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -110,7 +144,7 @@
       "match": "EXPRESS FC - Kampala Capital City Authority FC",
       "match_market_id": "36361.20768",
       "match_event_id": 16107120,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,7 +153,7 @@
       "match": "FC Lasten - AC Estudiantes",
       "match_market_id": "36365.19584",
       "match_event_id": 16109172,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -128,7 +162,7 @@
       "match": "Ppj/Lauttasaari - Malmi",
       "match_market_id": "36364.9534",
       "match_event_id": 16098707,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -137,7 +171,7 @@
       "match": "Stara Zagora - Montana",
       "match_market_id": "36364.15685",
       "match_event_id": 16100110,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -146,7 +180,7 @@
       "match": "Tups - FC Lahti 69",
       "match_market_id": "36364.9561",
       "match_event_id": 16098709,
-      "minutes_to_start": 11.4,
+      "minutes_to_start": 1.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -155,7 +189,7 @@
       "match": "Hoogee - Lohjan",
       "match_market_id": "36364.9603",
       "match_event_id": 16098733,
-      "minutes_to_start": 26.4,
+      "minutes_to_start": 16.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -164,25 +198,16 @@
       "match": "Gyor - Ferencváros",
       "match_market_id": "36361.22829",
       "match_event_id": 16078808,
-      "minutes_to_start": 41.4,
+      "minutes_to_start": 31.6,
       "status": "LINEUP_PRESENT_UNCONFIRMED",
       "source": "FotMob",
       "fotmob_match_id": 5865439
     },
     {
-      "match": "Hapoel Tel Aviv FC - Beitar Gerusalemme",
-      "match_market_id": "36341.3127",
-      "match_event_id": 16081125,
-      "minutes_to_start": 41.4,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000015252
-    },
-    {
       "match": "Pol. Timisoara - Rapid Bucuresti",
       "match_market_id": "36361.57856",
       "match_event_id": 16076228,
-      "minutes_to_start": 41.4,
+      "minutes_to_start": 31.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6093724
@@ -191,7 +216,7 @@
       "match": "Maccabi Ironi Ashdod FC - Hapoel Herzelia FC",
       "match_market_id": "36364.9848",
       "match_event_id": 16109707,
-      "minutes_to_start": 56.4,
+      "minutes_to_start": 46.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -200,7 +225,7 @@
       "match": "Al Kahrabaa SC - Al Gharafa",
       "match_market_id": "36365.7410",
       "match_event_id": 16107226,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6028528
@@ -209,7 +234,7 @@
       "match": "Albion - Progreso",
       "match_market_id": "36364.33705",
       "match_event_id": 16103030,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -218,7 +243,7 @@
       "match": "CA Argentino de Quilmes Reserve - Defensores Unidos Reserve",
       "match_market_id": "36365.21920",
       "match_event_id": 16109520,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -227,7 +252,7 @@
       "match": "CA Barracas Central Reserve - CA Banfield",
       "match_market_id": "36361.15993",
       "match_event_id": 16102995,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -236,7 +261,7 @@
       "match": "CA Huracan - CA Central Cordoba SE Reserve",
       "match_market_id": "36361.16005",
       "match_event_id": 16102746,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -245,7 +270,7 @@
       "match": "CA Los Andes Reserve - Csd Tristan Suarez Reserve",
       "match_market_id": "36365.17757",
       "match_event_id": 16108504,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -254,7 +279,7 @@
       "match": "Copenaghen - Nordsjaelland",
       "match_market_id": "36361.2764",
       "match_event_id": 16073678,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -263,7 +288,7 @@
       "match": "Defensa Y Justicia Reserve - Independiente Rivadavia de Mendoza Reserve",
       "match_market_id": "36364.36357",
       "match_event_id": 16103415,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -272,7 +297,7 @@
       "match": "Diriyah Club - Al-Qadisiyah",
       "match_market_id": "36361.5821",
       "match_event_id": 16091536,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "REFERENCE_PREVIOUS_XI",
       "source": "FotMob",
       "fotmob_match_id": 5970119
@@ -281,7 +306,7 @@
       "match": "Duhok - Air Force Club",
       "match_market_id": "36365.7411",
       "match_event_id": 16107230,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -290,7 +315,7 @@
       "match": "Es Setif - Ben Aknoun",
       "match_market_id": "36361.27828",
       "match_event_id": 16090413,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5989698
@@ -299,7 +324,7 @@
       "match": "Gimnasia de Mendoza Reserve - Rosario Central Reserve",
       "match_market_id": "36364.34290",
       "match_event_id": 16103115,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -308,7 +333,7 @@
       "match": "Novara - Livorno",
       "match_market_id": "36363.34201",
       "match_event_id": 16099475,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -317,7 +342,7 @@
       "match": "Panathinaikos - Niki Volou",
       "match_market_id": "36363.24030",
       "match_event_id": 16089753,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 6106043
@@ -326,7 +351,7 @@
       "match": "Rentistas - Colonia",
       "match_market_id": "36364.9855",
       "match_event_id": 16098834,
-      "minutes_to_start": 71.4,
+      "minutes_to_start": 61.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
