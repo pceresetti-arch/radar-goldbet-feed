@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-03T17:28:21.260509+00:00",
+  "generated_at": "2026-09-03T17:33:42.475908+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 10.1,
-    "tactical": 9.6,
-    "betflag_fixture_feed": 6.0,
-    "betflag_standard_source": 6.2,
-    "betflag_player_source": 6.1,
-    "player_context": 0.6
+    "lineups": 15.5,
+    "tactical": 15.0,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.5,
+    "player_context": 5.9
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,81 +36,10 @@
   "match_count": 34,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 30,
-    "READY_DEEP_ANALYSIS": 4
+    "STALE_LINEUP_FEED": 4
   },
-  "ready_count": 4,
-  "ready_matches": [
-    {
-      "match_market_id": "36361.22829",
-      "match": "Gyor - Ferencváros",
-      "league": "OTP Bank Liga",
-      "start_time": "03-09-2026 19:30",
-      "minutes_to_start": 11.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 34,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36341.3127",
-      "match": "Hapoel Tel Aviv FC - Beitar Gerusalemme",
-      "league": "Premier League",
-      "start_time": "03-09-2026 19:30",
-      "minutes_to_start": 11.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 29,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36361.5821",
-      "match": "Diriyah Club - Al-Qadisiyah",
-      "league": "Premier League",
-      "start_time": "03-09-2026 20:00",
-      "minutes_to_start": 41.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "FULL_WITH_PLAYER_CONTEXT_EXACT_BETFLAG_PRICE_REQUIRED",
-      "betflag_standard_count": 37,
-      "player_count": 54,
-      "player_quote_count": 256,
-      "player_lane_ready": true,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    },
-    {
-      "match_market_id": "36361.3218",
-      "match": "Lugano - Servette FC",
-      "league": "Super League",
-      "start_time": "03-09-2026 20:30",
-      "minutes_to_start": 71.8,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "betflag_standard_count": 38,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_lane_ready": false,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-    }
-  ],
-  "player_lane_ready_count": 1,
-  "player_lane_ready_matches": [
-    {
-      "match_market_id": "36361.5821",
-      "match": "Diriyah Club - Al-Qadisiyah",
-      "league": "Premier League",
-      "start_time": "03-09-2026 20:00",
-      "minutes_to_start": 41.8,
-      "player_lane_ready": true,
-      "player_market_bet_ready": true,
-      "player_count": 54,
-      "player_quote_count": 256,
-      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
-      "player_exact_price_required_at_decision_time": true
-    }
-  ]
+  "ready_count": 0,
+  "ready_matches": [],
+  "player_lane_ready_count": 0,
+  "player_lane_ready_matches": []
 }
