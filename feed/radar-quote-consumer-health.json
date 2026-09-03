@@ -1,23 +1,27 @@
 {
-  "schema_version": "radar-quote-consumer-health-v1",
-  "generated_at": "2026-09-03T09:29:32.811954+00:00",
+  "schema_version": "radar-quote-consumer-health-v2",
+  "generated_at": "2026-09-03T09:41:18.848990+00:00",
   "status": "READY",
   "current_quote_status": "CURRENT_BETFLAG_RECUPERATA",
   "failure_stage": null,
   "read_contract": {
     "repository": "pceresetti-arch/radar-goldbet-feed",
     "branch": "main",
+    "required_source_class": "BETFLAG_AAMS_DIRECT",
     "index": "feed/betflag-fixtures-index.json",
-    "resolution": "read index -> use fixture.file exactly -> read fixture -> use current prices"
+    "resolution": "read BetFlag index -> use fixture.file exactly -> read fixture -> use BetFlag current prices only",
+    "external_price_fallback_allowed": false
   },
   "fixture_query": null,
-  "validated_fixture_count": 94,
+  "validated_fixture_count": 97,
   "fixtures": [
     {
       "match": "Avia Swidnik - Wieczysta Krakow",
       "file": "feed/betflag-fixtures/avia-swidnik-wieczysta-krakow.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -27,6 +31,19 @@
       "file": "feed/betflag-fixtures/fc-guria-lanchkhuti-fc-gonio.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
+      "price_gate_fixture_eligible": true,
+      "standard_count": 8,
+      "player_quote_count": 0
+    },
+    {
+      "match": "FC Kolkheti Khobi - Didube 2014",
+      "file": "feed/betflag-fixtures/fc-kolkheti-khobi-didube-2014.json",
+      "identity_consistent": true,
+      "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 8,
       "player_quote_count": 0
@@ -36,6 +53,8 @@
       "file": "feed/betflag-fixtures/fc-saburtalo-tiblisi-ii-dinamo-2-tbilisi.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 8,
       "player_quote_count": 0
@@ -45,6 +64,19 @@
       "file": "feed/betflag-fixtures/iberia-2010-tbilisi-fc-irao-tbilisi.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
+      "price_gate_fixture_eligible": true,
+      "standard_count": 8,
+      "player_quote_count": 0
+    },
+    {
+      "match": "Margveti - Merani Tbilisi",
+      "file": "feed/betflag-fixtures/margveti-merani-tbilisi.json",
+      "identity_consistent": true,
+      "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 8,
       "player_quote_count": 0
@@ -54,6 +86,8 @@
       "file": "feed/betflag-fixtures/baku-sporting-karvan-yevlakh.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -63,6 +97,8 @@
       "file": "feed/betflag-fixtures/kataka-fc-bul-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 16,
       "player_quote_count": 0
@@ -72,8 +108,10 @@
       "file": "feed/betflag-fixtures/khankendi-fk-sabayil.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
-      "standard_count": 29,
+      "standard_count": 26,
       "player_quote_count": 0
     },
     {
@@ -81,6 +119,8 @@
       "file": "feed/betflag-fixtures/moik-baku-shahdagh-gusar.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -90,6 +130,8 @@
       "file": "feed/betflag-fixtures/dayrout-telecom-egypt.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 24,
       "player_quote_count": 0
@@ -99,6 +141,8 @@
       "file": "feed/betflag-fixtures/el-mansurah-kahrabaa-ismailia.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 24,
       "player_quote_count": 0
@@ -108,6 +152,8 @@
       "file": "feed/betflag-fixtures/el-sekka-el-hadid-el-zayat.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 24,
       "player_quote_count": 0
@@ -117,6 +163,8 @@
       "file": "feed/betflag-fixtures/haras-el-hodood-el-entag.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 21,
       "player_quote_count": 0
@@ -126,6 +174,8 @@
       "file": "feed/betflag-fixtures/la-viena-fc-team-fc-cairo.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 24,
       "player_quote_count": 0
@@ -135,6 +185,8 @@
       "file": "feed/betflag-fixtures/al-ahli-doha-qatar-sc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 32,
       "player_quote_count": 0
@@ -144,6 +196,8 @@
       "file": "feed/betflag-fixtures/ca-estudiantes-reserve-club-almagro-reserves.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 21,
       "player_quote_count": 0
@@ -153,6 +207,8 @@
       "file": "feed/betflag-fixtures/cska-sofia-ii-spartak-pleven.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -162,6 +218,8 @@
       "file": "feed/betflag-fixtures/fk-agmk-xorazm-urganch.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 19,
       "player_quote_count": 0
@@ -171,6 +229,8 @@
       "file": "feed/betflag-fixtures/igdir-fk-manisa-buyuksehir-belediyespor.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 29,
       "player_quote_count": 0
@@ -180,8 +240,10 @@
       "file": "feed/betflag-fixtures/isloch-minsk-raion-bate-borisov.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
-      "standard_count": 26,
+      "standard_count": 28,
       "player_quote_count": 0
     },
     {
@@ -189,6 +251,8 @@
       "file": "feed/betflag-fixtures/lok-tbilisi-fc-varketili.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 8,
       "player_quote_count": 0
@@ -198,6 +262,8 @@
       "file": "feed/betflag-fixtures/maccabi-ironi-kiryat-malakhi-h-mahane-yehuda.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 24,
       "player_quote_count": 0
@@ -207,6 +273,8 @@
       "file": "feed/betflag-fixtures/vihren-sandanski-sfc-etar-veliko-tarnovo.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -216,6 +284,8 @@
       "file": "feed/betflag-fixtures/siauliai-kauno.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -225,6 +295,8 @@
       "file": "feed/betflag-fixtures/acs-fotbal-club-bacau-uni-craiova.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 21,
       "player_quote_count": 0
@@ -234,6 +306,8 @@
       "file": "feed/betflag-fixtures/shimshon-tel-aviv-ironi-beit-shemesh.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 22,
       "player_quote_count": 0
@@ -243,6 +317,8 @@
       "file": "feed/betflag-fixtures/as-nordia-jerusalem-sport-club-dimona.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 19,
       "player_quote_count": 0
@@ -252,6 +328,8 @@
       "file": "feed/betflag-fixtures/agropecuario-reserves-temperley-reserve.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 19,
       "player_quote_count": 0
@@ -261,6 +339,8 @@
       "file": "feed/betflag-fixtures/cittadella-renate.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -270,6 +350,8 @@
       "file": "feed/betflag-fixtures/iveria-khashuri-wit-georgia.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 8,
       "player_quote_count": 0
@@ -279,6 +361,8 @@
       "file": "feed/betflag-fixtures/atlantis-pepo.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 29,
       "player_quote_count": 0
@@ -288,6 +372,8 @@
       "file": "feed/betflag-fixtures/tychy-lodz.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -297,6 +383,8 @@
       "file": "feed/betflag-fixtures/al-mosul-sc-al-zawraa.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 16,
       "player_quote_count": 0
@@ -306,6 +394,8 @@
       "file": "feed/betflag-fixtures/diyala-fc-al-karma.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -315,6 +405,8 @@
       "file": "feed/betflag-fixtures/maccabi-yavne-hapoel-azor-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 21,
       "player_quote_count": 0
@@ -324,6 +416,8 @@
       "file": "feed/betflag-fixtures/al-fayha-fc-al-khlood.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 180
@@ -333,6 +427,8 @@
       "file": "feed/betflag-fixtures/al-baqaa-doqarah-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -342,6 +438,8 @@
       "file": "feed/betflag-fixtures/alashkert-fc-van-charentsavan.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -351,6 +449,8 @@
       "file": "feed/betflag-fixtures/eif-akademi-leppa.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -360,6 +460,8 @@
       "file": "feed/betflag-fixtures/fk-banga-gargz-fk-panevezys.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -369,6 +471,8 @@
       "file": "feed/betflag-fixtures/hifk-hps.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 29,
       "player_quote_count": 0
@@ -378,6 +482,8 @@
       "file": "feed/betflag-fixtures/lokomotiv-gorna-oryahovitsa-pfc-dobrudzha-dobrich.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -387,6 +493,8 @@
       "file": "feed/betflag-fixtures/palermo-mantova.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 38,
       "player_quote_count": 1411
@@ -396,6 +504,8 @@
       "file": "feed/betflag-fixtures/rks-rakow-czestochowa-gornik-zabrze.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 0
@@ -405,6 +515,8 @@
       "file": "feed/betflag-fixtures/rigas-futbola-riga-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -414,6 +526,8 @@
       "file": "feed/betflag-fixtures/thisted-fc-soenderjyske.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 32,
       "player_quote_count": 0
@@ -423,6 +537,8 @@
       "file": "feed/betflag-fixtures/viimsi-jk-fc-tallinn.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 29,
       "player_quote_count": 0
@@ -432,6 +548,8 @@
       "file": "feed/betflag-fixtures/al-sailiya-al-arabi-doha.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 32,
       "player_quote_count": 0
@@ -441,6 +559,8 @@
       "file": "feed/betflag-fixtures/neom-sc-al-khaleej-saihat-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 192
@@ -450,6 +570,8 @@
       "file": "feed/betflag-fixtures/al-ahly-smouha.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -459,6 +581,8 @@
       "file": "feed/betflag-fixtures/bodrum-belediyesi-bodrumspor-esenler-erokspor.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 0
@@ -468,6 +592,8 @@
       "file": "feed/betflag-fixtures/bursaspor-istanbulspor-as.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 29,
       "player_quote_count": 0
@@ -477,6 +603,8 @@
       "file": "feed/betflag-fixtures/express-fc-kampala-capital-city-authority-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 16,
       "player_quote_count": 0
@@ -486,6 +614,8 @@
       "file": "feed/betflag-fixtures/mjallby-djurgarden.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 38,
       "player_quote_count": 276
@@ -495,6 +625,8 @@
       "file": "feed/betflag-fixtures/ppj-lauttasaari-malmi.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -504,6 +636,8 @@
       "file": "feed/betflag-fixtures/stara-zagora-montana.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -513,6 +647,8 @@
       "file": "feed/betflag-fixtures/tups-fc-lahti-69.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -522,6 +658,8 @@
       "file": "feed/betflag-fixtures/hoogee-lohjan.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 14,
       "player_quote_count": 0
@@ -531,6 +669,8 @@
       "file": "feed/betflag-fixtures/gyor-ferencvaros.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 0
@@ -540,6 +680,8 @@
       "file": "feed/betflag-fixtures/hapoel-tel-aviv-fc-beitar-gerusalemme.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 32,
       "player_quote_count": 0
@@ -549,6 +691,8 @@
       "file": "feed/betflag-fixtures/pol-timisoara-rapid-bucuresti.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 21,
       "player_quote_count": 0
@@ -558,6 +702,8 @@
       "file": "feed/betflag-fixtures/al-kahrabaa-sc-al-gharafa.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 16,
       "player_quote_count": 0
@@ -567,6 +713,8 @@
       "file": "feed/betflag-fixtures/albion-progreso.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -576,6 +724,8 @@
       "file": "feed/betflag-fixtures/ca-barracas-central-reserve-ca-banfield.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 24,
       "player_quote_count": 0
@@ -585,6 +735,8 @@
       "file": "feed/betflag-fixtures/ca-huracan-ca-central-cordoba-se-reserve.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 19,
       "player_quote_count": 0
@@ -594,6 +746,8 @@
       "file": "feed/betflag-fixtures/copenaghen-nordsjaelland.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 41,
       "player_quote_count": 376
@@ -603,6 +757,8 @@
       "file": "feed/betflag-fixtures/defensa-y-justicia-reserve-independiente-rivadavia-de-mendoza-reserve.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 22,
       "player_quote_count": 0
@@ -612,6 +768,8 @@
       "file": "feed/betflag-fixtures/diriyah-club-al-qadisiyah.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 194
@@ -621,6 +779,8 @@
       "file": "feed/betflag-fixtures/duhok-air-force-club.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 16,
       "player_quote_count": 0
@@ -630,6 +790,8 @@
       "file": "feed/betflag-fixtures/es-setif-ben-aknoun.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -639,6 +801,8 @@
       "file": "feed/betflag-fixtures/gimnasia-de-mendoza-reserve-rosario-central-reserve.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 22,
       "player_quote_count": 0
@@ -648,6 +812,8 @@
       "file": "feed/betflag-fixtures/novara-livorno.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -657,6 +823,8 @@
       "file": "feed/betflag-fixtures/panathinaikos-niki-volou.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 29,
       "player_quote_count": 0
@@ -666,6 +834,8 @@
       "file": "feed/betflag-fixtures/rentistas-colonia.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -675,6 +845,8 @@
       "file": "feed/betflag-fixtures/anderlecht-kortrijk.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 41,
       "player_quote_count": 306
@@ -684,6 +856,8 @@
       "file": "feed/betflag-fixtures/basilea-1893-sion.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 38,
       "player_quote_count": 0
@@ -693,6 +867,8 @@
       "file": "feed/betflag-fixtures/gent-oud-heverlee-leuven.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 38,
       "player_quote_count": 264
@@ -702,6 +878,8 @@
       "file": "feed/betflag-fixtures/lech-poznan-jagiellonia.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 0
@@ -711,6 +889,8 @@
       "file": "feed/betflag-fixtures/lugano-servette-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 38,
       "player_quote_count": 0
@@ -720,6 +900,8 @@
       "file": "feed/betflag-fixtures/river-plate-nacional.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -729,6 +911,8 @@
       "file": "feed/betflag-fixtures/slask-wroclaw-pogon-szczecin.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 26,
       "player_quote_count": 0
@@ -738,6 +922,8 @@
       "file": "feed/betflag-fixtures/hibernian-fc-heart-of-midlothian-fc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 38,
       "player_quote_count": 324
@@ -747,6 +933,8 @@
       "file": "feed/betflag-fixtures/rouen-valenciennes.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -756,6 +944,8 @@
       "file": "feed/betflag-fixtures/tolosa-fc-lille.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 41,
       "player_quote_count": 1121
@@ -765,6 +955,8 @@
       "file": "feed/betflag-fixtures/cagliari-hellas-verona.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 41,
       "player_quote_count": 1467
@@ -774,6 +966,8 @@
       "file": "feed/betflag-fixtures/real-sociedad-celta-vigo.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 41,
       "player_quote_count": 1367
@@ -783,6 +977,8 @@
       "file": "feed/betflag-fixtures/trento-desenzano.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -792,6 +988,8 @@
       "file": "feed/betflag-fixtures/universite-catholique-d-equateur-sd-aucas.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -801,6 +999,8 @@
       "file": "feed/betflag-fixtures/ellidi-hamar.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 21,
       "player_quote_count": 0
@@ -810,6 +1010,8 @@
       "file": "feed/betflag-fixtures/capiata-club-3-de-noviembre.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
       "player_quote_count": 0
@@ -819,6 +1021,8 @@
       "file": "feed/betflag-fixtures/rayo-zuliano-carabobo.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 0
@@ -828,6 +1032,8 @@
       "file": "feed/betflag-fixtures/academia-anzoategui-fc-monagas.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 34,
       "player_quote_count": 0
@@ -837,8 +1043,21 @@
       "file": "feed/betflag-fixtures/js-el-biar-olympique-akbou.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 28,
+      "player_quote_count": 0
+    },
+    {
+      "match": "CA Vinotinto - San Antonio FC",
+      "file": "feed/betflag-fixtures/ca-vinotinto-san-antonio-fc.json",
+      "identity_consistent": true,
+      "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
+      "price_gate_fixture_eligible": true,
+      "standard_count": 21,
       "player_quote_count": 0
     },
     {
@@ -846,6 +1065,8 @@
       "file": "feed/betflag-fixtures/cd-recoleta-cerro-porteno.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
@@ -855,15 +1076,19 @@
       "file": "feed/betflag-fixtures/club-leones-del-norte-orense-sc.json",
       "identity_consistent": true,
       "source_healthy": true,
+      "source_class": "BETFLAG_AAMS_DIRECT",
+      "source_provenance_eligible": true,
       "price_gate_fixture_eligible": true,
       "standard_count": 31,
       "player_quote_count": 0
     }
   ],
   "failures": [],
-  "index_generated_at": "2026-09-03T09:29:32.525776+00:00",
+  "index_generated_at": "2026-09-03T09:41:18.653074+00:00",
   "index_age_minutes": 0.0,
   "index_source_healthy": true,
   "index_operationally_usable": true,
-  "index_fixture_count": 94
+  "index_fixture_count": 97,
+  "index_source_class": "BETFLAG_AAMS_DIRECT",
+  "price_gate_source_eligible": true
 }
