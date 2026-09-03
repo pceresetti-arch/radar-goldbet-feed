@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T00:29:10.740812+00:00",
+  "generated_at": "2026-09-03T00:49:35.251351+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,10 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 7,
+  "target_count": 3,
   "status_counts": {
-    "SOURCE_CONFIRMED": 5,
-    "NOT_AVAILABLE": 1,
-    "REFERENCE_PREVIOUS_XI": 1
+    "SOURCE_CONFIRMED": 2,
+    "NOT_AVAILABLE": 1
   },
   "schedule_stats": [
     {
@@ -24,12 +23,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-03T00:29:10.740812+00:00",
+    "generated_at": "2026-09-03T00:49:35.251351+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 6,
+    "target_count": 3,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -43,31 +42,15 @@
     "changes": [
       {
         "match": "Deportivo Toluca - Club Leon",
-        "minutes_to_start": 30.8,
+        "minutes_to_start": 10.4,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
         "xi_changed": true
       },
       {
-        "match": "Deportes Limache - Nublense",
-        "minutes_to_start": 0.8,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Vitoria - CR Vasco da Gama RJ",
-        "minutes_to_start": 0.8,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Santos SP - Palmeiras",
-        "minutes_to_start": 0.8,
+        "match": "Independiente Santa Fe - Millonarios",
+        "minutes_to_start": 35.4,
         "before_official": true,
         "after_status": "SOURCE_CONFIRMED",
         "source": "FotMob",
@@ -77,61 +60,13 @@
   },
   "matches": [
     {
-      "match": "Velez Sarsfield - Boca Juniors",
-      "start_time": "03-09-2026 02:15",
-      "league": "Coppa Argentina",
-      "minutes_to_start": -14.2,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.16147",
-      "confirmed_at": "2026-09-03T00:29:08.163503+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Deportes Limache - Nublense",
-      "start_time": "03-09-2026 02:30",
-      "league": "Primera Division",
-      "minutes_to_start": 0.8,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.16886",
-      "confirmed_at": "2026-09-03T00:29:10.740812+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Santos SP - Palmeiras",
-      "start_time": "03-09-2026 02:30",
-      "league": "Coppa Brasiliana",
-      "minutes_to_start": 0.8,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.16922",
-      "confirmed_at": "2026-09-03T00:29:10.740812+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Vitoria - CR Vasco da Gama RJ",
-      "start_time": "03-09-2026 02:30",
-      "league": "Coppa Brasiliana",
-      "minutes_to_start": 0.8,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.32670",
-      "confirmed_at": "2026-09-03T00:29:10.740812+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
       "match": "Deportivo Toluca - Club Leon",
       "start_time": "03-09-2026 03:00",
       "league": "Leagues Cup",
-      "minutes_to_start": 30.8,
+      "minutes_to_start": 10.4,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.30372",
-      "confirmed_at": "2026-09-03T00:29:10.740812+00:00",
+      "confirmed_at": "2026-09-03T00:49:35.251351+00:00",
       "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
@@ -140,7 +75,7 @@
       "match": "Esteli - San Marcos FC",
       "start_time": "03-09-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 30.8,
+      "minutes_to_start": 10.4,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.3502",
       "confirmed_at": null,
@@ -152,11 +87,11 @@
       "match": "Independiente Santa Fe - Millonarios",
       "start_time": "03-09-2026 03:25",
       "league": "Primera A",
-      "minutes_to_start": 55.8,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 35.4,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.3433",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-09-03T00:49:35.251351+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     }
