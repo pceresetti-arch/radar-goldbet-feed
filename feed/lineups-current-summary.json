@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T18:25:34.919306+00:00",
+  "generated_at": "2026-09-03T18:48:30.687691+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 19,
+  "target_count": 13,
   "status_counts": {
-    "SOURCE_CONFIRMED": 8,
-    "NOT_AVAILABLE": 9,
+    "NOT_AVAILABLE": 7,
     "LINEUP_PRESENT_UNCONFIRMED": 1,
+    "SOURCE_CONFIRMED": 4,
     "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
@@ -25,12 +25,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-03T18:25:34.919306+00:00",
+    "generated_at": "2026-09-03T18:48:30.687691+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 16,
+    "target_count": 9,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -41,163 +41,28 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Cagliari - Hellas Verona",
-        "minutes_to_start": 34.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Real Sociedad - Celta Vigo",
-        "minutes_to_start": 34.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Gent - Oud-Heverlee Leuven",
-        "minutes_to_start": 4.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Lech Poznan - Jagiellonia",
-        "minutes_to_start": 4.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Anderlecht - Kortrijk",
-        "minutes_to_start": 4.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Rayo Zuliano - Carabobo",
-        "minutes_to_start": 64.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Lugano - Servette FC",
-        "minutes_to_start": 4.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Tolosa FC - Lille",
-        "minutes_to_start": 19.4,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Cagliari - Hellas Verona",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Real Sociedad - Celta Vigo",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Rayo Zuliano - Carabobo",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
-    {
-      "match": "Anderlecht - Kortrijk",
-      "start_time": "03-09-2026 20:30",
-      "league": "Pro League",
-      "minutes_to_start": 4.4,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.7214",
-      "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Basilea 1893 - Sion",
-      "start_time": "03-09-2026 20:30",
-      "league": "Super League",
-      "minutes_to_start": 4.4,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.3220",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Gent - Oud-Heverlee Leuven",
-      "start_time": "03-09-2026 20:30",
-      "league": "Pro League",
-      "minutes_to_start": 4.4,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.17887",
-      "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Lech Poznan - Jagiellonia",
-      "start_time": "03-09-2026 20:30",
-      "league": "Ekstraklasa",
-      "minutes_to_start": 4.4,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.17742",
-      "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Lugano - Servette FC",
-      "start_time": "03-09-2026 20:30",
-      "league": "Super League",
-      "minutes_to_start": 4.4,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.3218",
-      "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "River Plate - Nacional",
-      "start_time": "03-09-2026 20:30",
-      "league": "Coppa",
-      "minutes_to_start": 4.4,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36364.9862",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Slask Wroclaw - Pogon Szczecin",
-      "start_time": "03-09-2026 20:30",
-      "league": "Coppa",
-      "minutes_to_start": 4.4,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36364.18109",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Hibernian FC - Heart of Midlothian FC",
       "start_time": "03-09-2026 20:45",
       "league": "Premiership",
-      "minutes_to_start": 19.4,
+      "minutes_to_start": -3.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.3240",
       "confirmed_at": null,
@@ -209,7 +74,7 @@
       "match": "Rouen - Valenciennes",
       "start_time": "03-09-2026 20:45",
       "league": "National",
-      "minutes_to_start": 19.4,
+      "minutes_to_start": -3.5,
       "status": "LINEUP_PRESENT_UNCONFIRMED",
       "match_market_id": "36361.4060",
       "confirmed_at": null,
@@ -221,11 +86,11 @@
       "match": "Tolosa FC - Lille",
       "start_time": "03-09-2026 20:45",
       "league": "Ligue 1",
-      "minutes_to_start": 19.4,
+      "minutes_to_start": -3.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.2943",
-      "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-09-03T18:03:29.617321+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -233,11 +98,11 @@
       "match": "Cagliari - Hellas Verona",
       "start_time": "03-09-2026 21:00",
       "league": "Coppa Italia",
-      "minutes_to_start": 34.4,
+      "minutes_to_start": 11.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.17918",
       "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -245,11 +110,11 @@
       "match": "Real Sociedad - Celta Vigo",
       "start_time": "03-09-2026 21:00",
       "league": "Liga",
-      "minutes_to_start": 34.4,
+      "minutes_to_start": 11.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36381.2594",
-      "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-09-03T18:03:29.617321+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -257,7 +122,7 @@
       "match": "Trento - Desenzano",
       "start_time": "03-09-2026 21:00",
       "league": "Coppa Italia Serie C",
-      "minutes_to_start": 34.4,
+      "minutes_to_start": 11.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.38149",
       "confirmed_at": null,
@@ -269,7 +134,7 @@
       "match": "Université catholique d'Equateur - SD Aucas",
       "start_time": "03-09-2026 21:00",
       "league": "Serie A",
-      "minutes_to_start": 34.4,
+      "minutes_to_start": 11.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.1252",
       "confirmed_at": null,
@@ -281,7 +146,7 @@
       "match": "Capiata - Club 3 De Noviembre",
       "start_time": "03-09-2026 21:30",
       "league": "Segunda Division",
-      "minutes_to_start": 64.4,
+      "minutes_to_start": 41.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.6694",
       "confirmed_at": null,
@@ -293,11 +158,11 @@
       "match": "Rayo Zuliano - Carabobo",
       "start_time": "03-09-2026 21:30",
       "league": "Primera Division",
-      "minutes_to_start": 64.4,
+      "minutes_to_start": 41.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36364.24451",
       "confirmed_at": "2026-09-03T18:25:34.919306+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -305,7 +170,7 @@
       "match": "Academia Anzoategui FC - Monagas",
       "start_time": "03-09-2026 22:00",
       "league": "Primera Division",
-      "minutes_to_start": 94.4,
+      "minutes_to_start": 71.5,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36364.24465",
       "confirmed_at": null,
@@ -317,7 +182,7 @@
       "match": "Hafnarfjordur - KFR",
       "start_time": "03-09-2026 22:00",
       "league": "4 Deild",
-      "minutes_to_start": 94.4,
+      "minutes_to_start": 71.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.15725",
       "confirmed_at": null,
@@ -329,12 +194,24 @@
       "match": "Js El Biar - Olympique Akbou",
       "start_time": "03-09-2026 22:00",
       "league": "Ligue 1",
-      "minutes_to_start": 94.4,
+      "minutes_to_start": 71.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.60188",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "CA Vinotinto - San Antonio FC",
+      "start_time": "03-09-2026 22:30",
+      "league": "Serie B",
+      "minutes_to_start": 101.5,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36363.30058",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
