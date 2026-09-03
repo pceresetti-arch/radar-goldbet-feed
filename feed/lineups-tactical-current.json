@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-03T19:29:45.581849+00:00",
-  "source_lineup_generated_at": "2026-09-03T19:29:19.852387+00:00",
+  "generated_at": "2026-09-03T19:45:21.635334+00:00",
+  "source_lineup_generated_at": "2026-09-03T19:44:54.694246+00:00",
   "source_strategy": "FotMob XI + provider tactical layout; deterministic role/zone enrichment",
   "method_version": "tactical-position-v1",
   "match_count": 2,
@@ -15,7 +15,7 @@
       "start_time": "03-09-2026 21:30",
       "start_utc": "2026-09-03T19:30:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 0.7,
+      "minutes_to_start": -14.9,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -40,8 +40,8 @@
           "team_id": 1267963,
           "team_name": "Rayo Zuliano",
           "side": "HOME",
-          "listed_formation": "4-3-3",
-          "detected_shape": "4-3-3",
+          "listed_formation": "4-4-2",
+          "detected_shape": "4-4-2",
           "shape_match": true,
           "coordinate_coverage": 1.0,
           "starters": [
@@ -50,7 +50,7 @@
               "id": 1031545,
               "shirt_number": "40",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -79,8 +79,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -296,36 +296,36 @@
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
-              "name": "Luis Dugarte",
-              "id": 1739952,
-              "shirt_number": "31",
-              "position_id": 73,
+              "name": "Jean Sánchez",
+              "id": 1514675,
+              "shirt_number": "24",
+              "position_id": 72,
               "usual_position_id": 2,
               "horizontal_layout": {
                 "x": 0.613,
-                "y": 0.79,
+                "y": 0.875,
                 "height": 0.25,
                 "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.21,
+                "x": 0.125,
                 "y": 0.613,
                 "height": 0.2,
-                "width": 0.29
+                "width": 0.25
               },
-              "tactical_x": 0.21,
+              "tactical_x": 0.125,
               "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
               "tactical_side": "LEFT",
-              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_lane": "LEFT_WIDE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.21,
+              "common_pitch_x": 0.125,
               "common_pitch_y": 0.613,
               "formation_line": 2,
-              "line_size": 3,
+              "line_size": 4,
               "line_slot": 1,
-              "role_code": "LCM",
-              "role_family": "CM",
+              "role_code": "LM",
+              "role_family": "WM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
@@ -334,14 +334,67 @@
                   "id": 1356175,
                   "role_code": "RB",
                   "role_family": "FB",
-                  "zone_distance": 0.1186
+                  "zone_distance": 0.03
                 },
+                {
+                  "name": "Yohandry Orozco",
+                  "id": 108461,
+                  "role_code": "RM",
+                  "role_family": "WM",
+                  "zone_distance": 0.226
+                }
+              ],
+              "usual_position_group": "MID",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
+            },
+            {
+              "name": "Deyson Copete",
+              "id": 1331448,
+              "shirt_number": "66",
+              "position_id": 74,
+              "usual_position_id": 2,
+              "horizontal_layout": {
+                "x": 0.613,
+                "y": 0.625,
+                "height": 0.25,
+                "width": 0.257
+              },
+              "vertical_layout": {
+                "x": 0.375,
+                "y": 0.613,
+                "height": 0.2,
+                "width": 0.25
+              },
+              "tactical_x": 0.375,
+              "tactical_y": 0.613,
+              "coordinate_source": "vertical_layout",
+              "tactical_side": "CENTRE",
+              "tactical_lane": "LEFT_HALFSPACE",
+              "tactical_depth": "MIDFIELD_LINE",
+              "common_pitch_x": 0.375,
+              "common_pitch_y": 0.613,
+              "formation_line": 2,
+              "line_size": 4,
+              "line_slot": 2,
+              "role_code": "LCM",
+              "role_family": "CM",
+              "role_inference_confidence": 0.94,
+              "role_source": "provider_layout+listed_formation",
+              "direct_opponents": [
                 {
                   "name": "Jean Fuentes",
                   "id": 734310,
                   "role_code": "RCB",
                   "role_family": "CB",
-                  "zone_distance": 0.2248
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Matías Núñez",
+                  "id": 1211302,
+                  "role_code": "RCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
@@ -352,32 +405,32 @@
               "name": "Jorge Gómez",
               "id": 1562162,
               "shirt_number": "26",
-              "position_id": 75,
+              "position_id": 76,
               "usual_position_id": 2,
               "horizontal_layout": {
                 "x": 0.613,
-                "y": 0.5,
+                "y": 0.375,
                 "height": 0.25,
                 "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.5,
+                "x": 0.625,
                 "y": 0.613,
                 "height": 0.2,
-                "width": 0.29
+                "width": 0.25
               },
-              "tactical_x": 0.5,
+              "tactical_x": 0.625,
               "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
               "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
+              "tactical_lane": "RIGHT_HALFSPACE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.5,
+              "common_pitch_x": 0.625,
               "common_pitch_y": 0.613,
               "formation_line": 2,
-              "line_size": 3,
-              "line_slot": 2,
-              "role_code": "CM",
+              "line_size": 4,
+              "line_slot": 3,
+              "role_code": "RCM",
               "role_family": "CM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
@@ -387,14 +440,14 @@
                   "id": 1344644,
                   "role_code": "LCB",
                   "role_family": "CB",
-                  "zone_distance": 0.1714
+                  "zone_distance": 0.03
                 },
                 {
-                  "name": "Jean Fuentes",
-                  "id": 734310,
-                  "role_code": "RCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.1714
+                  "name": "Sebastián Mendoza",
+                  "id": 1732679,
+                  "role_code": "LCM",
+                  "role_family": "CM",
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
@@ -402,36 +455,36 @@
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
-              "name": "Deyson Copete",
-              "id": 1331448,
-              "shirt_number": "66",
-              "position_id": 77,
+              "name": "Deiber Vásquez",
+              "id": 2037313,
+              "shirt_number": "7",
+              "position_id": 78,
               "usual_position_id": 2,
               "horizontal_layout": {
                 "x": 0.613,
-                "y": 0.21,
+                "y": 0.125,
                 "height": 0.25,
                 "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.79,
+                "x": 0.875,
                 "y": 0.613,
                 "height": 0.2,
-                "width": 0.29
+                "width": 0.25
               },
-              "tactical_x": 0.79,
+              "tactical_x": 0.875,
               "tactical_y": 0.613,
               "coordinate_source": "vertical_layout",
               "tactical_side": "RIGHT",
-              "tactical_lane": "RIGHT_HALFSPACE",
+              "tactical_lane": "RIGHT_WIDE",
               "tactical_depth": "MIDFIELD_LINE",
-              "common_pitch_x": 0.79,
+              "common_pitch_x": 0.875,
               "common_pitch_y": 0.613,
               "formation_line": 2,
-              "line_size": 3,
-              "line_slot": 3,
-              "role_code": "RCM",
-              "role_family": "CM",
+              "line_size": 4,
+              "line_slot": 4,
+              "role_code": "RM",
+              "role_family": "WM",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
@@ -440,103 +493,103 @@
                   "id": 1942774,
                   "role_code": "LB",
                   "role_family": "FB",
-                  "zone_distance": 0.1186
+                  "zone_distance": 0.03
                 },
                 {
-                  "name": "Jonathan Bilbao",
-                  "id": 1344644,
-                  "role_code": "LCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.2248
+                  "name": "Dimas Meza",
+                  "id": 845942,
+                  "role_code": "LM",
+                  "role_family": "WM",
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
-              "role_vs_usual": "ALIGNED",
+              "role_vs_usual": "FLEX_ROLE_ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
-              "name": "Jean Sánchez",
-              "id": 1514675,
-              "shirt_number": "24",
-              "position_id": 103,
+              "name": "Luis Dugarte",
+              "id": 1739952,
+              "shirt_number": "31",
+              "position_id": 104,
               "usual_position_id": 3,
               "horizontal_layout": {
                 "x": 0.87,
-                "y": 0.79,
+                "y": 0.7,
                 "height": 0.25,
                 "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.21,
+                "x": 0.3,
                 "y": 0.87,
                 "height": 0.2,
-                "width": 0.29
+                "width": 0.4
               },
-              "tactical_x": 0.21,
+              "tactical_x": 0.3,
               "tactical_y": 0.87,
               "coordinate_source": "vertical_layout",
               "tactical_side": "LEFT",
               "tactical_lane": "LEFT_HALFSPACE",
               "tactical_depth": "ATTACKING_LINE",
-              "common_pitch_x": 0.21,
+              "common_pitch_x": 0.3,
               "common_pitch_y": 0.87,
               "formation_line": 3,
-              "line_size": 3,
+              "line_size": 2,
               "line_slot": 1,
-              "role_code": "LW",
-              "role_family": "W",
+              "role_code": "LST",
+              "role_family": "ST",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
-                {
-                  "name": "Juan Pérez",
-                  "id": 1356175,
-                  "role_code": "RB",
-                  "role_family": "FB",
-                  "zone_distance": 0.2544
-                },
                 {
                   "name": "Jean Fuentes",
                   "id": 734310,
                   "role_code": "RCB",
                   "role_family": "CB",
-                  "zone_distance": 0.318
+                  "zone_distance": 0.2486
+                },
+                {
+                  "name": "Juan Pérez",
+                  "id": 1356175,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.3276
                 }
               ],
               "usual_position_group": "FWD",
-              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
               "name": "José Ochoa",
               "id": 1478107,
               "shirt_number": "23",
-              "position_id": 105,
+              "position_id": 106,
               "usual_position_id": 3,
               "horizontal_layout": {
                 "x": 0.87,
-                "y": 0.5,
+                "y": 0.3,
                 "height": 0.25,
                 "width": 0.257
               },
               "vertical_layout": {
-                "x": 0.5,
+                "x": 0.7,
                 "y": 0.87,
                 "height": 0.2,
-                "width": 0.29
+                "width": 0.4
               },
-              "tactical_x": 0.5,
+              "tactical_x": 0.7,
               "tactical_y": 0.87,
               "coordinate_source": "vertical_layout",
-              "tactical_side": "CENTRE",
-              "tactical_lane": "CENTRAL",
+              "tactical_side": "RIGHT",
+              "tactical_lane": "RIGHT_HALFSPACE",
               "tactical_depth": "ATTACKING_LINE",
-              "common_pitch_x": 0.5,
+              "common_pitch_x": 0.7,
               "common_pitch_y": 0.87,
               "formation_line": 3,
-              "line_size": 3,
+              "line_size": 2,
               "line_slot": 2,
-              "role_code": "ST",
+              "role_code": "RST",
               "role_family": "ST",
               "role_inference_confidence": 0.94,
               "role_source": "provider_layout+listed_formation",
@@ -546,71 +599,18 @@
                   "id": 1344644,
                   "role_code": "LCB",
                   "role_family": "CB",
-                  "zone_distance": 0.2829
+                  "zone_distance": 0.2486
                 },
-                {
-                  "name": "Jean Fuentes",
-                  "id": 734310,
-                  "role_code": "RCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.2829
-                }
-              ],
-              "usual_position_group": "FWD",
-              "role_vs_usual": "ALIGNED",
-              "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
-            },
-            {
-              "name": "Deiber Vásquez",
-              "id": 2037313,
-              "shirt_number": "7",
-              "position_id": 107,
-              "usual_position_id": 3,
-              "horizontal_layout": {
-                "x": 0.87,
-                "y": 0.21,
-                "height": 0.25,
-                "width": 0.257
-              },
-              "vertical_layout": {
-                "x": 0.79,
-                "y": 0.87,
-                "height": 0.2,
-                "width": 0.29
-              },
-              "tactical_x": 0.79,
-              "tactical_y": 0.87,
-              "coordinate_source": "vertical_layout",
-              "tactical_side": "RIGHT",
-              "tactical_lane": "RIGHT_HALFSPACE",
-              "tactical_depth": "ATTACKING_LINE",
-              "common_pitch_x": 0.79,
-              "common_pitch_y": 0.87,
-              "formation_line": 3,
-              "line_size": 3,
-              "line_slot": 3,
-              "role_code": "RW",
-              "role_family": "W",
-              "role_inference_confidence": 0.94,
-              "role_source": "provider_layout+listed_formation",
-              "direct_opponents": [
                 {
                   "name": "José Durán",
                   "id": 1942774,
                   "role_code": "LB",
                   "role_family": "FB",
-                  "zone_distance": 0.2544
-                },
-                {
-                  "name": "Jonathan Bilbao",
-                  "id": 1344644,
-                  "role_code": "LCB",
-                  "role_family": "CB",
-                  "zone_distance": 0.318
+                  "zone_distance": 0.3276
                 }
               ],
               "usual_position_group": "FWD",
-              "role_vs_usual": "FLEX_ROLE_ALIGNED",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             }
           ],
@@ -672,8 +672,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 8,
+            "ALIGNED": 9,
             "FLEX_ROLE_ALIGNED": 2
           },
           "out_of_usual_line": []
@@ -692,7 +691,7 @@
               "id": 1082119,
               "shirt_number": "1",
               "position_id": 11,
-              "usual_position_id": null,
+              "usual_position_id": 0,
               "horizontal_layout": {
                 "x": 0.1,
                 "y": 0.5,
@@ -721,8 +720,8 @@
               "role_inference_confidence": 0.99,
               "role_source": "provider_layout",
               "direct_opponents": [],
-              "usual_position_group": "UNKNOWN",
-              "role_vs_usual": "UNKNOWN",
+              "usual_position_group": "GK",
+              "role_vs_usual": "ALIGNED",
               "role_sanity_source": "provider_usual_position_id_vs_inferred_tactical_role"
             },
             {
@@ -760,18 +759,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Deyson Copete",
-                  "id": 1331448,
-                  "role_code": "RCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.1186
-                },
-                {
                   "name": "Deiber Vásquez",
                   "id": 2037313,
-                  "role_code": "RW",
-                  "role_family": "W",
-                  "zone_distance": 0.2544
+                  "role_code": "RM",
+                  "role_family": "WM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Andrés Kinsler",
+                  "id": 2037320,
+                  "role_code": "RB",
+                  "role_family": "FB",
+                  "zone_distance": 0.286
                 }
               ],
               "usual_position_group": "DEF",
@@ -815,16 +814,16 @@
                 {
                   "name": "Jorge Gómez",
                   "id": 1562162,
-                  "role_code": "CM",
-                  "role_family": "CM",
-                  "zone_distance": 0.1714
-                },
-                {
-                  "name": "Deyson Copete",
-                  "id": 1331448,
                   "role_code": "RCM",
                   "role_family": "CM",
-                  "zone_distance": 0.2248
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "José Ochoa",
+                  "id": 1478107,
+                  "role_code": "RST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2486
                 }
               ],
               "usual_position_group": "DEF",
@@ -866,18 +865,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Jorge Gómez",
-                  "id": 1562162,
-                  "role_code": "CM",
+                  "name": "Deyson Copete",
+                  "id": 1331448,
+                  "role_code": "LCM",
                   "role_family": "CM",
-                  "zone_distance": 0.1714
+                  "zone_distance": 0.03
                 },
                 {
                   "name": "Luis Dugarte",
                   "id": 1739952,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.2248
+                  "role_code": "LST",
+                  "role_family": "ST",
+                  "zone_distance": 0.2486
                 }
               ],
               "usual_position_group": "DEF",
@@ -919,18 +918,18 @@
               "role_source": "provider_layout+listed_formation",
               "direct_opponents": [
                 {
-                  "name": "Luis Dugarte",
-                  "id": 1739952,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.1186
-                },
-                {
                   "name": "Jean Sánchez",
                   "id": 1514675,
-                  "role_code": "LW",
-                  "role_family": "W",
-                  "zone_distance": 0.2544
+                  "role_code": "LM",
+                  "role_family": "WM",
+                  "zone_distance": 0.03
+                },
+                {
+                  "name": "Jaider Julio",
+                  "id": 1463625,
+                  "role_code": "LB",
+                  "role_family": "FB",
+                  "zone_distance": 0.286
                 }
               ],
               "usual_position_group": "DEF",
@@ -979,11 +978,11 @@
                   "zone_distance": 0.03
                 },
                 {
-                  "name": "Deyson Copete",
-                  "id": 1331448,
-                  "role_code": "RCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.2535
+                  "name": "Deiber Vásquez",
+                  "id": 2037313,
+                  "role_code": "RM",
+                  "role_family": "WM",
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
@@ -1034,9 +1033,9 @@
                 {
                   "name": "Jorge Gómez",
                   "id": 1562162,
-                  "role_code": "CM",
+                  "role_code": "RCM",
                   "role_family": "CM",
-                  "zone_distance": 0.2821
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
@@ -1085,11 +1084,11 @@
                   "zone_distance": 0.03
                 },
                 {
-                  "name": "Jorge Gómez",
-                  "id": 1562162,
-                  "role_code": "CM",
+                  "name": "Deyson Copete",
+                  "id": 1331448,
+                  "role_code": "LCM",
                   "role_family": "CM",
-                  "zone_distance": 0.2821
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
@@ -1138,11 +1137,11 @@
                   "zone_distance": 0.03
                 },
                 {
-                  "name": "Luis Dugarte",
-                  "id": 1739952,
-                  "role_code": "LCM",
-                  "role_family": "CM",
-                  "zone_distance": 0.2535
+                  "name": "Jean Sánchez",
+                  "id": 1514675,
+                  "role_code": "LM",
+                  "role_family": "WM",
+                  "zone_distance": 0.226
                 }
               ],
               "usual_position_group": "MID",
@@ -1314,8 +1313,7 @@
             }
           ],
           "role_sanity_counts": {
-            "UNKNOWN": 1,
-            "ALIGNED": 8,
+            "ALIGNED": 9,
             "FLEX_ROLE_ALIGNED": 2
           },
           "out_of_usual_line": []
@@ -1325,8 +1323,7 @@
         "Tactical role codes are inferred from provider lineup geometry and listed formation; they are not continuous tracking data."
       ],
       "role_sanity_counts": {
-        "UNKNOWN": 2,
-        "ALIGNED": 16,
+        "ALIGNED": 18,
         "FLEX_ROLE_ALIGNED": 4
       },
       "out_of_usual_line_count": 0
@@ -1338,7 +1335,7 @@
       "start_time": "03-09-2026 22:00",
       "start_utc": "2026-09-03T20:00:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 30.7,
+      "minutes_to_start": 15.1,
       "status": "SOURCE_CONFIRMED",
       "source": "FotMob",
       "fotmob_match": {
@@ -2662,8 +2659,8 @@
   ],
   "role_sanity_method": "usual-position-v1",
   "role_sanity_counts": {
-    "UNKNOWN": 4,
-    "ALIGNED": 31,
-    "FLEX_ROLE_ALIGNED": 9
+    "ALIGNED": 33,
+    "FLEX_ROLE_ALIGNED": 9,
+    "UNKNOWN": 2
   }
 }
