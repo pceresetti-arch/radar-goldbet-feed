@@ -2,14 +2,13 @@
 """Reusable hard gates for Radar player-value decisions.
 
 These functions are deliberately small and dependency-free so workflows and
-analysis builders can share the same BetFlag-only, minutes and correlation
-rules without reimplementing them inconsistently.
+analysis builders can share the same BetFlag-only, minutes, correlation and
+scorer-watch rules without reimplementing them inconsistently.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import prod
 from typing import Iterable, Mapping
 
 BETFLAG_DIRECT_SOURCE = "BETFLAG_AAMS_DIRECT"
@@ -20,6 +19,13 @@ class PriceGateResult:
     verdict: str
     reason: str
     edge: float | None
+
+
+@dataclass(frozen=True)
+class ScorerWatchResult:
+    status: str
+    reason: str
+    retain: bool
 
 
 def price_gate_verdict(
@@ -44,6 +50,63 @@ def price_gate_verdict(
     if current_price >= final_gate:
         return PriceGateResult("BET_ELIGIBLE", "BETFLAG_PRICE_AT_OR_ABOVE_GATE", edge)
     return PriceGateResult("NO_BET", "BETFLAG_PRICE_BELOW_GATE", edge)
+
+
+def scorer_watch_status(
+    *,
+    scouting_rank: int | None,
+    in_official_xi: bool | None,
+    expected_minutes: float | None,
+    price_result: PriceGateResult | None,
+    alternative_markets_available: bool,
+    material_role_uncertainty: bool = False,
+    max_watch_rank: int = 6,
+    min_expected_minutes: float = 45.0,
+    near_gate_ratio: float = 0.12,
+) -> ScorerWatchResult:
+    """Keep strong scorer candidates alive until a final explicit resolution.
+
+    This gate separates *player retention* from the verdict on one specific
+    market. A NO_BET anytime does not remove a strong player from the board.
+    """
+    if scouting_rank is None or scouting_rank < 1 or scouting_rank > max_watch_rank:
+        return ScorerWatchResult("DROP_PLAYER", "OUTSIDE_SCOUTING_WATCH_RANGE", False)
+
+    if in_official_xi is False:
+        return ScorerWatchResult("DROP_PLAYER", "NOT_IN_OFFICIAL_XI", False)
+
+    if expected_minutes is not None and expected_minutes < min_expected_minutes:
+        return ScorerWatchResult("DROP_PLAYER", "EXPECTED_MINUTES_TOO_LOW", False)
+
+    if material_role_uncertainty or in_official_xi is None:
+        return ScorerWatchResult("WATCH_XI", "ROLE_OR_XI_NOT_FINAL", True)
+
+    if price_result is None:
+        return ScorerWatchResult("WATCH_PRICE", "NO_MARKET_PRICE_RESULT_YET", True)
+
+    if price_result.verdict == "BET_ELIGIBLE":
+        return ScorerWatchResult("BET", "BETFLAG_MARKET_ABOVE_GATE", True)
+
+    if price_result.verdict == "ATTESA_QUOTA":
+        return ScorerWatchResult("WATCH_PRICE", price_result.reason, True)
+
+    if price_result.verdict == "NO_BET":
+        # Preserve the player if the current market is close to gate or another
+        # BetFlag market can fit the player's production profile better.
+        if price_result.edge is not None:
+            denominator = abs(price_result.edge) + 1.0
+            # The exact gate is not carried in PriceGateResult; this normalized
+            # proximity check intentionally errs on retention rather than drop.
+            near_gate = abs(price_result.edge) / denominator <= near_gate_ratio
+        else:
+            near_gate = False
+        if alternative_markets_available:
+            return ScorerWatchResult("WATCH_MARKET", "ANYTIME_NO_BET_CHECK_ALTERNATIVES", True)
+        if near_gate:
+            return ScorerWatchResult("WATCH_PRICE", "PRICE_NEAR_GATE", True)
+        return ScorerWatchResult("NO_BET_FINAL", "PRICE_BELOW_GATE_NO_ALT_MARKET", False)
+
+    return ScorerWatchResult("NO_BET_FINAL", "UNHANDLED_PRICE_STATE", False)
 
 
 def minutes_adjusted_event_probability(
@@ -93,12 +156,7 @@ def correlation_cluster_exposure(
     correlation_level: str,
     single_thesis_cap: float,
 ) -> dict:
-    """Calculate conservative effective exposure for same-thesis selections.
-
-    The multipliers are risk controls, not statistical correlation estimates.
-    They intentionally prevent HIGH/VERY_HIGH clusters from masquerading as
-    diversified tickets. The hard cap remains the controlling rule.
-    """
+    """Calculate conservative effective exposure for same-thesis selections."""
     multipliers = {
         "LOW": 0.35,
         "MEDIUM": 0.60,
