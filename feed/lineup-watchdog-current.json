@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-03T19:01:29.640015+00:00",
+  "generated_at": "2026-09-03T19:16:22.474778+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,96 +21,121 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-03T18:58:30.254728+00:00",
-      "finished_at": "2026-09-03T18:58:32.793318+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T18:59:07.793461+00:00",
-      "finished_at": "2026-09-03T18:59:08.095555+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T18:59:43.095811+00:00",
-      "finished_at": "2026-09-03T18:59:43.586956+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 6,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T19:00:18.587178+00:00",
-      "finished_at": "2026-09-03T19:00:18.863403+00:00",
-      "official_count": 4,
+      "started_at": "2026-09-03T19:16:19.721354+00:00",
+      "finished_at": "2026-09-03T19:16:22.474764+00:00",
+      "official_count": 2,
       "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T19:00:53.863664+00:00",
-      "finished_at": "2026-09-03T19:00:54.359625+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T19:01:29.359897+00:00",
-      "finished_at": "2026-09-03T19:01:29.639898+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 4,
-      "events": [],
-      "actionable_events": []
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-03T19:16:22.474732+00:00",
+          "match": "Academia Anzoategui FC - Monagas",
+          "league": "Primera Division",
+          "start_time": "03-09-2026 22:00",
+          "minutes_to_start": 43.6,
+          "match_market_id": "36364.24465",
+          "match_event_id": 16101529,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000018895,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "31def9268cf2e85369c5",
+          "current_xi_fingerprint": "66e075ea722cdc48c666",
+          "confirmed_at": "2026-09-03T19:16:21.930038+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-03T19:16:22.474732+00:00",
+          "match": "Academia Anzoategui FC - Monagas",
+          "league": "Primera Division",
+          "start_time": "03-09-2026 22:00",
+          "minutes_to_start": 43.6,
+          "match_market_id": "36364.24465",
+          "match_event_id": 16101529,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000018895,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "31def9268cf2e85369c5",
+          "current_xi_fingerprint": "66e075ea722cdc48c666",
+          "confirmed_at": "2026-09-03T19:16:21.930038+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-03T19:16:22.474732+00:00",
+      "match": "Academia Anzoategui FC - Monagas",
+      "league": "Primera Division",
+      "start_time": "03-09-2026 22:00",
+      "minutes_to_start": 43.6,
+      "match_market_id": "36364.24465",
+      "match_event_id": 16101529,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000018895,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "31def9268cf2e85369c5",
+      "current_xi_fingerprint": "66e075ea722cdc48c666",
+      "confirmed_at": "2026-09-03T19:16:21.930038+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-03T19:16:22.474732+00:00",
+      "match": "Academia Anzoategui FC - Monagas",
+      "league": "Primera Division",
+      "start_time": "03-09-2026 22:00",
+      "minutes_to_start": 43.6,
+      "match_market_id": "36364.24465",
+      "match_event_id": 16101529,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000018895,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "31def9268cf2e85369c5",
+      "current_xi_fingerprint": "66e075ea722cdc48c666",
+      "confirmed_at": "2026-09-03T19:16:21.930038+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "Capiata - Club 3 De Noviembre",
       "match_market_id": "36365.6694",
       "match_event_id": 16107142,
-      "minutes_to_start": 28.5,
+      "minutes_to_start": 13.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Academia Anzoategui FC - Monagas",
-      "match_market_id": "36364.24465",
-      "match_event_id": 16101529,
-      "minutes_to_start": 58.5,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000018895
-    },
-    {
       "match": "Hafnarfjordur - KFR",
       "match_market_id": "36364.15725",
       "match_event_id": 16100128,
-      "minutes_to_start": 58.5,
+      "minutes_to_start": 43.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -119,11 +144,20 @@
       "match": "Js El Biar - Olympique Akbou",
       "match_market_id": "36361.60188",
       "match_event_id": 16077208,
-      "minutes_to_start": 58.5,
+      "minutes_to_start": 43.6,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5989701
+    },
+    {
+      "match": "CA Vinotinto - San Antonio FC",
+      "match_market_id": "36363.30058",
+      "match_event_id": 16107129,
+      "minutes_to_start": 73.6,
+      "status": "NOT_AVAILABLE",
+      "source": "FotMob",
+      "fotmob_match_id": null
     }
   ],
-  "target_count": 13
+  "target_count": 6
 }
