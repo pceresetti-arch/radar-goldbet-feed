@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-03T23:00:06.841403+00:00",
+  "generated_at": "2026-09-03T23:15:28.361178+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,100 +21,135 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 2,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-03T22:56:58.664049+00:00",
-      "finished_at": "2026-09-03T22:57:03.133754+00:00",
+      "started_at": "2026-09-03T23:14:48.653864+00:00",
+      "finished_at": "2026-09-03T23:14:53.080152+00:00",
       "official_count": 4,
-      "urgent_unconfirmed_count": 8,
+      "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
     },
     {
       "attempt": 2,
       "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T22:57:38.133906+00:00",
-      "finished_at": "2026-09-03T22:57:38.710220+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 8,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T22:58:13.710415+00:00",
-      "finished_at": "2026-09-03T22:58:14.501391+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 8,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T22:58:49.501628+00:00",
-      "finished_at": "2026-09-03T22:58:55.647107+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 8,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T22:59:30.647383+00:00",
-      "finished_at": "2026-09-03T22:59:31.474621+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 8,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-03T23:00:06.474857+00:00",
-      "finished_at": "2026-09-03T23:00:06.841299+00:00",
-      "official_count": 4,
-      "urgent_unconfirmed_count": 3,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-03T23:15:28.080312+00:00",
+      "finished_at": "2026-09-03T23:15:28.361118+00:00",
+      "official_count": 5,
+      "urgent_unconfirmed_count": 2,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-03T23:15:28.360970+00:00",
+          "match": "Libertad Loja - CS Emelec",
+          "league": "Serie A",
+          "start_time": "04-09-2026 02:00",
+          "minutes_to_start": 44.5,
+          "match_market_id": "36361.1257",
+          "match_event_id": 16081106,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000009089,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "2d4457b7d7c1ed1d6a7f",
+          "current_xi_fingerprint": "00c64aaecd0317de5df1",
+          "confirmed_at": "2026-09-03T23:15:28.163000+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-03T23:15:28.360970+00:00",
+          "match": "Libertad Loja - CS Emelec",
+          "league": "Serie A",
+          "start_time": "04-09-2026 02:00",
+          "minutes_to_start": 44.5,
+          "match_market_id": "36361.1257",
+          "match_event_id": 16081106,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 1000009089,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "2d4457b7d7c1ed1d6a7f",
+          "current_xi_fingerprint": "00c64aaecd0317de5df1",
+          "confirmed_at": "2026-09-03T23:15:28.163000+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-03T23:15:28.360970+00:00",
+      "match": "Libertad Loja - CS Emelec",
+      "league": "Serie A",
+      "start_time": "04-09-2026 02:00",
+      "minutes_to_start": 44.5,
+      "match_market_id": "36361.1257",
+      "match_event_id": 16081106,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000009089,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "2d4457b7d7c1ed1d6a7f",
+      "current_xi_fingerprint": "00c64aaecd0317de5df1",
+      "confirmed_at": "2026-09-03T23:15:28.163000+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-03T23:15:28.360970+00:00",
+      "match": "Libertad Loja - CS Emelec",
+      "league": "Serie A",
+      "start_time": "04-09-2026 02:00",
+      "minutes_to_start": 44.5,
+      "match_market_id": "36361.1257",
+      "match_event_id": 16081106,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 1000009089,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "2d4457b7d7c1ed1d6a7f",
+      "current_xi_fingerprint": "00c64aaecd0317de5df1",
+      "confirmed_at": "2026-09-03T23:15:28.163000+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
     {
       "match": "Cavaliers FC - Portmore Utd",
       "match_market_id": "36364.18502",
       "match_event_id": 16100675,
-      "minutes_to_start": 59.9,
+      "minutes_to_start": 44.5,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
-    },
-    {
-      "match": "Libertad Loja - CS Emelec",
-      "match_market_id": "36361.1257",
-      "match_event_id": 16081106,
-      "minutes_to_start": 59.9,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 1000009089
     },
     {
       "match": "Vargas Torres - Cumbaya FC",
       "match_market_id": "36361.21946",
       "match_event_id": 16108545,
-      "minutes_to_start": 59.9,
+      "minutes_to_start": 44.5,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     }
   ],
-  "target_count": 12
+  "target_count": 16
 }

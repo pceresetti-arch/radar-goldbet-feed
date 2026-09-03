@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T23:00:06.582039+00:00",
+  "generated_at": "2026-09-03T23:15:28.163000+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 12,
+  "target_count": 16,
   "status_counts": {
-    "SOURCE_CONFIRMED": 4,
-    "NOT_AVAILABLE": 7,
-    "REFERENCE_PREVIOUS_XI": 1
+    "SOURCE_CONFIRMED": 5,
+    "NOT_AVAILABLE": 9,
+    "REFERENCE_PREVIOUS_XI": 2
   },
   "schedule_stats": [
     {
@@ -29,7 +29,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-03T23:00:06.582039+00:00",
+    "generated_at": "2026-09-03T23:15:28.163000+00:00",
     "window_minutes": [
       0,
       85.0
@@ -45,23 +45,24 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Libertad Loja - CS Emelec",
+        "minutes_to_start": 44.5,
+        "before_official": false,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": false
+      }
+    ]
   },
   "watchdog_identity_repairs": [
-    {
-      "match": "Academia Puerto Cabello - Deportivo La Guaira",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
     {
       "match": "Gremio Porto Alegrense - Internacional",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     },
     {
       "match": "Metropolitanos - Trujillanos",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Nautico PE - Botafogo SP",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
     }
   ],
@@ -70,7 +71,7 @@
       "match": "Academia Puerto Cabello - Deportivo La Guaira",
       "start_time": "04-09-2026 01:00",
       "league": "Primera Division",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.25508",
       "confirmed_at": "2026-09-03T22:31:30.498659+00:00",
@@ -82,7 +83,7 @@
       "match": "Alagoano - Nacional",
       "start_time": "04-09-2026 01:00",
       "league": "Serie D",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.9615",
       "confirmed_at": null,
@@ -94,7 +95,7 @@
       "match": "Club Oriental - Racing Club",
       "start_time": "04-09-2026 01:00",
       "league": "Coppa",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.9652",
       "confirmed_at": null,
@@ -106,7 +107,7 @@
       "match": "Gremio Porto Alegrense - Internacional",
       "start_time": "04-09-2026 01:00",
       "league": "Coppa Brasiliana",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.16935",
       "confirmed_at": "2026-09-03T22:17:16.886808+00:00",
@@ -118,7 +119,7 @@
       "match": "Internacional de Palmira - Real Soacha Cundinamarca",
       "start_time": "04-09-2026 01:00",
       "league": "Primera B",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.4470",
       "confirmed_at": null,
@@ -130,7 +131,7 @@
       "match": "Managua FC - Diriangen FC",
       "start_time": "04-09-2026 01:00",
       "league": "Primera Division",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.6628",
       "confirmed_at": null,
@@ -142,7 +143,7 @@
       "match": "Metropolitanos - Trujillanos",
       "start_time": "04-09-2026 01:00",
       "league": "Primera Division",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36364.28850",
       "confirmed_at": "2026-09-03T22:17:16.886808+00:00",
@@ -154,7 +155,7 @@
       "match": "Nautico PE - Botafogo SP",
       "start_time": "04-09-2026 01:00",
       "league": "Serie B",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.57865",
       "confirmed_at": "2026-09-03T22:17:16.886808+00:00",
@@ -166,7 +167,7 @@
       "match": "Tauro FC II - Umecit II",
       "start_time": "04-09-2026 01:00",
       "league": "Liga Nacional De Ascenso",
-      "minutes_to_start": -0.1,
+      "minutes_to_start": -15.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.9946",
       "confirmed_at": null,
@@ -178,7 +179,7 @@
       "match": "Cavaliers FC - Portmore Utd",
       "start_time": "04-09-2026 02:00",
       "league": "Concacaf Caribbean Club Shield",
-      "minutes_to_start": 59.9,
+      "minutes_to_start": 44.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.18502",
       "confirmed_at": null,
@@ -190,10 +191,10 @@
       "match": "Libertad Loja - CS Emelec",
       "start_time": "04-09-2026 02:00",
       "league": "Serie A",
-      "minutes_to_start": 59.9,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 44.5,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.1257",
-      "confirmed_at": null,
+      "confirmed_at": "2026-09-03T23:15:28.163000+00:00",
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
@@ -202,12 +203,60 @@
       "match": "Vargas Torres - Cumbaya FC",
       "start_time": "04-09-2026 02:00",
       "league": "Serie B",
-      "minutes_to_start": 59.9,
+      "minutes_to_start": 44.5,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.21946",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "Deportes Pereira - Independiente Medellin",
+      "start_time": "04-09-2026 03:00",
+      "league": "Primera A",
+      "minutes_to_start": 104.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.3437",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Indigenas de Matagalpa - Unan Managua",
+      "start_time": "04-09-2026 03:00",
+      "league": "Primera Division",
+      "minutes_to_start": 104.5,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36365.6629",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Tepatitlan FC - CSD Dorados Sinaloa",
+      "start_time": "04-09-2026 03:00",
+      "league": "Liga Premier Serie B",
+      "minutes_to_start": 104.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "match_market_id": "36361.4563",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Veraguas United FC - SD Atletico Nacional",
+      "start_time": "04-09-2026 03:00",
+      "league": "Liga Nacional De Ascenso",
+      "minutes_to_start": 104.5,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36365.18805",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
