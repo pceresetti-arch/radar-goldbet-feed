@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the exact quote path consumed by Radar runs.
+"""Validate the exact BetFlag quote path consumed by Radar runs.
 
 The producer being healthy is not enough: consumers must be able to resolve
-index -> fixture file -> markets.  This script validates that path and emits a
-small, machine-readable health file with the precise failure stage.
+index -> fixture file -> markets and the source must remain BetFlag/AAMS direct.
+External/cross-brand data is never price-gate eligible.
 """
 
 from __future__ import annotations
@@ -15,6 +15,8 @@ import sys
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
+
+BETFLAG_DIRECT_SOURCE = "BETFLAG_AAMS_DIRECT"
 
 
 def parse_dt(value):
@@ -63,7 +65,7 @@ def validate(index_path, fixture_query=None, max_age_minutes=12.0, now=None):
     now = now or datetime.now(timezone.utc)
     index, index_error = load_json(index_path)
     result = {
-        "schema_version": "radar-quote-consumer-health-v1",
+        "schema_version": "radar-quote-consumer-health-v2",
         "generated_at": now.isoformat(),
         "status": "BETFLAG_PATH_READ_FAILURE",
         "current_quote_status": "QUOTA_CURRENT_NON_RECUPERATA",
@@ -71,8 +73,10 @@ def validate(index_path, fixture_query=None, max_age_minutes=12.0, now=None):
         "read_contract": {
             "repository": "pceresetti-arch/radar-goldbet-feed",
             "branch": "main",
+            "required_source_class": BETFLAG_DIRECT_SOURCE,
             "index": str(index_path).replace("\\", "/"),
-            "resolution": "read index -> use fixture.file exactly -> read fixture -> use current prices",
+            "resolution": "read BetFlag index -> use fixture.file exactly -> read fixture -> use BetFlag current prices only",
+            "external_price_fallback_allowed": False,
         },
         "fixture_query": fixture_query,
         "validated_fixture_count": 0,
@@ -88,7 +92,16 @@ def validate(index_path, fixture_query=None, max_age_minutes=12.0, now=None):
     result["index_source_healthy"] = bool(index.get("source_healthy"))
     result["index_operationally_usable"] = index.get("operationally_usable")
     result["index_fixture_count"] = int(index.get("fixture_count") or 0)
+    result["index_source_class"] = index.get("source_class")
+    result["price_gate_source_eligible"] = result["index_source_class"] == BETFLAG_DIRECT_SOURCE
 
+    if result["index_source_class"] != BETFLAG_DIRECT_SOURCE:
+        result["failures"].append({
+            "stage": "SOURCE_PROVENANCE",
+            "error": "NON_BETFLAG_OPERATIONAL_SOURCE",
+            "observed_source_class": result["index_source_class"],
+            "required_source_class": BETFLAG_DIRECT_SOURCE,
+        })
     if not result["index_source_healthy"]:
         result["failures"].append({"stage": "INDEX", "error": "SOURCE_UNHEALTHY"})
     if result["index_operationally_usable"] is False:
@@ -108,7 +121,6 @@ def validate(index_path, fixture_query=None, max_age_minutes=12.0, now=None):
             return result
         fixtures = candidates
 
-    # An empty, healthy prematch catalogue is a valid state after the last event.
     if not fixtures and not result["failures"]:
         result.update(
             status="NO_PREMATCH_FIXTURES_AVAILABLE",
@@ -132,20 +144,34 @@ def validate(index_path, fixture_query=None, max_age_minutes=12.0, now=None):
         pquote_count = player_quote_count(fixture)
         identity_ok = norm(fixture.get("match")) == norm(row.get("match"))
         healthy = bool(fixture.get("source_healthy", index.get("source_healthy")))
+        fixture_source_class = fixture.get("source_class", index.get("source_class"))
+        source_ok = fixture_source_class == BETFLAG_DIRECT_SOURCE
         eligible = fixture.get("price_gate_fixture_eligible")
         if eligible is None:
-            eligible = healthy and identity_ok and standard_count > 0
+            eligible = healthy and identity_ok and source_ok and (standard_count > 0 or pquote_count > 0)
+        else:
+            eligible = bool(eligible) and source_ok
         item = {
             "match": row.get("match"),
             "file": rel,
             "identity_consistent": identity_ok,
             "source_healthy": healthy,
+            "source_class": fixture_source_class,
+            "source_provenance_eligible": source_ok,
             "price_gate_fixture_eligible": bool(eligible),
             "standard_count": standard_count,
             "player_quote_count": pquote_count,
         }
         result["fixtures"].append(item)
-        if not identity_ok:
+        if not source_ok:
+            result["failures"].append({
+                "stage": "SOURCE_PROVENANCE",
+                "match": row.get("match"),
+                "file": rel,
+                "error": "NON_BETFLAG_OPERATIONAL_SOURCE",
+                "observed_source_class": fixture_source_class,
+            })
+        elif not identity_ok:
             result["failures"].append({"stage": "FIXTURE_IDENTITY", "match": row.get("match"), "file": rel, "error": "IDENTITY_MISMATCH"})
         elif not healthy:
             result["failures"].append({"stage": "FIXTURE_HEALTH", "match": row.get("match"), "file": rel, "error": "SOURCE_UNHEALTHY"})
