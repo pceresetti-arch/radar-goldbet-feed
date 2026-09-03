@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-03T00:44:17.318261+00:00",
+  "generated_at": "2026-09-03T00:48:44.969179+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 15.1,
-    "tactical": 14.7,
-    "betflag_fixture_feed": 17.9,
-    "betflag_standard_source": 18.1,
-    "betflag_player_source": 18.0,
-    "player_context": 6.1
+    "lineups": 19.6,
+    "tactical": 19.1,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.5,
+    "player_context": 10.6
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -76,7 +76,7 @@
       "betflag_fixture_mapped": false,
       "betflag_fixture_file": null,
       "betflag_standard_count": 0,
-      "betflag_standard_current_fresh": false,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -107,10 +107,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "STALE_LINEUP_FEED",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -126,14 +126,14 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/deportes-limache-nublense.json",
-      "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
-      "player_count": 49,
-      "player_quote_count": 294,
-      "player_props_available": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
       "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
@@ -160,10 +160,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "STALE_LINEUP_FEED",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -178,14 +178,14 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/santos-sp-palmeiras.json",
-      "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
-      "player_count": 26,
-      "player_quote_count": 156,
-      "player_props_available": true,
+      "player_count": 0,
+      "player_quote_count": 0,
+      "player_props_available": false,
       "player_props_ready": false,
       "player_context_available": true,
       "player_context_fresh": true,
@@ -212,10 +212,10 @@
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
         "STALE_LINEUP_FEED",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
@@ -231,10 +231,10 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/vitoria-cr-vasco-da-gama-rj.json",
-      "betflag_standard_count": 34,
-      "betflag_standard_current_fresh": false,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
+      "betflag_standard_current_fresh": true,
       "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
@@ -264,11 +264,9 @@
       "readiness": "STALE_LINEUP_FEED",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "STALE_LINEUP_FEED",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "STALE_LINEUP_FEED"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -286,12 +284,12 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/deportivo-toluca-club-leon.json",
       "betflag_standard_count": 38,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 58,
       "player_quote_count": 464,
       "player_props_available": true,
-      "player_props_ready": false,
+      "player_props_ready": true,
       "player_context_available": true,
       "player_context_fresh": true,
       "player_context_matches_current_xi": true,
@@ -316,11 +314,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -338,8 +335,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/esteli-san-marcos-fc.json",
       "betflag_standard_count": 8,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -368,11 +365,10 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI",
-        "STALE_BETFLAG_STANDARD_CURRENT"
+        "WAIT_OFFICIAL_STANDARD_XI"
       ],
       "warnings": [
-        "PLAYER_PROPS_BETFLAG_STALE",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "REFERENCE_PREVIOUS_XI",
@@ -390,8 +386,8 @@
       "betflag_fixture_mapped": true,
       "betflag_fixture_file": "feed/betflag-fixtures/independiente-santa-fe-millonarios.json",
       "betflag_standard_count": 31,
-      "betflag_standard_current_fresh": false,
-      "betflag_standard_ready": false,
+      "betflag_standard_current_fresh": true,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
