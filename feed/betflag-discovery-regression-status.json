@@ -1,8 +1,8 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-09-02T21:26:10.971080+00:00",
+  "generated_at": "2026-09-03T00:37:26.540564+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
-  "rome_date": "02-09-2026",
+  "rome_date": "03-09-2026",
   "ready": false,
   "status": "PIPELINE_DEGRADED",
   "contract": {
@@ -18,34 +18,52 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 5133,
-    "index_warm_elapsed_ms": 275,
-    "fallback_discovery_elapsed_ms": 235,
-    "index_first_cache": "MISS:MISS:CACHED_HEALTHY:NOT_CACHED_INCOMPLETE",
-    "index_warm_cache": "MISS:HIT:NOT_CACHED_INCOMPLETE"
+    "index_first_elapsed_ms": 6858,
+    "index_warm_elapsed_ms": 118,
+    "fallback_discovery_elapsed_ms": 305,
+    "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
+    "index_warm_cache": "HIT"
   },
   "coverage": {
     "targets_expected": 17,
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 10163,
-    "scoped_source_rows": 0,
-    "indexed_rows": 0,
+    "source_rows": 12275,
+    "scoped_source_rows": 8347,
+    "indexed_rows": 8347,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 0,
+      "standard_match": 8347,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
       "missing_stable_identity": 0,
       "missing_player": 0
     },
-    "fixtures": 0,
-    "exact_fixtures": 0,
+    "fixtures": 14,
+    "exact_fixtures": 14,
     "fallback_fixtures": 0,
-    "player_fixtures": 0,
-    "markets_present": []
+    "player_fixtures": 626,
+    "markets_present": [
+      "1° Marcatore",
+      "1° Marcatore o Sostituto",
+      "Assist",
+      "Assist o Sostituto",
+      "Doppietta",
+      "Gol e Assist",
+      "Marc",
+      "Marcatore 1T",
+      "Marcatore 2T",
+      "Marcatore Plus",
+      "Marcatore o Sostituto",
+      "Tripletta",
+      "U/O Parate Giocatore",
+      "U/O Tiri In Porta Giocatore",
+      "U/O Tiri Totali Giocatore",
+      "U/O Tiri Totali Plus",
+      "U/O Tiri in porta Plus"
+    ]
   },
   "checks": {
     "static_default_full": true,
@@ -74,9 +92,9 @@
     "index_all_targets": true,
     "index_no_unmapped_rows": true,
     "index_all_scoped_rows_indexed": true,
-    "index_nonempty": false,
+    "index_nonempty": true,
     "index_warm_200": true,
-    "index_warm_cache_hit": false,
+    "index_warm_cache_hit": true,
     "index_warm_fast": true,
     "index_warm_same_generation": true,
     "fallback_discovery_200": true,
@@ -85,15 +103,24 @@
     "fallback_discovery_mode_full": true,
     "fallback_discovery_nonempty": true,
     "pagination_runtime": true,
-    "dynamic_index_candidate_found": false,
-    "player_lookup_runtime": false,
-    "exact_200": false,
-    "exact_unique": false,
-    "exact_source_healthy": false,
-    "exact_fresh": false,
-    "exact_fingerprint": false,
-    "exact_price_gate_eligible": false
+    "dynamic_index_candidate_found": true,
+    "player_lookup_runtime": true,
+    "exact_200": true,
+    "exact_unique": true,
+    "exact_source_healthy": true,
+    "exact_fresh": true,
+    "exact_fingerprint": true,
+    "exact_price_gate_eligible": true
   },
-  "sample_dynamic_exact": null,
+  "sample_dynamic_exact": {
+    "match": "Deportivo Toluca - Club Leon",
+    "match_market_id": "36361.30372",
+    "player": "Abraham Villegas Maciel",
+    "market": "1° Marcatore",
+    "selection": "Si",
+    "odd": 39,
+    "scan_odd": 39,
+    "proof_id": "bf-7acc15e2d0fe90ce82c8"
+  },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
