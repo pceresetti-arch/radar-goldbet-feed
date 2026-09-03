@@ -226,7 +226,8 @@ Confronta, per lo stesso player, quale mercato BetFlag era stato promosso (anyti
 - la P usata appartiene a un altro mercato;
 - XI/ruolo sono materialmente incerti senza adeguata penalizzazione;
 - il correlation gate porta l'esposizione oltre il cap;
-- il player identity mapping è ambiguo.
+- il player identity mapping è ambiguo;
+- per una selezione scorer non è stato verificato e dichiarato lo stato rigori/piazzati del giocatore.
 
 Output obbligatorio in questi casi: `ATTESA`, `ATTESA QUOTA`, `NO BET` o `ANALISI INCOMPLETA`, con causa esplicita.
 
@@ -284,3 +285,23 @@ Nel post-match misurare anche:
 - `alternative_market_rescue`: casi in cui anytime era NO BET ma Plus/1T/Gol-Assist/SOT/altro BetFlag era value.
 
 Obiettivo esplicito: ridurre `lost_scorer_rate` senza abbassare il price discipline e senza trasformare la watchlist in una lista indiscriminata di giocatori da scommettere.
+
+## 16. Penalty-Taker Verification Gate — obbligatorio prima di ogni scorer BET
+Per qualsiasi selezione che dipende dal gol del giocatore (anytime, Marc Plus, 1T/2T, primo marcatore, scorer combo e mercati equivalenti), il Radar deve verificare **prima del verdetto** la gerarchia rigori/piazzati della squadra.
+
+Campi minimi da registrare:
+- `penalty_status = PRIMARY / SECONDARY / NONE / NOT_CERTIFIED`;
+- rigorista principale atteso;
+- seconda scelta attesa quando nota;
+- ultimi rigori della squadra e chi li ha calciati, quando verificabili;
+- presenza in campo del rigorista principale negli episodi recenti;
+- eventuali cambi di gerarchia da XI, trasferimenti, infortuni o dichiarazioni tecniche;
+- free-kick/set-piece role separato dal ruolo sui rigori.
+
+Regole:
+- `PRIMARY`: bonus player allocation esplicito e documentato;
+- `SECONDARY`: bonus ridotto/condizionale, non equivalente a rigorista principale;
+- `NONE`: nessun bonus rigori;
+- `NOT_CERTIFIED`: **HARD STOP scorer**; il candidato può restare in WATCH ma non può essere promosso a BET finché lo stato non è risolto o finché una penalizzazione prudenziale documentata non rende comunque il mercato non dipendente da tale informazione.
+
+La P Radar scorer deve essere ricalcolata dopo la verifica del penalty status. È vietato proporre una BET scorer e controllare solo dopo se il giocatore è rigorista.
