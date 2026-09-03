@@ -17,23 +17,36 @@ for target in targets:
     q = norm(target.get('q'))
     qterms = q.split()
     event_id = target.get('event_id')
+    focus_players = target.get('focus_players') or []
+    focus_norm = [(p, norm(p)) for p in focus_players]
     matched = []
+    focus_rows = []
     for r in rows:
+        belongs = False
         if event_id is not None and str(r.get('event_id')) == str(event_id):
-            matched.append(r)
+            belongs = True
+        else:
+            m = norm(r.get('match'))
+            if qterms and all(t in m for t in qterms):
+                belongs = True
+        if not belongs:
             continue
-        m = norm(r.get('match'))
-        if qterms and all(t in m for t in qterms):
-            matched.append(r)
+        matched.append(r)
+        player_norm = norm(r.get('player'))
+        if any(fp and fp in player_norm for _, fp in focus_norm):
+            focus_rows.append(r)
     out_matches.append({
         'q': target.get('q'),
         'event_id': event_id,
         'row_count': len(matched),
+        'focus_players': focus_players,
+        'focus_row_count': len(focus_rows),
+        'focus_rows': focus_rows,
         'rows': matched,
     })
 
 out = {
-    'schema_version': 'betflag-match-props-v1',
+    'schema_version': 'betflag-match-props-v2',
     'requested_at': req.get('requested_at'),
     'generated_at': datetime.now(timezone.utc).isoformat(),
     'source_class': 'BETFLAG_AAMS_DIRECT',
@@ -44,4 +57,4 @@ out = {
 pathlib.Path('feed/betflag-match-props-latest.json').write_text(
     json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8'
 )
-print(json.dumps({'source_healthy': out['source_healthy'], 'matches': [{k:v for k,v in x.items() if k != 'rows'} for x in out_matches]}, ensure_ascii=False))
+print(json.dumps({'source_healthy': out['source_healthy'], 'matches': [{'q':x['q'],'event_id':x['event_id'],'row_count':x['row_count'],'focus_row_count':x['focus_row_count']} for x in out_matches]}, ensure_ascii=False))
