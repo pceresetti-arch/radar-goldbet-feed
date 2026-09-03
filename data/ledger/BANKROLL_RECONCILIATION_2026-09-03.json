@@ -1,23 +1,13 @@
 {
   "as_of": "2026-09-03",
-  "status": "RECONCILED_V1",
-  "baseline": {
-    "date": "2026-08-29",
-    "bankroll_eur": 122.45,
-    "basis": "29/08 consolidated 12-bet reconciliation: opening 95.55, daily P/L +26.90, closing 122.45"
+  "status": "SUPERSEDED_INVALID_RECONSTRUCTION",
+  "invalidated_bankroll_eur": 145.50,
+  "reason": "Previous reconstruction used an unverified historical baseline and must not be used as official bankroll.",
+  "replacement": {
+    "file": "data/ledger/bankroll_state.json",
+    "bankroll_eur": 144.20,
+    "status": "USER_CONFIRMED_BASELINE",
+    "effective_date": "2026-09-03"
   },
-  "daily_rollforward": [
-    {"date":"2026-08-30","bets":21,"stake_eur":101.00,"returns_eur":157.75,"net_pl_eur":56.75,"bankroll_end_eur":179.20,"ledger":"data/ledger/2026-08-30.json","status":"CERTIFIED"},
-    {"date":"2026-08-31","bets":8,"stake_eur":38.00,"returns_eur":28.00,"net_pl_eur":-10.00,"bankroll_end_eur":169.20,"ledger":"data/ledger/2026-08-31.json","status":"CERTIFIED"},
-    {"date":"2026-09-01","bets_recovered":2,"stake_eur":10.00,"returns_eur":0.00,"net_pl_eur":-10.00,"bankroll_end_eur":159.20,"ledger":"data/ledger/2026-09-01.json","status":"PROVISIONAL_COMPLETENESS"},
-    {"date":"2026-09-02","bets":9,"stake_eur":45.00,"returns_eur":39.00,"net_pl_eur":-6.00,"bankroll_end_eur":153.20,"ledger":"data/ledger/2026-09-02.json","status":"CERTIFIED"},
-    {"date":"2026-09-03","bets":11,"stake_eur":53.00,"returns_eur":45.30,"net_pl_eur":-7.70,"bankroll_end_eur":145.50,"ledger":"data/ledger/2026-09-03.json","status":"CERTIFIED"}
-  ],
-  "bankroll_current_eur": 145.50,
-  "cumulative_pl_since_2026_08_29_close_eur": 23.05,
-  "control_notes": [
-    "The previous 74.00 bankroll reconstruction is invalid and superseded.",
-    "2026-09-01 completeness remains the only unresolved narrow point: two explicit placements recovered (Toney, Vrioni), both lost.",
-    "Future bets must be persisted immediately into a dated ledger and bankroll rollforward."
-  ]
+  "control_rule": "Never infer an official bankroll from uncertain historical baselines. Use bankroll_state.json or an explicitly user-confirmed reconciliation event."
 }
