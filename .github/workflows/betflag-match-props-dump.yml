@@ -1,0 +1,47 @@
+name: BetFlag compact match props dump
+
+on:
+  push:
+    paths:
+      - 'betflag-match-props-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-match-props-dump
+  cancel-in-progress: true
+
+jobs:
+  dump:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Ensure browser recovery client
+        shell: powershell
+        run: python -m pip install --disable-pip-version-check playwright
+      - name: Refresh BetFlag residential feed
+        shell: powershell
+        run: python collector/betflag_residential_collector.py
+      - name: Extract requested match props
+        shell: powershell
+        run: python scripts/extract_betflag_match_props.py
+      - name: Commit compact props dump
+        shell: powershell
+        run: |
+          git config user.name "radar-betflag-residential-bot"
+          git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+          git add feed/betflag-match-props-latest.json
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "Refresh compact BetFlag match props"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          }
