@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T00:39:59.835165+00:00",
+  "generated_at": "2026-09-04T00:58:50.970575+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -23,7 +23,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T00:39:59.835165+00:00",
+    "generated_at": "2026-09-04T00:58:50.970575+00:00",
     "window_minutes": [
       0,
       85.0
@@ -39,35 +39,28 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Deportes Pereira - Independiente Medellin",
-        "minutes_to_start": 20.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Tepatitlan FC - CSD Dorados Sinaloa",
-        "minutes_to_start": 20.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Deportes Pereira - Independiente Medellin",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Tepatitlan FC - CSD Dorados Sinaloa",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
     {
       "match": "Deportes Pereira - Independiente Medellin",
       "start_time": "04-09-2026 03:00",
       "league": "Primera A",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.3437",
       "confirmed_at": "2026-09-04T00:39:59.835165+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -75,7 +68,7 @@
       "match": "Indigenas de Matagalpa - Unan Managua",
       "start_time": "04-09-2026 03:00",
       "league": "Primera Division",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.6629",
       "confirmed_at": null,
@@ -87,11 +80,11 @@
       "match": "Tepatitlan FC - CSD Dorados Sinaloa",
       "start_time": "04-09-2026 03:00",
       "league": "Liga Premier Serie B",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.4563",
-      "confirmed_at": "2026-09-04T00:39:59.835165+00:00",
-      "xi_changed_after_confirmation": true,
+      "confirmed_at": "2026-09-04T00:19:29.251190+00:00",
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -99,7 +92,7 @@
       "match": "Veraguas United FC - SD Atletico Nacional",
       "start_time": "04-09-2026 03:00",
       "league": "Liga Nacional De Ascenso",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.18805",
       "confirmed_at": null,

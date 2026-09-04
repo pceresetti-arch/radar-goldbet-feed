@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T00:39:59.835165+00:00",
+  "generated_at": "2026-09-04T00:58:50.970575+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -29,13 +29,13 @@
       "start_time": "04-09-2026 03:00",
       "start_utc": "2026-09-04T01:00:00+00:00",
       "league": "Primera A",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-04T00:39:59.835165+00:00",
       "retained_from_previous": false,
-      "xi_changed_after_confirmation": true,
-      "previous_xi_fingerprint": null,
+      "xi_changed_after_confirmation": false,
+      "previous_xi_fingerprint": "013636f92212e09d0045",
       "source": "FotMob",
       "fotmob_match": {
         "id": 1000014116,
@@ -607,7 +607,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-09-04T00:39:59.835165+00:00",
+        "polled_at": "2026-09-04T00:58:50.970575+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 1000014116,
@@ -626,7 +626,7 @@
       "start_time": "04-09-2026 03:00",
       "start_utc": "2026-09-04T01:00:00+00:00",
       "league": "Primera Division",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -644,7 +644,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-04T00:39:59.835165+00:00",
+        "polled_at": "2026-09-04T00:58:50.970575+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -659,7 +659,7 @@
       "start_time": "04-09-2026 03:00",
       "start_utc": "2026-09-04T01:00:00+00:00",
       "league": "Liga Premier Serie B",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-04T00:19:29.251190+00:00",
@@ -1249,7 +1249,7 @@
       },
       "error": null,
       "source_evidence": {
-        "polled_at": "2026-09-04T00:39:59.835165+00:00",
+        "polled_at": "2026-09-04T00:58:50.970575+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 5898712,
@@ -1268,7 +1268,7 @@
       "start_time": "04-09-2026 03:00",
       "start_utc": "2026-09-04T01:00:00+00:00",
       "league": "Liga Nacional De Ascenso",
-      "minutes_to_start": 20.0,
+      "minutes_to_start": 1.2,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "NOT_AVAILABLE",
       "confirmed_at": null,
@@ -1286,7 +1286,7 @@
       },
       "error": null,
       "urgent_source_evidence": {
-        "polled_at": "2026-09-04T00:39:59.835165+00:00",
+        "polled_at": "2026-09-04T00:58:50.970575+00:00",
         "fotmob": null,
         "sofascore": {
           "provider": "Sofascore",
@@ -1297,7 +1297,7 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T00:39:59.835165+00:00",
+    "generated_at": "2026-09-04T00:58:50.970575+00:00",
     "window_minutes": [
       0,
       85.0
@@ -1313,26 +1313,13 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Deportes Pereira - Independiente Medellin",
-        "minutes_to_start": 20.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Tepatitlan FC - CSD Dorados Sinaloa",
-        "minutes_to_start": 20.0,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
   "watchdog_identity_repairs": [
+    {
+      "match": "Deportes Pereira - Independiente Medellin",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
     {
       "match": "Tepatitlan FC - CSD Dorados Sinaloa",
       "repair": "FALSE_XI_CHANGE_SUPPRESSED"
