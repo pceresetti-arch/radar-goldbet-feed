@@ -1,8 +1,8 @@
 {
-  "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-04T20:31:19.367687+00:00",
-  "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
-  "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
+  "schema": "radar-lineup-watchdog-v5-certified-source",
+  "generated_at": "2026-09-04T20:37:52.642114+00:00",
+  "source_strategy": "One canonical full discovery; then targeted multi-source probes. Single-provider SOURCE_CONFIRMED remains provider-only until primary metadata or independent cross-confirmation exists.",
+  "official_definition": "CERTIFIED_PRIMARY or CERTIFIED_CROSSCHECK + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
   "poll_policy": {
     "base_schedule": "GitHub cron every 5 minutes",
@@ -26,39 +26,39 @@
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-04T20:28:19.269283+00:00",
-      "finished_at": "2026-09-04T20:28:22.383142+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 7,
+      "started_at": "2026-09-04T20:34:54.575941+00:00",
+      "finished_at": "2026-09-04T20:34:56.329736+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
     },
     {
       "attempt": 2,
       "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T20:28:57.383261+00:00",
-      "finished_at": "2026-09-04T20:28:57.729572+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 7,
+      "started_at": "2026-09-04T20:35:31.329881+00:00",
+      "finished_at": "2026-09-04T20:35:31.649802+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
     },
     {
       "attempt": 3,
       "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T20:29:32.729724+00:00",
-      "finished_at": "2026-09-04T20:29:33.213615+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 7,
+      "started_at": "2026-09-04T20:36:06.649982+00:00",
+      "finished_at": "2026-09-04T20:36:06.937529+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
     },
     {
       "attempt": 4,
       "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T20:30:08.213772+00:00",
-      "finished_at": "2026-09-04T20:30:08.473183+00:00",
-      "official_count": 1,
+      "started_at": "2026-09-04T20:36:41.937702+00:00",
+      "finished_at": "2026-09-04T20:36:42.113876+00:00",
+      "official_count": 0,
       "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
@@ -66,9 +66,9 @@
     {
       "attempt": 5,
       "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T20:30:43.473343+00:00",
-      "finished_at": "2026-09-04T20:30:44.063964+00:00",
-      "official_count": 1,
+      "started_at": "2026-09-04T20:37:17.114039+00:00",
+      "finished_at": "2026-09-04T20:37:17.397657+00:00",
+      "official_count": 0,
       "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
@@ -76,9 +76,9 @@
     {
       "attempt": 6,
       "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T20:31:19.064141+00:00",
-      "finished_at": "2026-09-04T20:31:19.367638+00:00",
-      "official_count": 1,
+      "started_at": "2026-09-04T20:37:52.397839+00:00",
+      "finished_at": "2026-09-04T20:37:52.642063+00:00",
+      "official_count": 0,
       "urgent_unconfirmed_count": 3,
       "events": [],
       "actionable_events": []
@@ -92,8 +92,9 @@
       "match": "Asociacion Deportivo Cali - Orsomarso SC",
       "match_market_id": "36366.2923",
       "match_event_id": 16111866,
-      "minutes_to_start": 28.7,
+      "minutes_to_start": 22.1,
       "status": "NOT_AVAILABLE",
+      "xi_source_confidence": "MISSING",
       "source": "FotMob",
       "fotmob_match_id": null
     },
@@ -101,8 +102,9 @@
       "match": "Academia del Balompie Boliviano - FC Universitario de Vinto",
       "match_market_id": "36364.25098",
       "match_event_id": 16101629,
-      "minutes_to_start": 43.7,
+      "minutes_to_start": 37.1,
       "status": "NOT_AVAILABLE",
+      "xi_source_confidence": "MISSING",
       "source": "FotMob",
       "fotmob_match_id": null
     },
@@ -110,11 +112,12 @@
       "match": "Crown Legacy FC - Chicago Fire FC II",
       "match_market_id": "36361.34251",
       "match_event_id": 16109647,
-      "minutes_to_start": 58.7,
+      "minutes_to_start": 52.1,
       "status": "REFERENCE_PREVIOUS_XI",
+      "xi_source_confidence": "MISSING",
       "source": "FotMob",
       "fotmob_match_id": 1000007753
     }
   ],
-  "target_count": 9
+  "target_count": 7
 }
