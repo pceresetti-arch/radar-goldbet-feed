@@ -1,0 +1,39 @@
+name: Probe extra lineup sources
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'extra-lineup-source-trigger.json'
+      - 'scripts/probe_extra_lineup_sources.py'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Install browser-like client
+        run: pip install -q curl_cffi
+      - name: Probe Diretta Flashscore and LiveScore
+        run: python scripts/probe_extra_lineup_sources.py
+      - name: Persist probe report
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/extra-lineup-source-probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe extra lineup source availability'
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
