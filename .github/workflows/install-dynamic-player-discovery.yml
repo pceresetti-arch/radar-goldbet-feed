@@ -1,0 +1,63 @@
+name: Install dynamic BetFlag player discovery
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/patch_betflag_dynamic_player_discovery.py'
+      - 'scripts/test_betflag_dynamic_player_discovery.py'
+      - 'scripts/player-prop-market-codes.json'
+      - 'dynamic-player-discovery-trigger.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: install-dynamic-betflag-player-discovery
+  cancel-in-progress: true
+
+jobs:
+  install-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Patch worker source idempotently
+        run: python scripts/patch_betflag_dynamic_player_discovery.py
+
+      - name: Regression test
+        run: python scripts/test_betflag_dynamic_player_discovery.py
+
+      - name: Persist installed worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add worker/src/index.mjs
+          if git diff --cached --quiet; then
+            echo 'Worker already contains dynamic player discovery.'
+            exit 0
+          fi
+          git commit -m 'Install dynamic BetFlag player-market discovery'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo 'Unable to persist dynamic player discovery after retries' >&2
+          exit 1
