@@ -69,9 +69,13 @@ def relevant_sections(std):
 
 def load_player_matches():
     p=FEED/'betflag-residential-current.json'
-    if not p.exists(): return []
-    try: data=json.loads(p.read_text(encoding='utf-8'))
-    except: return []
+    if not p.exists(): return [], 'missing_file'
+    try:
+        # PowerShell 5.x Out-File -Encoding utf8 may prepend a BOM. utf-8-sig
+        # accepts both BOM and normal UTF-8, avoiding silent candidate loss.
+        data=json.loads(p.read_text(encoding='utf-8-sig'))
+    except Exception as e:
+        return [], f'parse_error:{e!r}'
     counts=Counter()
     starts={}
     for r in data.get('rows') or []:
@@ -81,11 +85,10 @@ def load_player_matches():
         if r.get('match_start'): starts[m]=r.get('match_start')
     rows=[{'match':m,'player_rows':c,'match_start':starts.get(m)} for m,c in counts.items()]
     rows.sort(key=lambda x:(-(x['player_rows']),x.get('match_start') or '',x['match']))
-    return rows
+    return rows, None
 
 
 def best_fixture_node(nodes):
-    # Prefer nodes carrying all identifiers required by getDetailsEventAams.
     ranked=sorted(nodes,key=lambda x:sum(x.get(k) is not None for k in ('tai','ti','mi','ei')),reverse=True)
     return ranked[0] if ranked else None
 
@@ -93,7 +96,7 @@ def best_fixture_node(nodes):
 def main():
     now=datetime.now(timezone.utc).isoformat()
     client=BetFlagTransport(timeout=20)
-    out={'schema_version':'betflag-combo-detail-availability-v1','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':False,'candidate_rule':'probe only fixtures that already expose BetFlag player rows; combo availability is fixture-specific, not assumed league-wide','fixtures':[]}
+    out={'schema_version':'betflag-combo-detail-availability-v2','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':False,'candidate_rule':'probe only fixtures that already expose BetFlag player rows; combo availability is fixture-specific, not assumed league-wide','fixtures':[]}
     try:
         st,std=client.get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
         out['overview_status']=st
@@ -102,7 +105,10 @@ def main():
         sections,tab_names=relevant_sections(std)
         out['sections_probed']=sections
         out['section_names']=tab_names
-        candidates=load_player_matches()[:20]
+        candidates,load_error=load_player_matches()
+        out['player_feed_load_error']=load_error
+        out['candidate_count_total']=len(candidates)
+        candidates=candidates[:20]
         out['candidate_count']=len(candidates)
         for cand in candidates:
             f=fixtures.get(norm(cand['match']))
@@ -114,9 +120,7 @@ def main():
             if not node or any(node.get(k) is None for k in ('ti','mi','ei')):
                 row['resolution_error']='missing detail identifiers'; out['fixtures'].append(row); continue
             tai=node.get('tai') or 0
-            found=set()
-            # Stop early once we have positive player/combo detail evidence, but probe a few more sections for coverage.
-            positive_at=None
+            found=set(); positive_at=None
             for idx,sec in enumerate(sections):
                 url=f"{BASE}/getDetailsEventAams/{tai}/{node['ti']}/{node['mi']}/{node['ei']}/{sec}/0?channelId=0"
                 try:
@@ -133,6 +137,7 @@ def main():
             row['combo_or_player_detail_available']=bool(found)
             row['positive_sections']=[a['section'] for a in row['detail_attempts'] if a.get('market_name_count',0)>0]
             out['fixtures'].append(row)
+        out['resolved_fixture_count']=sum(1 for x in out['fixtures'] if x.get('resolved'))
         out['fixtures_with_detail_player_markets']=sum(1 for x in out['fixtures'] if x['combo_or_player_detail_available'])
         out['source_healthy']=True
     except Exception as e:
@@ -141,6 +146,6 @@ def main():
         out['transport']=client.diagnostics(); client.close()
     FEED.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(json.dumps({'source_healthy':out.get('source_healthy'),'candidate_count':out.get('candidate_count'),'fixtures_with_detail_player_markets':out.get('fixtures_with_detail_player_markets'),'sections_probed':len(out.get('sections_probed') or []),'transport':out.get('transport')},ensure_ascii=False))
+    print(json.dumps({'source_healthy':out.get('source_healthy'),'candidate_count_total':out.get('candidate_count_total'),'candidate_count':out.get('candidate_count'),'resolved_fixture_count':out.get('resolved_fixture_count'),'fixtures_with_detail_player_markets':out.get('fixtures_with_detail_player_markets'),'player_feed_load_error':out.get('player_feed_load_error'),'sections_probed':len(out.get('sections_probed') or []),'transport':out.get('transport')},ensure_ascii=False))
 
 if __name__=='__main__': main()
