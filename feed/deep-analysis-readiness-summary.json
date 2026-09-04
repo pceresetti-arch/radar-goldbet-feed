@@ -1,14 +1,15 @@
 {
-  "generated_at": "2026-09-04T20:20:03.932764+00:00",
-  "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
+  "generated_at": "2026-09-04T20:25:04.476202+00:00",
+  "contract": "RADAR_FULL_ANALYSIS_GATE_V2: FULL requires certified primary/crosschecked XI, synchronized tactical layer, fresh exact CURRENT BetFlag/AAMS standard prices, explicit market/movement status, and POST-XI delta when required. Single-provider SOURCE_CONFIRMED is PROVIDER_ONLY and cannot be called official. Missing TRUE OPEN never permits a movement claim; CURRENT_ONLY may support PRICE-ONLY value analysis with exact FINAL GATE price.",
+  "contract_file": "RADAR_FULL_ANALYSIS_GATE_V2.md",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 5.4,
-    "tactical": 4.9,
-    "betflag_fixture_feed": 0.4,
-    "betflag_standard_source": 0.6,
-    "betflag_player_source": 0.5,
-    "player_context": 4.8
+    "lineups": 10.4,
+    "tactical": 9.9,
+    "betflag_fixture_feed": 5.4,
+    "betflag_standard_source": 5.6,
+    "betflag_player_source": 5.5,
+    "player_context": 9.9
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -20,7 +21,10 @@
     "betflag_exact_price_seconds": 45
   },
   "betflag_feed_path": {
-    "index": "feed/betflag-fixtures-index.json",
+    "runtime_branch": "betflag-live",
+    "live_status": "feed/betflag-live-status.json",
+    "live_index": "feed/betflag-residential-fixtures-index.json",
+    "builder_index": "feed/betflag-fixtures-index.json",
     "fixture_dir": "feed/betflag-fixtures",
     "source_class": "BETFLAG_AAMS_DIRECT",
     "worker": "https://radar-betflag-v7.p-ceresetti.workers.dev"
@@ -32,11 +36,18 @@
     "endpoint": "/live/player-price",
     "exact_proof_required_at_decision_time": true
   },
-  "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
+  "xi_policy": "SOURCE_CONFIRMED from one provider => PROVIDER_ONLY unless explicit official-primary metadata; CROSS_CONFIRMED => CERTIFIED_CROSSCHECK.",
+  "movement_policy": "Only explicit BetFlag evidence can be TRUE_OPEN/OPEN_RADAR. FIRST_SEEN is diagnostic. CURRENT_ONLY permits no movement claim and cross-book movement never substitutes BetFlag.",
+  "mandatory_output_status": [
+    "XI_SOURCE_CONFIDENCE",
+    "BETFLAG_MARKET_COMPLETENESS",
+    "MOVEMENT_CERTIFICATION",
+    "readiness_strip"
+  ],
   "match_count": 10,
   "readiness_counts": {
-    "WAIT_OFFICIAL_STANDARD_XI": 9,
-    "WAIT_BETFLAG_FIXTURE_MAPPING": 1
+    "WAIT_XI": 9,
+    "WAIT_PRIMARY_OR_CROSSCHECK_XI": 1
   },
   "ready_count": 0,
   "ready_matches": [],
