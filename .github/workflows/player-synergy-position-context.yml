@@ -6,6 +6,8 @@ on:
     paths:
       - 'feed/lineups-current.json'
       - 'scripts/build_player_synergy_position_context.py'
+      - 'scripts/enrich_player_synergy_position_context.py'
+      - 'scripts/build_deep_analysis_readiness_v3.py'
 
 permissions:
   contents: write
@@ -17,7 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
         with:
@@ -26,15 +28,23 @@ jobs:
         run: pip install -q curl_cffi
       - name: Build player synergy and position context
         run: python scripts/build_player_synergy_position_context.py
-      - name: Persist synergy context
+      - name: Complete co-start and position confidence layer
+        run: python scripts/enrich_player_synergy_position_context.py
+      - name: Rebuild deep analysis gate with synergy requirements
+        run: python scripts/build_deep_analysis_readiness_v3.py
+      - name: Persist synergy context and deep gate
         shell: bash
         run: |
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          git add feed/player-synergy-position-current.json feed/player-synergy-position-current-summary.json
+          git add \
+            feed/player-synergy-position-current.json \
+            feed/player-synergy-position-current-summary.json \
+            feed/deep-analysis-readiness.json \
+            feed/deep-analysis-readiness-summary.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh player synergy and position context'
+          git commit -m 'Refresh synergy-aware deep analysis readiness'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
