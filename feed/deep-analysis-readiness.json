@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-04T20:09:37.166568+00:00",
+  "generated_at": "2026-09-04T20:15:52.539511+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 15.6,
-    "tactical": 15.2,
-    "betflag_fixture_feed": 4.2,
-    "betflag_standard_source": 4.3,
-    "betflag_player_source": 4.2,
-    "player_context": 15.1
+    "lineups": 1.2,
+    "tactical": 0.7,
+    "betflag_fixture_feed": 10.4,
+    "betflag_standard_source": 10.6,
+    "betflag_player_source": 10.5,
+    "player_context": 0.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -33,51 +33,45 @@
     "exact_proof_required_at_decision_time": true
   },
   "true_open_policy": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO when no direct certified open exists; never substitute GoldBet/other books and never block CURRENT price analysis solely for missing open.",
-  "match_count": 11,
+  "match_count": 10,
   "readiness_counts": {
-    "STALE_LINEUP_FEED": 2,
-    "WAIT_OFFICIAL_STANDARD_XI": 9
+    "WAIT_OFFICIAL_STANDARD_XI": 9,
+    "READY_DEEP_ANALYSIS": 1
   },
-  "ready_count": 0,
-  "ready_matches": [],
-  "player_lane_ready_count": 0,
-  "player_lane_ready_matches": [],
-  "matches": [
+  "ready_count": 1,
+  "ready_matches": [
     {
-      "match_market_id": "36361.6278",
-      "match_event_id": 16088419,
-      "match": "Estudiantes Rio Cuarto - Sarmiento Junin",
+      "match_market_id": "36361.2786",
+      "match_event_id": 16085772,
+      "match": "Alianza Atletico - UTC de Cajamarca",
       "league": "Primera Division",
-      "start_time": "04-09-2026 21:45",
-      "start_utc": "2026-09-04T19:45:00+00:00",
-      "minutes_to_start": -9.0,
-      "readiness": "STALE_LINEUP_FEED",
-      "analysis_scope": "NOT_READY",
-      "blocking_reasons": [
-        "STALE_LINEUP_FEED",
-        "WAIT_BETFLAG_FIXTURE_MAPPING"
-      ],
+      "start_time": "04-09-2026 22:15",
+      "start_utc": "2026-09-04T20:15:00+00:00",
+      "minutes_to_start": 0.3,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
       "warnings": [
-        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
+        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": false,
-      "xi_fingerprint": "9d37e2b5ccca153f12db",
+      "lineup_ready": true,
+      "xi_fingerprint": "ef300e65f13fd5bdbf9b",
       "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
-      "tactical_confidence": 0.86,
+      "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": false,
-      "betflag_fixture_file": null,
-      "betflag_standard_count": 0,
+      "betflag_fixture_mapped": true,
+      "betflag_fixture_file": "feed/betflag-fixtures/alianza-atletico-utc-de-cajamarca.json",
+      "betflag_standard_count": 32,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": false,
+      "betflag_standard_ready": true,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -94,7 +88,11 @@
       "true_open_blocks_current_analysis": false,
       "strong_drop_count": 0,
       "strong_drops": []
-    },
+    }
+  ],
+  "player_lane_ready_count": 0,
+  "player_lane_ready_matches": [],
+  "matches": [
     {
       "match_market_id": "36363.20660",
       "match_event_id": 16089496,
@@ -102,7 +100,7 @@
       "league": "Ligue 1",
       "start_time": "04-09-2026 22:00",
       "start_utc": "2026-09-04T20:00:00+00:00",
-      "minutes_to_start": 6.0,
+      "minutes_to_start": -14.7,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -154,23 +152,20 @@
       "league": "Primera Division",
       "start_time": "04-09-2026 22:15",
       "start_utc": "2026-09-04T20:15:00+00:00",
-      "minutes_to_start": 21.0,
-      "readiness": "STALE_LINEUP_FEED",
-      "analysis_scope": "NOT_READY",
-      "blocking_reasons": [
-        "STALE_LINEUP_FEED"
-      ],
+      "minutes_to_start": 0.3,
+      "readiness": "READY_DEEP_ANALYSIS",
+      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
+      "blocking_reasons": [],
       "warnings": [
         "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
-        "XI_CHANGED_AFTER_FIRST_CONFIRMATION",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
       "lineup_type": "standard",
       "official_standard_xi": true,
-      "lineup_ready": false,
-      "xi_fingerprint": "7d409fb61dd5c8be5a41",
-      "xi_changed_after_confirmation": true,
+      "lineup_ready": true,
+      "xi_fingerprint": "ef300e65f13fd5bdbf9b",
+      "xi_changed_after_confirmation": false,
       "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
       "tactical_confidence": 0.94,
       "tactical_feed_fresh": true,
@@ -206,7 +201,7 @@
       "league": "Segunda Division",
       "start_time": "04-09-2026 22:15",
       "start_utc": "2026-09-04T20:15:00+00:00",
-      "minutes_to_start": 21.0,
+      "minutes_to_start": 0.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -257,7 +252,7 @@
       "league": "Serie B",
       "start_time": "04-09-2026 22:30",
       "start_utc": "2026-09-04T20:30:00+00:00",
-      "minutes_to_start": 36.0,
+      "minutes_to_start": 15.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -308,7 +303,7 @@
       "league": "Serie B",
       "start_time": "04-09-2026 22:30",
       "start_utc": "2026-09-04T20:30:00+00:00",
-      "minutes_to_start": 36.0,
+      "minutes_to_start": 15.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -359,7 +354,7 @@
       "league": "Liga Femenina",
       "start_time": "04-09-2026 22:30",
       "start_utc": "2026-09-04T20:30:00+00:00",
-      "minutes_to_start": 36.0,
+      "minutes_to_start": 15.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -410,7 +405,7 @@
       "league": "Primera B",
       "start_time": "04-09-2026 22:30",
       "start_utc": "2026-09-04T20:30:00+00:00",
-      "minutes_to_start": 36.0,
+      "minutes_to_start": 15.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -461,7 +456,7 @@
       "league": "Liga Femenina",
       "start_time": "04-09-2026 23:00",
       "start_utc": "2026-09-04T21:00:00+00:00",
-      "minutes_to_start": 66.0,
+      "minutes_to_start": 45.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -512,7 +507,7 @@
       "league": "Liga de Futbol Prof",
       "start_time": "04-09-2026 23:15",
       "start_utc": "2026-09-04T21:15:00+00:00",
-      "minutes_to_start": 81.0,
+      "minutes_to_start": 60.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
@@ -563,7 +558,7 @@
       "league": "Mls Next Pro",
       "start_time": "04-09-2026 23:30",
       "start_utc": "2026-09-04T21:30:00+00:00",
-      "minutes_to_start": 96.0,
+      "minutes_to_start": 75.3,
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
