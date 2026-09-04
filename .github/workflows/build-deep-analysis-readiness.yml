@@ -15,6 +15,8 @@ on:
     paths:
       - 'deep-analysis-readiness-trigger.json'
       - 'scripts/build_deep_analysis_readiness.py'
+      - 'scripts/hydrate_live_betflag_index.py'
+      - 'RADAR_FULL_ANALYSIS_GATE_V2.md'
 
 permissions:
   contents: write
@@ -32,14 +34,35 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: main
+          fetch-depth: 0
+
+      - name: Hydrate fresh BetFlag live index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin betflag-live:refs/remotes/origin/betflag-live
+          mkdir -p feed
+          if ! git show origin/betflag-live:feed/betflag-residential-fixtures-index.json > feed/betflag-residential-fixtures-index.json; then
+            echo 'Missing betflag-live fixture index: hard data gap' >&2
+            exit 2
+          fi
+          if git show origin/betflag-live:feed/betflag-live-status.json > feed/betflag-live-status.json 2>/dev/null; then
+            echo 'Hydrated live status'
+          else
+            echo 'Live status file unavailable; fixture index health remains authoritative for this build' >&2
+          fi
+          python scripts/hydrate_live_betflag_index.py
+
       - name: Build machine-readable BetFlag-only readiness gate
         run: python scripts/build_deep_analysis_readiness.py
+
       - name: Persist readiness safely
         shell: bash
         run: |
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          # The hydrated BetFlag adapter is runtime-only. Persist only readiness outputs.
           git add feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh deep-analysis readiness gate'
