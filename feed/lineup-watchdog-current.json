@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v5-certified-source",
-  "generated_at": "2026-09-04T21:56:49.686776+00:00",
+  "generated_at": "2026-09-04T22:19:29.526804+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source probes. Single-provider SOURCE_CONFIRMED remains provider-only until primary metadata or independent cross-confirmation exists.",
   "official_definition": "CERTIFIED_PRIMARY or CERTIFIED_CROSSCHECK + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,15 +21,65 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 1,
+  "attempt_count": 6,
   "attempts": [
     {
       "attempt": 1,
-      "mode": "FULL_DISCOVERY",
-      "started_at": "2026-09-04T21:56:49.534682+00:00",
-      "finished_at": "2026-09-04T21:56:49.686760+00:00",
+      "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
+      "started_at": "2026-09-04T22:16:26.227407+00:00",
+      "finished_at": "2026-09-04T22:16:33.170215+00:00",
       "official_count": 0,
-      "urgent_unconfirmed_count": 0,
+      "urgent_unconfirmed_count": 11,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 2,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-04T22:17:08.170386+00:00",
+      "finished_at": "2026-09-04T22:17:08.385806+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 11,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 3,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-04T22:17:43.386084+00:00",
+      "finished_at": "2026-09-04T22:17:43.707892+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 11,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 4,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-04T22:18:18.708144+00:00",
+      "finished_at": "2026-09-04T22:18:19.011449+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 11,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 5,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-04T22:18:54.011673+00:00",
+      "finished_at": "2026-09-04T22:18:54.295872+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 11,
+      "events": [],
+      "actionable_events": []
+    },
+    {
+      "attempt": 6,
+      "mode": "URGENT_DIRECT_MULTI_SOURCE",
+      "started_at": "2026-09-04T22:19:29.296142+00:00",
+      "finished_at": "2026-09-04T22:19:29.526668+00:00",
+      "official_count": 0,
+      "urgent_unconfirmed_count": 11,
       "events": [],
       "actionable_events": []
     }
@@ -37,6 +87,117 @@
   "observed_events": [],
   "actionable_events": [],
   "post_xi_required": false,
-  "urgent_unconfirmed_remaining": [],
-  "target_count": 0
+  "urgent_unconfirmed_remaining": [
+    {
+      "match": "Criciuma EC SC - Cuiaba MT",
+      "match_market_id": "36361.1277",
+      "match_event_id": 16088339,
+      "minutes_to_start": 10.5,
+      "status": "SOURCE_CONFIRMED",
+      "xi_source_confidence": "PROVIDER_ONLY",
+      "source": "FotMob",
+      "fotmob_match_id": 5190695
+    },
+    {
+      "match": "Bandeirante - Uniao Sao Joao EC SP",
+      "match_market_id": "36365.34335",
+      "match_event_id": 16110712,
+      "minutes_to_start": 40.5,
+      "status": "NOT_AVAILABLE",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 1000020540
+    },
+    {
+      "match": "Ferro Carril Oeste - Mitre Santiago Del Estero",
+      "match_market_id": "36341.479",
+      "match_event_id": 16081000,
+      "minutes_to_start": 40.5,
+      "status": "NOT_AVAILABLE",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    },
+    {
+      "match": "Houston Dynamo 2 - Austin FC II",
+      "match_market_id": "36365.19857",
+      "match_event_id": 16109639,
+      "minutes_to_start": 40.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007757
+    },
+    {
+      "match": "Inter Miami CF II - Orlando City B",
+      "match_market_id": "36365.23002",
+      "match_event_id": 16109631,
+      "minutes_to_start": 40.5,
+      "status": "SOURCE_CONFIRMED",
+      "xi_source_confidence": "PROVIDER_ONLY",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007754
+    },
+    {
+      "match": "Loudoun United FC - Colorado Springs Switchbacks",
+      "match_market_id": "36361.781",
+      "match_event_id": 16088490,
+      "minutes_to_start": 40.5,
+      "status": "LINEUP_PRESENT_UNCONFIRMED",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 5109924
+    },
+    {
+      "match": "Philadelphia - Columbus Crew 2",
+      "match_market_id": "36365.23263",
+      "match_event_id": 16109650,
+      "minutes_to_start": 40.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007755
+    },
+    {
+      "match": "Toronto II - FC Cincinnati 2",
+      "match_market_id": "36365.23261",
+      "match_event_id": 16109648,
+      "minutes_to_start": 40.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007756
+    },
+    {
+      "match": "Athletic Club Sjdr MG - villa Nova FC",
+      "match_market_id": "36361.1276",
+      "match_event_id": 16088340,
+      "minutes_to_start": 70.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 5190691
+    },
+    {
+      "match": "Carolina Core FC - New England Revolution II",
+      "match_market_id": "36363.38554",
+      "match_event_id": 16109635,
+      "minutes_to_start": 70.5,
+      "status": "REFERENCE_PREVIOUS_XI",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": 1000007752
+    },
+    {
+      "match": "New York City - Nashville",
+      "match_market_id": "36361.513",
+      "match_event_id": 16076244,
+      "minutes_to_start": 70.5,
+      "status": "NOT_AVAILABLE",
+      "xi_source_confidence": "MISSING",
+      "source": "FotMob",
+      "fotmob_match_id": null
+    }
+  ],
+  "target_count": 12
 }
