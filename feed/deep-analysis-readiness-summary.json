@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-09-04T23:09:46.831562+00:00",
-  "contract": "RADAR_FULL_ANALYSIS_GATE_V2: FULL requires certified primary/crosschecked XI, synchronized tactical layer, fresh exact CURRENT BetFlag/AAMS standard prices, explicit market/movement status, and POST-XI delta when required. Single-provider SOURCE_CONFIRMED is PROVIDER_ONLY and cannot be called official. Missing TRUE OPEN never permits a movement claim; CURRENT_ONLY may support PRICE-ONLY value analysis with exact FINAL GATE price. V3: player-market BET readiness additionally requires fresh Player Synergy & Position Context aligned to the current XI fingerprint with >=60% recent-history baseline coverage. Teammate/position deltas are shrinkage context modifiers only.",
+  "generated_at": "2026-09-04T23:38:42.043595+00:00",
+  "contract": "RADAR_FULL_ANALYSIS_GATE_V2: FULL requires certified primary/crosschecked XI, synchronized tactical layer, fresh exact CURRENT BetFlag/AAMS standard prices, explicit market/movement status, and POST-XI delta when required. Single-provider SOURCE_CONFIRMED is PROVIDER_ONLY and cannot be called official. Missing TRUE OPEN never permits a movement claim; CURRENT_ONLY may support PRICE-ONLY value analysis with exact FINAL GATE price. V4: player BET readiness requires explicit fixture-specific BetFlag player_coverage_complete with concrete player rows; Combo BET readiness separately requires combo_coverage_complete with concrete SCORER_COMBO/PLAYER_COMBO rows. Empty player/combo arrays are never COMPLETE. Player readiness additionally requires fresh XI-aligned Player Synergy & Position Context with >=60% baseline coverage.",
   "contract_file": "RADAR_FULL_ANALYSIS_GATE_V2.md",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 23.2,
-    "tactical": 22.8,
-    "betflag_fixture_feed": 9.2,
-    "betflag_standard_source": 9.4,
-    "betflag_player_source": 9.3,
-    "player_context": 22.8,
+    "lineups": 52.2,
+    "tactical": 51.7,
+    "betflag_fixture_feed": 2.1,
+    "betflag_standard_source": 2.2,
+    "betflag_player_source": 2.1,
+    "player_context": 14.2,
     "player_synergy_position": 0.0
   },
   "freshness_limits_minutes": {
@@ -55,8 +55,15 @@
   "ready_matches": [],
   "player_lane_ready_count": 0,
   "player_lane_ready_matches": [],
-  "schema": "radar-deep-analysis-readiness-v3-synergy-position",
-  "generated_at_v3": "2026-09-04T23:09:46.805040+00:00",
+  "schema": "radar-deep-analysis-readiness-v4-betflag-coverage-synergy",
+  "generated_at_v3": "2026-09-04T23:38:42.019442+00:00",
+  "betflag_player_combo_coverage_policy": {
+    "input": "feed/betflag-fixtures-index.json",
+    "player_rule": "player_coverage_complete=true AND player_props_count>0",
+    "combo_rule": "combo_coverage_complete=true AND combo_props_count>0",
+    "generic_coverage_rule": "never use generic coverage_complete as a substitute for player/combo completeness",
+    "not_observed_rule": "NOT OBSERVED is pending/recovery, never equivalent to unavailable"
+  },
   "synergy_position_policy": {
     "input": "feed/player-synergy-position-current.json",
     "max_age_minutes": 45,
@@ -64,5 +71,6 @@
     "require_current_xi_fingerprint_match": true,
     "small_sample_policy": "shrink deltas toward zero; LOW samples cannot create standalone edge",
     "standard_market_gate_effect": "none; only player-market BET readiness is blocked"
-  }
+  },
+  "combo_lane_ready_count": 0
 }
