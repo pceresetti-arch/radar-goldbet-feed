@@ -22,14 +22,33 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
         with:
           ref: main
       - name: Install browser-like client
         run: pip install -q curl_cffi
-      - name: Watch official XI with fast dual-source urgent polling
+      - name: Promote dual-source XI checks to T-120
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          patches = {
+              Path('scripts/refresh_current_lineups_watchdog.py'): [
+                  ('URGENT_TO_MIN = 80.0', 'URGENT_TO_MIN = 120.0'),
+              ],
+              Path('scripts/refresh_urgent_lineups.py'): [
+                  ('URGENT_TO_MIN = 85.0', 'URGENT_TO_MIN = 120.0'),
+              ],
+          }
+          for path, reps in patches.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in reps:
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Watch official XI with early dual-source polling
         run: python scripts/refresh_current_lineups_watchdog.py
       - name: Commit lineup feed and POST-XI trigger safely
         shell: bash
