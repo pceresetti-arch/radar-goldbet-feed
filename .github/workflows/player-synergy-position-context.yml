@@ -1,0 +1,43 @@
+name: Player synergy position context
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'feed/lineups-current.json'
+      - 'scripts/build_player_synergy_position_context.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: player-synergy-position-context
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Install browser-like client
+        run: pip install -q curl_cffi
+      - name: Build player synergy and position context
+        run: python scripts/build_player_synergy_position_context.py
+      - name: Persist synergy context
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git add feed/player-synergy-position-current.json feed/player-synergy-position-current-summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh player synergy and position context'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          exit 1
