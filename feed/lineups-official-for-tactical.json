@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T22:33:35.457941+00:00",
+  "generated_at": "2026-09-04T22:46:32.140487+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -10,9 +10,9 @@
   ],
   "target_count": 18,
   "status_counts": {
-    "SOURCE_CONFIRMED": 4,
+    "SOURCE_CONFIRMED": 5,
     "NOT_AVAILABLE": 8,
-    "REFERENCE_PREVIOUS_XI": 6
+    "REFERENCE_PREVIOUS_XI": 5
   },
   "schedule_stats": [
     {
@@ -30,18 +30,22 @@
   "matches": [],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T22:33:35.457941+00:00",
+    "generated_at": "2026-09-04T22:46:32.140487+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 10,
+    "target_count": 11,
     "sources": [
       "FotMob",
       "Sofascore"
     ],
     "schedule_meta": {
       "2026-09-04": {
+        "provider": "Sofascore",
+        "error": "SCHEDULE_UNAVAILABLE"
+      },
+      "2026-09-05": {
         "provider": "Sofascore",
         "error": "SCHEDULE_UNAVAILABLE"
       }
@@ -52,6 +56,6 @@
   "official_definition": "CERTIFIED_PRIMARY or CERTIFIED_CROSSCHECK + confirmed standard 11v11; CROSS_CONFIRMED requires >=2 explicit independent source names; single-provider evidence is not official",
   "source_match_count": 18,
   "official_match_count": 0,
-  "provider_only_rejected_count": 4,
+  "provider_only_rejected_count": 5,
   "crosscheck_without_evidence_rejected_count": 0
 }
