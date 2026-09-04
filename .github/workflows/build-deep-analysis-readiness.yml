@@ -9,6 +9,7 @@ on:
       - 'Enrich current lineups tactical'
       - 'Build player matchup context'
       - 'Radar BetFlag v7 live bridge'
+      - 'BetFlag market coverage audit'
     types: [completed]
   workflow_dispatch:
   push:
@@ -17,6 +18,8 @@ on:
       - 'scripts/build_deep_analysis_readiness.py'
       - 'scripts/enforce_full_analysis_gate_v2.py'
       - 'scripts/build_acquisition_recovery_queue.py'
+      - 'scripts/harden_lineup_evidence.py'
+      - 'scripts/validate_radar_pipeline.py'
       - 'scripts/hydrate_live_betflag_index.py'
       - 'scripts/filter_official_lineups_for_tactical.py'
       - 'RADAR_FULL_ANALYSIS_GATE_V2.md'
@@ -33,7 +36,7 @@ jobs:
   build:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
         with:
@@ -57,6 +60,12 @@ jobs:
           fi
           python scripts/hydrate_live_betflag_index.py
 
+      - name: Harden lineup source evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/harden_lineup_evidence.py
+
       - name: Rebuild certified-XI tactical input
         shell: bash
         run: |
@@ -78,17 +87,23 @@ jobs:
           set -euo pipefail
           python scripts/build_acquisition_recovery_queue.py
 
+      - name: Validate Radar pipeline integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/validate_radar_pipeline.py
+
       - name: Persist readiness safely
         shell: bash
         run: |
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          # Hydrated BetFlag/XI adapter files are runtime-only. Persist only readiness/recovery outputs.
+          # Hydrated BetFlag adapter files are runtime-only. Persist XI hardening and audit outputs.
           git reset -- feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-fixtures-index.json feed/lineups-official-for-tactical.json 2>/dev/null || true
-          git add feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json feed/acquisition-recovery-queue.json
+          git add feed/lineups-current.json feed/lineups-last-certified.json feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json feed/acquisition-recovery-queue.json feed/radar-pipeline-validation.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh deep-analysis readiness and recovery queue'
+          git commit -m 'Refresh hardened XI readiness and pipeline validation'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
