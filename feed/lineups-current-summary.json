@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T19:44:18.646316+00:00",
+  "generated_at": "2026-09-04T19:53:58.538428+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 12,
+  "target_count": 11,
   "status_counts": {
-    "NOT_AVAILABLE": 9,
-    "SOURCE_CONFIRMED": 1,
-    "REFERENCE_PREVIOUS_XI": 2
+    "SOURCE_CONFIRMED": 2,
+    "NOT_AVAILABLE": 8,
+    "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
     {
@@ -24,7 +24,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T19:44:18.646316+00:00",
+    "generated_at": "2026-09-04T19:53:58.538428+00:00",
     "window_minutes": [
       0,
       85.0
@@ -40,32 +40,23 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Alianza Atletico - UTC de Cajamarca",
+        "minutes_to_start": 21.0,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Estudiantes Rio Cuarto - Sarmiento Junin",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "matches": [
-    {
-      "match": "Deportivo Carapegua - Paraguari AC",
-      "start_time": "04-09-2026 21:30",
-      "league": "Segunda Division",
-      "minutes_to_start": -14.3,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36365.21463",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Estudiantes Rio Cuarto - Sarmiento Junin",
       "start_time": "04-09-2026 21:45",
       "league": "Primera Division",
-      "minutes_to_start": 0.7,
+      "minutes_to_start": -9.0,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.6278",
       "confirmed_at": "2026-09-04T19:26:49.559235+00:00",
@@ -77,7 +68,7 @@
       "match": "Js Kabylie - Rouissat",
       "start_time": "04-09-2026 22:00",
       "league": "Ligue 1",
-      "minutes_to_start": 15.7,
+      "minutes_to_start": 6.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.20660",
       "confirmed_at": null,
@@ -89,11 +80,11 @@
       "match": "Alianza Atletico - UTC de Cajamarca",
       "start_time": "04-09-2026 22:15",
       "league": "Primera Division",
-      "minutes_to_start": 30.7,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 21.0,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.2786",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-09-04T19:53:58.538428+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -101,7 +92,7 @@
       "match": "Comerciantes FC - Ayacucho",
       "start_time": "04-09-2026 22:15",
       "league": "Segunda Division",
-      "minutes_to_start": 30.7,
+      "minutes_to_start": 21.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.12123",
       "confirmed_at": null,
@@ -113,7 +104,7 @@
       "match": "22 de Julio - Gualaceo",
       "start_time": "04-09-2026 22:30",
       "league": "Serie B",
-      "minutes_to_start": 45.7,
+      "minutes_to_start": 36.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.3541",
       "confirmed_at": null,
@@ -125,7 +116,7 @@
       "match": "Atletico Rojiblanco - Nueve de Octubre",
       "start_time": "04-09-2026 22:30",
       "league": "Serie B",
-      "minutes_to_start": 45.7,
+      "minutes_to_start": 36.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.21941",
       "confirmed_at": null,
@@ -137,7 +128,7 @@
       "match": "CA Nacional Sa - Internacional de Bogota",
       "start_time": "04-09-2026 22:30",
       "league": "Liga Femenina",
-      "minutes_to_start": 45.7,
+      "minutes_to_start": 36.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.63590",
       "confirmed_at": null,
@@ -149,7 +140,7 @@
       "match": "Itagui Leones - Atletico FC",
       "start_time": "04-09-2026 22:30",
       "league": "Primera B",
-      "minutes_to_start": 45.7,
+      "minutes_to_start": 36.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.4472",
       "confirmed_at": null,
@@ -161,7 +152,7 @@
       "match": "Asociacion Deportivo Cali - Orsomarso SC",
       "start_time": "04-09-2026 23:00",
       "league": "Liga Femenina",
-      "minutes_to_start": 75.7,
+      "minutes_to_start": 66.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.2923",
       "confirmed_at": null,
@@ -173,7 +164,7 @@
       "match": "Academia del Balompie Boliviano - FC Universitario de Vinto",
       "start_time": "04-09-2026 23:15",
       "league": "Liga de Futbol Prof",
-      "minutes_to_start": 90.7,
+      "minutes_to_start": 81.0,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.25098",
       "confirmed_at": null,
@@ -185,12 +176,12 @@
       "match": "Crown Legacy FC - Chicago Fire FC II",
       "start_time": "04-09-2026 23:30",
       "league": "Mls Next Pro",
-      "minutes_to_start": 105.7,
+      "minutes_to_start": 96.0,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.34251",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
-      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     }
   ]
