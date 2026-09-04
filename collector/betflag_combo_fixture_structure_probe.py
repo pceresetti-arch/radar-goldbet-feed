@@ -12,6 +12,7 @@ AGG = 1334500001
 FEED = pathlib.Path('feed')
 PLAYER_FEED = FEED / 'betflag-residential-current.json'
 OUT = FEED / 'betflag-combo-fixture-structure.json'
+LINK_OUT = FEED / 'betflag-combo-odd-link-samples.json'
 
 
 def norm(v):
@@ -30,6 +31,17 @@ def walk(x, path='root'):
             yield from walk(v, f'{path}[{i}]')
 
 
+def walk_with_ancestors(x, path='root', ancestors=()):
+    if isinstance(x, dict):
+        yield path, x, ancestors
+        nxt=(ancestors + ((path,x),))[-8:]
+        for k,v in x.items():
+            yield from walk_with_ancestors(v,f'{path}.{k}',nxt)
+    elif isinstance(x,list):
+        for i,v in enumerate(x):
+            yield from walk_with_ancestors(v,f'{path}[{i}]',ancestors)
+
+
 def marketish(v):
     n = norm(v)
     return bool(re.search(r'marcat|marc |assist|giocator|player|combo|doppietta|tripletta|tiri|parate|segna', n))
@@ -39,113 +51,84 @@ def overview_fixtures(std):
     out = {}
     for _, x in walk(std):
         en = str(x.get('en') or '')
-        if x.get('mi') is None or not en or en.startswith('('):
-            continue
-        out.setdefault(norm(en), {'match': en, 'nodes': []})['nodes'].append({k: x.get(k) for k in ('ei','mi','ti','tai','ed','en')})
+        if x.get('mi') is None or not en or en.startswith('('): continue
+        out.setdefault(norm(en), {'match': en, 'nodes': []})['nodes'].append({k:x.get(k) for k in ('ei','mi','ti','tai','ed','en')})
     return out
 
 
 def player_candidates():
-    if not PLAYER_FEED.exists():
-        return []
-    data = json.loads(PLAYER_FEED.read_text(encoding='utf-8-sig'))
-    counts = Counter(r.get('match') for r in data.get('rows') or [] if r.get('match'))
-    rows = [{'match': m, 'player_rows': n} for m, n in counts.items()]
-    rows.sort(key=lambda r: (-r['player_rows'], r['match']))
+    if not PLAYER_FEED.exists(): return []
+    data=json.loads(PLAYER_FEED.read_text(encoding='utf-8-sig'))
+    counts=Counter(r.get('match') for r in data.get('rows') or [] if r.get('match'))
+    rows=[{'match':m,'player_rows':n} for m,n in counts.items()]
+    rows.sort(key=lambda r:(-r['player_rows'],r['match']))
     return rows[:12]
 
 
 def best_node(nodes):
-    return sorted(nodes, key=lambda x: sum(x.get(k) is not None for k in ('tai','ti','mi','ei')), reverse=True)[0] if nodes else None
+    return sorted(nodes,key=lambda x:sum(x.get(k) is not None for k in ('tai','ti','mi','ei')),reverse=True)[0] if nodes else None
 
 
-def summarize_dict(path, x):
-    vals = {}
-    for k, v in x.items():
-        if isinstance(v, (str, int, float, bool)) or v is None:
-            sv = str(v)
-            vals[k] = sv[:180]
-    return {
-        'path': path,
-        'keys': sorted(x.keys()),
-        'scalar_values': vals,
-        'list_lengths': {k: len(v) for k, v in x.items() if isinstance(v, list)},
-        'dict_keys': {k: sorted(v.keys())[:40] for k, v in x.items() if isinstance(v, dict)},
-    }
+def scalar_summary(x):
+    return {k:(str(v)[:180]) for k,v in x.items() if isinstance(v,(str,int,float,bool)) or v is None}
+
+
+def summarize_dict(path,x):
+    return {'path':path,'keys':sorted(x.keys()),'scalar_values':scalar_summary(x),'list_lengths':{k:len(v) for k,v in x.items() if isinstance(v,list)},'dict_keys':{k:sorted(v.keys())[:40] for k,v in x.items() if isinstance(v,dict)}}
 
 
 def diagnostics(body):
-    market_nodes = []
-    selection_nodes = []
-    key_counts = Counter()
-    for path, x in walk(body):
-        for k in x.keys():
-            key_counts[k] += 1
-        scalar_text = ' | '.join(str(v) for v in x.values() if isinstance(v, (str, int, float)))
-        if marketish(scalar_text) and len(market_nodes) < 80:
-            market_nodes.append(summarize_dict(path, x))
-        # Selection/odd candidates independent of the currently assumed nesting.
-        if any(k in x for k in ('ov','odd','price','quota')) and len(selection_nodes) < 80:
-            selection_nodes.append(summarize_dict(path, x))
-    return {
-        'top_keys': key_counts.most_common(80),
-        'market_nodes': market_nodes,
-        'selection_like_nodes': selection_nodes,
-        'market_node_count_captured': len(market_nodes),
-        'selection_node_count_captured': len(selection_nodes),
-    }
+    market_nodes=[]; selection_nodes=[]; key_counts=Counter()
+    for path,x in walk(body):
+        key_counts.update(x.keys())
+        scalar_text=' | '.join(str(v) for v in x.values() if isinstance(v,(str,int,float)))
+        if marketish(scalar_text) and len(market_nodes)<40: market_nodes.append(summarize_dict(path,x))
+        if any(k in x for k in ('ov','odd','price','quota')) and len(selection_nodes)<40: selection_nodes.append(summarize_dict(path,x))
+    return {'top_keys':key_counts.most_common(80),'market_nodes':market_nodes,'selection_like_nodes':selection_nodes,'market_node_count_captured':len(market_nodes),'selection_node_count_captured':len(selection_nodes)}
+
+
+def odd_link_samples(body,limit=24):
+    out=[]
+    for path,x,anc in walk_with_ancestors(body):
+        if not any(k in x for k in ('ov','odd','price','quota')): continue
+        out.append({'path':path,'odd_node':scalar_summary(x),'ancestors':[{'path':p,'scalars':scalar_summary(a)} for p,a in anc[-6:]]})
+        if len(out)>=limit: break
+    return out
 
 
 def main():
-    client = BetFlagTransport(timeout=20)
-    out = {
-        'schema_version': 'betflag-combo-fixture-structure-v1',
-        'generated_at': datetime.now(timezone.utc).isoformat(),
-        'source_class': 'BETFLAG_AAMS_DIRECT',
-        'purpose': 'Discover fixture-specific market/selection nesting without assuming that asl lives under the market-name node.',
-        'fixtures': [],
-        'source_healthy': False,
-    }
+    client=BetFlagTransport(timeout=20)
+    out={'schema_version':'betflag-combo-fixture-structure-v2','generated_at':datetime.now(timezone.utc).isoformat(),'source_class':'BETFLAG_AAMS_DIRECT','purpose':'Discover fixture-specific market/selection nesting without assuming that asl lives under the market-name node.','fixtures':[],'source_healthy':False}
+    links={'schema_version':'betflag-combo-odd-link-samples-v1','generated_at':out['generated_at'],'source_class':'BETFLAG_AAMS_DIRECT','sample':None}
     try:
-        st, overview = client.get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
-        out['overview_status'] = st
-        if st != 200:
-            raise RuntimeError(f'overview HTTP {st}')
-        fixtures = overview_fixtures(overview)
+        st,overview=client.get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
+        out['overview_status']=st
+        if st!=200: raise RuntimeError(f'overview HTTP {st}')
+        fixtures=overview_fixtures(overview)
         for cand in player_candidates():
-            f = fixtures.get(norm(cand['match']))
-            row = {**cand, 'resolved': bool(f), 'sections': []}
-            if not f:
-                out['fixtures'].append(row)
-                continue
-            node = best_node(f['nodes'])
-            row['ids'] = node
+            f=fixtures.get(norm(cand['match'])); row={**cand,'resolved':bool(f),'sections':[]}
+            if not f: out['fixtures'].append(row); continue
+            node=best_node(f['nodes']); row['ids']=node
             if not node or any(node.get(k) is None for k in ('ti','mi','ei')):
-                row['error'] = 'missing detail identifiers'
-                out['fixtures'].append(row)
-                continue
-            tai = node.get('tai') or 0
-            # Section 0 currently returns the broad market tree; 2484 is kept as
-            # a targeted special/player candidate when exposed by BetFlag.
-            for sec in (0, 2484):
-                url = f"{BASE}/getDetailsEventAams/{tai}/{node['ti']}/{node['mi']}/{node['ei']}/{sec}/0?channelId=0"
+                row['error']='missing detail identifiers'; out['fixtures'].append(row); continue
+            tai=node.get('tai') or 0
+            for sec in (0,2484):
+                url=f"{BASE}/getDetailsEventAams/{tai}/{node['ti']}/{node['mi']}/{node['ei']}/{sec}/0?channelId=0"
                 try:
-                    status, body = client.get(url)
-                    row['sections'].append({'section': sec, 'status': status, 'diagnostics': diagnostics(body) if status == 200 else None})
+                    status,body=client.get(url)
+                    row['sections'].append({'section':sec,'status':status,'diagnostics':diagnostics(body) if status==200 else None})
+                    if status==200 and sec==0 and links['sample'] is None:
+                        links['sample']={'match':cand['match'],'ids':node,'section':sec,'odd_nodes':odd_link_samples(body)}
                 except Exception as e:
-                    row['sections'].append({'section': sec, 'status': None, 'error': repr(e)})
+                    row['sections'].append({'section':sec,'status':None,'error':repr(e)})
             out['fixtures'].append(row)
-        out['resolved_fixture_count'] = sum(1 for r in out['fixtures'] if r.get('resolved'))
-        out['source_healthy'] = True
-    except Exception as e:
-        out['error'] = repr(e)
+        out['resolved_fixture_count']=sum(1 for r in out['fixtures'] if r.get('resolved')); out['source_healthy']=True
+    except Exception as e: out['error']=repr(e)
     finally:
-        out['transport'] = client.diagnostics()
-        client.close()
+        out['transport']=client.diagnostics(); client.close()
     FEED.mkdir(exist_ok=True)
-    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(json.dumps({'source_healthy': out.get('source_healthy'), 'resolved_fixture_count': out.get('resolved_fixture_count'), 'fixture_count': len(out.get('fixtures') or [])}, ensure_ascii=False))
+    OUT.write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+    LINK_OUT.write_text(json.dumps(links,ensure_ascii=False,indent=2),encoding='utf-8')
+    print(json.dumps({'source_healthy':out.get('source_healthy'),'resolved_fixture_count':out.get('resolved_fixture_count'),'fixture_count':len(out.get('fixtures') or []),'odd_link_samples':len(((links.get('sample') or {}).get('odd_nodes') or []))},ensure_ascii=False))
 
-
-if __name__ == '__main__':
-    main()
+if __name__=='__main__': main()
