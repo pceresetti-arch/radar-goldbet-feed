@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T19:17:08.303329+00:00",
+  "generated_at": "2026-09-04T19:26:49.559235+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,11 +8,11 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 29,
+  "target_count": 19,
   "status_counts": {
-    "NOT_AVAILABLE": 20,
-    "SOURCE_CONFIRMED": 7,
-    "REFERENCE_PREVIOUS_XI": 2
+    "NOT_AVAILABLE": 16,
+    "SOURCE_CONFIRMED": 2,
+    "REFERENCE_PREVIOUS_XI": 1
   },
   "schedule_stats": [
     {
@@ -24,7 +24,7 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T19:17:08.303329+00:00",
+    "generated_at": "2026-09-04T19:26:49.559235+00:00",
     "window_minutes": [
       0,
       85.0
@@ -40,164 +40,23 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": []
+    "changes": [
+      {
+        "match": "Estudiantes Rio Cuarto - Sarmiento Junin",
+        "minutes_to_start": 18.2,
+        "before_official": true,
+        "after_status": "SOURCE_CONFIRMED",
+        "source": "FotMob",
+        "xi_changed": true
+      }
+    ]
   },
-  "watchdog_identity_repairs": [
-    {
-      "match": "Cdt Real Oruro - San Antonio Bulo Bulo",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Ipswich Town - Liverpool",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "Sandefjord - Viking FK",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    },
-    {
-      "match": "FC Porto - Moreirense FC",
-      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
-    }
-  ],
   "matches": [
-    {
-      "match": "Bruk-Bet Termalica Nieciecza - Lechia Gdansk",
-      "start_time": "04-09-2026 21:00",
-      "league": "1. Liga",
-      "minutes_to_start": -17.1,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.3320",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Cdt Real Oruro - San Antonio Bulo Bulo",
-      "start_time": "04-09-2026 21:00",
-      "league": "Liga de Futbol Prof",
-      "minutes_to_start": -17.1,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36364.58303",
-      "confirmed_at": "2026-09-04T18:29:17.478606+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "FC Fleury - Olympique Lione",
-      "start_time": "04-09-2026 21:00",
-      "league": "Division 1 Femminile",
-      "minutes_to_start": -17.1,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36361.4638",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Ipswich Town - Liverpool",
-      "start_time": "04-09-2026 21:00",
-      "league": "Premier League",
-      "minutes_to_start": -17.1,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.3299",
-      "confirmed_at": "2026-09-04T18:10:55.016833+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "La Luz FC - Huracan",
-      "start_time": "04-09-2026 21:00",
-      "league": "Segunda Division",
-      "minutes_to_start": -17.1,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36365.32369",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Real Betis - Real Madrid",
-      "start_time": "04-09-2026 21:00",
-      "league": "Liga",
-      "minutes_to_start": -17.1,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.3752",
-      "confirmed_at": "2026-09-04T18:10:55.016833+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Sandefjord - Viking FK",
-      "start_time": "04-09-2026 21:00",
-      "league": "Eliteserien",
-      "minutes_to_start": -17.1,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.653",
-      "confirmed_at": "2026-09-04T18:10:55.016833+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Shamrock Rovers - Shelbourne FC",
-      "start_time": "04-09-2026 21:00",
-      "league": "Premier League",
-      "minutes_to_start": -17.1,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.19519",
-      "confirmed_at": "2026-09-04T18:29:17.478606+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "UD SANTAREM - Caldas",
-      "start_time": "04-09-2026 21:00",
-      "league": "Liga III",
-      "minutes_to_start": -17.1,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36365.25545",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "Crusaders Strikers - Larne Ladies",
-      "start_time": "04-09-2026 21:00",
-      "league": "Premier League Femminile",
-      "minutes_to_start": -17.1,
-      "status": "NOT_AVAILABLE",
-      "match_market_id": "36365.32343",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
-    {
-      "match": "PSG - Monaco",
-      "start_time": "04-09-2026 21:05",
-      "league": "Ligue 1",
-      "minutes_to_start": -12.1,
-      "status": "SOURCE_CONFIRMED",
-      "match_market_id": "36361.2940",
-      "confirmed_at": "2026-09-04T18:29:17.478606+00:00",
-      "xi_changed_after_confirmation": false,
-      "target_origin": "PREVIOUS_LINEUP_FEED",
-      "source": "FotMob"
-    },
     {
       "match": "Domagnano - San Giovanni",
       "start_time": "04-09-2026 21:15",
       "league": "Campionato Sammarinese",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16281",
       "confirmed_at": null,
@@ -209,7 +68,7 @@
       "match": "FC Porto - Moreirense FC",
       "start_time": "04-09-2026 21:15",
       "league": "Primeira Liga",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.4118",
       "confirmed_at": "2026-09-04T18:10:55.016833+00:00",
@@ -221,7 +80,7 @@
       "match": "Faetano - Tre Fiori",
       "start_time": "04-09-2026 21:15",
       "league": "Campionato Sammarinese",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.7134",
       "confirmed_at": null,
@@ -233,7 +92,7 @@
       "match": "Fiorentino - AC Virtus",
       "start_time": "04-09-2026 21:15",
       "league": "Campionato Sammarinese",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16278",
       "confirmed_at": null,
@@ -245,7 +104,7 @@
       "match": "KH Hlidarendi - Augnablik",
       "start_time": "04-09-2026 21:15",
       "league": "3 Deild",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.18133",
       "confirmed_at": null,
@@ -257,7 +116,7 @@
       "match": "Kopavogur - Reynir",
       "start_time": "04-09-2026 21:15",
       "league": "3 Deild",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.18136",
       "confirmed_at": null,
@@ -269,7 +128,7 @@
       "match": "SD Ponferradina - Lugo",
       "start_time": "04-09-2026 21:15",
       "league": "Primera Federacion RFEF",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.6639",
       "confirmed_at": null,
@@ -281,7 +140,7 @@
       "match": "Tre Penne - Cosmos Serravalle",
       "start_time": "04-09-2026 21:15",
       "league": "Campionato Sammarinese",
-      "minutes_to_start": -2.1,
+      "minutes_to_start": -11.8,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.63600",
       "confirmed_at": null,
@@ -293,7 +152,7 @@
       "match": "Deportivo Carapegua - Paraguari AC",
       "start_time": "04-09-2026 21:30",
       "league": "Segunda Division",
-      "minutes_to_start": 12.9,
+      "minutes_to_start": 3.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.21463",
       "confirmed_at": null,
@@ -305,11 +164,11 @@
       "match": "Estudiantes Rio Cuarto - Sarmiento Junin",
       "start_time": "04-09-2026 21:45",
       "league": "Primera Division",
-      "minutes_to_start": 27.9,
-      "status": "REFERENCE_PREVIOUS_XI",
+      "minutes_to_start": 18.2,
+      "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.6278",
-      "confirmed_at": null,
-      "xi_changed_after_confirmation": false,
+      "confirmed_at": "2026-09-04T19:26:49.559235+00:00",
+      "xi_changed_after_confirmation": true,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -317,7 +176,7 @@
       "match": "Js Kabylie - Rouissat",
       "start_time": "04-09-2026 22:00",
       "league": "Ligue 1",
-      "minutes_to_start": 42.9,
+      "minutes_to_start": 33.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36363.20660",
       "confirmed_at": null,
@@ -329,7 +188,7 @@
       "match": "Alianza Atletico - UTC de Cajamarca",
       "start_time": "04-09-2026 22:15",
       "league": "Primera Division",
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.2,
       "status": "REFERENCE_PREVIOUS_XI",
       "match_market_id": "36361.2786",
       "confirmed_at": null,
@@ -341,7 +200,7 @@
       "match": "Comerciantes FC - Ayacucho",
       "start_time": "04-09-2026 22:15",
       "league": "Segunda Division",
-      "minutes_to_start": 57.9,
+      "minutes_to_start": 48.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.12123",
       "confirmed_at": null,
@@ -353,7 +212,7 @@
       "match": "22 de Julio - Gualaceo",
       "start_time": "04-09-2026 22:30",
       "league": "Serie B",
-      "minutes_to_start": 72.9,
+      "minutes_to_start": 63.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.3541",
       "confirmed_at": null,
@@ -365,7 +224,7 @@
       "match": "Atletico Rojiblanco - Nueve de Octubre",
       "start_time": "04-09-2026 22:30",
       "league": "Serie B",
-      "minutes_to_start": 72.9,
+      "minutes_to_start": 63.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.21941",
       "confirmed_at": null,
@@ -377,7 +236,7 @@
       "match": "CA Nacional Sa - Internacional de Bogota",
       "start_time": "04-09-2026 22:30",
       "league": "Liga Femenina",
-      "minutes_to_start": 72.9,
+      "minutes_to_start": 63.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.63590",
       "confirmed_at": null,
@@ -389,7 +248,7 @@
       "match": "Itagui Leones - Atletico FC",
       "start_time": "04-09-2026 22:30",
       "league": "Primera B",
-      "minutes_to_start": 72.9,
+      "minutes_to_start": 63.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.4472",
       "confirmed_at": null,
@@ -401,9 +260,21 @@
       "match": "Asociacion Deportivo Cali - Orsomarso SC",
       "start_time": "04-09-2026 23:00",
       "league": "Liga Femenina",
-      "minutes_to_start": 102.9,
+      "minutes_to_start": 93.2,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36366.2923",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "Academia del Balompie Boliviano - FC Universitario de Vinto",
+      "start_time": "04-09-2026 23:15",
+      "league": "Liga de Futbol Prof",
+      "minutes_to_start": 108.2,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36364.25098",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
