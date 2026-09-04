@@ -1,15 +1,16 @@
 {
-  "generated_at": "2026-09-04T20:30:56.900497+00:00",
-  "contract": "RADAR_FULL_ANALYSIS_GATE_V2: FULL requires certified primary/crosschecked XI, synchronized tactical layer, fresh exact CURRENT BetFlag/AAMS standard prices, explicit market/movement status, and POST-XI delta when required. Single-provider SOURCE_CONFIRMED is PROVIDER_ONLY and cannot be called official. Missing TRUE OPEN never permits a movement claim; CURRENT_ONLY may support PRICE-ONLY value analysis with exact FINAL GATE price.",
+  "generated_at": "2026-09-04T23:09:46.831562+00:00",
+  "contract": "RADAR_FULL_ANALYSIS_GATE_V2: FULL requires certified primary/crosschecked XI, synchronized tactical layer, fresh exact CURRENT BetFlag/AAMS standard prices, explicit market/movement status, and POST-XI delta when required. Single-provider SOURCE_CONFIRMED is PROVIDER_ONLY and cannot be called official. Missing TRUE OPEN never permits a movement claim; CURRENT_ONLY may support PRICE-ONLY value analysis with exact FINAL GATE price. V3: player-market BET readiness additionally requires fresh Player Synergy & Position Context aligned to the current XI fingerprint with >=60% recent-history baseline coverage. Teammate/position deltas are shrinkage context modifiers only.",
   "contract_file": "RADAR_FULL_ANALYSIS_GATE_V2.md",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 16.3,
-    "tactical": 15.8,
-    "betflag_fixture_feed": 0.4,
-    "betflag_standard_source": 0.6,
-    "betflag_player_source": 0.5,
-    "player_context": 3.7
+    "lineups": 23.2,
+    "tactical": 22.8,
+    "betflag_fixture_feed": 9.2,
+    "betflag_standard_source": 9.4,
+    "betflag_player_source": 9.3,
+    "player_context": 22.8,
+    "player_synergy_position": 0.0
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -18,7 +19,8 @@
     "betflag_standard_current": 12,
     "betflag_player_discovery": 12,
     "player_context": 30,
-    "betflag_exact_price_seconds": 45
+    "betflag_exact_price_seconds": 45,
+    "player_synergy_position": 45
   },
   "betflag_feed_path": {
     "runtime_branch": "betflag-live",
@@ -44,13 +46,23 @@
     "MOVEMENT_CERTIFICATION",
     "readiness_strip"
   ],
-  "match_count": 10,
+  "match_count": 18,
   "readiness_counts": {
-    "WAIT_XI": 9,
-    "WAIT_PRIMARY_OR_CROSSCHECK_XI": 1
+    "WAIT_PRIMARY_OR_CROSSCHECK_XI": 5,
+    "WAIT_XI": 13
   },
   "ready_count": 0,
   "ready_matches": [],
   "player_lane_ready_count": 0,
-  "player_lane_ready_matches": []
+  "player_lane_ready_matches": [],
+  "schema": "radar-deep-analysis-readiness-v3-synergy-position",
+  "generated_at_v3": "2026-09-04T23:09:46.805040+00:00",
+  "synergy_position_policy": {
+    "input": "feed/player-synergy-position-current.json",
+    "max_age_minutes": 45,
+    "minimum_baseline_coverage": 0.6,
+    "require_current_xi_fingerprint_match": true,
+    "small_sample_policy": "shrink deltas toward zero; LOW samples cannot create standalone edge",
+    "standard_market_gate_effect": "none; only player-market BET readiness is blocked"
+  }
 }
