@@ -182,3 +182,45 @@ Ogni analisi, anche NO BET / ATTESA / ANALISI INCOMPLETA, deve essere conservata
 - decisione e motivazioni.
 
 La retroanalisi deve seguire `RADAR_BETFLAG_PLAYER_VALUE_AND_AUDIT_CONTRACT.md` e non deve retro-modificare le decisioni pre-match.
+
+## 13. OUTPUT DEI RUN AUTOMATICI — STESSA PROFONDITÀ DELLE ANALISI MANUALI
+Questa sezione è **VINCOLANTE** per ogni run automatico, schedulato, PRE-XI, XI WATCH, POST-XI, FAST, FULL, T-40, T-30 e FINAL GATE.
+
+Il Radar automatico NON può limitarsi a un elenco di quote, shortlist, segnali o verdetti. Deve produrre, per ogni partita analizzata, una lettura narrativa e quantitativa equivalente a una analisi manuale approfondita.
+
+Ogni output automatico deve includere, quando i dati sono materialmente disponibili:
+- contesto competitivo, classifica, motivazioni e stato recente;
+- freschezza/fatica con giorni di riposo, calendario, viaggi e carichi recenti;
+- XI ufficiale/probabile con moduli, ruoli e cambi rispetto alla gara precedente;
+- formazione contro formazione e analisi zona-contro-zona;
+- pressing, altezza blocco, ampiezza, mezzi spazi, transizioni, rest-defense, cross/cut-back, palle inattive;
+- mismatch individuali e matchup giocatore-difensore/zona;
+- xG squadra, xG avversario, xG totale, probabilità 1X2, O/U, BTTS e team totals rilevanti;
+- modulo 1T completo con xG 1T, P(>=1 gol 1T), fair 1T e mercati 1T player quando disponibili;
+- PLAYER DANGER ranking e BETFLAG VALUE ranking separati;
+- per ogni scorer/player candidate: ruolo, expected minutes, rischio cambio, share offensivo, xG/xA, tiri/SOT, rigori/piazzati e matrice completa dei mercati BetFlag disponibili;
+- CURRENT BetFlag fresco, fair, FINAL GATE, edge e stato del movimento quota;
+- valutazione esplicita se il movimento quota SUPPORTA / CONTRADDICE / è NEUTRO;
+- correlazione tra eventuali più giocate della stessa partita;
+- conclusione operativa chiara `BET / NO BET / ATTESA / ATTESA QUOTA`, con una riga di motivazione per ogni selezione finale.
+
+### Requisito qualitativo
+Un run automatico che dispone di XI e quote player ma restituisce solo una shortlist o un riepilogo sintetico è da considerarsi **INCOMPLETO**, anche se la selezione finale è corretta.
+
+La velocità non giustifica la perdita di profondità. Il modo FAST può ridurre ridondanza e lunghezza del testo, ma NON può saltare i blocchi analitici materiali sopra elencati.
+
+### Regola post-XI
+Quando l'XI ufficiale diventa disponibile, il Radar deve rieseguire immediatamente i blocchi che dipendono dalla formazione: modulo reale, posizione giocatori, matchup, minuti attesi, player allocation, P di mercato, fair, gate, movimento post-XI e value ranking. Non è ammesso mantenere automaticamente il verdetto PRE-XI senza questa rivalutazione.
+
+### Formato finale minimo obbligatorio
+Per ogni fixture il run automatico deve terminare con:
+1. `LETTURA PARTITA`;
+2. `XI / MATCHUP / ZONE`;
+3. `FRESCHEZZA E CONTESTO`;
+4. `MODELLO GOL E 1T`;
+5. `PLAYER SCOUTING`;
+6. `QUOTE BETFLAG E MOVIMENTI`;
+7. `VALUE MATRIX / FAIR / GATE`;
+8. `BET / NO BET / ATTESA`.
+
+Se uno di questi blocchi è materialmente non compilabile, il run deve dichiararlo esplicitamente anziché ometterlo in silenzio.
