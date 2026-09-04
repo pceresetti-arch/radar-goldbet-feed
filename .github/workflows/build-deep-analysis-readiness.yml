@@ -88,7 +88,7 @@ jobs:
           if [ $build_rc -ne 0 ]; then
             echo "Synergy acquisition returned rc=$build_rc; v3 readiness will use the last persisted artifact and mark the player lane stale if required." >&2
           fi
-          if [ -f feed/player-synergy-position-context.json ]; then
+          if [ -f feed/player-synergy-position-current.json ]; then
             python scripts/enrich_player_synergy_position_context.py || echo 'Synergy enrichment failed; player lane will be gated by v3 readiness.' >&2
           else
             echo 'No synergy artifact available; player lane will be gated by v3 readiness.' >&2
@@ -124,7 +124,7 @@ jobs:
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
           # Hydrated BetFlag adapter files are runtime-only. Persist XI hardening, synergy and audit outputs.
           git reset -- feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-fixtures-index.json feed/lineups-official-for-tactical.json 2>/dev/null || true
-          git add feed/lineups-current.json feed/lineups-last-certified.json feed/player-synergy-position-context.json feed/player-synergy-position-context-summary.json feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json feed/acquisition-recovery-queue.json feed/radar-pipeline-validation.json
+          git add feed/lineups-current.json feed/lineups-last-certified.json feed/player-synergy-position-current.json feed/player-synergy-position-current-summary.json feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json feed/acquisition-recovery-queue.json feed/radar-pipeline-validation.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh hardened XI synergy readiness and pipeline validation'
           for attempt in 1 2 3 4; do
