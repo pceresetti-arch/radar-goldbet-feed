@@ -89,7 +89,6 @@ def player_market_family(name):
 
 
 def discover_player_targets(std):
- """Read BetFlag lmtW and keep all player/scorer tabs plus explicit player-like slots."""
  out=[]; unknown=[]; seen=set()
  for node in walk(std):
   tabs=node.get('lmtW') if isinstance(node,dict) else None
@@ -132,8 +131,7 @@ def extract_market(data,matches,target_name,diag):
  rows=[]
  for x in walk(data):
   en=str(x.get('en') or '')
-  sn=norm(x.get('sn'))
-  if 'ei' not in x or not en.startswith('(') or not sn.startswith('giocatori'): continue
+  if 'ei' not in x or not en.startswith('('): continue
   player=re.sub(r'^\([^)]+\)\s*','',en).strip()
   match=matches.get(str(x.get('mi')))
   matchname=(match or {}).get('en')
