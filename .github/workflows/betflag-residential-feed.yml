@@ -58,6 +58,9 @@ jobs:
       - name: Collect BetFlag player markets
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_residential_collector.py
+      - name: Collect BetFlag combo markets
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_combo_residential_collector.py
       - name: Update player movement history
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_residential_movement.py
@@ -93,6 +96,8 @@ jobs:
           try {
             $files = @(
               'feed/betflag-residential-current.json',
+              'feed/betflag-combo-residential-current.json',
+              'feed/betflag-combo-residential-summary.json',
               'feed/betflag-residential-movement.json',
               'feed/betflag-opening-field-diagnostics.json',
               'feed/betflag-standard-current.json',
@@ -130,7 +135,7 @@ jobs:
             try {
               git config user.name "radar-betflag-residential-bot"
               git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
-              git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures feed/betflag-fixtures-index.json feed/betflag-fixtures
+              git add -A -- feed/betflag-residential-current.json feed/betflag-combo-residential-current.json feed/betflag-combo-residential-summary.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures feed/betflag-fixtures-index.json feed/betflag-fixtures
               if (Test-Path $watchRel) { git add $watchRel }
               git diff --cached --quiet
               if ($LASTEXITCODE -ne 0) {
