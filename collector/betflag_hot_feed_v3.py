@@ -58,12 +58,27 @@ def family_counts(rows):
     return dict(sorted(c.items()))
 
 
+def compact_discovery(player):
+    d=player.get('discovery') or {}
+    keys=(
+        'enabled','source','static_seed_count','dynamic_catalog_count','dynamic_only_count',
+        'effective_target_count','dynamic_targets_queried','dynamic_targets_with_rows',
+        'dynamic_rows','unknown_player_like_slot_count'
+    )
+    out={k:d.get(k) for k in keys if k in d}
+    active=d.get('active_dynamic_targets') or []
+    out['active_dynamic_target_count']=len(active)
+    out['active_dynamic_targets']=active[:50]
+    return out
+
+
 def main():
     player=load('betflag-residential-current.json')
     standard=load('betflag-standard-current.json')
     standard_lane_healthy=bool(standard.get('source_healthy'))
     player_lane_healthy=bool(player.get('source_healthy'))
     combined_healthy=standard_lane_healthy and player_lane_healthy
+    discovery=compact_discovery(player)
 
     fixtures={}
     for r in standard.get('rows',[]): add(fixtures,r,'standard')
@@ -129,6 +144,7 @@ def main():
         'player_source_generated_at':player.get('generated_at'),'standard_source_generated_at':standard.get('generated_at'),
         'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':combined_healthy,
         'standard_lane_healthy':standard_lane_healthy,'player_lane_healthy':player_lane_healthy,
+        'player_market_discovery':discovery,
         'fixture_count':len(index),'gate_eligible_fixture_count':standard_gate,
         'player_gate_eligible_fixture_count':player_gate,'complete_fixture_count':complete,
     }
@@ -137,17 +153,18 @@ def main():
     OUT.write_text(json.dumps({**common,'schema_version':'betflag-residential-hot-feed-v3','fixtures':compact},ensure_ascii=False,separators=(',',':')),encoding='utf-8')
 
     status={
-        'schema_version':'betflag-live-status-v2','generated_at':generated_at,'source_class':'BETFLAG_AAMS_DIRECT',
+        'schema_version':'betflag-live-status-v3','generated_at':generated_at,'source_class':'BETFLAG_AAMS_DIRECT',
         'source_healthy':combined_healthy,'standard_source_healthy':standard_lane_healthy,'player_source_healthy':player_lane_healthy,
         'standard_price_lane_usable':standard_lane_healthy,'player_price_lane_usable':player_lane_healthy,
         'player_source_generated_at':player.get('generated_at'),'standard_source_generated_at':standard.get('generated_at'),
         'player_rows':len(player.get('rows') or []),'standard_rows':len(standard.get('rows') or []),
+        'player_market_discovery':discovery,
         'fixture_count':len(index),'gate_eligible_fixture_count':standard_gate,
         'player_gate_eligible_fixture_count':player_gate,'complete_fixture_count':complete,
         'player_transport':player.get('transport'),'standard_transport':standard.get('transport'),
         'read_contract':{'branch':'betflag-live','fixture_index':'feed/betflag-residential-fixtures-index.json','fixture_dir':'feed/betflag-residential-fixtures/','rule':'standard and player lanes are evaluated independently; player failure must not invalidate usable standard CURRENT'},
     }
     STATUS.write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(json.dumps({'standard_lane_healthy':standard_lane_healthy,'player_lane_healthy':player_lane_healthy,'fixtures':len(index),'standard_gate_eligible':standard_gate,'player_gate_eligible':player_gate,'complete':complete},ensure_ascii=False))
+    print(json.dumps({'standard_lane_healthy':standard_lane_healthy,'player_lane_healthy':player_lane_healthy,'fixtures':len(index),'standard_gate_eligible':standard_gate,'player_gate_eligible':player_gate,'complete':complete,'player_market_discovery':discovery},ensure_ascii=False))
 
 if __name__=='__main__':main()
