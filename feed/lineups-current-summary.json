@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T09:52:31.728339+00:00",
+  "generated_at": "2026-09-04T10:12:55.295552+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,9 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 12,
+  "target_count": 22,
   "status_counts": {
-    "NOT_AVAILABLE": 10,
+    "NOT_AVAILABLE": 20,
     "SOURCE_CONFIRMED": 2
   },
   "schedule_stats": [
@@ -23,12 +23,12 @@
   "source_errors": {},
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T09:52:31.728339+00:00",
+    "generated_at": "2026-09-04T10:12:55.295552+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 11,
+    "target_count": 8,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -39,31 +39,24 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Paju Citizen FC - Daegu",
-        "minutes_to_start": 37.5,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      },
-      {
-        "match": "Cheongju FC - Seul E-Land",
-        "minutes_to_start": 37.5,
-        "before_official": true,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": true
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Cheongju FC - Seul E-Land",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Paju Citizen FC - Daegu",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "matches": [
     {
       "match": "FC Chernomorets Odessa - FC Levy Bereg Kyiv",
       "start_time": "04-09-2026 12:00",
       "league": "Premier League",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -12.9,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.18424",
       "confirmed_at": null,
@@ -75,7 +68,7 @@
       "match": "FC Kolos Kovalivka 2 - FC Lokomotiv Kyiv",
       "start_time": "04-09-2026 12:00",
       "league": "1st League",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -12.9,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.30391",
       "confirmed_at": null,
@@ -87,7 +80,7 @@
       "match": "Salgueiros Porto - AD Machico",
       "start_time": "04-09-2026 12:00",
       "league": "Campeonato de Portugal",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -12.9,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.30396",
       "confirmed_at": null,
@@ -99,7 +92,7 @@
       "match": "Salisbury Inter - West Adelaide",
       "start_time": "04-09-2026 12:00",
       "league": "NPL South Australia Femminile",
-      "minutes_to_start": 7.5,
+      "minutes_to_start": -12.9,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.15621",
       "confirmed_at": null,
@@ -111,11 +104,11 @@
       "match": "Cheongju FC - Seul E-Land",
       "start_time": "04-09-2026 12:30",
       "league": "K League Challenge",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 17.1,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.1060",
       "confirmed_at": "2026-09-04T09:52:31.728339+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -123,7 +116,7 @@
       "match": "Hapoel Marmorek FC - Hapoel Hadera",
       "start_time": "04-09-2026 12:30",
       "league": "Liga Alef",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 17.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.63174",
       "confirmed_at": null,
@@ -135,11 +128,11 @@
       "match": "Paju Citizen FC - Daegu",
       "start_time": "04-09-2026 12:30",
       "league": "K League Challenge",
-      "minutes_to_start": 37.5,
+      "minutes_to_start": 17.1,
       "status": "SOURCE_CONFIRMED",
       "match_market_id": "36361.1056",
       "confirmed_at": "2026-09-04T09:52:31.728339+00:00",
-      "xi_changed_after_confirmation": true,
+      "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "source": "FotMob"
     },
@@ -147,7 +140,7 @@
       "match": "Bayswater - Olympic Kingsway",
       "start_time": "04-09-2026 13:00",
       "league": "NPL Western Australia",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 47.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36364.18548",
       "confirmed_at": null,
@@ -159,7 +152,7 @@
       "match": "Binh Phuoc - Viettel",
       "start_time": "04-09-2026 13:00",
       "league": "V.League 1",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 47.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36362.29194",
       "confirmed_at": null,
@@ -171,7 +164,7 @@
       "match": "Sheffield Wednesday U21 - Wigan U21",
       "start_time": "04-09-2026 13:00",
       "league": "Professional Development League",
-      "minutes_to_start": 67.5,
+      "minutes_to_start": 47.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36361.16701",
       "confirmed_at": null,
@@ -183,7 +176,7 @@
       "match": "MK Kfar Saba 1928 - FC Jerusalem",
       "start_time": "04-09-2026 13:15",
       "league": "Liga Alef",
-      "minutes_to_start": 82.5,
+      "minutes_to_start": 62.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.18686",
       "confirmed_at": null,
@@ -195,12 +188,132 @@
       "match": "FC Holon Yirmiyahu - Nir Ramat Hasharon",
       "start_time": "04-09-2026 13:20",
       "league": "Liga Alef",
-      "minutes_to_start": 87.5,
+      "minutes_to_start": 67.1,
       "status": "NOT_AVAILABLE",
       "match_market_id": "36365.18709",
       "confirmed_at": null,
       "xi_changed_after_confirmation": false,
       "target_origin": "PREVIOUS_LINEUP_FEED",
+      "source": "FotMob"
+    },
+    {
+      "match": "Bali United - PSS Sleman",
+      "start_time": "04-09-2026 14:00",
+      "league": "Liga 1",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36361.16562",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "ES Mostaganem - Blida",
+      "start_time": "04-09-2026 14:00",
+      "league": "Ligue 2",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36365.18616",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "FC Syunik - FC Pyunik",
+      "start_time": "04-09-2026 14:00",
+      "league": "Premier League",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36364.29141",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "GC MASCARA - Arbaa",
+      "start_time": "04-09-2026 14:00",
+      "league": "Ligue 2",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36365.18621",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Irb Sidi M Hamed Benali - EL BAYADH",
+      "start_time": "04-09-2026 14:00",
+      "league": "Ligue 2",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36365.18628",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Na Hussein Dey - Jrb Taghit",
+      "start_time": "04-09-2026 14:00",
+      "league": "Ligue 2",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36364.8786",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Pattani FC - BG Pathum United FC",
+      "start_time": "04-09-2026 14:00",
+      "league": "Premier League",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36362.29069",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "SC Poltava - Ingulets Petrove",
+      "start_time": "04-09-2026 14:00",
+      "league": "1st League",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36365.32235",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Usm El Harrach - ASM Oran",
+      "start_time": "04-09-2026 14:00",
+      "league": "Ligue 2",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36361.16681",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
+      "source": "FotMob"
+    },
+    {
+      "match": "Uttaradit - Muang Thong",
+      "start_time": "04-09-2026 14:00",
+      "league": "League 2",
+      "minutes_to_start": 107.1,
+      "status": "NOT_AVAILABLE",
+      "match_market_id": "36364.10354",
+      "confirmed_at": null,
+      "xi_changed_after_confirmation": false,
+      "target_origin": "BETFLAG_WORKER_FIXTURE_INDEX",
       "source": "FotMob"
     }
   ]
