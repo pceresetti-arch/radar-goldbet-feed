@@ -43,34 +43,88 @@ def extract_market_names(body):
     return sorted(set(names))
 
 
+def _odd_value(x):
+    for k in ('ov','odd','price','quota'):
+        if x.get(k) is not None:
+            return x.get(k)
+    return None
+
+
+def _market_name_from_node(x, inherited=None):
+    mn=x.get('mn')
+    if isinstance(mn,str) and marketish(mn):
+        return mn.strip()
+    # BetFlag detail trees frequently expose the market label as sn on a node
+    # that owns los/spd/asl, while descendant selection nodes only carry ids/odds.
+    sn=x.get('sn')
+    if isinstance(sn,str) and marketish(sn) and any(k in x for k in ('spd','asl','los','mi','ti','minO','maxO')):
+        return sn.strip()
+    return inherited
+
+
 def extract_quote_rows(body, section, section_name):
+    """Extract odds from BetFlag detail payloads without assuming mn->spd->asl.
+
+    The current AAMS payload can place ov several levels below a market node and
+    can use sn instead of mn for the market label. We therefore walk the tree
+    carrying market/line/selection context down to every odds-bearing node.
+    """
     rows=[]
     seen=set()
-    for x in walk(body):
-        if not isinstance(x,dict): continue
-        mn=x.get('mn')
-        if not isinstance(mn,str) or not marketish(mn): continue
-        spd=x.get('spd') or {}
-        spreads=spd.items() if isinstance(spd,dict) else enumerate(spd) if isinstance(spd,list) else []
-        for line,spr in spreads:
-            if not isinstance(spr,dict): continue
-            for q in spr.get('asl') or []:
-                if not isinstance(q,dict) or q.get('ov') is None: continue
-                key=(str(mn),str(line),str(q.get('si')),str(q.get('oi')),str(q.get('sn')),str(q.get('ov')))
-                if key in seen: continue
+
+    def rec(node, market=None, market_id=None, line=None, selection=None):
+        if isinstance(node,list):
+            for item in node:
+                rec(item,market,market_id,line,selection)
+            return
+        if not isinstance(node,dict):
+            return
+
+        cur_market=_market_name_from_node(node,market)
+        cur_market_id=node.get('mi') if node.get('mi') is not None else market_id
+        if cur_market_id is None and cur_market and node.get('ti') is not None:
+            cur_market_id=node.get('ti')
+
+        cur_selection=selection
+        for k in ('ssn','sn','name','selectionName'):
+            v=node.get(k)
+            if isinstance(v,str) and v.strip() and (not cur_market or norm(v)!=norm(cur_market)):
+                # ssn is commonly the child selection label. sn is accepted only
+                # when it is not the market label inherited above.
+                if k=='ssn' or not marketish(v) or node.get('ov') is not None:
+                    cur_selection=v.strip()
+                    break
+
+        odd=_odd_value(node)
+        if odd is not None and cur_market and marketish(cur_market):
+            sel_id=node.get('si')
+            odds_id=node.get('oi')
+            key=(str(cur_market),str(line),str(sel_id),str(odds_id),str(cur_selection),str(odd))
+            if key not in seen:
                 seen.add(key)
                 rows.append({
                     'section':section,
                     'section_name':section_name,
-                    'market':mn,
-                    'market_is_player_or_scorer':player_or_scorer_market(mn),
-                    'line':None if str(line) in ('0','0.0') else line,
-                    'selection':q.get('sn'),
-                    'odd':q.get('ov'),
-                    'selection_id':q.get('si'),
-                    'market_id':q.get('mi'),
-                    'odds_id':q.get('oi')
+                    'market':cur_market,
+                    'market_is_player_or_scorer':player_or_scorer_market(cur_market),
+                    'line':None if line is None or str(line) in ('0','0.0') else line,
+                    'selection':cur_selection,
+                    'odd':odd,
+                    'selection_id':sel_id,
+                    'market_id':cur_market_id,
+                    'odds_id':odds_id
                 })
+
+        for k,v in node.items():
+            if not isinstance(v,(dict,list)):
+                continue
+            if k=='spd' and isinstance(v,dict):
+                for lk,lv in v.items():
+                    rec(lv,cur_market,cur_market_id,lk,cur_selection)
+            else:
+                rec(v,cur_market,cur_market_id,line,cur_selection)
+
+    rec(body)
     return rows
 
 
@@ -127,7 +181,7 @@ def best_fixture_node(nodes):
 def main():
     now=datetime.now(timezone.utc).isoformat()
     client=BetFlagTransport(timeout=20)
-    out={'schema_version':'betflag-combo-detail-availability-v3','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':False,'candidate_rule':'probe only fixtures that already expose BetFlag player rows; combo availability is fixture-specific, not assumed league-wide','fixtures':[]}
+    out={'schema_version':'betflag-combo-detail-availability-v4','generated_at':now,'source_class':'BETFLAG_AAMS_DIRECT','source_healthy':False,'candidate_rule':'probe only fixtures that already expose BetFlag player rows; combo availability is fixture-specific, not assumed league-wide','fixtures':[]}
     try:
         st,std=client.get(f'{BASE}/getOverviewEventsAams/0/1/0/{AGG}/0/0/0?channelId=0')
         out['overview_status']=st
