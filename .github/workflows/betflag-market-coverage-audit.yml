@@ -1,0 +1,48 @@
+name: BetFlag market coverage audit
+
+on:
+  workflow_run:
+    workflows: ['BetFlag residential feed']
+    types: [completed]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-market-coverage-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Hydrate player current from live branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin betflag-live:refs/remotes/origin/betflag-live
+          mkdir -p feed
+          git show origin/betflag-live:feed/betflag-residential-current.json > feed/betflag-residential-current.json
+      - name: Build semantic market coverage
+        run: python scripts/build_betflag_market_coverage.py
+      - name: Persist audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'radar-goldbet-bot'
+          git config user.email 'radar-goldbet-bot@users.noreply.github.com'
+          git reset -- feed/betflag-residential-current.json
+          git add feed/betflag-player-market-coverage.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh BetFlag player-market coverage audit'
+          git pull --rebase origin main
+          git push origin main
