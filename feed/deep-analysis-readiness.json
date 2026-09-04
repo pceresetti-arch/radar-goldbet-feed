@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-04T13:40:12.882153+00:00",
+  "generated_at": "2026-09-04T13:47:49.809685+00:00",
   "contract": "READY requires fresh official XI + tactical layer synchronized to that XI + fresh CURRENT BetFlag/AAMS direct standard prices for the same fixture. TRUE OPEN is movement metadata and never blocks CURRENT analysis when unavailable. Player lane additionally requires fresh BetFlag player discovery and context matched to the current XI; a unique fresh exact BetFlag/AAMS price certificate is mandatory only at FINAL GATE decision time.",
   "operational_bookmaker": "BETFLAG_ONLY",
   "input_freshness_minutes": {
-    "lineups": 1.6,
-    "tactical": 1.1,
-    "betflag_fixture_feed": 3.7,
-    "betflag_standard_source": 3.8,
-    "betflag_player_source": 3.7,
-    "player_context": 1.1
+    "lineups": 9.2,
+    "tactical": 8.8,
+    "betflag_fixture_feed": 0.4,
+    "betflag_standard_source": 0.6,
+    "betflag_player_source": 0.5,
+    "player_context": 8.7
   },
   "freshness_limits_minutes": {
     "lineups": 15,
@@ -36,59 +36,11 @@
   "match_count": 53,
   "readiness_counts": {
     "WAIT_OFFICIAL_STANDARD_XI": 51,
-    "READY_DEEP_ANALYSIS": 2
+    "WAIT_BETFLAG_FIXTURE_MAPPING": 1,
+    "READY_DEEP_ANALYSIS": 1
   },
-  "ready_count": 2,
+  "ready_count": 1,
   "ready_matches": [
-    {
-      "match_market_id": "36361.5618",
-      "match_event_id": 16084704,
-      "match": "Ittihad Kalba FC - Al Ain",
-      "league": "Arabian Gulf League",
-      "start_time": "04-09-2026 15:45",
-      "start_utc": "2026-09-04T13:45:00+00:00",
-      "minutes_to_start": 6.4,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "blocking_reasons": [],
-      "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
-        "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
-      ],
-      "lineup_status": "SOURCE_CONFIRMED",
-      "lineup_type": "standard",
-      "official_standard_xi": true,
-      "lineup_ready": true,
-      "xi_fingerprint": "adb78bb51f900717c58f",
-      "xi_changed_after_confirmation": false,
-      "tactical_status": "PROVIDER_TACTICAL_CONFIRMED",
-      "tactical_confidence": 0.94,
-      "tactical_feed_fresh": true,
-      "tactical_synced_to_current_lineup": true,
-      "tactical_ready": true,
-      "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/ittihad-kalba-fc-al-ain.json",
-      "betflag_standard_count": 14,
-      "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
-      "player_count": 0,
-      "player_quote_count": 0,
-      "player_props_available": false,
-      "player_props_ready": false,
-      "player_context_available": true,
-      "player_context_fresh": true,
-      "player_context_matches_current_xi": true,
-      "player_market_bet_ready": false,
-      "player_lane_ready": false,
-      "player_price_source_class": "BETFLAG_AAMS_DIRECT",
-      "player_exact_price_endpoint": "https://radar-betflag-v7.p-ceresetti.workers.dev/live/player-price",
-      "player_exact_price_required_at_decision_time": true,
-      "true_open_status": "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO",
-      "true_open_blocks_current_analysis": false,
-      "strong_drop_count": 0,
-      "strong_drops": []
-    },
     {
       "match_market_id": "36363.19279",
       "match_event_id": 16089307,
@@ -411,11 +363,13 @@
       "start_time": "04-09-2026 15:45",
       "start_utc": "2026-09-04T13:45:00+00:00",
       "minutes_to_start": 6.4,
-      "readiness": "READY_DEEP_ANALYSIS",
-      "analysis_scope": "STANDARD_READY_PLAYER_PROPS_UNAVAILABLE_OR_PENDING",
-      "blocking_reasons": [],
+      "readiness": "WAIT_BETFLAG_FIXTURE_MAPPING",
+      "analysis_scope": "NOT_READY",
+      "blocking_reasons": [
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
+      ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "SOURCE_CONFIRMED",
@@ -430,11 +384,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": true,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/ittihad-kalba-fc-al-ain.json",
-      "betflag_standard_count": 14,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
@@ -1941,10 +1895,11 @@
       "readiness": "WAIT_OFFICIAL_STANDARD_XI",
       "analysis_scope": "NOT_READY",
       "blocking_reasons": [
-        "WAIT_OFFICIAL_STANDARD_XI"
+        "WAIT_OFFICIAL_STANDARD_XI",
+        "WAIT_BETFLAG_FIXTURE_MAPPING"
       ],
       "warnings": [
-        "PLAYER_PROPS_NOT_QUOTED_OR_NOT_AVAILABLE_ON_BETFLAG",
+        "PLAYER_PROPS_ACQUISITION_WAIT_FIXTURE_MAPPING",
         "TRUE OPEN BETFLAG NON CERTIFICATA — MOVIMENTO INCOMPLETO"
       ],
       "lineup_status": "NOT_AVAILABLE",
@@ -1959,11 +1914,11 @@
       "tactical_synced_to_current_lineup": true,
       "tactical_ready": false,
       "betflag_source_class": "BETFLAG_AAMS_DIRECT",
-      "betflag_fixture_mapped": true,
-      "betflag_fixture_file": "feed/betflag-fixtures/levadia-u21-tallinna-fc-flora-u21.json",
-      "betflag_standard_count": 29,
+      "betflag_fixture_mapped": false,
+      "betflag_fixture_file": null,
+      "betflag_standard_count": 0,
       "betflag_standard_current_fresh": true,
-      "betflag_standard_ready": true,
+      "betflag_standard_ready": false,
       "player_count": 0,
       "player_quote_count": 0,
       "player_props_available": false,
