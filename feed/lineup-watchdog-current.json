@@ -1,6 +1,6 @@
 {
   "schema": "radar-lineup-watchdog-v4",
-  "generated_at": "2026-09-04T13:24:08.093674+00:00",
+  "generated_at": "2026-09-04T13:38:38.266300+00:00",
   "source_strategy": "One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures",
   "official_definition": "SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11",
   "xi_change_identity": "SHA256 of sorted normalized 11 starter names per side; provider IDs ignored",
@@ -21,123 +21,112 @@
     "stop_immediately_on_actionable_official_transition": true,
     "started_matches_are_audit_only": true
   },
-  "attempt_count": 6,
+  "attempt_count": 1,
   "attempts": [
     {
       "attempt": 1,
       "mode": "FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK",
-      "started_at": "2026-09-04T13:21:03.571584+00:00",
-      "finished_at": "2026-09-04T13:21:11.616936+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 25,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 2,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T13:21:46.617090+00:00",
-      "finished_at": "2026-09-04T13:21:46.830821+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 25,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 3,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T13:22:21.831043+00:00",
-      "finished_at": "2026-09-04T13:22:22.245797+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 25,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 4,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T13:22:57.246000+00:00",
-      "finished_at": "2026-09-04T13:22:57.451650+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 25,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 5,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T13:23:32.451828+00:00",
-      "finished_at": "2026-09-04T13:23:32.777457+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 25,
-      "events": [],
-      "actionable_events": []
-    },
-    {
-      "attempt": 6,
-      "mode": "URGENT_DIRECT_MULTI_SOURCE",
-      "started_at": "2026-09-04T13:24:07.777692+00:00",
-      "finished_at": "2026-09-04T13:24:08.093550+00:00",
-      "official_count": 1,
-      "urgent_unconfirmed_count": 25,
-      "events": [],
-      "actionable_events": []
+      "started_at": "2026-09-04T13:38:26.951223+00:00",
+      "finished_at": "2026-09-04T13:38:38.266274+00:00",
+      "official_count": 2,
+      "urgent_unconfirmed_count": 19,
+      "events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-04T13:38:38.266141+00:00",
+          "match": "Al-Shamal - Al Shahaniya",
+          "league": "Stars League",
+          "start_time": "04-09-2026 16:00",
+          "minutes_to_start": 21.4,
+          "match_market_id": "36363.19279",
+          "match_event_id": 16089307,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5952262,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "98b4d58959052d1d99d3",
+          "current_xi_fingerprint": "ff7c328f0403b9793526",
+          "confirmed_at": "2026-09-04T13:38:38.024045+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ],
+      "actionable_events": [
+        {
+          "event": "XI_OFFICIAL_DETECTED",
+          "detected_at": "2026-09-04T13:38:38.266141+00:00",
+          "match": "Al-Shamal - Al Shahaniya",
+          "league": "Stars League",
+          "start_time": "04-09-2026 16:00",
+          "minutes_to_start": 21.4,
+          "match_market_id": "36363.19279",
+          "match_event_id": 16089307,
+          "source": "FotMob",
+          "source_status": "SOURCE_CONFIRMED",
+          "provider_match_id": 5952262,
+          "previous_status": "REFERENCE_PREVIOUS_XI",
+          "current_status": "SOURCE_CONFIRMED",
+          "previous_xi_fingerprint": "98b4d58959052d1d99d3",
+          "current_xi_fingerprint": "ff7c328f0403b9793526",
+          "confirmed_at": "2026-09-04T13:38:38.024045+00:00",
+          "actionable_for_post_xi": true,
+          "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+        }
+      ]
     }
   ],
-  "observed_events": [],
-  "actionable_events": [],
-  "post_xi_required": false,
+  "observed_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-04T13:38:38.266141+00:00",
+      "match": "Al-Shamal - Al Shahaniya",
+      "league": "Stars League",
+      "start_time": "04-09-2026 16:00",
+      "minutes_to_start": 21.4,
+      "match_market_id": "36363.19279",
+      "match_event_id": 16089307,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5952262,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "98b4d58959052d1d99d3",
+      "current_xi_fingerprint": "ff7c328f0403b9793526",
+      "confirmed_at": "2026-09-04T13:38:38.024045+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "actionable_events": [
+    {
+      "event": "XI_OFFICIAL_DETECTED",
+      "detected_at": "2026-09-04T13:38:38.266141+00:00",
+      "match": "Al-Shamal - Al Shahaniya",
+      "league": "Stars League",
+      "start_time": "04-09-2026 16:00",
+      "minutes_to_start": 21.4,
+      "match_market_id": "36363.19279",
+      "match_event_id": 16089307,
+      "source": "FotMob",
+      "source_status": "SOURCE_CONFIRMED",
+      "provider_match_id": 5952262,
+      "previous_status": "REFERENCE_PREVIOUS_XI",
+      "current_status": "SOURCE_CONFIRMED",
+      "previous_xi_fingerprint": "98b4d58959052d1d99d3",
+      "current_xi_fingerprint": "ff7c328f0403b9793526",
+      "confirmed_at": "2026-09-04T13:38:38.024045+00:00",
+      "actionable_for_post_xi": true,
+      "actionability_reason": "PRE_KICKOFF_OFFICIAL_XI_TRANSITION"
+    }
+  ],
+  "post_xi_required": true,
   "urgent_unconfirmed_remaining": [
-    {
-      "match": "AL Mehalla - Mega Sport Belqas",
-      "match_market_id": "36364.3463",
-      "match_event_id": 16097106,
-      "minutes_to_start": 5.9,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "El Dakhleya - Pharco",
-      "match_market_id": "36364.24198",
-      "match_event_id": 16101480,
-      "minutes_to_start": 5.9,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Ismaily - Al Nasr Cairo",
-      "match_market_id": "36364.24186",
-      "match_event_id": 16101479,
-      "minutes_to_start": 5.9,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Proxy SC - El Terasanah",
-      "match_market_id": "36364.24177",
-      "match_event_id": 16101478,
-      "minutes_to_start": 5.9,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
-    {
-      "match": "Tanta FC - FC Masar",
-      "match_market_id": "36362.28981",
-      "match_event_id": 16101505,
-      "minutes_to_start": 5.9,
-      "status": "NOT_AVAILABLE",
-      "source": "FotMob",
-      "fotmob_match_id": null
-    },
     {
       "match": "ACS Sepsi Osk Sfantu Gheorghe 2 - Tricolorul B",
       "match_market_id": "36366.5482",
       "match_event_id": 16112339,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -146,25 +135,16 @@
       "match": "Acad Viitorul Cluj - CS Bihorul Beius",
       "match_market_id": "36366.5484",
       "match_event_id": 16112347,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
     },
     {
-      "match": "Al-Shamal - Al Shahaniya",
-      "match_market_id": "36363.19279",
-      "match_event_id": 16089307,
-      "minutes_to_start": 35.9,
-      "status": "REFERENCE_PREVIOUS_XI",
-      "source": "FotMob",
-      "fotmob_match_id": 5952262
-    },
-    {
       "match": "CD Plaza Amador - Champions FC Academy",
       "match_market_id": "36364.9950",
       "match_event_id": 16111654,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -173,7 +153,7 @@
       "match": "CS Blejoi - ACS Vointa 2024 Crevedia",
       "match_market_id": "36364.9998",
       "match_event_id": 16113726,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -182,7 +162,7 @@
       "match": "Csm Flacara Moreni - Electrosid Titu",
       "match_market_id": "36364.10001",
       "match_event_id": 16111867,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -191,7 +171,7 @@
       "match": "FC Nasaf - FK Neftchi",
       "match_market_id": "36361.1205",
       "match_event_id": 16111285,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5200637
@@ -200,7 +180,7 @@
       "match": "FC Prishtina - Vushtrria",
       "match_market_id": "36364.9737",
       "match_event_id": 16113729,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -209,7 +189,7 @@
       "match": "Fyllingsdalen - Odds",
       "match_market_id": "36365.63583",
       "match_event_id": 16111655,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5190018
@@ -218,7 +198,7 @@
       "match": "Gabala FK - Imisli FK",
       "match_market_id": "36364.25397",
       "match_event_id": 16101666,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5987509
@@ -227,7 +207,7 @@
       "match": "Ghiroda - Cugir",
       "match_market_id": "36365.30783",
       "match_event_id": 16110426,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -236,7 +216,7 @@
       "match": "I. Akademia Hal. - Ferencvarosi Tc",
       "match_market_id": "36364.9614",
       "match_event_id": 16112640,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -245,7 +225,7 @@
       "match": "Navbahor Namangan - Lokomotiv Tashkent",
       "match_market_id": "36361.1204",
       "match_event_id": 16111232,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5200638
@@ -254,7 +234,7 @@
       "match": "SC DINAMO 1948 SA 2 - ACS Axi Adunatii Copaceni",
       "match_market_id": "36366.3131",
       "match_event_id": 16111906,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -263,7 +243,7 @@
       "match": "Unirea Bascov - CS Drobeta Turnu Severin",
       "match_market_id": "36366.5472",
       "match_event_id": 16112336,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -272,7 +252,7 @@
       "match": "Universitatea Alba Iulia - ACS Viitorul Arad",
       "match_market_id": "36366.5479",
       "match_event_id": 16112338,
-      "minutes_to_start": 35.9,
+      "minutes_to_start": 21.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -281,7 +261,7 @@
       "match": "Panthere - Rayon Sports",
       "match_market_id": "36365.6689",
       "match_event_id": 16107140,
-      "minutes_to_start": 65.9,
+      "minutes_to_start": 51.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 1000021235
@@ -290,7 +270,7 @@
       "match": "SK 1923 Gabcikovo - KFC Komarno B",
       "match_market_id": "36366.2900",
       "match_event_id": 16111859,
-      "minutes_to_start": 65.9,
+      "minutes_to_start": 51.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": null
@@ -299,7 +279,7 @@
       "match": "Slatina - Chindia Targoviste",
       "match_market_id": "36361.5685",
       "match_event_id": 16090158,
-      "minutes_to_start": 65.9,
+      "minutes_to_start": 51.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 5976873
@@ -308,11 +288,11 @@
       "match": "Zarzis - Diambars",
       "match_market_id": "36364.9540",
       "match_event_id": 16107128,
-      "minutes_to_start": 65.9,
+      "minutes_to_start": 51.4,
       "status": "NOT_AVAILABLE",
       "source": "FotMob",
       "fotmob_match_id": 1000021227
     }
   ],
-  "target_count": 45
+  "target_count": 53
 }
