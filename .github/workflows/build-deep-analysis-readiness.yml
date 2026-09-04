@@ -16,6 +16,7 @@ on:
       - 'deep-analysis-readiness-trigger.json'
       - 'scripts/build_deep_analysis_readiness.py'
       - 'scripts/enforce_full_analysis_gate_v2.py'
+      - 'scripts/build_acquisition_recovery_queue.py'
       - 'scripts/hydrate_live_betflag_index.py'
       - 'scripts/filter_official_lineups_for_tactical.py'
       - 'RADAR_FULL_ANALYSIS_GATE_V2.md'
@@ -71,17 +72,23 @@ jobs:
           set -euo pipefail
           python scripts/enforce_full_analysis_gate_v2.py
 
+      - name: Build acquisition recovery queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/build_acquisition_recovery_queue.py
+
       - name: Persist readiness safely
         shell: bash
         run: |
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          # Hydrated BetFlag/XI adapter files are runtime-only. Persist only readiness outputs.
+          # Hydrated BetFlag/XI adapter files are runtime-only. Persist only readiness/recovery outputs.
           git reset -- feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-fixtures-index.json feed/lineups-official-for-tactical.json 2>/dev/null || true
-          git add feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json
+          git add feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json feed/acquisition-recovery-queue.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Refresh deep-analysis readiness gate'
+          git commit -m 'Refresh deep-analysis readiness and recovery queue'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
