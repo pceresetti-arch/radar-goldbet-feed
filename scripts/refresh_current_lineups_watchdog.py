@@ -15,15 +15,20 @@ LINEUPS = pathlib.Path('feed/lineups-current.json')
 WATCHDOG = pathlib.Path('feed/lineup-watchdog-current.json')
 POSTXI = pathlib.Path('feed/post-xi-refresh-request.json')
 
-# One complete target-discovery pass per workflow. If official XI is still
+# One complete target-discovery pass per workflow. If certified XI is still
 # missing close to kickoff, subsequent checks are lightweight direct probes of
-# only the imminent fixtures, using FotMob plus a secondary-source fallback.
+# only the imminent fixtures, using multiple sources when available.
 MAX_ATTEMPTS = 6
 POLL_INTERVAL_SECONDS = 35
 URGENT_FROM_MIN = 0.0
 URGENT_TO_MIN = 80.0
 POST_XI_ACTIONABLE_FROM_MIN = 0.0
 POST_XI_ACTIONABLE_TO_MIN = 100.0
+
+PRIMARY_SOURCE_MARKERS = {
+    'OFFICIAL_CLUB', 'CLUB_OFFICIAL', 'OFFICIAL_LEAGUE', 'LEAGUE_OFFICIAL',
+    'OFFICIAL_FEDERATION', 'FEDERATION_OFFICIAL'
+}
 
 
 def now_iso():
@@ -42,12 +47,43 @@ def norm(s):
     return ' '.join(re.sub(r'[^a-z0-9]+', ' ', s).split())
 
 
+def upper(v):
+    return str(v or '').strip().upper()
+
+
 def key_of(m):
     return str(m.get('match_market_id') or m.get('match_event_id') or m.get('match') or '')
 
 
+def xi_source_confidence(m):
+    """Never promote a single third-party provider to OFFICIAL."""
+    if not isinstance(m, dict):
+        return 'MISSING'
+    status = upper(m.get('status') or m.get('confirmation_status'))
+    source_class = upper(m.get('source_class') or m.get('source_type'))
+    source_meta = m.get('source_meta') if isinstance(m.get('source_meta'), dict) else {}
+    explicit_primary = (
+        source_class in PRIMARY_SOURCE_MARKERS
+        or bool(m.get('official_primary_source'))
+        or upper(source_meta.get('class')) in PRIMARY_SOURCE_MARKERS
+        or bool(source_meta.get('official_primary_source'))
+    )
+    if status == 'CROSS_CONFIRMED':
+        return 'CERTIFIED_CROSSCHECK'
+    if status == 'SOURCE_CONFIRMED' and explicit_primary:
+        return 'CERTIFIED_PRIMARY'
+    if status == 'SOURCE_CONFIRMED':
+        return 'PROVIDER_ONLY'
+    if status in {'PREDICTED', 'PROBABLE'}:
+        return 'PREDICTED'
+    return 'MISSING'
+
+
 def is_official(m):
-    if not isinstance(m, dict) or m.get('status') not in ('SOURCE_CONFIRMED', 'CROSS_CONFIRMED'):
+    if not isinstance(m, dict):
+        return False
+    confidence = xi_source_confidence(m)
+    if confidence not in ('CERTIFIED_PRIMARY', 'CERTIFIED_CROSSCHECK'):
         return False
     ln = m.get('lineup') or {}
     return (
@@ -76,8 +112,6 @@ def canonical_xi_fingerprint(m):
         )
         if len(names) != 11:
             return None
-        # Do not include provider team IDs or even team labels: participant
-        # mapping is already fixture-scoped and provider aliases can differ.
         parts.append(','.join(names))
     return hashlib.sha256('|'.join(parts).encode()).hexdigest()[:20]
 
@@ -117,6 +151,7 @@ def urgent_missing(payload):
                 'match_event_id': m.get('match_event_id'),
                 'minutes_to_start': mins,
                 'status': m.get('status'),
+                'xi_source_confidence': xi_source_confidence(m),
                 'source': m.get('source'),
                 'fotmob_match_id': ((m.get('fotmob_match') or {}).get('id')),
             })
@@ -177,6 +212,7 @@ def detect_events(before, after):
             'match_event_id': cur.get('match_event_id'),
             'source': cur.get('source'),
             'source_status': cur.get('status'),
+            'xi_source_confidence': xi_source_confidence(cur),
             'provider_match_id': ((cur.get('fotmob_match') or {}).get('id')),
             'previous_status': prev.get('status'),
             'current_status': cur.get('status'),
@@ -185,7 +221,7 @@ def detect_events(before, after):
             'confirmed_at': cur.get('confirmed_at'),
             'actionable_for_post_xi': actionable,
             'actionability_reason': (
-                'PRE_KICKOFF_OFFICIAL_XI_TRANSITION'
+                'PRE_KICKOFF_CERTIFIED_OFFICIAL_XI_TRANSITION'
                 if actionable
                 else 'AUDIT_ONLY_MATCH_ALREADY_STARTED_OR_OUTSIDE_POST_XI_WINDOW'
             ),
@@ -263,10 +299,10 @@ if not actionable_now and missing:
 
 remaining = urgent_missing(final_payload)
 watchdog = {
-    'schema': 'radar-lineup-watchdog-v4',
+    'schema': 'radar-lineup-watchdog-v5-certified-source',
     'generated_at': now_iso(),
-    'source_strategy': 'One canonical full discovery; then targeted multi-source confirmed XI probes for imminent unresolved fixtures',
-    'official_definition': 'SOURCE_CONFIRMED/CROSS_CONFIRMED + lineupType=standard + complete 11v11',
+    'source_strategy': 'One canonical full discovery; then targeted multi-source probes. Single-provider SOURCE_CONFIRMED remains provider-only until primary metadata or independent cross-confirmation exists.',
+    'official_definition': 'CERTIFIED_PRIMARY or CERTIFIED_CROSSCHECK + lineupType=standard + complete 11v11',
     'xi_change_identity': 'SHA256 of sorted normalized 11 starter names per side; provider IDs ignored',
     'poll_policy': {
         'base_schedule': 'GitHub cron every 5 minutes',
@@ -290,13 +326,13 @@ watchdog = {
 WATCHDOG.write_text(json.dumps(watchdog, ensure_ascii=False, indent=2), encoding='utf-8')
 
 postxi = {
-    'schema': 'radar-post-xi-refresh-request-v4',
+    'schema': 'radar-post-xi-refresh-request-v5-certified-source',
     'generated_at': watchdog['generated_at'],
     'required': bool(actionable_events),
     'reason': (
-        'Pre-kickoff official XI detected or genuinely changed; rebuild tactical roles, player context and deep-analysis readiness immediately.'
+        'Pre-kickoff certified official XI detected or genuinely changed; rebuild tactical roles, player context and deep-analysis readiness immediately.'
         if actionable_events
-        else 'No actionable pre-kickoff official XI transition in this watchdog run.'
+        else 'No actionable pre-kickoff certified official XI transition in this watchdog run.'
     ),
     'events': actionable_events,
     'observed_audit_events': [e for e in all_events if not e.get('actionable_for_post_xi')],
