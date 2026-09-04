@@ -9,6 +9,7 @@ on:
       - 'betflag-combo-detail-trigger.json'
       - 'collector/betflag_combo_detail_probe.py'
       - 'collector/betflag_combo_fixture_structure_probe.py'
+      - 'collector/betflag_combo_residential_collector.py'
       - '.github/workflows/betflag-combo-detail-probe.yml'
 
 permissions:
@@ -34,13 +35,16 @@ jobs:
         run: |
           git fetch origin betflag-live:refs/remotes/origin/betflag-live
           git show origin/betflag-live:feed/betflag-residential-current.json | Out-File -Encoding utf8 feed/betflag-residential-current.json
+      - name: Collect fixture-specific combo quotes from canonical residential player routes
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_combo_residential_collector.py
       - name: Probe fixture-specific combo detail routes
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_combo_detail_probe.py
       - name: Discover fixture-specific combo market structure
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_combo_fixture_structure_probe.py
-      - name: Publish combo availability and structure reports to betflag-live
+      - name: Publish combo feeds and diagnostics to betflag-live
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           $ErrorActionPreference = 'Stop'
@@ -54,7 +58,13 @@ jobs:
           git fetch origin betflag-live:refs/remotes/origin/betflag-live
           git worktree add --detach $publishRoot origin/betflag-live
           try {
-            $rels=@('feed/betflag-combo-detail-availability.json','feed/betflag-combo-fixture-structure.json','feed/betflag-combo-odd-link-samples.json')
+            $rels=@(
+              'feed/betflag-combo-residential-current.json',
+              'feed/betflag-combo-residential-summary.json',
+              'feed/betflag-combo-detail-availability.json',
+              'feed/betflag-combo-fixture-structure.json',
+              'feed/betflag-combo-odd-link-samples.json'
+            )
             foreach ($rel in $rels) {
               $src=Join-Path $workspace $rel
               $dst=Join-Path $publishRoot $rel
@@ -65,9 +75,9 @@ jobs:
             try {
               git config user.name 'radar-betflag-residential-bot'
               git config user.email 'radar-betflag-residential-bot@users.noreply.github.com'
-              git add feed/betflag-combo-detail-availability.json feed/betflag-combo-fixture-structure.json feed/betflag-combo-odd-link-samples.json
+              git add feed/betflag-combo-residential-current.json feed/betflag-combo-residential-summary.json feed/betflag-combo-detail-availability.json feed/betflag-combo-fixture-structure.json feed/betflag-combo-odd-link-samples.json
               git diff --cached --quiet
-              if ($LASTEXITCODE -ne 0) { git commit -m 'Publish BetFlag combo fixture diagnostics' }
+              if ($LASTEXITCODE -ne 0) { git commit -m 'Publish BetFlag combo fixture feeds' }
               git push origin HEAD:refs/heads/betflag-live
             }
             finally { Pop-Location }
