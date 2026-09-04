@@ -19,12 +19,13 @@ concurrency:
 jobs:
   install-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
 
       - uses: actions/setup-python@v6
         with:
