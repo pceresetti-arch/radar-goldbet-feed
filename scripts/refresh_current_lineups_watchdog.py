@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 
 BASE_SCRIPT = pathlib.Path('scripts/refresh_current_lineups_resilient.py')
 URGENT_SCRIPT = pathlib.Path('scripts/refresh_urgent_lineups.py')
+FLASHSCORE_CROSSCHECK_SCRIPT = pathlib.Path('scripts/crosscheck_flashscore_lineups.py')
 LINEUPS = pathlib.Path('feed/lineups-current.json')
 WATCHDOG = pathlib.Path('feed/lineup-watchdog-current.json')
 POSTXI = pathlib.Path('feed/post-xi-refresh-request.json')
@@ -94,12 +95,7 @@ def is_official(m):
 
 
 def canonical_xi_fingerprint(m):
-    """Cross-provider XI identity based only on normalized starter names.
-
-    Provider player/team IDs are intentionally ignored: FotMob, Sofascore and
-    Flashscore use different IDs. Sorting the 11 names per side also makes the
-    identity insensitive to provider lineup ordering/layout.
-    """
+    """Cross-provider XI identity based only on normalized starter names."""
     teams = (((m or {}).get('lineup') or {}).get('teams') or [])
     if len(teams) < 2:
         return None
@@ -236,6 +232,24 @@ def run_script(path):
     return load_json(LINEUPS, {})
 
 
+def run_flashscore_crosscheck_if_needed(payload):
+    """Use Flashscore only as an independent confirmer of an existing provider XI.
+
+    The crosscheck script refuses predicted/probable payloads and never creates
+    a standalone official XI. This keeps provider-only XI below the official
+    gate unless an independent final-lineup payload agrees >=10/11 per side.
+    """
+    if not FLASHSCORE_CROSSCHECK_SCRIPT.exists():
+        return payload, False
+    unresolved = urgent_missing(payload)
+    if not unresolved:
+        return payload, False
+    cp = subprocess.run([sys.executable, str(FLASHSCORE_CROSSCHECK_SCRIPT)], check=False)
+    if cp.returncode != 0:
+        return payload, False
+    return load_json(LINEUPS, payload), True
+
+
 pathlib.Path('feed').mkdir(exist_ok=True)
 initial = load_json(LINEUPS, {'matches': []})
 reference = initial
@@ -247,11 +261,15 @@ actionable_events = []
 started = now_iso()
 final_payload = run_script(BASE_SCRIPT)
 missing = urgent_missing(final_payload)
+urgent_ran = False
 
 # If anything imminent is still unresolved, immediately run the lightweight
-# multi-source probe before waiting.
+# FotMob+Sofascore probe, then independently cross-check the surviving
+# provider-only XI against Diretta/Flashscore.
 if missing:
     final_payload = run_script(URGENT_SCRIPT)
+    urgent_ran = True
+final_payload, flashscore_ran = run_flashscore_crosscheck_if_needed(final_payload)
 
 final_payload = reconcile_official_metadata(reference, final_payload)
 events = detect_events(reference, final_payload)
@@ -259,11 +277,12 @@ actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
 missing = urgent_missing(final_payload)
 attempt_records.append({
     'attempt': 1,
-    'mode': 'FULL_DISCOVERY_PLUS_IMMEDIATE_URGENT_FALLBACK' if missing or events else 'FULL_DISCOVERY',
+    'mode': 'FULL_DISCOVERY_PLUS_MULTI_SOURCE_XI' if urgent_ran or flashscore_ran else 'FULL_DISCOVERY',
     'started_at': started,
     'finished_at': now_iso(),
     'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
     'urgent_unconfirmed_count': len(missing),
+    'flashscore_crosscheck_ran': flashscore_ran,
     'events': events,
     'actionable_events': actionable_now,
 })
@@ -277,17 +296,19 @@ if not actionable_now and missing:
         time.sleep(POLL_INTERVAL_SECONDS)
         started = now_iso()
         final_payload = run_script(URGENT_SCRIPT)
+        final_payload, flashscore_ran = run_flashscore_crosscheck_if_needed(final_payload)
         final_payload = reconcile_official_metadata(reference, final_payload)
         events = detect_events(reference, final_payload)
         actionable_now = [e for e in events if e.get('actionable_for_post_xi')]
         missing = urgent_missing(final_payload)
         attempt_records.append({
             'attempt': attempt,
-            'mode': 'URGENT_DIRECT_MULTI_SOURCE',
+            'mode': 'URGENT_DIRECT_MULTI_SOURCE_PLUS_FLASHSCORE_CROSSCHECK',
             'started_at': started,
             'finished_at': now_iso(),
             'official_count': sum(1 for m in (final_payload.get('matches') or []) if is_official(m)),
             'urgent_unconfirmed_count': len(missing),
+            'flashscore_crosscheck_ran': flashscore_ran,
             'events': events,
             'actionable_events': actionable_now,
         })
@@ -299,10 +320,11 @@ if not actionable_now and missing:
 
 remaining = urgent_missing(final_payload)
 watchdog = {
-    'schema': 'radar-lineup-watchdog-v5-certified-source',
+    'schema': 'radar-lineup-watchdog-v6-flashscore-crosscheck',
     'generated_at': now_iso(),
-    'source_strategy': 'One canonical full discovery; then targeted multi-source probes. Single-provider SOURCE_CONFIRMED remains provider-only until primary metadata or independent cross-confirmation exists.',
+    'source_strategy': 'One canonical full discovery; targeted FotMob+Sofascore probes; then Diretta/Flashscore as independent final-XI cross-check. LiveScore remains probe-only until a working lineup endpoint/parser is verified.',
     'official_definition': 'CERTIFIED_PRIMARY or CERTIFIED_CROSSCHECK + lineupType=standard + complete 11v11',
+    'flashscore_policy': 'Never standalone official. Explicit final starting-lineup marker, no predicted/probable marker, existing complete provider XI and >=10/11 starter-name agreement per side required.',
     'xi_change_identity': 'SHA256 of sorted normalized 11 starter names per side; provider IDs ignored',
     'poll_policy': {
         'base_schedule': 'GitHub cron every 5 minutes',
@@ -326,16 +348,22 @@ watchdog = {
 WATCHDOG.write_text(json.dumps(watchdog, ensure_ascii=False, indent=2), encoding='utf-8')
 
 postxi = {
-    'schema': 'radar-post-xi-refresh-request-v5-certified-source',
+    'schema': 'radar-post-xi-refresh-request-v6-flashscore-crosscheck',
     'generated_at': watchdog['generated_at'],
     'required': bool(actionable_events),
     'reason': (
-        'Pre-kickoff certified official XI detected or genuinely changed; rebuild tactical roles, player context and deep-analysis readiness immediately.'
+        'Pre-kickoff certified official XI detected or genuinely changed; rebuild tactical roles, player matchup, synergy/position context and deep-analysis readiness immediately.'
         if actionable_events
         else 'No actionable pre-kickoff certified official XI transition in this watchdog run.'
     ),
     'events': actionable_events,
     'observed_audit_events': [e for e in all_events if not e.get('actionable_for_post_xi')],
+    'required_post_xi_chain': [
+        'tactical-role-context',
+        'player-matchup-context',
+        'player-synergy-position-context-v2',
+        'deep-analysis-readiness-v3',
+    ] if actionable_events else [],
 }
 POSTXI.write_text(json.dumps(postxi, ensure_ascii=False, indent=2), encoding='utf-8')
 print(json.dumps(watchdog, ensure_ascii=False, indent=2))
