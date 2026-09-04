@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T11:18:14.050125+00:00",
+  "generated_at": "2026-09-04T11:36:22.860476+00:00",
   "window": "T-120 to T+15 minutes",
   "source_strategy": "Canonical Worker-backed BetFlag fixture index + explicit Radar runtime fixtures + continuity fallbacks; FotMob standard XI certification",
   "target_sources": [
@@ -8,9 +8,9 @@
     "radar-runtime-request.json",
     "feed/lineups-current.json"
   ],
-  "target_count": 21,
+  "target_count": 24,
   "status_counts": {
-    "NOT_AVAILABLE": 19,
+    "NOT_AVAILABLE": 22,
     "SOURCE_CONFIRMED": 2
   },
   "schedule_stats": [
@@ -29,13 +29,13 @@
       "start_time": "04-09-2026 14:00",
       "start_utc": "2026-09-04T12:00:00+00:00",
       "league": "Liga 1",
-      "minutes_to_start": 41.8,
+      "minutes_to_start": 23.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-04T11:18:14.050125+00:00",
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
-      "previous_xi_fingerprint": null,
+      "previous_xi_fingerprint": "0a4ce5d1c9ef7d00a747",
       "source": "FotMob",
       "fotmob_match": {
         "id": 6006715,
@@ -636,20 +636,8 @@
         ]
       },
       "error": null,
-      "urgent_source_evidence": {
-        "polled_at": "2026-09-04T11:17:38.660698+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 6006715,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      },
       "source_evidence": {
-        "polled_at": "2026-09-04T11:18:14.050125+00:00",
+        "polled_at": "2026-09-04T11:36:22.860476+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 6006715,
@@ -668,13 +656,13 @@
       "start_time": "04-09-2026 14:00",
       "start_utc": "2026-09-04T12:00:00+00:00",
       "league": "Premier League",
-      "minutes_to_start": 41.8,
+      "minutes_to_start": 23.6,
       "target_origin": "PREVIOUS_LINEUP_FEED",
       "status": "SOURCE_CONFIRMED",
       "confirmed_at": "2026-09-04T11:18:14.050125+00:00",
       "retained_from_previous": false,
       "xi_changed_after_confirmation": false,
-      "previous_xi_fingerprint": null,
+      "previous_xi_fingerprint": "c8524c33df5bcc80f948",
       "source": "FotMob",
       "fotmob_match": {
         "id": 1000017717,
@@ -1280,20 +1268,8 @@
         ]
       },
       "error": null,
-      "urgent_source_evidence": {
-        "polled_at": "2026-09-04T11:17:38.660698+00:00",
-        "fotmob": {
-          "provider": "FotMob",
-          "match_id": 1000017717,
-          "http_status": 200
-        },
-        "sofascore": {
-          "provider": "Sofascore",
-          "error": "EVENT_NOT_MATCHED"
-        }
-      },
       "source_evidence": {
-        "polled_at": "2026-09-04T11:18:14.050125+00:00",
+        "polled_at": "2026-09-04T11:36:22.860476+00:00",
         "fotmob": {
           "provider": "FotMob",
           "match_id": 1000017717,
@@ -1308,12 +1284,12 @@
   ],
   "urgent_refresh": {
     "schema": "radar-urgent-lineup-refresh-v1",
-    "generated_at": "2026-09-04T11:18:14.050125+00:00",
+    "generated_at": "2026-09-04T11:36:22.860476+00:00",
     "window_minutes": [
       0,
       85.0
     ],
-    "target_count": 11,
+    "target_count": 19,
     "sources": [
       "FotMob",
       "Sofascore"
@@ -1324,26 +1300,19 @@
         "error": "SCHEDULE_UNAVAILABLE"
       }
     },
-    "changes": [
-      {
-        "match": "Bali United - PSS Sleman",
-        "minutes_to_start": 41.8,
-        "before_official": false,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": false
-      },
-      {
-        "match": "Pattani FC - BG Pathum United FC",
-        "minutes_to_start": 41.8,
-        "before_official": false,
-        "after_status": "SOURCE_CONFIRMED",
-        "source": "FotMob",
-        "xi_changed": false
-      }
-    ]
+    "changes": []
   },
+  "watchdog_identity_repairs": [
+    {
+      "match": "Bali United - PSS Sleman",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    },
+    {
+      "match": "Pattani FC - BG Pathum United FC",
+      "repair": "FALSE_XI_CHANGE_SUPPRESSED"
+    }
+  ],
   "official_tactical_gate": true,
-  "source_match_count": 21,
+  "source_match_count": 24,
   "official_match_count": 2
 }
