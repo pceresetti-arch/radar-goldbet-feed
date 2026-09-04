@@ -1,0 +1,71 @@
+name: BetFlag combo detail probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  push:
+    paths:
+      - 'betflag-combo-detail-trigger.json'
+      - 'collector/betflag_combo_detail_probe.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-combo-detail-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Hydrate latest player feed
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          git fetch origin betflag-live:refs/remotes/origin/betflag-live
+          git show origin/betflag-live:feed/betflag-residential-current.json | Out-File -Encoding utf8 feed/betflag-residential-current.json
+      - name: Probe fixture-specific combo detail routes
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_combo_detail_probe.py
+      - name: Publish combo availability report to betflag-live
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $workspace = (Get-Location).Path
+          $publishRoot = Join-Path $env:RUNNER_TEMP 'betflag-combo-detail-publish'
+          git worktree prune
+          if (Test-Path $publishRoot) {
+            git worktree remove --force $publishRoot 2>$null
+            Remove-Item $publishRoot -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          git fetch origin betflag-live:refs/remotes/origin/betflag-live
+          git worktree add --detach $publishRoot origin/betflag-live
+          try {
+            $rel='feed/betflag-combo-detail-availability.json'
+            $src=Join-Path $workspace $rel
+            $dst=Join-Path $publishRoot $rel
+            New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+            Copy-Item $src $dst -Force
+            Push-Location $publishRoot
+            try {
+              git config user.name 'radar-betflag-residential-bot'
+              git config user.email 'radar-betflag-residential-bot@users.noreply.github.com'
+              git add $rel
+              git diff --cached --quiet
+              if ($LASTEXITCODE -ne 0) { git commit -m 'Publish BetFlag combo detail availability' }
+              git push origin HEAD:refs/heads/betflag-live
+            }
+            finally { Pop-Location }
+          }
+          finally {
+            git worktree remove --force $publishRoot 2>$null
+            git worktree prune
+          }
