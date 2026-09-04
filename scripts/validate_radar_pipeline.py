@@ -10,7 +10,11 @@ def load(name,default):
 lineups=load('lineups-current.json',{'matches':[]})
 ready=load('deep-analysis-readiness.json',{'matches':[]})
 coverage=load('betflag-player-market-coverage.json',{})
+synergy=load('player-synergy-position-current.json',{'matches':[]})
 errors=[]; warnings=[]
+
+if str(ready.get('schema') or '').startswith('radar-deep-analysis-readiness-v3') and not str(synergy.get('schema') or '').startswith('radar-player-synergy-position-v2'):
+ warnings.append({'code':'SYNERGY_V2_ARTIFACT_MISSING_OR_NOT_ENRICHED','schema':synergy.get('schema')})
 
 for m in lineups.get('matches') or []:
  if not isinstance(m,dict):continue
@@ -29,6 +33,12 @@ for m in ready.get('matches') or []:
   errors.append({'match':m.get('match'),'code':'MOVEMENT_CLAIM_WITHOUT_CERTIFICATE'})
  if m.get('player_lane_ready') and not m.get('player_context_matches_current_xi'):
   errors.append({'match':m.get('match'),'code':'PLAYER_CONTEXT_XI_MISMATCH'})
+ if m.get('player_market_bet_ready') and not m.get('player_synergy_position_ready'):
+  errors.append({'match':m.get('match'),'code':'PLAYER_BET_READY_WITHOUT_SYNERGY_POSITION'})
+ if m.get('player_market_bet_ready') and not m.get('player_synergy_position_xi_match'):
+  errors.append({'match':m.get('match'),'code':'PLAYER_BET_READY_WITH_SYNERGY_XI_MISMATCH'})
+ if m.get('player_market_bet_ready') and float(m.get('player_synergy_position_coverage') or 0)<0.60:
+  errors.append({'match':m.get('match'),'code':'PLAYER_BET_READY_WITH_LOW_SYNERGY_COVERAGE','coverage':m.get('player_synergy_position_coverage')})
  if m.get('analysis_total_ready') and not m.get('betflag_standard_current_fresh'):
   errors.append({'match':m.get('match'),'code':'FULL_READY_WITH_STALE_CURRENT'})
 
@@ -37,7 +47,7 @@ if coverage and not coverage.get('source_healthy'):
 partial=sum(1 for x in coverage.get('fixtures') or [] if x.get('status')!='COMPLETE')
 if partial:warnings.append({'code':'PARTIAL_PLAYER_MARKET_FIXTURES','count':partial})
 
-report={'schema':'radar-pipeline-validation-v1','generated_at':datetime.now(timezone.utc).isoformat(),'valid':not errors,'error_count':len(errors),'warning_count':len(warnings),'errors':errors,'warnings':warnings}
+report={'schema':'radar-pipeline-validation-v2-synergy','generated_at':datetime.now(timezone.utc).isoformat(),'valid':not errors,'error_count':len(errors),'warning_count':len(warnings),'errors':errors,'warnings':warnings}
 (F/'radar-pipeline-validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(report,ensure_ascii=False))
 if errors: sys.exit(2)
