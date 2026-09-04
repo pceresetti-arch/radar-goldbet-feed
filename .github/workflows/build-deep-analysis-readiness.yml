@@ -16,6 +16,7 @@ on:
       - 'deep-analysis-readiness-trigger.json'
       - 'scripts/build_deep_analysis_readiness.py'
       - 'scripts/hydrate_live_betflag_index.py'
+      - 'scripts/filter_official_lineups_for_tactical.py'
       - 'RADAR_FULL_ANALYSIS_GATE_V2.md'
 
 permissions:
@@ -53,6 +54,12 @@ jobs:
           fi
           python scripts/hydrate_live_betflag_index.py
 
+      - name: Rebuild certified-XI tactical input
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/filter_official_lineups_for_tactical.py
+
       - name: Build machine-readable BetFlag-only readiness gate
         run: python scripts/build_deep_analysis_readiness.py
 
@@ -62,7 +69,8 @@ jobs:
           set -e
           git config user.name 'radar-goldbet-bot'
           git config user.email 'radar-goldbet-bot@users.noreply.github.com'
-          # The hydrated BetFlag adapter is runtime-only. Persist only readiness outputs.
+          # Hydrated BetFlag/XI adapter files are runtime-only. Persist only readiness outputs.
+          git reset -- feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-fixtures-index.json feed/lineups-official-for-tactical.json 2>/dev/null || true
           git add feed/deep-analysis-readiness.json feed/deep-analysis-readiness-summary.json
           git diff --cached --quiet && exit 0
           git commit -m 'Refresh deep-analysis readiness gate'
