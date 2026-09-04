@@ -15,9 +15,11 @@ on:
     paths:
       - 'deep-analysis-readiness-trigger.json'
       - 'scripts/build_deep_analysis_readiness.py'
+      - 'scripts/enforce_full_analysis_gate_v2.py'
       - 'scripts/hydrate_live_betflag_index.py'
       - 'scripts/filter_official_lineups_for_tactical.py'
       - 'RADAR_FULL_ANALYSIS_GATE_V2.md'
+      - 'RADAR_DATA_ACQUISITION_HARDENING_V1.md'
 
 permissions:
   contents: write
@@ -62,6 +64,12 @@ jobs:
 
       - name: Build machine-readable BetFlag-only readiness gate
         run: python scripts/build_deep_analysis_readiness.py
+
+      - name: Enforce hardened FULL-analysis gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/enforce_full_analysis_gate_v2.py
 
       - name: Persist readiness safely
         shell: bash
