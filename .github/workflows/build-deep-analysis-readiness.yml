@@ -33,9 +33,12 @@ on:
 permissions:
   contents: write
 
+# Keep the active readiness build alive when bursts of upstream workflows finish.
+# A newer pending run may replace an older pending run, but it must not cancel the
+# run already computing/persisting the current XI + BetFlag + player context.
 concurrency:
   group: radar-deep-analysis-readiness
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
