@@ -60,6 +60,18 @@ jobs:
       - name: Update standard movement
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_standard_movement.py
+      - name: Hydrate latest combo lane before coverage build
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          git fetch origin betflag-live:refs/remotes/origin/betflag-live
+          foreach ($rel in @('feed/betflag-combo-residential-current.json','feed/betflag-combo-residential-summary.json')) {
+            git cat-file -e ("origin/betflag-live:" + $rel) 2>$null
+            if ($LASTEXITCODE -eq 0) {
+              $dst = Join-Path (Get-Location).Path $rel
+              New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+              git show ("origin/betflag-live:" + $rel) | Out-File -Encoding utf8 $dst
+            }
+          }
       - name: Build fixture feed and health status
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_hot_feed_v3.py
