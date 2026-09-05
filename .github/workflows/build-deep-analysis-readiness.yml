@@ -20,6 +20,7 @@ on:
       - 'scripts/build_deep_analysis_readiness_v3.py'
       - 'scripts/build_player_synergy_position_context.py'
       - 'scripts/enrich_player_synergy_position_context.py'
+      - 'scripts/apply_player_final_gate_overlay.py'
       - 'scripts/enforce_full_analysis_gate_v2.py'
       - 'scripts/build_acquisition_recovery_queue.py'
       - 'scripts/harden_lineup_evidence.py'
@@ -97,6 +98,12 @@ jobs:
 
       - name: Build source-aware BetFlag-only readiness gate
         run: python scripts/build_deep_analysis_readiness_v3.py
+
+      - name: Apply per-player XI and scorer-allocation final gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/apply_player_final_gate_overlay.py
 
       - name: Enforce hardened FULL-analysis gate
         shell: bash
