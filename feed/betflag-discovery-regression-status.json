@@ -1,6 +1,6 @@
 {
   "schema_version": "betflag-discovery-regression-v3-fast-index",
-  "generated_at": "2026-09-05T18:27:55.901353+00:00",
+  "generated_at": "2026-09-05T21:24:47.090682+00:00",
   "worker_base": "https://radar-betflag-v7.p-ceresetti.workers.dev",
   "rome_date": "05-09-2026",
   "ready": false,
@@ -18,9 +18,9 @@
     "fixture_hardcoding": false
   },
   "performance": {
-    "index_first_elapsed_ms": 8614,
-    "index_warm_elapsed_ms": 77,
-    "fallback_discovery_elapsed_ms": 731,
+    "index_first_elapsed_ms": 7869,
+    "index_warm_elapsed_ms": 55,
+    "fallback_discovery_elapsed_ms": 320,
     "index_first_cache": "MISS:MISS:CACHED_HEALTHY:CACHED_HEALTHY",
     "index_warm_cache": "HIT"
   },
@@ -29,25 +29,24 @@
     "targets_called": 17,
     "targets_ok": 17,
     "missing_targets": [],
-    "source_rows": 11286,
-    "scoped_source_rows": 11134,
-    "indexed_rows": 11134,
+    "source_rows": 13530,
+    "scoped_source_rows": 1451,
+    "indexed_rows": 1451,
     "unmapped_rows": 0,
     "mapping_counts": {
-      "standard_match": 11134,
+      "standard_match": 1451,
       "match_code_fallback": 0,
       "fixture_id_fallback": 0,
       "composite_identity_fallback": 0,
       "missing_stable_identity": 0,
       "missing_player": 0
     },
-    "fixtures": 21,
-    "exact_fixtures": 21,
+    "fixtures": 3,
+    "exact_fixtures": 3,
     "fallback_fixtures": 0,
-    "player_fixtures": 981,
+    "player_fixtures": 166,
     "markets_present": [
       "1° Marcatore",
-      "1° Marcatore o Sostituto",
       "Assist",
       "Assist o Sostituto",
       "Doppietta",
@@ -58,7 +57,6 @@
       "Marcatore Plus",
       "Marcatore o Sostituto",
       "Tripletta",
-      "U/O Parate Giocatore",
       "U/O Tiri In Porta Giocatore",
       "U/O Tiri Totali Giocatore",
       "U/O Tiri Totali Plus",
@@ -113,14 +111,14 @@
     "exact_price_gate_eligible": true
   },
   "sample_dynamic_exact": {
-    "match": "SG Dynamo Dresden - Bochum",
-    "match_market_id": "36361.3975",
-    "player": "Ahmet Muhamedbegovic",
+    "match": "CD Everton Vina Del Mar - Universidad Catolica",
+    "match_market_id": "36371.986",
+    "player": "Agustin Farias",
     "market": "1° Marcatore",
     "selection": "Si",
-    "odd": 40,
-    "scan_odd": 40,
-    "proof_id": "bf-5c5d4b476b0e9742d846"
+    "odd": 24,
+    "scan_odd": 24,
+    "proof_id": "bf-3c4319207a091a0f4f8b"
   },
   "rule": "PRE-MATCH uses today-scoped player-index first; if ready=false or coverage_complete=false, declare PIPELINE_DEGRADED and do not infer no-bet from incomplete coverage."
 }
