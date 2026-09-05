@@ -1,12 +1,18 @@
-name: BetFlag combo detail probe
+name: BetFlag residential authoritative scheduler
 
 on:
   workflow_dispatch:
   schedule:
+    - cron: '*/5 * * * *'
     - cron: '12,42 * * * *'
   push:
     paths:
       - 'betflag-combo-detail-trigger.json'
+      - 'betflag-residential-trigger.json'
+      - 'collector/betflag_residential_current_fast.py'
+      - 'collector/betflag_residential_collector.py'
+      - 'collector/betflag_standard_market_collector.py'
+      - 'collector/betflag_hot_feed_v3.py'
       - 'collector/betflag_combo_detail_probe.py'
       - 'collector/betflag_combo_fixture_structure_probe.py'
       - 'collector/betflag_combo_residential_collector.py'
@@ -15,12 +21,112 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: betflag-combo-detail-probe
-  cancel-in-progress: true
-
 jobs:
-  probe:
+  current:
+    if: github.event_name != 'schedule' || github.event.schedule == '*/5 * * * *'
+    concurrency:
+      group: betflag-authoritative-current
+      cancel-in-progress: true
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 5
+    env:
+      BETFLAG_HTTP_TIMEOUT: '10'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Ensure browser recovery client
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python -m pip install --disable-pip-version-check playwright
+      - name: Clear stale git operation metadata
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          Remove-Item '.git\rebase-merge' -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item '.git\rebase-apply' -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item '.git\MERGE_HEAD' -Force -ErrorAction SilentlyContinue
+          Remove-Item '.git\CHERRY_PICK_HEAD' -Force -ErrorAction SilentlyContinue
+      - name: Collect player CURRENT fast
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_residential_current_fast.py
+      - name: Update player movement
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_residential_movement.py
+      - name: Collect standard CURRENT
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_standard_market_collector.py
+      - name: Update standard movement
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_standard_movement.py
+      - name: Build fixture feed and health status
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_hot_feed_v3.py
+      - name: Publish fresh CURRENT to betflag-live
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $workspace = (Get-Location).Path
+          $publishRoot = Join-Path $env:RUNNER_TEMP 'betflag-authoritative-current-publish'
+          git worktree prune
+          if (Test-Path $publishRoot) {
+            git worktree remove --force $publishRoot 2>$null
+            Remove-Item $publishRoot -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          git fetch origin betflag-live:refs/remotes/origin/betflag-live
+          git worktree add --detach $publishRoot origin/betflag-live
+          try {
+            $files = @(
+              'feed/betflag-residential-current.json',
+              'feed/betflag-residential-movement.json',
+              'feed/betflag-opening-field-diagnostics.json',
+              'feed/betflag-standard-current.json',
+              'feed/betflag-standard-movement.json',
+              'feed/betflag-movement-index.json',
+              'feed/betflag-residential-hot-feed.json',
+              'feed/betflag-live-status.json',
+              'feed/betflag-residential-fixtures-index.json',
+              'feed/betflag-fixtures-index.json'
+            )
+            foreach ($rel in $files) {
+              $src = Join-Path $workspace $rel
+              if (-not (Test-Path $src)) { throw "Missing generated CURRENT file: $rel" }
+              $dst = Join-Path $publishRoot $rel
+              New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+              Copy-Item $src $dst -Force
+            }
+            foreach ($dirName in @('betflag-residential-fixtures','betflag-fixtures')) {
+              $src = Join-Path $workspace ("feed/" + $dirName)
+              if (-not (Test-Path $src)) { throw "Missing generated fixture directory: $dirName" }
+              $dst = Join-Path $publishRoot ("feed/" + $dirName)
+              Remove-Item $dst -Recurse -Force -ErrorAction SilentlyContinue
+              New-Item -ItemType Directory -Force -Path $dst | Out-Null
+              Copy-Item (Join-Path $src '*') $dst -Recurse -Force
+            }
+            Push-Location $publishRoot
+            try {
+              git config user.name 'radar-betflag-residential-bot'
+              git config user.email 'radar-betflag-residential-bot@users.noreply.github.com'
+              git add -A -- feed/betflag-residential-current.json feed/betflag-residential-movement.json feed/betflag-opening-field-diagnostics.json feed/betflag-standard-current.json feed/betflag-standard-movement.json feed/betflag-movement-index.json feed/betflag-residential-hot-feed.json feed/betflag-live-status.json feed/betflag-residential-fixtures-index.json feed/betflag-residential-fixtures feed/betflag-fixtures-index.json feed/betflag-fixtures
+              git diff --cached --quiet
+              if ($LASTEXITCODE -ne 0) { git commit -m 'Publish authoritative BetFlag CURRENT snapshot' }
+              git fetch origin betflag-live
+              git rebase origin/betflag-live
+              git push origin HEAD:refs/heads/betflag-live
+            }
+            finally { Pop-Location }
+          }
+          finally {
+            git worktree remove --force $publishRoot 2>$null
+            git worktree prune
+          }
+
+  combo:
+    if: github.event_name == 'schedule' && github.event.schedule == '12,42 * * * *'
+    concurrency:
+      group: betflag-authoritative-combo
+      cancel-in-progress: true
     runs-on: [self-hosted, windows, betflag-residential]
     timeout-minutes: 7
     steps:
@@ -30,12 +136,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Ensure browser recovery client
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python -m pip install --disable-pip-version-check playwright
       - name: Hydrate latest player feed
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           git fetch origin betflag-live:refs/remotes/origin/betflag-live
           git show origin/betflag-live:feed/betflag-residential-current.json | Out-File -Encoding utf8 feed/betflag-residential-current.json
-      - name: Collect fixture-specific combo quotes from canonical residential player routes
+      - name: Collect fixture-specific combo quotes
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_combo_residential_collector.py
       - name: Probe fixture-specific combo detail routes
@@ -49,7 +158,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $workspace = (Get-Location).Path
-          $publishRoot = Join-Path $env:RUNNER_TEMP 'betflag-combo-detail-publish'
+          $publishRoot = Join-Path $env:RUNNER_TEMP 'betflag-authoritative-combo-publish'
           git worktree prune
           if (Test-Path $publishRoot) {
             git worktree remove --force $publishRoot 2>$null
@@ -67,6 +176,7 @@ jobs:
             )
             foreach ($rel in $rels) {
               $src=Join-Path $workspace $rel
+              if (-not (Test-Path $src)) { throw "Missing generated combo file: $rel" }
               $dst=Join-Path $publishRoot $rel
               New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
               Copy-Item $src $dst -Force
@@ -78,6 +188,8 @@ jobs:
               git add feed/betflag-combo-residential-current.json feed/betflag-combo-residential-summary.json feed/betflag-combo-detail-availability.json feed/betflag-combo-fixture-structure.json feed/betflag-combo-odd-link-samples.json
               git diff --cached --quiet
               if ($LASTEXITCODE -ne 0) { git commit -m 'Publish BetFlag combo fixture feeds' }
+              git fetch origin betflag-live
+              git rebase origin/betflag-live
               git push origin HEAD:refs/heads/betflag-live
             }
             finally { Pop-Location }
