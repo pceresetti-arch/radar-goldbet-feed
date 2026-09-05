@@ -7,13 +7,14 @@ on:
   push:
     paths:
       - 'betflag-residential-trigger.json'
+      - 'collector/betflag_residential_current_fast.py'
 
 permissions:
   contents: write
 
 concurrency:
   group: betflag-residential-feed
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   collect:
@@ -23,6 +24,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 5
+
       - name: Clear stale git operation metadata
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
@@ -30,12 +32,15 @@ jobs:
           Remove-Item '.git\rebase-apply' -Recurse -Force -ErrorAction SilentlyContinue
           Remove-Item '.git\MERGE_HEAD' -Force -ErrorAction SilentlyContinue
           Remove-Item '.git\CHERRY_PICK_HEAD' -Force -ErrorAction SilentlyContinue
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Ensure browser-session recovery client
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python -m pip install --disable-pip-version-check playwright
+
       - name: Ensure local true-open close watcher
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
@@ -55,26 +60,33 @@ jobs:
             Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -RunLevel Highest -Description 'BetFlag residential watcher: open, movement and last pre-kickoff close.' | Out-Null
           }
           if (-not (Test-Path (Join-Path $state 'betflag-open-close-watch.json'))) { Start-ScheduledTask -TaskName $taskName }
-      - name: Collect BetFlag player markets
+
+      - name: Collect BetFlag player CURRENT fast
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
-        run: python collector/betflag_residential_collector.py
+        run: python collector/betflag_residential_current_fast.py
+
       - name: Update player movement history
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_residential_movement.py
+
       - name: Collect BetFlag standard markets
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_standard_market_collector.py
+
       - name: Update standard-market movement
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_standard_movement.py
+
       - name: Build hardened residential per-fixture live feed
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: python collector/betflag_hot_feed_v3.py
+
       - name: Import local open-close watcher state
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           $src = 'C:\BetFlagRadar\state\betflag-open-close-watch.json'
           if (Test-Path $src) { Copy-Item $src 'feed\betflag-open-close-watch.json' -Force }
+
       - name: Publish data-only live branch
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
@@ -135,7 +147,6 @@ jobs:
               git diff --cached --quiet
               if ($LASTEXITCODE -ne 0) {
                 git commit -m "Publish BetFlag residential live snapshot"
-                if ($LASTEXITCODE -ne 0) { throw 'Unable to create data-only BetFlag live snapshot commit' }
               }
               git push origin HEAD:refs/heads/betflag-live
               if ($LASTEXITCODE -ne 0) { throw 'Unable to publish dedicated betflag-live data branch' }
