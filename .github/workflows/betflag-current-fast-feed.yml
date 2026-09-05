@@ -1,0 +1,109 @@
+name: BetFlag CURRENT fast lane
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+  push:
+    paths:
+      - 'betflag-residential-trigger.json'
+      - '.github/workflows/betflag-current-fast-feed.yml'
+      - 'collector/betflag_residential_current_fast.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betflag-current-fast-feed
+  cancel-in-progress: true
+
+jobs:
+  current:
+    runs-on: [self-hosted, windows, betflag-residential]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Collect player CURRENT fast
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_residential_current_fast.py
+
+      - name: Update player movement
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_residential_movement.py
+
+      - name: Collect standard CURRENT
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_standard_market_collector.py
+
+      - name: Update standard movement
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_standard_movement.py
+
+      - name: Build fixture feed and health status
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: python collector/betflag_hot_feed_v3.py
+
+      - name: Publish fresh CURRENT to betflag-live
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $workspace = (Get-Location).Path
+          $publishRoot = Join-Path $env:RUNNER_TEMP 'betflag-current-fast-publish'
+          git worktree prune
+          if (Test-Path $publishRoot) {
+            git worktree remove --force $publishRoot 2>$null
+            Remove-Item $publishRoot -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          git fetch origin betflag-live:refs/remotes/origin/betflag-live
+          git worktree add --detach $publishRoot origin/betflag-live
+          try {
+            $files = @(
+              'feed/betflag-residential-current.json',
+              'feed/betflag-residential-movement.json',
+              'feed/betflag-opening-field-diagnostics.json',
+              'feed/betflag-standard-current.json',
+              'feed/betflag-standard-movement.json',
+              'feed/betflag-movement-index.json',
+              'feed/betflag-residential-hot-feed.json',
+              'feed/betflag-live-status.json',
+              'feed/betflag-residential-fixtures-index.json',
+              'feed/betflag-fixtures-index.json'
+            )
+            foreach ($rel in $files) {
+              $src = Join-Path $workspace $rel
+              if (-not (Test-Path $src)) { throw "Missing generated file: $rel" }
+              $dst = Join-Path $publishRoot $rel
+              New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+              Copy-Item $src $dst -Force
+            }
+            foreach ($dirName in @('betflag-residential-fixtures','betflag-fixtures')) {
+              $src = Join-Path $workspace ("feed/" + $dirName)
+              $dst = Join-Path $publishRoot ("feed/" + $dirName)
+              Remove-Item $dst -Recurse -Force -ErrorAction SilentlyContinue
+              New-Item -ItemType Directory -Force -Path $dst | Out-Null
+              Copy-Item (Join-Path $src '*') $dst -Recurse -Force
+            }
+            Push-Location $publishRoot
+            try {
+              git config user.name "radar-betflag-residential-bot"
+              git config user.email "radar-betflag-residential-bot@users.noreply.github.com"
+              git add -A -- feed
+              git diff --cached --quiet
+              if ($LASTEXITCODE -ne 0) { git commit -m "Publish BetFlag CURRENT fast snapshot" }
+              git fetch origin betflag-live
+              git rebase origin/betflag-live
+              git push origin HEAD:refs/heads/betflag-live
+            }
+            finally { Pop-Location }
+          }
+          finally {
+            git worktree remove --force $publishRoot 2>$null
+            git worktree prune
+          }
