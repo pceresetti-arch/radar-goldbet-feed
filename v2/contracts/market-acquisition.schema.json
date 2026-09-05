@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "radar-v2-market-acquisition",
+  "title": "Radar V2 market acquisition evidence",
+  "type": "object",
+  "required": ["market_key", "status", "attempts"],
+  "properties": {
+    "market_key": { "type": "string", "minLength": 1 },
+    "bookmaker": { "type": ["string", "null"] },
+    "status": {
+      "enum": [
+        "QUOTED_RECOVERED",
+        "NOT_QUOTED_CONFIRMED",
+        "ACQUISITION_FAILED",
+        "UNCERTAIN"
+      ]
+    },
+    "price": { "type": ["number", "null"], "exclusiveMinimum": 1 },
+    "source": { "type": ["string", "null"] },
+    "fetched_at": { "type": ["string", "null"], "format": "date-time" },
+    "event_structure_checked": { "type": "boolean", "default": false },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "result"],
+        "properties": {
+          "source": { "type": "string", "minLength": 1 },
+          "result": { "type": "string", "minLength": 1 },
+          "checked_at": { "type": ["string", "null"], "format": "date-time" },
+          "detail": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
